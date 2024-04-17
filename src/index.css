@@ -84,7 +84,7 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden; /* Hide horizontal scrollbar */
     scroll-behavior: smooth;
-    font-size: 15px;
+    font-size: 14px;
     font-family: "Inter", sans-serif;
     font-weight: 400;
   }
@@ -96,33 +96,6 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-}
-
-:root {
-  --vobb-primary-70: #4a22eb;
-  --white: #fff;
-
-  /* Vobb Primary Colors */
-  --vobb-primary-70: #4a22eb;
-
-  /* Vobb Secondary Colors */
-  --vobb-sec-0: #f5f8ff;
-
-  /* Neutrals */
-  --neutral-100: #101323;
-  --neutral-90: #1d2939;
-  --neutral-80: #344054;
-  --neutral-70: #475467;
-  --neutral-70: #475467;
-  --neutral-60: #667085;
-  --neutral-50: #98a2b3;
-  --neutral-40: #d0d5dd;
-  --neutral-30: #eaecf0;
-  --neutral-20: #f2f4f7;
-  --neutral-10: #f9fafb;
-  --neutral-0: #fcfcfd;
-
-  --max-width: 1160px;
 }
 
 html {

@@ -4,7 +4,7 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
-  content: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
+  content: ["src/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
   theme: {
     container: {
       center: true,
@@ -48,6 +48,27 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "vobb-neutral": {
+          100: "#101323",
+          90: "#1d2939",
+          80: "#344054",
+          70: "#475467",
+          70: "#475467",
+          60: "#667085",
+          50: "#98a2b3",
+          40: "#d0d5dd",
+          30: "#eaecf0",
+          20: "#f2f4f7",
+          10: "#f9fafb",
+          0: "#fcfcfd",
+        },
+        "vobb-primary": {
+          70: "#4a22eb",
+        },
+        "vobb-sec": {
+          0: "#f5f8ff",
+        },
+        error: { 60: "#D92D20" },
       },
       borderRadius: {
         lg: `var(--radius)`,
@@ -70,6 +91,10 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      backgroundImage: {
+        "circle-pattern":
+          "url('/src/assets/vectors/illustrations/circles.svg')",
       },
     },
   },

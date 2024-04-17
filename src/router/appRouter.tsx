@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { RouteBuilder } from ".";
-import { ErrorBoundary } from "helpers";
+import { ErrorBoundary } from "lib";
 import { ProtectedRoute } from "./protectedRoute";
 
 /**
