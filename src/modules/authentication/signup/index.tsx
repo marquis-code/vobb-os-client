@@ -64,8 +64,8 @@ const SignupUI = () => {
 
   return (
     <>
-      <main className="px-4 pb-4">
-        <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px]">
+      <main>
+        <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
           <LogoIcon className="mb-12 m-auto" />
           <h1 className="text-xl sm:text-2xl font-bold mb-2 text-vobb-neutral-100 text-center">
             Create a Vobb account
