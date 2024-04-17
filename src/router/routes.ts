@@ -13,4 +13,5 @@ export const Routes = {
   home: "/",
   login: "/login",
   forgot_password: "/forgot-password",
+  recaptcha: "/recaptcha",
 };

@@ -7,15 +7,19 @@ import { Button } from "components/ui/button";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { useRef } from "react";
 
 interface SignupData {
   email: string;
   password: string;
+  captcha: string;
 }
 
 const initSignup: SignupData = {
   email: "",
   password: "",
+  captcha: "",
 };
 
 const schema = yup.object({
@@ -31,6 +35,7 @@ const schema = yup.object({
       /@|#|&|\$]/,
       "Password should contain at least special character (e.g. @, #, &, $)"
     ),
+  captcha: yup.string().required("Required"),
 });
 
 interface SignupProps {
@@ -39,6 +44,8 @@ interface SignupProps {
 }
 
 const SignupUI = () => {
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   const {
     register,
     handleSubmit,
@@ -57,7 +64,7 @@ const SignupUI = () => {
 
   return (
     <>
-      <main className="px-4 pb-4" >
+      <main className="px-4 pb-4">
         <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px]">
           <LogoIcon className="mb-12 m-auto" />
           <h1 className="text-xl sm:text-2xl font-bold mb-2 text-vobb-neutral-100 text-center">
@@ -81,15 +88,40 @@ const SignupUI = () => {
               register={register}
               validatorMessage={errors.password?.message}
             />
-            <Button onClick={handleSubmit(onSubmit)} className="w-full mt-6" size={"default"} variant="fill">
+            {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
+              <ReCAPTCHA
+                class="recaptcha"
+                sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                onChange={(token) => {
+                  setValue("captcha", token);
+                }}
+                ref={recaptchaRef}
+              />
+            )}
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              className="w-full mt-6"
+              size={"default"}
+              variant="fill"
+            >
               Get started
             </Button>
           </form>
-          <Button className="w-full mt-4 flex items-center gap-2 justify-center" size={"default"} variant="outline">
+          <Button
+            className="w-full mt-4 flex items-center gap-2 justify-center"
+            size={"default"}
+            variant="outline"
+          >
             <GoogleLogoIcon width={20} /> Signup with Google
           </Button>
-          <p className="mt-6 text-center text-[13px]" >
-            Already have an account? <Link className="text-vobb-primary-70 font-semibold" to={Routes.login}>Login</Link>
+          <p className="mt-6 text-center text-[13px]">
+            Already have an account?{" "}
+            <Link
+              className="text-vobb-primary-70 font-semibold"
+              to={Routes.login}
+            >
+              Login
+            </Link>
           </p>
         </section>
       </main>

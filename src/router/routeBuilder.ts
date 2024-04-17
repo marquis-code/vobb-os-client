@@ -1,6 +1,6 @@
 import { PathRouteProps } from "react-router-dom";
 import { Routes } from "./routes";
-import { Error404, Signup, Login } from "pages";
+import { Error404, Signup, Login, Recaptcha } from "pages";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -31,6 +31,10 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.login,
     Element: Login,
+  },
+  {
+    path: Routes.recaptcha,
+    Element: Recaptcha,
   },
 
   // Add all routes above 404

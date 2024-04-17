@@ -3,7 +3,6 @@ import {
   CustomInput,
   PasswordInput,
   Button,
-  Checkbox,
   CheckboxWithText,
 } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,20 +11,25 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { useRef } from "react";
 
 interface LoginData {
   email: string;
   password: string;
+  captcha: string;
 }
 
 const initLogin: LoginData = {
   email: "",
   password: "",
+  captcha: "",
 };
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Required"),
   password: yup.string().required("Required"),
+  captcha: yup.string().required("Required"),
 });
 
 interface LoginProps {
@@ -34,10 +38,13 @@ interface LoginProps {
 }
 
 const LoginUI = () => {
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<LoginData>({
     resolver: yupResolver(schema),
     defaultValues: initLogin,
@@ -84,6 +91,16 @@ const LoginUI = () => {
                 Forgot password?
               </Link>
             </div>
+            {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
+              <ReCAPTCHA
+                class="recaptcha"
+                sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                onChange={(token) => {
+                  setValue("captcha", token);
+                }}
+                ref={recaptchaRef}
+              />
+            )}
             <Button
               onClick={handleSubmit(onSubmit)}
               className="w-full mt-6"
