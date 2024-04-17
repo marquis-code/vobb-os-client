@@ -82,6 +82,7 @@ module.exports = {
       },
       fontFamily: {
         inter: ["Inter", ...fontFamily.sans],
+        workSans: ["Work Sans", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {

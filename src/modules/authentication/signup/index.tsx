@@ -120,7 +120,7 @@ const SignupUI = () => {
               className="text-vobb-primary-70 font-semibold"
               to={Routes.login}
             >
-              Login
+              Sign in
             </Link>
           </p>
         </section>
