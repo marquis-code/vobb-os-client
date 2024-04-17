@@ -35,7 +35,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
         {label && (
           <label className={"block font-inter text-xs mb-1"}>
             {label}
-            {required ? <span className={"text-error-60"}>*</span> : ""}
+            {required ? <span className={"text-error-50"}>*</span> : ""}
           </label>
         )}
         {icon && icon}
@@ -50,21 +50,21 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               max: props.max,
             })}
             className={cn(
-              `${validatorMessage ? "border-error-60 focus-visible:ring-error-60" : ""}`,
+              `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
               className
             )}
           />
         ) : (
           <Input
             className={cn(
-              `${validatorMessage ? "border-error-60 focus-visible:ring-error-60" : ""}`,
+              `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
               className
             )}
             {...props}
           />
         )}
         {validatorMessage && (
-          <small className="block text=-xs mt-1 text-error-60">
+          <small className="block text=-xs mt-1 text-error-10">
             {validatorMessage}
           </small>
         )}
@@ -98,7 +98,7 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
         {label && (
           <label className={"block font-inter text-xs mb-1"}>
             {label}
-            {required ? <span className={"text-error-60"}>*</span> : ""}
+            {required ? <span className={"text-error-10"}>*</span> : ""}
           </label>
         )}
 
@@ -128,7 +128,7 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
               max: props.max,
             })}
             className={cn(
-              `${validatorMessage ? "border-error-60 focus-visible:ring-error-60" : ""}`,
+              `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
               className
             )}
             type={show ? "text" : "password"}
@@ -137,13 +137,13 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
           <Input
             {...props}
             className={cn(
-              `${validatorMessage ? "border-error-60 focus-visible:ring-error-60" : ""}`,
+              `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
               className
             )}
           />
         )}
         {validatorMessage && (
-          <small className="block text=-xs mt-1 text-error-60">
+          <small className="block text=-xs mt-1 text-error-10">
             {validatorMessage}
           </small>
         )}

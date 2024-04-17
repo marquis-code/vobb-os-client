@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 @layer base {
   :root {
@@ -68,6 +68,84 @@
   }
 }
 
+:root {
+  --atlas-primary-70: #fa2727;
+  --white: #fff;
+  --error: #e74444;
+
+  /* Vobb Primary Colors */
+  --vobb-primary-0: #fcfbff;
+  --vobb-primary-10: #f2f0fb;
+  --vobb-primary-20: #e1dafc;
+  --vobb-primary-30: #c3b5f8;
+  --vobb-primary-40: #a491f5;
+  --vobb-primary-50: #866cf2;
+  --vobb-primary-60: #6847ee;
+  --vobb-primary-70: #4a22eb;
+  --vobb-primary-80: #3913d2;
+  --vobb-primary-90: #2f10ae;
+  --vobb-primary-100: #250c89;
+
+  /* Vobb Secondary Colors */
+  --vobb-sec-0: #f5f8ff;
+  --vobb-sec-10: #e0f1ff;
+  --vobb-sec-20: #c1e3ff;
+  --vobb-sec-30: #a2d5ff;
+  --vobb-sec-40: #83c7ff;
+  --vobb-sec-50: #64b9ff;
+  --vobb-sec-60: #46abff;
+  --vobb-sec-70: #279dff;
+  --vobb-sec-80: #088fff;
+  --vobb-sec-90: #007fe8;
+  --vobb-sec-100: #006ec9;
+
+  /* Neutrals */
+  --neutral-100: #101323;
+  --neutral-90: #1d2939;
+  --neutral-80: #344054;
+  --neutral-70: #475467;
+  --neutral-70: #475467;
+  --neutral-60: #667085;
+  --neutral-50: #98a2b3;
+  --neutral-40: #d0d5dd;
+  --neutral-30: #eaecf0;
+  --neutral-20: #f2f4f7;
+  --neutral-10: #f9fafb;
+  --neutral-0: #fcfcfd;
+
+  /* Success Colors */
+  --success-50: #008042;
+  --success-40: #069952;
+  --success-30: #18B368;
+  --success-20: #3DCC87;
+  --success-10: #82E6B6;
+  --success-0: #E6FFF3;
+
+  /* Error Colors */
+  --error-50: #800000;
+  --error-40: #990000;
+  --error-30: #B30000;
+  --error-20: #CC0000;
+  --error-10: #E62E2E;
+  --error-0: #FFE6E6;
+
+  /* Warning Colors */
+  --warning-50: #A66300;
+  --warning-40: #B86E00;
+  --warning-30: #C97900;
+  --warning-20: #DB8400;
+  --warning-10: #EDA12F;
+  --warning-0: #FFF5E6;
+
+  /* Info Colors */
+  --info-50: #005180;
+  --info-40: #006199;
+  --info-30: #0071B3;
+  --info-20: #0081CC;
+  --info-10: #2EA2E6;
+  --info-0: #E6F6FF;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -75,7 +153,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    color: var(--neutral-60);
+    color: var(--neutral-100);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden; /* Hide horizontal scrollbar */
