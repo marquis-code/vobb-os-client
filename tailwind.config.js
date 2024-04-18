@@ -4,19 +4,15 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "src/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
-  ],
+  content: ["./pages/**/*.{ts,tsx}", "src/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
-      },
+        "2xl": "1400px"
+      }
     },
     extend: {
       colors: {
@@ -27,31 +23,31 @@ module.exports = {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          foreground: "hsl(var(--primary-foreground))"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          foreground: "hsl(var(--secondary-foreground))"
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          foreground: "hsl(var(--destructive-foreground))"
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          foreground: "hsl(var(--muted-foreground))"
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          foreground: "hsl(var(--accent-foreground))"
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          foreground: "hsl(var(--popover-foreground))"
         },
         card: {
           DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          foreground: "hsl(var(--card-foreground))"
         },
         "vobb-neutral": {
           100: "var(--neutral-100)",
@@ -64,7 +60,7 @@ module.exports = {
           30: "var(--neutral-30)",
           20: "var(--neutral-20)",
           10: "var(--neutral-10)",
-          0: "var(--neutral-0)",
+          0: "var(--neutral-0)"
         },
         "vobb-primary": {
           100: "var(--vobb-primary-100)",
@@ -77,7 +73,7 @@ module.exports = {
           30: "var(--vobb-primary-30)",
           20: "var(--vobb-primary-20)",
           10: "var(--vobb-primary-10)",
-          0: "var(--vobb-primary-0)",
+          0: "var(--vobb-primary-0)"
         },
         "vobb-sec": {
           100: "var(--vobb-sec-100)",
@@ -90,7 +86,7 @@ module.exports = {
           30: "var(--vobb-sec-30)",
           20: "var(--vobb-sec-20)",
           10: "var(--vobb-sec-10)",
-          0: "var(--vobb-sec-0)",
+          0: "var(--vobb-sec-0)"
         },
         error: {
           50: "var(--error-50)",
@@ -98,7 +94,7 @@ module.exports = {
           30: "var(--error-30)",
           20: "var(--error-20)",
           10: "var(--error-10)",
-          0: "var(--error-0)",
+          0: "var(--error-0)"
         },
         success: {
           50: "var(--success-50)",
@@ -106,7 +102,7 @@ module.exports = {
           30: "var(--success-30)",
           20: "var(--success-20)",
           10: "var(--success-10)",
-          0: "var(--success-0)",
+          0: "var(--success-0)"
         },
         warning: {
           50: "var(--warning-50)",
@@ -114,7 +110,7 @@ module.exports = {
           30: "var(--warning-30)",
           20: "var(--warning-20)",
           10: "var(--warning-10)",
-          0: "var(--warning-0)",
+          0: "var(--warning-0)"
         },
         info: {
           50: "var(--info-50)",
@@ -122,37 +118,39 @@ module.exports = {
           30: "var(--info-30)",
           20: "var(--info-20)",
           10: "var(--info-10)",
-          0: "var(--info-0)",
-        },
+          0: "var(--info-0)"
+        }
       },
       borderRadius: {
         lg: `var(--radius)`,
         md: `calc(var(--radius) - 2px)`,
-        sm: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 4px)"
       },
       fontFamily: {
         inter: ["Inter", ...fontFamily.sans],
-        workSans: ["Work Sans", ...fontFamily.sans],
+        workSans: ["Work Sans", ...fontFamily.sans]
       },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "var(--radix-accordion-content-height)" }
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
+          to: { height: "0" }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out"
       },
       backgroundImage: {
-        "circle-pattern":
-          "url('/src/assets/vectors/illustrations/circles.svg')",
+        "circle-pattern": "url('/src/assets/vectors/illustrations/circles.svg')"
       },
-    },
+      gridTemplateColumns: {
+        colsLayout: "1.5fr 2.5fr 1fr"
+      }
+    }
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")]
 };

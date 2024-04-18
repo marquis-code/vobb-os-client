@@ -116,34 +116,34 @@
   /* Success Colors */
   --success-50: #008042;
   --success-40: #069952;
-  --success-30: #18B368;
-  --success-20: #3DCC87;
-  --success-10: #82E6B6;
-  --success-0: #E6FFF3;
+  --success-30: #18b368;
+  --success-20: #3dcc87;
+  --success-10: #82e6b6;
+  --success-0: #e6fff3;
 
   /* Error Colors */
   --error-50: #800000;
   --error-40: #990000;
-  --error-30: #B30000;
-  --error-20: #CC0000;
-  --error-10: #E62E2E;
-  --error-0: #FFE6E6;
+  --error-30: #b30000;
+  --error-20: #cc0000;
+  --error-10: #e62e2e;
+  --error-0: #ffe6e6;
 
   /* Warning Colors */
-  --warning-50: #A66300;
-  --warning-40: #B86E00;
-  --warning-30: #C97900;
-  --warning-20: #DB8400;
-  --warning-10: #EDA12F;
-  --warning-0: #FFF5E6;
+  --warning-50: #a66300;
+  --warning-40: #b86e00;
+  --warning-30: #c97900;
+  --warning-20: #db8400;
+  --warning-10: #eda12f;
+  --warning-0: #fff5e6;
 
   /* Info Colors */
   --info-50: #005180;
   --info-40: #006199;
-  --info-30: #0071B3;
-  --info-20: #0081CC;
-  --info-10: #2EA2E6;
-  --info-0: #E6F6FF;
+  --info-30: #0071b3;
+  --info-20: #0081cc;
+  --info-10: #2ea2e6;
+  --info-0: #e6f6ff;
 }
 
 @layer base {
@@ -178,8 +178,7 @@ html {
   transition: 0.3s;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 h1,
@@ -243,4 +242,15 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #f3f3f3 inset !important;
   box-shadow: 0 0 0 30px #f3f3f3 inset !important;
+}
+.completedForm {
+  svg {
+    fill: #d3dbff;
+    path:nth-of-type(1) {
+      stroke: transparent;
+    }
+    path:nth-of-type(2) {
+      stroke: #3d58d9;
+    }
+  }
 }
