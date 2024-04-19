@@ -26,7 +26,7 @@ const CountryFlagSelect: React.FC<CountryFlagSelectProps> = ({
       />
       ;
       {validatorMessage && (
-        <small className="block text=-xs mt-1 text-error-10">{validatorMessage}</small>
+        <small className="block text-xs mt-1 text-error-10">{validatorMessage}</small>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import { Arrow, CompanyInfoIcon } from "assets";
 import { useOnboardingContext } from "context";
-import { CompanyFormData, CompanyFormErrors, CompanyFormProps } from "@/types/interfaces";
+import { CompanyFormData, CompanyFormErrors, CompanyFormProps } from "types/interfaces";
 import { Button, CustomInput, OptionType, SelectInput } from "components";
 import { useEffect, useState } from "react";
 

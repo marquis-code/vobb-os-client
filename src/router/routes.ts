@@ -15,5 +15,5 @@ export const Routes = {
   forgot_password: "/forgot-password",
   recaptcha: "/recaptcha",
   onboarding: "/onboarding",
-  completed: "./completed"
+  completed: "/completed"
 };

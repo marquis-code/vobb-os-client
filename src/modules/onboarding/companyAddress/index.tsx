@@ -4,7 +4,7 @@ import {
   CompanyAddressFormData,
   CompanyAddressFormErrors,
   CompanyAddressProps
-} from "@/types/interfaces";
+} from "types/interfaces";
 import { Button, CountryFlagSelect, CustomInput } from "components";
 import { useEffect, useState } from "react";
 
@@ -133,7 +133,7 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => 
             />
             <CustomInput
               type="text"
-              placeholder="Address line 2"
+              placeholder="Address line 2 (optional)"
               name="addressline2"
               onChange={(e) => setState((prev) => ({ ...prev, addressline2: e.target.value }))}
             />

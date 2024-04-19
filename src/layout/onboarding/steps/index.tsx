@@ -33,8 +33,8 @@ const stepsItems: StepsType[] = [
 const Steps = () => {
   const { activeForm, completedForms } = useOnboardingContext();
   return (
-    <div className=" md:min-h-full overflow-auto">
-      <div className="px-4 py-8 flex gap-10 md:gap-20 flex-col h-full justify-between">
+    <div className="min-h-full overflow-auto">
+      <div className="px-4 py-8 flex gap-20 flex-col h-full justify-between">
         <Link className=" block w-fit" to={Routes.home}>
           <Logo className="min-w-28 min-h-8" />
         </Link>

@@ -6,6 +6,7 @@ import { ReactComponent as LocationIcon } from "./locationIcon.svg";
 import { ReactComponent as SendIcon } from "./sendMailIcon.svg";
 import { ReactComponent as MailIcon } from "./mail.svg";
 import { ReactComponent as Arrow } from "./arrow.svg";
+import { ReactComponent as Check } from "./checkCircle.svg";
 
 export {
   GoogleLogoIcon,
@@ -15,5 +16,6 @@ export {
   LocationIcon,
   SendIcon,
   MailIcon,
-  Arrow
+  Arrow,
+  Check
 };
