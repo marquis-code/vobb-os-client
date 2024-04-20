@@ -1,60 +1,53 @@
-import { FullnameFormData, FullnameFormProps } from "types/interfaces";
+import { FullnameFormData, FullnameFormProps } from "types/onboarding";
 import { PersonalIcon } from "assets";
 import { Button, CustomInput } from "components";
-import { useEffect, useState } from "react";
-
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm, SubmitHandler } from "react-hook-form";
 const Fullname: React.FC<FullnameFormProps> = ({ initData, submit }) => {
-  const [state, setState] = useState(initFullnameData);
-  const { firstName, lastName } = state;
-  const [error, setError] = useState<FullnameFormErrors>();
-
-  useEffect(() => {
-    initData && setState(initData);
-  }, [initData]);
-
-  const handleSubmit = () => {
-    const errors: FullnameFormErrors = {};
-
-    if (firstName.trim().length === 0) errors.firstName = "Required";
-    if (lastName.trim().length === 0) errors.lastName = "Required";
-
-    if (Object.keys(errors).length > 0) {
-      setError(errors);
-    } else {
-      submit(state);
-    }
+  const schema = yup.object({
+    firstName: yup.string().required("Required"),
+    lastName: yup.string().required("Required")
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FullnameFormData>({
+    resolver: yupResolver(schema),
+    defaultValues: initData
+  });
+  const onSubmit: SubmitHandler<FullnameFormData> = (data) => {
+    submit(data);
   };
+
   return (
     <div className="max-w-[400px] m-auto">
       <PersonalIcon className="mb-6 m-auto" />
       <div className="mb-4 text-center mx-auto">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
+        <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Fullname information
-        </h2>
+        </h1>
         <p>Help us get to know you better</p>
       </div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           type="text"
-          name="firstname"
+          name="firstName"
           placeholder="First name"
-          onChange={(e) => setState((prev) => ({ ...prev, firstName: e.target.value }))}
-          validatorMessage={error?.firstName}
+          register={register}
+          validatorMessage={errors.firstName?.message}
         />
 
         <CustomInput
           type="text"
           name="lastName"
           placeholder="Last name"
-          onChange={(e) => setState((prev) => ({ ...prev, lastName: e.target.value }))}
-          validatorMessage={error?.lastName}
+          register={register}
+          validatorMessage={errors.lastName?.message}
         />
 
-        <Button
-          onClick={() => handleSubmit()}
-          className="w-full mt-6"
-          size={"default"}
-          variant="fill">
+        <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
           Continue
         </Button>
       </form>
@@ -62,13 +55,3 @@ const Fullname: React.FC<FullnameFormProps> = ({ initData, submit }) => {
   );
 };
 export { Fullname };
-
-interface FullnameFormErrors {
-  firstName?: string;
-  lastName?: string;
-}
-
-const initFullnameData: FullnameFormData = {
-  firstName: "",
-  lastName: ""
-};

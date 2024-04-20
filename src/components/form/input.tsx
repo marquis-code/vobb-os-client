@@ -4,8 +4,7 @@ import { cn } from "lib/utils";
 import { UseFormRegister } from "react-hook-form";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 
-export interface CustomInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   icon?: ReactNode;
   validatorMessage?: string;
@@ -26,7 +25,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     className,
     hint,
     name,
-    register,
+    register
   } = props;
 
   return (
@@ -47,7 +46,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               minLength: props.minLength,
               onChange: props.onChange,
               min: props.min,
-              max: props.max,
+              max: props.max
             })}
             className={cn(
               `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
@@ -64,15 +63,9 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
           />
         )}
         {validatorMessage && (
-          <small className="block text=-xs mt-1 text-error-10">
-            {validatorMessage}
-          </small>
+          <small className="block text=-xs mt-1 text-error-10">{validatorMessage}</small>
         )}
-        {hint && (
-          <small className="block text=-xs mt-1 text-vobb-neutral-60">
-            {hint}
-          </small>
-        )}
+        {hint && <small className="block text=-xs mt-1 text-vobb-neutral-60">{hint}</small>}
       </div>
     </>
   );
@@ -88,7 +81,7 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
     className,
     hint,
     name,
-    register,
+    register
   } = props;
   const [show, setShow] = useState(false);
 
@@ -125,7 +118,7 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
               minLength: props.minLength,
               onChange: props.onChange,
               min: props.min,
-              max: props.max,
+              max: props.max
             })}
             className={cn(
               `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
@@ -143,15 +136,9 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
           />
         )}
         {validatorMessage && (
-          <small className="block text=-xs mt-1 text-error-10">
-            {validatorMessage}
-          </small>
+          <small className="block text=-xs mt-1 text-error-10">{validatorMessage}</small>
         )}
-        {hint && (
-          <small className="block text=-xs mt-1 text-vobb-neutral-60">
-            {hint}
-          </small>
-        )}
+        {hint && <small className="block text=-xs mt-1 text-vobb-neutral-60">{hint}</small>}
       </div>
     </>
   );

@@ -1,18 +1,28 @@
 import { useOnboardingContext } from "context";
-import { CompanyUrlFormProps } from "types/interfaces";
 import { Arrow, WeblinkIcon } from "assets";
 import { Button, CustomInput } from "components";
-import { useEffect, useState } from "react";
+import { CompanyUrlFormProps } from "types/onboarding";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
 
 const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => {
   const { handleFormChange } = useOnboardingContext();
-  const [state, setState] = useState(initUrlData);
-  useEffect(() => {
-    initData && setState(initData);
-  }, [initData]);
+  const schema = yup.object().shape({
+    companyUrl: yup.string().url("Invalid URL")
+  });
 
-  const handleSubmit = () => {
-    submit(state);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data) => {
+    submit(data);
   };
   return (
     <div className="max-w-[400px] m-auto">
@@ -28,27 +38,20 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
         </h2>
         <p>Neque porro quisquam est, qui dolorem ipsu.</p>
       </div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           type="text"
           name="companyUrl"
           placeholder="travelspace.ng"
-          onChange={(e) => setState((prev) => ({ ...prev, companyUrl: e.target.value }))}
+          register={register}
+          validatorMessage={errors.companyUrl?.message}
         />
 
-        <Button
-          onClick={() => handleSubmit()}
-          className="w-full mt-6"
-          size={"default"}
-          variant="fill">
+        <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
           Continue
         </Button>
 
-        <Button
-          onClick={() => handleSubmit()}
-          className="w-full mt-6 no-underline"
-          size={"default"}
-          variant="link">
+        <Button type="submit" className="w-full mt-6 no-underline" size={"default"} variant="link">
           Skip
         </Button>
       </form>
@@ -56,7 +59,3 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
   );
 };
 export { CompanyWebsite };
-
-const initUrlData = {
-  companyUrl: ""
-};

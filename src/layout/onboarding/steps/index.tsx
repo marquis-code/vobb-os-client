@@ -2,7 +2,7 @@ import { CompanyInfoIcon, LocationIcon, Logo, MailIcon, PersonalIcon, WeblinkIco
 import { Link } from "react-router-dom";
 import { Routes } from "router";
 import { useOnboardingContext } from "context";
-import { StepsType } from "types/interfaces";
+import { StepsType } from "types/onboarding";
 
 const stepsItems: StepsType[] = [
   {

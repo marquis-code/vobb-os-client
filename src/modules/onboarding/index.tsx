@@ -4,7 +4,7 @@ import {
   CompanyFormData,
   CompanyWebsiteData,
   FullnameFormData
-} from "types/interfaces";
+} from "types/onboarding";
 import { useState } from "react";
 import { Fullname } from "./fullname";
 import { CompanyInfo } from "./companyInfo";
@@ -25,7 +25,6 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit }) => {
   const [companyAddressData, setCompanyAddressData] = useState<CompanyAddressFormData | undefined>(
     undefined
   );
-  console.log({ ...fullnameData, ...companyData, ...companyUrlData, ...companyAddressData });
   return (
     <>
       {activeForm === "fullname" && (

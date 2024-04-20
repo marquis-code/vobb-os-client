@@ -4,7 +4,7 @@ import {
   CompanyAddressFormData,
   CompanyAddressFormErrors,
   CompanyAddressProps
-} from "types/interfaces";
+} from "types/onboarding";
 import { Button, CountryFlagSelect, CustomInput } from "components";
 import { useEffect, useState } from "react";
 

@@ -1,90 +1,66 @@
 import { Arrow, CompanyInfoIcon } from "assets";
 import { useOnboardingContext } from "context";
-import { CompanyFormData, CompanyFormErrors, CompanyFormProps } from "types/interfaces";
-import { Button, CustomInput, OptionType, SelectInput } from "components";
-import { useEffect, useState } from "react";
+import { CompanyFormData, CompanyFormProps } from "types/onboarding";
+import { Button, CustomInput, SelectInput } from "components";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { optionType } from "@/types/interfaces";
 
-const initCompanyData: CompanyFormData = {
-  organisation: "",
-  sector: null,
-  teamSize: null
-};
+const sectorOptions: optionType[] = [
+  {
+    label: "Education",
+    value: "Education"
+  },
+  {
+    label: "Medical and Health",
+    value: "Medical and Health"
+  },
+  {
+    label: "Tourism",
+    value: "Tourism"
+  }
+];
+
+const teamSizeOptions: optionType[] = [
+  {
+    label: "0-5 Team members",
+    value: "0-5"
+  },
+  {
+    label: "6-10 Team members",
+    value: "6-10"
+  },
+  {
+    label: "11-20 Team members",
+    value: "11-20"
+  },
+  {
+    label: "21-50 Team members",
+    value: "21-50"
+  },
+  {
+    label: "50+ Team members",
+    value: "50+"
+  }
+];
 
 const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
   const { handleFormChange } = useOnboardingContext();
   const [activeCompanyInfo, setActiveCompanyInfo] = useState<string>("organisation");
 
-  const [state, setState] = useState<CompanyFormData>(initCompanyData);
-  const { organisation, sector, teamSize } = state;
-  const [error, setError] = useState<CompanyFormErrors>();
-  useEffect(() => {
-    initData && setState(initData);
-  }, [initData]);
+  const handleFormDisplay = (newActiveCompanyInfo: string) => {
+    setActiveCompanyInfo(newActiveCompanyInfo);
+  };
 
-  const handleSubmitFormInfo = (stage: string) => {
-    const errors: CompanyFormErrors = {};
-
-    if (stage === "teamSize") {
-      if (organisation.trim().length === 0) errors.organisation = "Required";
-    } else if (stage === "sector") {
-      if (!teamSize) errors.teamSize = "Required";
-    } else {
-      if (!sector) errors.sector = "Required";
-    }
-    if (Object.keys(errors).length > 0) {
-      setError(errors);
-    } else {
-      stage !== "done" ? setActiveCompanyInfo(stage) : submit(state);
+  const handleFormSubmit = (data: CompanyFormData) => {
+    if (activeCompanyInfo === "sector") {
+      submit(data);
     }
   };
 
-  const sectorOptions: OptionType[] = [
-    {
-      label: "Medical and Health Tourism",
-      value: "Medical and Health Tourism"
-    },
-    {
-      label: "Educational and Academic Travel",
-      value: "Educational and Academic Travel"
-    },
-    {
-      label: "Event and Conference Travel",
-      value: "Event and Conference Travel"
-    },
-    {
-      label: "Religious and Pilgrimage Tourism",
-      value: "Religious and Pilgrimage Tourism"
-    },
-    {
-      label: "Luxury and High-End Tourism",
-      value: "Luxury and High-End Tourism"
-    },
-    {
-      label: "Others",
-      value: "Others"
-    }
-  ];
-
-  const teamSizeOptions: OptionType[] = [
-    {
-      label: "0-5 Team members",
-      value: "0-5"
-    },
-    {
-      label: "6-10 Team members",
-      value: "6-10"
-    },
-    {
-      label: "10-20 Team members",
-      value: "10-20"
-    },
-    {
-      label: "20-50 Team members",
-      value: "20-50"
-    }
-  ];
   const progressBtns = ["organisation", "teamSize", "sector"];
-
   return (
     <div className="max-w-[400px] h-[100dvh] m-auto ">
       <Arrow
@@ -99,86 +75,171 @@ const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
         </h2>
         <p>Help us get to know your organisation better</p>
       </div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <div>
         {activeCompanyInfo === "organisation" && (
-          <aside>
-            <CustomInput
-              label="Company Name"
-              type="text"
-              placeholder="Travel Space Inc"
-              name="organisation"
-              onChange={(e) => setState((prev) => ({ ...prev, organisation: e.target.value }))}
-              validatorMessage={error?.organisation}
-            />
-            <Button
-              onClick={() => handleSubmitFormInfo("teamSize")}
-              className="w-full mt-6"
-              size={"default"}
-              variant="fill">
-              Continue
-            </Button>
-          </aside>
+          <OrganisationForm
+            initData={initData}
+            submit={handleFormSubmit}
+            changeActiveState={handleFormDisplay}
+          />
         )}
-
         {activeCompanyInfo === "teamSize" && (
-          <aside>
-            <SelectInput
-              name="teamSize"
-              label="Team size"
-              selectedOption={teamSize}
-              options={teamSizeOptions}
-              handleSelectChange={(value) =>
-                value && setState((prev) => ({ ...prev, teamSize: value }))
-              }
-              placeholder={"What is the size of your team?"}
-              validatorMessage={error?.teamSize}
-            />
-            <Button
-              onClick={() => handleSubmitFormInfo("sector")}
-              className="w-full mt-6"
-              size={"default"}
-              variant="fill">
-              Continue
-            </Button>
-          </aside>
+          <TeamSizeForm
+            initData={initData}
+            submit={handleFormSubmit}
+            changeActiveState={handleFormDisplay}
+          />
         )}
-
         {activeCompanyInfo === "sector" && (
-          <aside>
-            <SelectInput
-              name="sector"
-              label="Sector"
-              selectedOption={sector}
-              options={sectorOptions}
-              handleSelectChange={(value) =>
-                value && setState((prev) => ({ ...prev, sector: value }))
-              }
-              placeholder={"Select sector"}
-              validatorMessage={error?.sector}
-            />
-            <Button
-              onClick={() => handleSubmitFormInfo("done")}
-              className="w-full mt-6"
-              size={"default"}
-              variant="fill">
-              Continue
-            </Button>
-          </aside>
+          <SectorForm initData={initData} submit={handleFormSubmit} />
         )}
-
-        <div className="flex justify-center items-center gap-4 mt-8">
-          {progressBtns.map((btn) => (
-            <div
-              key={btn}
-              className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
-                btn === activeCompanyInfo ? "bg-vobb-primary-70" : ""
-              }`}
-              onClick={() => setActiveCompanyInfo(btn)}></div>
-          ))}
-        </div>
-      </form>
+      </div>
+      <div className="flex justify-center items-center gap-4 mt-8">
+        {progressBtns.map((btn) => (
+          <div
+            key={btn}
+            className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+              btn === activeCompanyInfo ? "bg-vobb-primary-70" : ""
+            }`}
+            onClick={() => setActiveCompanyInfo(btn)}></div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export { CompanyInfo };
+
+// OrganisationForm.tsx
+interface OrganisationFormProps {
+  initData?: CompanyFormData;
+  submit: (data: CompanyFormData) => void;
+  changeActiveState: (newActiveCompanyInfo: string) => void;
+}
+
+const OrganisationForm: React.FC<OrganisationFormProps> = ({
+  initData,
+  submit,
+  changeActiveState
+}) => {
+  const organisationSchema = yup.object().shape({
+    organisation: yup.string().required("Required")
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<CompanyFormData>({
+    resolver: yupResolver(organisationSchema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data: CompanyFormData) => {
+    submit(data);
+    changeActiveState("teamSize");
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <CustomInput
+        type="text"
+        placeholder="Name of organisation"
+        name="organisation"
+        register={register}
+        validatorMessage={errors.organisation?.message}
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Continue
+      </Button>
+    </form>
+  );
+};
+
+// TeamSizeForm.tsx
+interface TeamSizeFormProps {
+  initData?: CompanyFormData;
+  submit: (data: CompanyFormData) => void;
+  changeActiveState: (newActiveCompanyInfo: string) => void;
+}
+
+const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit, changeActiveState }) => {
+  const teamSizeSchema = yup.object().shape({
+    teamSize: yup.object().shape({
+      label: yup.string().required("Required"),
+      value: yup.string().required("Required")
+    })
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue
+  } = useForm<CompanyFormData>({
+    resolver: yupResolver<any>(teamSizeSchema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data: CompanyFormData) => {
+    submit(data);
+    changeActiveState("sector");
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SelectInput
+        name="teamSize"
+        options={teamSizeOptions}
+        handleSelectChange={(value) => setValue("teamSize", value)}
+        register={register}
+        validatorMessage={errors.teamSize?.message}
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Continue
+      </Button>
+    </form>
+  );
+};
+
+// SectorForm.tsx
+interface SectorFormProps {
+  initData?: CompanyFormData;
+  submit: (data: CompanyFormData) => void;
+}
+
+const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
+  const sectorSchema = yup.object().shape({
+    sector: yup.object().shape({
+      label: yup.string().required("Required"),
+      value: yup.string().required("Required")
+    })
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue
+  } = useForm<CompanyFormData>({
+    resolver: yupResolver<any>(sectorSchema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data: CompanyFormData) => {
+    submit(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SelectInput
+        name="sector"
+        options={sectorOptions}
+        handleSelectChange={(value) => setValue("sector", value)}
+        register={register}
+        validatorMessage={errors.sector?.message}
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Submit
+      </Button>
+    </form>
+  );
+};
