@@ -21,7 +21,7 @@ const ProtectedRoute: React.FC<{ children: any }> = ({ children }) => {
     if (!accessToken || accessToken === "undefined") {
       setIsLoggedIn(false);
       localStorage.clear();
-      return navigate(Routes.home);
+      return navigate(Routes.login);
     }
     setIsLoggedIn(true);
     // Fetch user profile
