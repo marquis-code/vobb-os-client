@@ -165,16 +165,19 @@ interface TeamSizeFormProps {
 
 const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit, changeActiveState }) => {
   const teamSizeSchema = yup.object().shape({
-    teamSize: yup.object().shape({
-      label: yup.string().required("Required"),
-      value: yup.string().required("Required")
-    })
+    teamSize: yup
+      .object()
+      .shape({
+        label: yup.string().required("Required"),
+        value: yup.string().required("Required")
+      })
+      .required("Required")
   });
   const {
-    register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    watch
   } = useForm<CompanyFormData>({
     resolver: yupResolver<any>(teamSizeSchema),
     defaultValues: initData
@@ -190,9 +193,13 @@ const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit, changeAct
       <SelectInput
         name="teamSize"
         options={teamSizeOptions}
-        handleSelectChange={(value) => setValue("teamSize", value)}
-        register={register}
-        validatorMessage={errors.teamSize?.message}
+        onChange={(value) => setValue("teamSize", value)}
+        value={watch("teamSize")}
+        validatorMessage={
+          errors.teamSize?.message ??
+          errors.teamSize?.value?.message ??
+          errors.teamSize?.label?.message
+        }
       />
       <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
         Continue
@@ -209,16 +216,20 @@ interface SectorFormProps {
 
 const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
   const sectorSchema = yup.object().shape({
-    sector: yup.object().shape({
-      label: yup.string().required("Required"),
-      value: yup.string().required("Required")
-    })
+    sector: yup
+      .object()
+      .shape({
+        label: yup.string().required("Required"),
+        value: yup.string().required("Required")
+      })
+      .required("Required")
   });
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    watch
   } = useForm<CompanyFormData>({
     resolver: yupResolver<any>(sectorSchema),
     defaultValues: initData
@@ -233,9 +244,11 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
       <SelectInput
         name="sector"
         options={sectorOptions}
-        handleSelectChange={(value) => setValue("sector", value)}
-        register={register}
-        validatorMessage={errors.sector?.message}
+        value={watch("sector")}
+        onChange={(value) => setValue("sector", value)}
+        validatorMessage={
+          errors.sector?.message ?? errors.sector?.value?.message ?? errors.sector?.label?.message
+        }
       />
       <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
         Submit

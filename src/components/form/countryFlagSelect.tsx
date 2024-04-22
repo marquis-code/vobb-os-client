@@ -11,10 +11,9 @@ interface CountryFlagSelectProps {
   validatorMessage?: string;
   hint?: string;
   label?: string;
-  name?: string;
   className?: string;
   parentClassName?: string;
-  register?: UseFormRegister<any>;
+  required?: boolean;
 }
 const CountryFlagSelect: React.FC<CountryFlagSelectProps> = (props) => {
   const {
@@ -27,41 +26,31 @@ const CountryFlagSelect: React.FC<CountryFlagSelectProps> = (props) => {
     hint,
     className,
     parentClassName,
-    register,
-    name
+    required
   } = props;
   const selectedValue = selectedOption || "";
   return (
     <div className={cn("mb-4", parentClassName)}>
-      {label && <label>{label}</label>}
-      {icon && icon}
-      {register && name ? (
-        <ReactFlagsSelect
-          selected={selectedValue}
-          onSelect={handleSelectChange}
-          placeholder={placeholder}
-          optionsSize={14}
-          selectedSize={14}
-          className={cn(
-            `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : "border-input"}`,
-            "border rounded-md h-9 shadow-sm"
-          )}
-          selectButtonClassName={className}
-        />
-      ) : (
-        <ReactFlagsSelect
-          selected={selectedValue}
-          onSelect={handleSelectChange}
-          placeholder={placeholder}
-          optionsSize={14}
-          selectedSize={14}
-          className={cn(
-            `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : "border-input"}`,
-            "border rounded-md h-9 shadow-sm"
-          )}
-          selectButtonClassName={className}
-        />
+      {label && (
+        <label className={"block font-inter text-xs mb-1"}>
+          {label}
+          {required ? <span className={"text-error-50"}>*</span> : ""}
+        </label>
       )}
+      {icon && icon}
+      <ReactFlagsSelect
+        selected={selectedValue}
+        onSelect={handleSelectChange}
+        placeholder={placeholder}
+        optionsSize={14}
+        selectedSize={14}
+        className={cn(
+          `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : "border-input"}`,
+          "border rounded-md h-9 shadow-sm"
+        )}
+        selectButtonClassName={className}
+        searchable
+      />
       {validatorMessage && (
         <small className="block text=-xs mt-1 text-error-10">{validatorMessage}</small>
       )}

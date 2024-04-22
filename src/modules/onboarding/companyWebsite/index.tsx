@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => {
   const { handleFormChange } = useOnboardingContext();
   const schema = yup.object().shape({
-    companyUrl: yup.string().url("Invalid URL")
+    companyUrl: yup.string().required("Required").url("Enter a valid URL")
   });
 
   const {
@@ -24,6 +24,7 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
   const onSubmit = (data) => {
     submit(data);
   };
+
   return (
     <div className="max-w-[400px] m-auto">
       <Arrow
