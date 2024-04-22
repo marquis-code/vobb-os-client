@@ -151,6 +151,9 @@ module.exports = {
       },
       backgroundImage: {
         "circle-pattern": "url('/src/assets/vectors/illustrations/circles.svg')"
+      },
+      gridTemplateColumns: {
+        colsLayout: "1.5fr 2.5fr 1fr"
       }
     }
   },
