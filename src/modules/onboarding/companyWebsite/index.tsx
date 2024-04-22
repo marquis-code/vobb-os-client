@@ -28,7 +28,7 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
     <div className="max-w-[400px] m-auto">
       <Arrow
         role="button"
-        className="hidden absolute top-20 left-[40%] md:block w-8 h-8 rotate-180 border border-neutral-400 rounded-full p-1 fill-neutral-400"
+        className="hidden absolute top-20 left-[40%] lg:block w-8 h-8 rotate-180 border border-neutral-400 rounded-full p-1 fill-neutral-400"
         onClick={() => handleFormChange("companyInfo", ["fullname", "companyInfo"])}
       />
       <WeblinkIcon className="mb-6 m-auto" />

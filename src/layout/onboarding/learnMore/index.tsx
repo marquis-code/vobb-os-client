@@ -1,18 +1,21 @@
+import { cn } from "lib";
 import { useOnboardingContext } from "context";
-
-const LearnMore = () => {
+interface LearnmoreProps {
+  className: string;
+}
+const LearnMore: React.FC<LearnmoreProps> = ({ className }: LearnmoreProps) => {
   const { activeForm } = useOnboardingContext();
   return (
-    <div className="md:flex items-center text-left gap-8 p-6  mt-32">
+    <div className={cn(" lg:flex items-center text-left gap-8 lg:px-6 mb-4  lg:mt-32", className)}>
       <div className="mx-auto text-left">
-        <h4 className="font-semibold">
+        <p className="font-semibold hidden lg:block ">
           {activeForm === "fullname" ||
           activeForm === "companyInfo" ||
           activeForm === "companyWeb" ||
           activeForm === "address"
             ? "Personal and Company Info"
             : "Choose your Team"}
-        </h4>
+        </p>
         <p>
           {activeForm === "fullname" ||
           activeForm === "companyInfo" ||
