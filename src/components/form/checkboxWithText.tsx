@@ -10,13 +10,7 @@ interface CheckboxWithTextProps {
 }
 
 export const CheckboxWithText = (props: CheckboxWithTextProps) => {
-  const {
-    label,
-    instruction,
-    labelClassName,
-    instructionClassName,
-    className,
-  } = props;
+  const { label, instruction, labelClassName, instructionClassName, className } = props;
   return (
     <div className={cn("items-top flex space-x-2", className)}>
       <Checkbox id="terms1" />
@@ -26,8 +20,7 @@ export const CheckboxWithText = (props: CheckboxWithTextProps) => {
           className={cn(
             "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
             labelClassName
-          )}
-        >
+          )}>
           {label}
         </label>
         {instruction && (
@@ -35,8 +28,7 @@ export const CheckboxWithText = (props: CheckboxWithTextProps) => {
             className={cn(
               "text-sm text-muted-foreground text-vobb-neutral-60",
               instructionClassName
-            )}
-          >
+            )}>
             {instruction}
           </p>
         )}

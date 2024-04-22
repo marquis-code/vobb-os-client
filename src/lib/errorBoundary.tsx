@@ -20,9 +20,7 @@ class ErrorBoundary extends React.Component<any, { hasError: boolean }> {
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return (
-        <Error500 />
-      );
+      return <Error500 />;
     }
 
     return this.props.children;

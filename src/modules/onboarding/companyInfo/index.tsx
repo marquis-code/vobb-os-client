@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { optionType } from "@/types/interfaces";
+import { optionType } from "types/interfaces";
 
 const sectorOptions: optionType[] = [
   {

@@ -1,6 +1,6 @@
 import { PathRouteProps } from "react-router-dom";
 import { Routes } from "./routes";
-import { Error404, Signup, Login, Recaptcha, Onboarding, CompletedOnboarding } from "pages";
+import { CompletedOnboarding, Error404, Login, Onboarding, Recaptcha, Signup } from "pages";
 import { OnboardingLayout } from "layout";
 
 // Route Builder Item Props
