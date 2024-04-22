@@ -43,7 +43,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: OnboardingLayout
   },
   {
-    path: Routes.completed,
+    path: Routes.completed_onboarding,
     Element: CompletedOnboarding
   },
 
