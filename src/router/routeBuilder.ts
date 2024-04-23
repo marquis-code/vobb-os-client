@@ -1,7 +1,15 @@
 import { PathRouteProps } from "react-router-dom";
 import { Routes } from "./routes";
-import { Error404, Signup, Login, Recaptcha, Onboarding, CompletedOnboarding } from "pages";
-import { OnboardingLayout } from "layout";
+import {
+  Error404,
+  Signup,
+  Login,
+  Recaptcha,
+  Onboarding,
+  CompletedOnboarding,
+  Overview
+} from "pages";
+import { DashboardLayout, OnboardingLayout } from "layout";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -45,6 +53,14 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.completed_onboarding,
     Element: CompletedOnboarding
+  },
+
+  // Dashboard Routes
+  {
+    path: Routes.overview,
+    Element: Overview,
+    isProtected: true,
+    Layout: DashboardLayout
   },
 
   // Add all routes above 404
