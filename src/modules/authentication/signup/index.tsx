@@ -1,5 +1,5 @@
 import { LogoIcon } from "assets";
-import { CustomInput, PasswordInput } from "components";
+import { CustomInput, PasswordInput, Popover, PopoverContent, PopoverTrigger } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -19,7 +19,7 @@ interface SignupData {
 const initSignup: SignupData = {
   email: "",
   password: "",
-  captcha: "",
+  captcha: ""
 };
 
 const schema = yup.object({
@@ -31,11 +31,8 @@ const schema = yup.object({
     .matches(/[A-Z]/, "Password should contain an uppercase character")
     .matches(/[a-z]/, "Password should contain an lowercase character")
     .matches(/[0-9]/, "Password should contain at least one number")
-    .matches(
-      /@|#|&|\$]/,
-      "Password should contain at least special character (e.g. @, #, &, $)"
-    ),
-  captcha: yup.string().required("Required"),
+    .matches(/@|#|&|\$]/, "Password should contain at least special character (e.g. @, #, &, $)"),
+  captcha: yup.string().required("Required")
 });
 
 interface SignupProps {
@@ -52,10 +49,10 @@ const SignupUI = () => {
     formState: { errors },
     watch,
     setValue,
-    reset,
+    reset
   } = useForm<SignupData>({
     resolver: yupResolver(schema),
-    defaultValues: initSignup,
+    defaultValues: initSignup
   });
 
   const onSubmit: SubmitHandler<SignupData> = (data) => {
@@ -70,9 +67,7 @@ const SignupUI = () => {
           <h1 className="text-xl sm:text-2xl font-bold mb-2 text-vobb-neutral-100 text-center">
             Create a Vobb account
           </h1>
-          <p className="mb-8 text-center">
-            Access all Vobb's tools with just one account.
-          </p>
+          <p className="mb-8 text-center">Access all Vobb's tools with just one account.</p>
           <form>
             <CustomInput
               label="Email"
@@ -102,24 +97,19 @@ const SignupUI = () => {
               onClick={handleSubmit(onSubmit)}
               className="w-full mt-6"
               size={"default"}
-              variant="fill"
-            >
+              variant="fill">
               Get started
             </Button>
           </form>
           <Button
             className="w-full mt-4 flex items-center gap-2 justify-center"
             size={"default"}
-            variant="outline"
-          >
+            variant="outline">
             <GoogleLogoIcon width={20} /> Signup with Google
           </Button>
           <p className="mt-6 text-center text-[13px]">
             Already have an account?{" "}
-            <Link
-              className="text-vobb-primary-70 font-semibold"
-              to={Routes.login}
-            >
+            <Link className="text-vobb-primary-70 font-semibold" to={Routes.login}>
               Sign in
             </Link>
           </p>

@@ -1,4 +1,4 @@
-import { Button, CustomInput, OTPWrapper, PasswordInput } from "components";
+import { Button, CustomInput, PasswordInput } from "components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -11,60 +11,57 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
+interface ForgotPasswordProps {
+  submit: () => void;
+}
+interface ForgotPasswordData {
+  email: string;
+}
+const initMail: ForgotPasswordData = {
+  email: ""
+};
 
-const ForgotPasswordUI = () => {
+const ForgotPasswordUI: React.FC<ForgotPasswordProps> = ({ submit }) => {
   const navigate = useNavigate();
-  const [steps, setSteps] = useState(2);
-  const handleNextStep = () => {
-    setSteps((step) => step++);
+  const schema = yup.object().shape({
+    email: yup.string().email("Enter a valid email").required("Required")
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<ForgotPasswordData>({
+    resolver: yupResolver(schema),
+    defaultValues: initMail
+  });
+
+  const onSubmit: SubmitHandler<ForgotPasswordData> = (data) => {
+    submit();
   };
 
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
-        {steps === 1 ? (
-          <KeyboardIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
-        ) : steps === 2 ? (
-          <EnvelopeClosedIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
-        ) : steps === 3 ? (
-          <LockClosedIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
-        ) : (
-          <CheckCircledIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
-        )}
+        <KeyboardIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
 
         <h1 className="text-xl sm:text-2xl font-bold mb-8 text-vobb-neutral-100 text-center">
-          {steps === 1
-            ? "Forgot Password?"
-            : steps === 2
-            ? "Check your email"
-            : steps === 3
-            ? "Set new Password"
-            : "Password Reset"}
+          Forgot Password?
         </h1>
-        <p className="text-center mb-8">
-          {" "}
-          {steps === 1
-            ? "No worries, we’ll send you reset instructions."
-            : steps === 2
-            ? "We sent a verification code to anjola@vobb.io"
-            : steps === 3
-            ? "Your new password must be different to previously used passwords."
-            : "Your password has been successfully reset. Click below to log in magically."}
-        </p>
+        <p className="text-center mb-8">No worries, we’ll send you reset instructions.</p>
 
-        {steps === 1 && <InputMail submit={handleNextStep} />}
-        {steps === 2 && <InputCode submit={handleNextStep} />}
-        {steps === 3 && <NewPassword submit={handleNextStep} />}
-
-        {steps === 4 && (
-          <Button
-            onClick={() => navigate("/")}
-            className="w-full mt-6"
-            size={"default"}
-            variant="fill">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CustomInput
+            label="Email"
+            type="email"
+            name="email"
+            register={register}
+            validatorMessage={errors.email?.message}
+          />
+          <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
             Continue
           </Button>
-        )}
+        </form>
 
         <Button
           onClick={() => navigate("/")}
@@ -80,51 +77,6 @@ const ForgotPasswordUI = () => {
 
 export { ForgotPasswordUI };
 
-//InputMail.tsx
-interface InputMailProps {
-  submit: () => void;
-}
-interface InputMailData {
-  email: string;
-}
-const initMail: InputMailData = {
-  email: ""
-};
-
-const InputMail: React.FC<InputMailProps> = ({ submit }) => {
-  const schema = yup.object().shape({
-    email: yup.string().email("Enter a valid email").required("Required")
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<InputMailData>({
-    resolver: yupResolver(schema),
-    defaultValues: initMail
-  });
-
-  const onSubmit: SubmitHandler<InputMailData> = (data) => {
-    submit();
-  };
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <CustomInput
-        label="Email"
-        type="email"
-        name="email"
-        register={register}
-        validatorMessage={errors.email?.message}
-      />
-      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
-        Continue
-      </Button>
-    </form>
-  );
-};
-
 //InputCode.tsx
 interface InputCodeProps {
   submit: () => void;
@@ -135,10 +87,6 @@ const InputCode: React.FC<InputCodeProps> = ({ submit }) => {
 
   return (
     <form onSubmit={() => submit()}>
-      <div className="flex justify-center items-center">
-        {" "}
-        <OTPWrapper value={otp} setValue={setOtp} />
-      </div>
       <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
         Continue
       </Button>

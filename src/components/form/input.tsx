@@ -17,7 +17,6 @@ export interface CustomInputProps
 
 const CustomInput: React.FC<CustomInputProps> = (props) => {
   const {
-    type,
     label,
     icon,
     required,

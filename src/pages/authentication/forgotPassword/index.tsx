@@ -1,9 +1,10 @@
 import { ForgotPasswordUI } from "modules";
 
 const ForgotPassword = () => {
+  const submit = () => {};
   return (
     <>
-      <ForgotPasswordUI />
+      <ForgotPasswordUI submit={submit} />
     </>
   );
 };
