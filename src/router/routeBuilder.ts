@@ -80,7 +80,10 @@ export const RouteBuilder: RouteBuilderItem[] = [
     path: Routes.overview,
     Element: Overview,
     isProtected: true,
-    Layout: DashboardLayout
+    Layout: DashboardLayout,
+    props: {
+      title: "Overview"
+    }
   },
 
   // Add all routes above 404

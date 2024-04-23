@@ -16,9 +16,10 @@ import { Button } from "components";
 interface NavBarProps {
   sideBarWidth: string;
   collapse: boolean;
+  title: string;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse }) => {
+const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
   return (
     <>
       <header
@@ -30,7 +31,7 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse }) => {
               "font-workSans font-bold text-lg text-vobb-neutral-100",
               collapse ? "ml-[30px]" : ""
             )}>
-            Overview
+            {title}
           </p>
         </div>
         <div className="flex items-center gap-2 ml-auto">
