@@ -13,5 +13,8 @@ export const Routes = {
   home: "/",
   login: "/login",
   forgot_password: "/forgot-password",
-  recaptcha: "/recaptcha",
+  forgot_password_verify: "/forgot-password/verify",
+  new_password: "/new-password",
+  new_password_completed: "/new-password/completed",
+  recaptcha: "/recaptcha"
 };

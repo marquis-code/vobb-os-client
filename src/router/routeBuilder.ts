@@ -1,13 +1,20 @@
 import { PathRouteProps } from "react-router-dom";
 import { Routes } from "./routes";
-import { Error404, Signup, Login, Recaptcha, ForgotPassword } from "pages";
+import {
+  Error404,
+  Signup,
+  Login,
+  Recaptcha,
+  Email,
+  VerifyPassword,
+  CompletedPasswordReset,
+  NewPassword
+} from "pages";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
   Layout?: React.FC<any>; // If you wish to add a layout to the page
   Element: React.FC;
-  path: any;
-  caseSensitive?: boolean;
   props?: any;
   isProtected?: boolean;
 }
@@ -40,7 +47,19 @@ export const RouteBuilder: RouteBuilderItem[] = [
   },
   {
     path: Routes.forgot_password,
-    Element: ForgotPassword
+    Element: Email
+  },
+  {
+    path: Routes.forgot_password_verify,
+    Element: VerifyPassword
+  },
+  {
+    path: Routes.new_password,
+    Element: NewPassword
+  },
+  {
+    path: Routes.new_password_completed,
+    Element: CompletedPasswordReset
   },
 
   // Add all routes above 404
