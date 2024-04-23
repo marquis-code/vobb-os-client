@@ -146,11 +146,13 @@ module.exports = {
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "caret-blink": "caret-blink 1.25s ease-out infinite"
+        "accordion-up": "accordion-up 0.2s ease-out"
       },
       backgroundImage: {
         "circle-pattern": "url('/src/assets/vectors/illustrations/circles.svg')"
+      },
+      gridTemplateColumns: {
+        colsLayout: "1.5fr 2.5fr 1fr"
       }
     }
   },

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { RouteBuilder } from ".";
-import { ErrorBoundary } from "lib";
+import { RouteBuilder } from "./routeBuilder";
 import { ProtectedRoute } from "./protectedRoute";
+import { ErrorBoundary } from "lib";
 
 /**
  * MAIN ROUTER COMPONENT
@@ -22,8 +22,7 @@ const MainRouter: React.FC = () => {
       <Routes>
         {RouteBuilder?.length > 0 &&
           RouteBuilder.map((item, idx) => {
-            const { Element, path, caseSensitive, Layout, props, isProtected } =
-              item;
+            const { Element, path, caseSensitive, Layout, props, isProtected } = item;
             // Checks if a layout exists or not
             const PageComponent = Layout ? (
               <Layout {...props}>
@@ -39,11 +38,7 @@ const MainRouter: React.FC = () => {
                 path={path}
                 element={
                   <ErrorBoundary key={path}>
-                    {isProtected ? (
-                      <ProtectedRoute>{PageComponent}</ProtectedRoute>
-                    ) : (
-                      PageComponent
-                    )}
+                    {isProtected ? <ProtectedRoute>{PageComponent}</ProtectedRoute> : PageComponent}
                   </ErrorBoundary>
                 }
                 caseSensitive={caseSensitive}

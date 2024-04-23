@@ -8,8 +8,11 @@ import {
   Email,
   VerifyPassword,
   CompletedPasswordReset,
-  NewPassword
+  NewPassword,
+  Onboarding,
+  CompletedOnboarding
 } from "pages";
+import { OnboardingLayout } from "layout";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -60,6 +63,15 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.new_password_completed,
     Element: CompletedPasswordReset
+  },
+  {
+    path: Routes.onboarding,
+    Element: Onboarding,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.completed_onboarding,
+    Element: CompletedOnboarding
   },
 
   // Add all routes above 404
