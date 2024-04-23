@@ -1,5 +1,5 @@
 import { cn } from "lib";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { ChevronDownIcon, DotsVerticalIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
+import { Button } from "components";
 
 interface NavBarProps {
   sideBarWidth: string;
@@ -32,7 +33,12 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse }) => {
             Overview
           </p>
         </div>
-        <div className="ml-auto">
+        <div className="flex items-center gap-2 ml-auto">
+          <UserAvatar />
+          <div className="mr-1 text-left">
+            <p className="font-workSans font-bold mb-[2px] text-sm leading-4">First name</p>
+            <p className="text-[11px] text-vobb-neutral-60 leading-3">Role</p>
+          </div>
           <Menu />
         </div>
       </header>
@@ -53,14 +59,9 @@ const Menu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2">
-          <UserAvatar />
-          <div className="mr-1 text-left">
-            <p className="font-workSans font-bold mb-[2px] text-sm leading-4">First name</p>
-            <p className="text-[11px] text-vobb-neutral-60 leading-3">Role</p>
-          </div>
-          <ChevronDownIcon />
-        </button>
+        <Button variant="ghost" className="p-1">
+          <DotsVerticalIcon />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mr-4">
         <DropdownMenuLabel>Profile</DropdownMenuLabel>
