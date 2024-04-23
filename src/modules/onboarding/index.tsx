@@ -3,6 +3,7 @@ import {
   CompanyAddressFormData,
   CompanyFormData,
   CompanyWebsiteData,
+  CountriesProps,
   FullnameFormData
 } from "types/onboarding";
 import { useState } from "react";
@@ -13,8 +14,9 @@ import { CompanyAddress } from "./companyAddress";
 import { useNavigate } from "react-router-dom";
 interface OnboardingUIProps {
   handleSubmit: ({ data, callback }) => void;
+  countries?: CountriesProps[] | null;
 }
-const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit }) => {
+const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) => {
   const navigate = useNavigate();
 
   const { activeForm, handleFormChange } = useOnboardingContext();
@@ -78,6 +80,7 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit }) => {
                 })
             });
           }}
+          countries={countries}
         />
       )}
     </>

@@ -4,7 +4,7 @@ import Select, { ActionMeta, SingleValue } from "react-select";
 import { optionType } from "types/interfaces";
 
 interface SelectInputProps {
-  options: optionType[];
+  options: optionType[] | undefined;
   value: optionType | null | undefined;
   onChange: (newValue: SingleValue<optionType>, actionMeta: ActionMeta<optionType>) => void;
   placeholder?: string;
@@ -32,6 +32,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
       {icon && icon}
       <Select
         {...props}
+        isSearchable
         styles={{
           control: (baseStyles, state) => ({
             ...baseStyles,

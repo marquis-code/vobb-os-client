@@ -23,12 +23,14 @@ const Fullname: React.FC<FullnameFormProps> = ({ initData, submit }) => {
 
   return (
     <div className="max-w-[400px] m-auto">
-      <PersonalIcon className="mb-6 m-auto" />
-      <div className="mb-4 text-center mx-auto">
-        <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
-          Fullname information
-        </h1>
-        <p>Help us get to know you better</p>
+      <div className="hidden lg:grid">
+        <PersonalIcon className="mb-6 m-auto" />
+        <div className="mb-8 text-center mx-auto">
+          <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
+            Enter your name
+          </h1>
+          <p> As shown on a government issued ID</p>
+        </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput

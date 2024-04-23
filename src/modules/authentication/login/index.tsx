@@ -34,10 +34,10 @@ const schema = yup.object({
   captcha: yup.string().required("Required")
 });
 
-interface LoginProps {
-  submit: (data) => void;
-  clear: boolean;
-}
+// interface LoginProps {
+//   submit: (data) => void;
+//   clear: boolean;
+// }
 
 const LoginUI = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);

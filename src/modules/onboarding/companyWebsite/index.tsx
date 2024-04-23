@@ -32,12 +32,14 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
         className="hidden absolute top-20 left-[40%] lg:block w-8 h-8 rotate-180 border border-neutral-400 rounded-full p-1 fill-neutral-400"
         onClick={() => handleFormChange("companyInfo", ["fullname", "companyInfo"])}
       />
-      <WeblinkIcon className="mb-6 m-auto" />
-      <div className="mb-4 text-center mx-auto">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
-          Company Website
-        </h2>
-        <p>Neque porro quisquam est, qui dolorem ipsu.</p>
+      <div className="hidden lg:grid">
+        <WeblinkIcon className="mb-6 m-auto" />
+        <div className="mb-8 text-center mx-auto">
+          <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
+            Company Website
+          </h1>
+          <p>Neque porro quisquam est, qui dolorem ipsu.</p>
+        </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
@@ -51,11 +53,14 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
         <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
           Continue
         </Button>
-
-        <Button type="submit" className="w-full mt-6 no-underline" size={"default"} variant="link">
-          Skip
-        </Button>
       </form>
+      <Button
+        onClick={onSubmit}
+        className="w-full mt-6 no-underline"
+        size={"default"}
+        variant="link">
+        Skip
+      </Button>
     </div>
   );
 };

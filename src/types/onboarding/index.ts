@@ -49,9 +49,32 @@ export interface CompanyAddressFormData {
   addressline2?: string;
   city?: string;
 }
+
+export interface CountriesProps {
+  flags: {
+    alt: string;
+    png: string;
+    svg: string;
+  };
+  name: {
+    common: string;
+    nativeName: {
+      ron: {
+        common: string;
+        official: string;
+      };
+      official: string;
+    };
+  };
+  postalCode: {
+    format: string;
+    regex: string;
+  };
+}
 export interface CompanyAddressProps {
-  initData: CompanyAddressFormData | undefined;
-  submit: (data: CompanyAddressFormData) => void;
+  initData?: CompanyAddressFormData | undefined;
+  submit?: (data: CompanyAddressFormData) => void;
+  countries?: CountriesProps[] | null | undefined;
 }
 export interface CompanyAddressFormErrors {
   country?: string;
