@@ -11,7 +11,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 import { useMobile } from "hooks";
@@ -42,6 +42,7 @@ interface LoginProps {
 const LoginUI = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { isMobile } = useMobile({ size: 1024 });
+  const navigate = useNavigate();
 
   const {
     register,
@@ -55,6 +56,7 @@ const LoginUI = () => {
 
   const onSubmit: SubmitHandler<LoginData> = (data) => {
     console.log(data);
+    navigate(Routes.overview);
   };
 
   return (

@@ -1,15 +1,20 @@
 import { ReactNode, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
+import { useMobile } from "hooks";
+import { UnsupportedScreenSize } from "components";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const { isMobile } = useMobile({ size: 1024 });
   const [collapse, setCollapse] = useState(false);
   const sideBarWidth = collapse ? "60px" : "275px";
-  return (
+  return isMobile ? (
+    <UnsupportedScreenSize />
+  ) : (
     <>
       <NavBar collapse={collapse} sideBarWidth={sideBarWidth} />
       <SideBar collapse={collapse} handleCollapse={setCollapse} sideBarWidth={sideBarWidth} />

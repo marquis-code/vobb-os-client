@@ -24,7 +24,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
       className="border-r border-vobb-neutral-30 h-full fixed top-0 left-0">
       <div className="border-b border-vobb-neutral-30 px-4 py-1 h-[55px] flex items-center">
         <img className="h-[24px] w-auto object-contain object-left-center mr-2" src={logo} />{" "}
-        {!collapse ? <DropdownMenuDemo /> : ""}
+        {!collapse ? <BranchMenu /> : ""}
         <button
           onClick={() => handleCollapse(!collapse)}
           className={collapse ? "ml-[24px]" : "ml-auto"}>
@@ -36,8 +36,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
   );
 };
 
-export function DropdownMenuDemo() {
-  const [position, setPosition] = useState("bottom");
+export function BranchMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
