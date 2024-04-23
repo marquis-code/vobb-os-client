@@ -1,6 +1,17 @@
 import { PathRouteProps } from "react-router-dom";
 import { Routes } from "./routes";
-import { CompletedOnboarding, Error404, Login, Onboarding, Recaptcha, Signup } from "pages";
+import {
+  Error404,
+  Signup,
+  Login,
+  Recaptcha,
+  Email,
+  VerifyPassword,
+  CompletedPasswordReset,
+  NewPassword,
+  Onboarding,
+  CompletedOnboarding
+} from "pages";
 import { OnboardingLayout } from "layout";
 
 // Route Builder Item Props
@@ -36,6 +47,22 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.recaptcha,
     Element: Recaptcha
+  },
+  {
+    path: Routes.forgot_password,
+    Element: Email
+  },
+  {
+    path: Routes.forgot_password_verify,
+    Element: VerifyPassword
+  },
+  {
+    path: Routes.new_password,
+    Element: NewPassword
+  },
+  {
+    path: Routes.new_password_completed,
+    Element: CompletedPasswordReset
   },
   {
     path: Routes.onboarding,
