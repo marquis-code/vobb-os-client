@@ -11,10 +11,10 @@ interface signupData {
   password: string;
 }
 /**
- * login service
+ * Signup service
  * @returns axios promise
  */
 
-export const loginService = (data: signupData) => {
+export const signupService = (data: signupData) => {
   return axiosInstanceUnauth.post(signupURL(), data);
 };

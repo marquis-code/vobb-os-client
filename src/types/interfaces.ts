@@ -3,4 +3,7 @@ export interface optionType {
   value: string;
 }
 
-export * from "./onboarding";
+export interface ModalProps {
+  close: () => void;
+  show: boolean;
+}

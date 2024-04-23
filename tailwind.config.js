@@ -138,6 +138,13 @@ module.exports = {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" }
+<<<<<<< HEAD
+=======
+        },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" }
+>>>>>>> 6bb63feea32b2c6a39cd83bd4527e8d9ba782fe5
         }
       },
       animation: {

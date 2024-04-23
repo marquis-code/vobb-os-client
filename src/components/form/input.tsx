@@ -16,7 +16,6 @@ export interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputEle
 
 const CustomInput: React.FC<CustomInputProps> = (props) => {
   const {
-    type,
     label,
     icon,
     required,
