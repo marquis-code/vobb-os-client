@@ -1,7 +1,6 @@
 import { cn } from "lib";
 import { ReactNode } from "react";
 import ReactFlagsSelect from "react-flags-select";
-import { UseFormRegister } from "react-hook-form";
 
 interface CountryFlagSelectProps {
   selectedOption: string | undefined;
@@ -46,7 +45,7 @@ const CountryFlagSelect: React.FC<CountryFlagSelectProps> = (props) => {
         selectedSize={14}
         className={cn(
           `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : "border-input"}`,
-          "border rounded-md h-9 shadow-sm"
+          "border rounded-md h-10 shadow-sm"
         )}
         selectButtonClassName={className}
         searchable

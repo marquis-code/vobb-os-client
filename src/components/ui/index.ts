@@ -1,4 +1,5 @@
 export * from "./input";
 export * from "./button";
 export * from "./checkbox";
-export * from "./popover"
+export * from "./input-otp";
+export * from "./popover";

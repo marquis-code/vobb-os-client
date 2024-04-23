@@ -1,6 +1,5 @@
-import { Check } from "assets";
 import { Button } from "components";
-
+import { Check } from "assets";
 import { useNavigate } from "react-router-dom";
 
 const CompletedOnboardingUI = () => {

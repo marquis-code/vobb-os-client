@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { optionType } from "@/types/interfaces";
+import { optionType } from "types/interfaces";
 
 const sectorOptions: optionType[] = [
   {
@@ -68,12 +68,14 @@ const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
         className="hidden absolute top-20 left-[40%] lg:block w-8 h-8 rotate-180 border border-neutral-400 rounded-full p-1 fill-neutral-400"
         onClick={() => handleFormChange("fullname", ["fullname"])}
       />
-      <CompanyInfoIcon className="mb-6 m-auto" />
-      <div className="mb-4 text-center mx-auto">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
-          Company information
-        </h2>
-        <p>Help us get to know your organisation better</p>
+      <div className="hidden lg:grid">
+        <CompanyInfoIcon className="mb-6 m-auto" />
+        <div className="mb-8 text-center mx-auto">
+          <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
+            Company information
+          </h1>
+          <p>Neque porro quisquam est, qui dolorem ipsu.</p>
+        </div>
       </div>
       <div>
         {activeCompanyInfo === "organisation" && (
@@ -192,6 +194,7 @@ const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit, changeAct
     <form onSubmit={handleSubmit(onSubmit)}>
       <SelectInput
         name="teamSize"
+        placeholder="What is the size of your team?"
         options={teamSizeOptions}
         onChange={(value) => setValue("teamSize", value)}
         value={watch("teamSize")}
@@ -225,7 +228,6 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
       .required("Required")
   });
   const {
-    register,
     handleSubmit,
     formState: { errors },
     setValue,
@@ -243,6 +245,7 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <SelectInput
         name="sector"
+        placeholder="Select travel industry"
         options={sectorOptions}
         value={watch("sector")}
         onChange={(value) => setValue("sector", value)}

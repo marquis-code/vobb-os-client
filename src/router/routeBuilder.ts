@@ -7,7 +7,11 @@ import {
   Recaptcha,
   Onboarding,
   CompletedOnboarding,
-  Overview
+  Overview,
+  Email,
+  VerifyPassword,
+  CompletedPasswordReset,
+  NewPassword
 } from "pages";
 import { DashboardLayout, OnboardingLayout } from "layout";
 
@@ -44,6 +48,22 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.recaptcha,
     Element: Recaptcha
+  },
+  {
+    path: Routes.forgot_password,
+    Element: Email
+  },
+  {
+    path: Routes.forgot_password_verify,
+    Element: VerifyPassword
+  },
+  {
+    path: Routes.new_password,
+    Element: NewPassword
+  },
+  {
+    path: Routes.new_password_completed,
+    Element: CompletedPasswordReset
   },
   {
     path: Routes.onboarding,

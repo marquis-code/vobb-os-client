@@ -6,7 +6,7 @@ interface LearnmoreProps {
 const LearnMore: React.FC<LearnmoreProps> = ({ className }: LearnmoreProps) => {
   const { activeForm } = useOnboardingContext();
   return (
-    <div className={cn(" lg:flex items-center text-left gap-8 lg:px-6 mb-4  lg:mt-32", className)}>
+    <div className={cn(" lg:flex items-center text-left gap-8 lg:px-6 h-full", className)}>
       <div className="mx-auto text-left">
         <p className="font-semibold hidden lg:block ">
           {activeForm === "fullname" ||
