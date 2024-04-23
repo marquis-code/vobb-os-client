@@ -139,7 +139,7 @@ const InputCode: React.FC<InputCodeProps> = ({ submit }) => {
         {" "}
         <OTPWrapper value={otp} setValue={setOtp} />
       </div>
-      <Button className="w-full mt-6" size={"default"} variant="fill">
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
         Continue
       </Button>
 
