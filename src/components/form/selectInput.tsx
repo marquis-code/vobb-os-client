@@ -36,7 +36,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
         styles={{
           control: (baseStyles, state) => ({
             ...baseStyles,
-            border: "1px solid #e62e2e",
+            border: validatorMessage ? "1px solid #e62e2e" : "1px solid #d0d5dd",
             boxShadow: "0px 1px 2px 0px #1018280d",
             height: "36px",
             display: "flex",

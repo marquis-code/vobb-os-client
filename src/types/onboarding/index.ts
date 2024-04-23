@@ -42,11 +42,11 @@ export interface CompanyUrlFormProps {
 }
 
 export interface CompanyAddressFormData {
-  country?: string;
+  country?: optionType | null;
   zipcode?: string;
-  state?: string;
-  addressline1?: string;
-  addressline2?: string;
+  province?: string;
+  address1?: string;
+  address2?: string;
   city?: string;
 }
 
@@ -73,8 +73,9 @@ export interface CountriesProps {
 }
 export interface CompanyAddressProps {
   initData?: CompanyAddressFormData | undefined;
-  submit?: (data: CompanyAddressFormData) => void;
+  submit?: (data: CompanyAddressFormData) => void | undefined;
   countries?: CountriesProps[] | null | undefined;
+  changeActiveState?: (newActiveCompanyInfo: string) => void;
 }
 export interface CompanyAddressFormErrors {
   country?: string;

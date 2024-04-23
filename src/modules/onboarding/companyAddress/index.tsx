@@ -1,86 +1,24 @@
 import { Arrow, LocationIcon } from "assets";
 import { useOnboardingContext } from "context";
-import {
-  CompanyAddressFormData,
-  CompanyAddressFormErrors,
-  CompanyAddressProps
-} from "types/onboarding";
-import { Button, CountryFlagSelect, CustomInput } from "components";
-import { useEffect, useState } from "react";
+import { CompanyAddressFormData, CompanyAddressProps } from "types/onboarding";
+import { Button, CustomInput, SelectInput } from "components";
+import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-const initCompanyAddressData: CompanyAddressFormData = {
-  country: "",
-  zipcode: "",
-  state: "",
-  addressline1: "",
-  addressline2: "",
-  city: ""
-};
-
-const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
+const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, countries }) => {
   const { handleFormChange } = useOnboardingContext();
   const [activeCompanyAddress, setActiveCompanyAddress] = useState<string>("country");
+  const handleFormDisplay = (newActiveCompanyAddress: string) => {
+    setActiveCompanyAddress(newActiveCompanyAddress);
+  };
 
-  const [state, setState] = useState<CompanyAddressFormData>(initCompanyAddressData);
-  const { country, zipcode, state: province, addressline1, city } = state;
-  const [error, setError] = useState<CompanyAddressFormErrors>();
-
-  useEffect(() => {
-    initData && setState(initData);
-  }, [initData]);
-
-  const handleSubmitFormInfo = (current: string, next: string) => {
-    const errors: CompanyAddressFormErrors = {};
-
-    if (current === "zipcode") {
-      if (zipcode?.trim().length === 0) errors.zipcode = "Required";
-    } else if (current === "city") {
-      if (addressline1?.trim().length === 0) errors.addressline1 = "Required";
-      if (city?.trim().length === 0) errors.city = "Required";
-    } else if (current === "country") {
-      if (country?.trim().length === 0) errors.country = "Required";
-    } else if (current === "province") {
-      if (province?.trim().length === 0) errors.state = "Required";
-    }
-    if (Object.keys(errors).length > 0) {
-      setError(errors);
-    } else {
-      current !== "city" && setActiveCompanyAddress(next);
+  const handleFormSubmit = (data: CompanyAddressFormData) => {
+    if (activeCompanyAddress === "city") {
+      submit?.(data);
     }
   };
-  interface addressData {
-    address1: string;
-    address2: string;
-    city: string;
-  }
-  const initAdrresses: addressData = {
-    address1: "",
-    address2: "",
-    city: ""
-  };
-
-  const schema = yup.object({
-    address1: yup.string().required("Required"),
-    address2: yup.string(),
-    city: yup.string().required("Required")
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<addressData>({
-    resolver: yupResolver<any>(schema),
-    defaultValues: initAdrresses
-  });
-
-  const onSubmit: SubmitHandler<addressData> = (data) => {
-    submit?.(data);
-  };
-
   const progressBtns = ["country", "zipcode", "province", "city"];
 
   return (
@@ -99,91 +37,37 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => 
           <p>Neque porro quisquam est, qui dolorem ipsu.</p>
         </div>
       </div>
-      <form onSubmit={(e) => e.preventDefault()}>
-        {activeCompanyAddress === "country" && (
-          <aside>
-            <CountryFlagSelect
-              placeholder={"Select Country"}
-              selectedOption={country}
-              handleSelectChange={(value) => setState((prev) => ({ ...prev, country: value }))}
-              validatorMessage={error?.country}
-            />
-            <Button
-              onClick={() => handleSubmitFormInfo("country", "zipcode")}
-              className="w-full mt-6"
-              size={"default"}
-              variant="fill">
-              Continue
-            </Button>
-          </aside>
-        )}
+      {activeCompanyAddress === "country" && (
+        <CountrySelect
+          changeActiveState={handleFormDisplay}
+          submit={handleFormSubmit}
+          initData={initData}
+          countries={countries}
+        />
+      )}
+      {activeCompanyAddress === "zipcode" && (
+        <Zipcode
+          changeActiveState={handleFormDisplay}
+          submit={handleFormSubmit}
+          initData={initData}
+          countries={countries}
+        />
+      )}
 
-        {activeCompanyAddress === "zipcode" && (
-          <aside>
-            <CustomInput
-              type="text"
-              placeholder="Zip code"
-              name="zipcode"
-              onChange={(e) => setState((prev) => ({ ...prev, zipcode: e.target.value }))}
-              validatorMessage={error?.zipcode}
-            />
-            <Button
-              onClick={() => handleSubmitFormInfo("zipcode", "province")}
-              className="w-full mt-6"
-              size={"default"}
-              variant="fill">
-              Continue
-            </Button>
-          </aside>
-        )}
-
-        {activeCompanyAddress === "province" && (
-          <aside>
-            <CustomInput
-              type="text"
-              placeholder="State/Province"
-              name="state"
-              onChange={(e) => setState((prev) => ({ ...prev, state: e.target.value }))}
-              validatorMessage={error?.state}
-            />
-            <Button
-              onClick={() => handleSubmitFormInfo("province", "city")}
-              className="w-full mt-6"
-              size={"default"}
-              variant="fill">
-              Continue
-            </Button>
-          </aside>
-        )}
-      </form>
-
+      {activeCompanyAddress === "province" && (
+        <Province
+          changeActiveState={handleFormDisplay}
+          submit={handleFormSubmit}
+          initData={initData}
+          countries={countries}
+        />
+      )}
       {activeCompanyAddress === "city" && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CustomInput
-            type="text"
-            placeholder="Address line 1"
-            name="address1"
-            register={register}
-            validatorMessage={errors.address1?.message}
-          />
-          <CustomInput
-            type="text"
-            placeholder="Address line 2"
-            name="address2"
-            register={register}
-            validatorMessage={errors.address2?.message}
-          />
-          <CustomInput
-            type="text"
-            placeholder="City"
-            name="city"
-            register={register}
-            validatorMessage={errors.city?.message}
-          />
-          <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
-            Continue
-          </Button>
-        </form>
+        <CityAddress
+          submit={handleFormSubmit}
+          changeActiveState={handleFormDisplay}
+          initData={initData}
+        />
       )}
 
       <div className="flex justify-center items-center gap-4 mt-8">
@@ -201,3 +85,191 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => 
 };
 
 export { CompanyAddress };
+
+//CountrySelect.tsx
+const CountrySelect: React.FC<CompanyAddressProps> = ({
+  initData,
+  submit,
+  countries,
+  changeActiveState
+}) => {
+  const schema = yup.object().shape({
+    country: yup
+      .object()
+      .shape({
+        label: yup.string().required("Required"),
+        value: yup.string().required("Required")
+      })
+      .required("Required")
+  });
+  const {
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch
+  } = useForm<CompanyAddressFormData>({
+    resolver: yupResolver<any>(schema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data: CompanyAddressFormData) => {
+    submit?.(data);
+    changeActiveState?.("zipcode");
+  };
+
+  const newCountryArray = countries?.map((country) => ({
+    label: country.name.common,
+    value: country.name.common
+  }));
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SelectInput
+        name="country"
+        placeholder="Select Country"
+        options={newCountryArray}
+        onChange={(value) => setValue("country", value)}
+        value={watch("country")}
+        validatorMessage={
+          errors.country?.message ??
+          errors.country?.value?.message ??
+          errors.country?.label?.message
+        }
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Continue
+      </Button>
+    </form>
+  );
+};
+
+//zipcode.tsx
+const Zipcode: React.FC<CompanyAddressProps> = ({
+  initData,
+  submit,
+  changeActiveState,
+  countries
+}) => {
+  const validCode = countries
+    ?.filter((country) => country.name.common === "Nigeria")
+    ?.map((selected) => ({
+      format: selected.postalCode.format,
+      regex: selected.postalCode.regex
+    }));
+  const { format, regex } = validCode?.[0] ?? { format: "", regex: "" };
+
+  const schema = yup.object().shape({
+    zipcode: yup
+      .string()
+      .required("Required")
+      .matches(new RegExp(regex), "Invalid ZIP code format. Required format is in placeholder.")
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<CompanyAddressFormData>({
+    resolver: yupResolver<any>(schema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data: CompanyAddressFormData) => {
+    submit?.(data);
+    changeActiveState?.("province");
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <CustomInput
+        type="text"
+        placeholder={format}
+        name="zipcode"
+        register={register}
+        validatorMessage={errors.zipcode?.message}
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Continue
+      </Button>
+    </form>
+  );
+};
+//province.tsx
+const Province: React.FC<CompanyAddressProps> = ({ initData, submit, changeActiveState }) => {
+  const schema = yup.object().shape({
+    province: yup.string().required("Required")
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<CompanyAddressFormData>({
+    resolver: yupResolver<any>(schema),
+    defaultValues: initData
+  });
+
+  const onSubmit = (data: CompanyAddressFormData) => {
+    submit?.(data);
+    changeActiveState?.("city");
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <CustomInput
+        type="text"
+        placeholder={"State/Province"}
+        name="province"
+        register={register}
+        validatorMessage={errors.province?.message}
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Continue
+      </Button>
+    </form>
+  );
+};
+//CityAddress.tsx
+const CityAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
+  const schema = yup.object({
+    address1: yup.string().required("Required"),
+    address2: yup.string(),
+    city: yup.string().required("Required")
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<CompanyAddressFormData>({
+    resolver: yupResolver<any>(schema),
+    defaultValues: initData
+  });
+
+  const onSubmit: SubmitHandler<CompanyAddressFormData> = (data) => {
+    submit?.(data);
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <CustomInput
+        type="text"
+        placeholder="Address line 1"
+        name="address1"
+        register={register}
+        validatorMessage={errors.address1?.message}
+      />
+      <CustomInput
+        type="text"
+        placeholder="Address line 2"
+        name="address2"
+        register={register}
+        validatorMessage={errors.address2?.message}
+      />
+      <CustomInput
+        type="text"
+        placeholder="City"
+        name="city"
+        register={register}
+        validatorMessage={errors.city?.message}
+      />
+      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        Continue
+      </Button>
+    </form>
+  );
+};
