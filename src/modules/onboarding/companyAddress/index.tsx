@@ -5,8 +5,15 @@ import { Button, CustomInput, SelectInput } from "components";
 import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useForm, SubmitHandler } from "react-hook-form";
-
+import {
+  SubmitHandler,
+  UseFormGetValues,
+  UseFormHandleSubmit,
+  UseFormSetValue,
+  UseFormWatch,
+  useForm,
+  FieldErrors
+} from "react-hook-form";
 const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, countries }) => {
   const { handleFormChange } = useOnboardingContext();
   const [activeCompanyAddress, setActiveCompanyAddress] = useState<string>("country");
@@ -19,6 +26,27 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
       submit?.(data);
     }
   };
+
+  const countrySchema = yup.object().shape({
+    country: yup
+      .object()
+      .shape({
+        label: yup.string().required("Required"),
+        value: yup.string().required("Required")
+      })
+      .required("Required")
+  });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    getValues
+  } = useForm<CompanyAddressFormData>({
+    resolver: yupResolver<any>(countrySchema),
+    defaultValues: initData
+  });
   const progressBtns = ["country", "zipcode", "province", "city"];
 
   return (
@@ -43,6 +71,10 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
           submit={handleFormSubmit}
           initData={initData}
           countries={countries}
+          handleSubmit={handleSubmit}
+          errors={errors}
+          watch={watch}
+          setValue={setValue}
         />
       )}
       {activeCompanyAddress === "zipcode" && (
@@ -51,6 +83,7 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
           submit={handleFormSubmit}
           initData={initData}
           countries={countries}
+          getValues={getValues}
         />
       )}
 
@@ -86,32 +119,23 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
 
 export { CompanyAddress };
 
+interface CountrySelectProps extends CompanyAddressProps {
+  handleSubmit: UseFormHandleSubmit<CompanyAddressFormData, undefined>;
+  errors: FieldErrors<CompanyAddressFormData>;
+  watch: UseFormWatch<CompanyAddressFormData>;
+  setValue: UseFormSetValue<CompanyAddressFormData>;
+}
+
 //CountrySelect.tsx
-const CountrySelect: React.FC<CompanyAddressProps> = ({
-  initData,
+const CountrySelect: React.FC<CountrySelectProps> = ({
   submit,
   countries,
-  changeActiveState
+  changeActiveState,
+  handleSubmit,
+  errors,
+  setValue,
+  watch
 }) => {
-  const schema = yup.object().shape({
-    country: yup
-      .object()
-      .shape({
-        label: yup.string().required("Required"),
-        value: yup.string().required("Required")
-      })
-      .required("Required")
-  });
-  const {
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch
-  } = useForm<CompanyAddressFormData>({
-    resolver: yupResolver<any>(schema),
-    defaultValues: initData
-  });
-
   const onSubmit = (data: CompanyAddressFormData) => {
     submit?.(data);
     changeActiveState?.("zipcode");
@@ -125,7 +149,8 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
     <form onSubmit={handleSubmit(onSubmit)}>
       <SelectInput
         name="country"
-        placeholder="Select Country"
+        label="Select Country"
+        placeholder="Type to search..."
         options={newCountryArray}
         onChange={(value) => setValue("country", value)}
         value={watch("country")}
@@ -143,14 +168,19 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
 };
 
 //zipcode.tsx
-const Zipcode: React.FC<CompanyAddressProps> = ({
+interface ZipcodeProps extends CompanyAddressProps {
+  getValues: UseFormGetValues<CompanyAddressFormData>;
+}
+const Zipcode: React.FC<ZipcodeProps> = ({
   initData,
   submit,
   changeActiveState,
-  countries
+  countries,
+  getValues
 }) => {
+  const { label } = getValues().country ?? { label: "" };
   const validCode = countries
-    ?.filter((country) => country.name.common === "Nigeria")
+    ?.filter((country) => country.name.common === label)
     ?.map((selected) => ({
       format: selected.postalCode.format,
       regex: selected.postalCode.regex
