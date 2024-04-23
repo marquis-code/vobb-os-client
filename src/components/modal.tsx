@@ -1,7 +1,7 @@
 import { useClickOutside } from "hooks";
 import { useRef } from "react";
 import { cn } from "lib";
-import { ModalProps } from "@/types/interfaces";
+import { ModalProps } from "types/interfaces";
 
 interface ModalUIProps extends ModalProps {
   children: any;
