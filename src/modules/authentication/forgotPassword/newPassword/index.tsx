@@ -20,12 +20,12 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
   const schema = yup.object().shape({
     password: yup
       .string()
-      .required("Password is required")
-      .min(12, "Password must be at least 12 characters")
-      .matches(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/,
-        "Password must contain at least one number and one symbol"
-      ),
+      .required("Required")
+      .min(8, "Password should be at least 8 characters long")
+      .matches(/[A-Z]/, "Password should contain an uppercase character")
+      .matches(/[a-z]/, "Password should contain an lowercase character")
+      .matches(/[0-9]/, "Password should contain at least one number")
+      .matches(/@|#|&|\$]/, "Password should contain at least special character (e.g. @, #, &, $)"),
     confirmPassword: yup
       .string()
       .required("Confirm Password is required")

@@ -27,7 +27,7 @@ const CompletedPasswordResetUI: React.FC<CompletedProps> = ({ submit }) => {
         </form>
 
         <Button
-          onClick={() => navigate(Routes.home)}
+          onClick={() => navigate(Routes.login)}
           className="w-full mt-6 flex gap-4 items-center"
           size={"default"}
           variant="link">
