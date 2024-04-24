@@ -18,5 +18,7 @@ export const Routes = {
   new_password_completed: "/new-password/completed",
   onboarding: "/onboarding",
   completed_onboarding: "/onboarding/completed",
-  recaptcha: "/recaptcha",
+  email_verify: "/email-verify",
+  completed_email_verify: "/email-verify/completed",
+  recaptcha: "/recaptcha"
 };

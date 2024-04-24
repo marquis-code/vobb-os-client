@@ -5,3 +5,5 @@ export * from "./forgotPassword/email";
 export * from "./forgotPassword/newPassword";
 export * from "./forgotPassword/verifyPassword";
 export * from "./forgotPassword/completedPasswordReset";
+export * from "./emailVerification/verifyEmail";
+export * from "./emailVerification/completedEmailVerification";
