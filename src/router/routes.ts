@@ -21,4 +21,7 @@ export const Routes = {
   email_verify: "/email-verify",
   completed_email_verify: "/email-verify/completed",
   recaptcha: "/recaptcha"
+
+  // Dashboard
+  overview: "/overview",
 };

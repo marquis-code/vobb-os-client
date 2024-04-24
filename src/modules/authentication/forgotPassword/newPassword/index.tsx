@@ -28,7 +28,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
       .matches(/@|#|&|\$]/, "Password should contain at least special character (e.g. @, #, &, $)"),
     confirmPassword: yup
       .string()
-      .required("Confirm Password is required")
+      .required("Required")
       .oneOf([yup.ref("password"), ""], "Passwords must match")
   });
 
@@ -50,7 +50,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
         <LockClosedIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
 
-        <h1 className="text-xl sm:text-2xl font-bold mb-8 text-vobb-neutral-100 text-center">
+        <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Set new Password
         </h1>
         <p className="text-center mb-8">

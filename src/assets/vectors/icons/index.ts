@@ -8,8 +8,10 @@ import { ReactComponent as SendIcon } from "./sendMailIcon.svg";
 import { ReactComponent as MailIcon } from "./mail.svg";
 import { ReactComponent as Arrow } from "./arrow.svg";
 import { ReactComponent as Check } from "./checkCircle.svg";
+import { ReactComponent as ChevronLeftDoubleIcon } from "./chevronLeftDoubleIcon.svg";
 
 export {
+  ChevronLeftDoubleIcon,
   GoogleLogoIcon,
   KeyIcon,
   PersonalIcon,
