@@ -11,6 +11,11 @@ import {
   Email,
   VerifyPassword,
   CompletedPasswordReset,
+  NewPassword,
+  Onboarding,
+  CompletedOnboarding,
+  VerifyEmail,
+  CompletedEmailVerify
   NewPassword
 } from "pages";
 import { DashboardLayout, OnboardingLayout } from "layout";
@@ -69,6 +74,14 @@ export const RouteBuilder: RouteBuilderItem[] = [
     path: Routes.onboarding,
     Element: Onboarding,
     Layout: OnboardingLayout
+  },
+  {
+    path: Routes.email_verify,
+    Element: VerifyEmail
+  },
+  {
+    path: Routes.completed_email_verify,
+    Element: CompletedEmailVerify
   },
   {
     path: Routes.completed_onboarding,
