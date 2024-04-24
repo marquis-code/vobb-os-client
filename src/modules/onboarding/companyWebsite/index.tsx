@@ -5,6 +5,7 @@ import { CompanyUrlFormProps } from "types/onboarding";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => {
   const { handleFormChange } = useOnboardingContext();
@@ -26,11 +27,13 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
   };
 
   return (
-    <div className="max-w-[400px] m-auto">
-      <Arrow
+    <div className="relative max-w-[400px] m-auto">
+      <ArrowLeftIcon
+        stroke="#344054"
+        color="#344054"
         role="button"
-        className="hidden absolute top-20 left-[40%] lg:block w-8 h-8 rotate-180 border border-neutral-400 rounded-full p-1 fill-neutral-400"
-        onClick={() => handleFormChange("companyInfo", ["fullname", "companyInfo"])}
+        className="hidden absolute top-4 left-[0] lg:block w-6 h-6 rounded-full fill-vobb-neutral-60"
+        onClick={() => handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb"])}
       />
       <div className="hidden lg:grid">
         <WeblinkIcon className="mb-6 m-auto" />
@@ -58,7 +61,7 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
         onClick={onSubmit}
         className="w-full mt-6 no-underline"
         size={"default"}
-        variant="link">
+        variant="ghost">
         Skip
       </Button>
     </div>

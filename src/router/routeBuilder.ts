@@ -5,14 +5,15 @@ import {
   Signup,
   Login,
   Recaptcha,
+  Onboarding,
+  CompletedOnboarding,
+  Overview,
   Email,
   VerifyPassword,
   CompletedPasswordReset,
-  NewPassword,
-  Onboarding,
-  CompletedOnboarding
+  NewPassword
 } from "pages";
-import { OnboardingLayout } from "layout";
+import { DashboardLayout, OnboardingLayout } from "layout";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -72,6 +73,17 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.completed_onboarding,
     Element: CompletedOnboarding
+  },
+
+  // Dashboard Routes
+  {
+    path: Routes.overview,
+    Element: Overview,
+    isProtected: true,
+    Layout: DashboardLayout,
+    props: {
+      title: "Overview"
+    }
   },
 
   // Add all routes above 404

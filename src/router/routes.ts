@@ -19,4 +19,7 @@ export const Routes = {
   onboarding: "/onboarding",
   completed_onboarding: "/onboarding/completed",
   recaptcha: "/recaptcha",
+
+  // Dashboard
+  overview: "/overview",
 };
