@@ -12,11 +12,8 @@ import {
   VerifyPassword,
   CompletedPasswordReset,
   NewPassword,
-  Onboarding,
-  CompletedOnboarding,
   VerifyEmail,
   CompletedEmailVerify
-  NewPassword
 } from "pages";
 import { DashboardLayout, OnboardingLayout } from "layout";
 
