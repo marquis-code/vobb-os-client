@@ -1,36 +1,26 @@
-import { patchRequest, resendVerifyEmailURL, verifyEmailURL } from "api";
+import { resendVerifyEmailService, verifyEmailService } from "api";
 import { useApiRequest } from "hooks";
 import { useCallback } from "react";
 
 const useVerifyEmailService = () => {
   const { run, data: response, error: apiError, requestStatus } = useApiRequest({});
 
-  const verifyEmailService = useCallback(
+  const verifyEmail = useCallback(
     async (data: { token: number }) => {
-      await run(
-        patchRequest({
-          url: verifyEmailURL,
-          data: data
-        })
-      );
+      await run(verifyEmailService(data));
     },
     [run]
   );
 
   const resendVerify = useCallback(
     async (data: { email: string }) => {
-      await run(
-        patchRequest({
-          url: resendVerifyEmailURL,
-          data: data
-        })
-      );
+      await run(resendVerifyEmailService(data));
     },
     [run]
   );
 
   return {
-    verifyEmail: verifyEmailService,
+    verifyEmail: verifyEmail,
     resendVerify: resendVerify,
     response,
     apiError,

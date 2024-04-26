@@ -12,5 +12,5 @@ AUTH URLS
  */
 
 export const signupURL = () => `auth/register`;
-export const verifyEmailURL = `auth/verify`;
-export const resendVerifyEmailURL = `auth/resend`;
+export const verifyEmailURL = () => `auth/verify`;
+export const resendVerifyEmailURL = () => `auth/resend`;
