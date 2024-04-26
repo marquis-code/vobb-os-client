@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 
 import { cn } from "lib/utils";
 
@@ -48,4 +49,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+interface ButtonLoadingProps {
+  className?: string;
+}
+const ButtonLoading: React.FC<ButtonLoadingProps> = ({ className }) => {
+  return (
+    <Button disabled className={cn("w-full space-x-2 cursor-pointer bg-primary", className)}>
+      <Loader2 className={"h-4 animate-spin w-4"} />
+      <span> Please wait</span>
+    </Button>
+  );
+};
+
+export { Button, buttonVariants, ButtonLoading };

@@ -1,5 +1,5 @@
 import { useOnboardingContext } from "context";
-import { Arrow, WeblinkIcon } from "assets";
+import { WeblinkIcon } from "assets";
 import { Button, CustomInput } from "components";
 import { CompanyUrlFormProps } from "types/onboarding";
 import { yupResolver } from "@hookform/resolvers/yup";

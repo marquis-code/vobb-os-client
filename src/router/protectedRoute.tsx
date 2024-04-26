@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Routes } from "./routes";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
 /**
  * PROTECTED ROUTE COMPONENT
@@ -13,7 +11,6 @@ import { useNavigate } from "react-router-dom";
  */
 
 const ProtectedRoute: React.FC<{ children: any }> = ({ children }) => {
-  const navigate = useNavigate();
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const accessToken = localStorage.getItem("vobbOSAccess");
 

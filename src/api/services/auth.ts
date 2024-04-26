@@ -9,7 +9,9 @@ import { axiosInstanceUnauth, signupURL } from "api";
 interface signupData {
   email: string;
   password: string;
+  recaptcha: string;
 }
+
 /**
  * Signup service
  * @returns axios promise
