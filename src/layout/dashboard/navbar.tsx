@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { Button } from "components";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 interface NavBarProps {
   sideBarWidth: string;
@@ -57,6 +59,7 @@ const UserAvatar = () => {
 };
 
 const Menu = () => {
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -69,7 +72,7 @@ const Menu = () => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>Organization Settings</DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate(Routes.profile)}>
             Account Settings
             {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
           </DropdownMenuItem>

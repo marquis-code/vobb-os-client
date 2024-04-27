@@ -12,13 +12,11 @@ import {
   VerifyPassword,
   CompletedPasswordReset,
   NewPassword,
-  Onboarding,
-  CompletedOnboarding,
   VerifyEmail,
-  CompletedEmailVerify
-  NewPassword
+  CompletedEmailVerify,
+  AccountProfile
 } from "pages";
-import { DashboardLayout, OnboardingLayout } from "layout";
+import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -96,6 +94,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: DashboardLayout,
     props: {
       title: "Overview"
+    }
+  },
+  {
+    path: Routes.profile,
+    Element: AccountProfile,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Profile",
+      active: "profile"
     }
   },
 
