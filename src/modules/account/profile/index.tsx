@@ -53,7 +53,11 @@ const schema = yup.object({
     .test("fileSize", "Image is too large", (value) => isFile(value) && value.size <= 1048576 * 10)
 });
 
-const AccountProfileUI = () => {
+interface AccountProfileProps {
+  handleChangeEmail: () => void;
+}
+
+const AccountProfileUI = ({ handleChangeEmail }) => {
   const {
     register,
     handleSubmit,
@@ -160,11 +164,13 @@ const AccountProfileUI = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      {/* <CheckCircledIcon width={20} height={20} color="var(--success-50)" /> */} {/* Verified email icon */}
+                      {/* <CheckCircledIcon width={20} height={20} color="var(--success-50)" /> */}{" "}
+                      {/* Verified email icon */}
                       <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Email is unverified, please request a new verification email</p> {/* If verified, change text to: Email is verified! */}
+                      <p>Email is unverified, please request a new verification email</p>{" "}
+                      {/* If verified, change text to: Email is verified! */}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -172,12 +178,20 @@ const AccountProfileUI = () => {
             </div>
 
             <div className="flex justify-between items-center">
-              <Button className="p-0 underline" size={"sm"} variant={"link"}>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleChangeEmail();
+                }}
+                className="p-0 underline"
+                size={"sm"}
+                variant={"link"}>
                 Change email address
               </Button>
-              <Button className="p-0 underline text-vobb-primary-50" size={"sm"} variant={"link"}> 
+              <Button className="p-0 underline text-vobb-primary-50" size={"sm"} variant={"link"}>
                 Resend verification mail
-              </Button> {/* Hide this button when email is verified */}
+              </Button>{" "}
+              {/* Hide this button when email is verified */}
             </div>
           </div>
         </form>
