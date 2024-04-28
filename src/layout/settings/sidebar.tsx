@@ -154,7 +154,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
         </Button>
         <p className="ml-2 font-workSans font-bold text-lg">Settings</p>
       </div>
-      <section style={{ height: "calc(100dvh - 55px)" }} className="p-4 overflow-auto">
+      <section style={{ height: "calc(100dvh - 55px)" }} className="p-4 overflow-auto no-scrollbar">
         <div className="mb-6">
           <p className="text-xs text-vobb-neutral-50 mb-2 font-light">Account</p>
           {accountItems.map(({ icon, title, value, path }) => (

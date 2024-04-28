@@ -103,7 +103,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Profile",
-      active: "profile"
+      parent: "Account Settings"
     }
   },
 
