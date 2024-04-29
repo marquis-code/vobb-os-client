@@ -15,6 +15,7 @@ import {
   VerifyEmail,
   CompletedEmailVerify,
   AccountProfile
+
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
