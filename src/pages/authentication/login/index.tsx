@@ -6,11 +6,11 @@ const Login = () => {
   const [twoFactor, setTwoFactor] = useState({
     show: false
   });
-
+  const submit = () => {};
   return (
     <>
       <Login2FA {...twoFactor} close={() => setTwoFactor({ show: false })} />
-      <LoginUI />
+      <LoginUI submit={submit} />
     </>
   );
 };

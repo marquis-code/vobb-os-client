@@ -62,9 +62,9 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
           />
         )}
         {validatorMessage && (
-          <small className="block text=-xs mt-1 text-error-10">{validatorMessage}</small>
+          <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
         )}
-        {hint && <small className="block text=-xs mt-1 text-vobb-neutral-60">{hint}</small>}
+        {hint && <small className="block text-[11px] mt-1 text-vobb-neutral-60">{hint}</small>}
       </div>
     </>
   );
@@ -135,9 +135,9 @@ const PasswordInput: React.FC<CustomInputProps> = (props) => {
           />
         )}
         {validatorMessage && (
-          <small className="block text=-xs mt-1 text-error-10">{validatorMessage}</small>
+          <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
         )}
-        {hint && <small className="block text=-xs mt-1 text-vobb-neutral-60">{hint}</small>}
+        {hint && <small className="block text-[11px] mt-1 text-vobb-neutral-60">{hint}</small>}
       </div>
     </>
   );

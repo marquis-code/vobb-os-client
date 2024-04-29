@@ -11,7 +11,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 import { useMobile } from "hooks";
@@ -19,30 +19,31 @@ import { useMobile } from "hooks";
 interface LoginData {
   email: string;
   password: string;
-  captcha: string;
+  rememberMe: boolean;
+  captcha?: string;
 }
 
 const initLogin: LoginData = {
   email: "",
   password: "",
-  captcha: ""
+  rememberMe: false
+  // captcha: ""
 };
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Required"),
   password: yup.string().required("Required"),
-  captcha: yup.string().required("Required")
+  rememberMe: yup.boolean().required("")
+  // captcha: yup.string().required("Required")
 });
 
-// interface LoginProps {
-//   submit: (data) => void;
-//   clear: boolean;
-// }
+interface LoginProps {
+  submit: () => void;
+}
 
-const LoginUI = () => {
+const LoginUI: React.FC<LoginProps> = ({ submit }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { isMobile } = useMobile({ size: 1024 });
-  const navigate = useNavigate();
 
   const {
     register,
@@ -55,8 +56,9 @@ const LoginUI = () => {
   });
 
   const onSubmit: SubmitHandler<LoginData> = (data) => {
-    console.log(data);
-    navigate(Routes.overview);
+    submit();
+
+    // navigate(Routes.overview);
   };
 
   return (
@@ -90,6 +92,9 @@ const LoginUI = () => {
                   label="Stay signed in for a week"
                   labelClassName="text-[13px]"
                   className="items-center"
+                  handleChecked={(checked) => {
+                    setValue("rememberMe", checked);
+                  }}
                 />
 
                 <Link
@@ -98,7 +103,7 @@ const LoginUI = () => {
                   Forgot password?
                 </Link>
               </div>
-              {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
+              {/* {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
                 <ReCAPTCHA
                   class="recaptcha"
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
@@ -107,7 +112,8 @@ const LoginUI = () => {
                   }}
                   ref={recaptchaRef}
                 />
-              )}
+              )} */}
+
               <Button
                 onClick={handleSubmit(onSubmit)}
                 className="w-full mt-6"

@@ -1,15 +1,11 @@
-import { Routes } from "router";
 import { EmailUI } from "modules";
-import { useNavigate } from "react-router-dom";
 
 const Email = () => {
-  const navigate = useNavigate();
-  const submit = () => {
-    navigate(Routes.forgot_password_verify);
-  };
+  const handleForgotPassword = (data: { email: string }) => {};
+
   return (
     <>
-      <EmailUI submit={submit} />
+      <EmailUI submit={handleForgotPassword} apiError={"apiError"} loading={false} />
     </>
   );
 };

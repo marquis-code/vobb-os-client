@@ -1,1 +1,2 @@
-export * from "./otpModal"
+export * from "./otpModal";
+export * from "./changeEmailModal";
