@@ -3,7 +3,7 @@ import { CustomInput, PasswordInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button, ButtonLoading } from "components/ui/button";
+import { Button } from "components/ui/button";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
 import { Link } from "react-router-dom";
@@ -38,11 +38,10 @@ const schema = yup.object({
 interface SignupProps {
   submit: (data) => void;
   clear: boolean;
-  apiError: any;
   loading: boolean;
 }
 
-const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) => {
+const SignupUI: React.FC<SignupProps> = ({ submit, clear, loading }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const {
     register,
@@ -73,7 +72,7 @@ const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) =
               type="email"
               name="email"
               register={register}
-              validatorMessage={errors.email?.message || apiError?.response?.data?.error}
+              validatorMessage={errors.email?.message}
             />
             <PasswordInput
               label="Password"
@@ -92,17 +91,15 @@ const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) =
                 ref={recaptchaRef}
               />
             )}
-            {loading ? (
-              <ButtonLoading className="mt-6" />
-            ) : (
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                className="w-full mt-6"
-                size={"default"}
-                variant="fill">
-                Get started
-              </Button>
-            )}
+
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              loading={loading}
+              className="w-full mt-6"
+              size={"default"}
+              variant="fill">
+              Get started
+            </Button>
           </form>
           <Button
             className="w-full mt-4 flex items-center gap-2 justify-center"

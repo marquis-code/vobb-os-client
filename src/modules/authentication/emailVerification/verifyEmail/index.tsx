@@ -1,4 +1,4 @@
-import { Button, ButtonLoading, CustomInputOTP } from "components";
+import { Button, CustomInputOTP } from "components";
 import { useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { useAuthContext } from "context";
@@ -8,16 +8,10 @@ import { Routes } from "router";
 interface VerifyEmailProps {
   handleVerify: ({ token }) => void;
   handleResend: ({ email }) => void;
-  apiError: any;
   loading: boolean;
 }
 
-const VerifyEmailUI: React.FC<VerifyEmailProps> = ({
-  handleVerify,
-  handleResend,
-  apiError,
-  loading
-}) => {
+const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend, loading }) => {
   const { email, message } = useAuthContext();
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -45,23 +39,14 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({
             <CustomInputOTP value={otp} onChange={setOtp} />
           </div>
 
-          {loading ? (
-            <ButtonLoading />
-          ) : (
-            <Button
-              disabled={otp.length !== 6}
-              size={"default"}
-              variant={"fill"}
-              className="w-full">
-              Continue
-            </Button>
-          )}
-
-          {apiError && (
-            <small className="block text=-xs text-error-10 text-center mt-4">
-              {apiError?.response?.data?.error}
-            </small>
-          )}
+          <Button
+            disabled={otp.length !== 6 || loading}
+            loading={loading}
+            size={"default"}
+            variant={"fill"}
+            className="w-full">
+            Continue
+          </Button>
         </form>
         <p className="cursor-pointer mx-auto mt-6 text-center">
           Didn't receive the code?{" "}

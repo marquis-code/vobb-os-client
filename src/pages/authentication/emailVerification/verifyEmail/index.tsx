@@ -1,22 +1,23 @@
 import { VerifyEmailUI } from "modules";
 import { useNavigate } from "react-router-dom";
-import { useVerifyEmailService } from "hooks";
 import { useEffect, useState } from "react";
 import { Routes } from "router";
 import { useAuthContext } from "context";
+import { useApiRequest } from "hooks";
+import { resendVerifyEmailService, verifyEmailService } from "api";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
   const { handleSetResponse } = useAuthContext();
-  const { verifyEmail, resendVerify, response, apiError, loading } = useVerifyEmailService();
   const [activeUrl, setActiveUrl] = useState("verify");
+  const { run, data: response, error, requestStatus } = useApiRequest({});
 
-  const handleVerify = ({ token }: { token: number }) => {
-    verifyEmail({ token });
+  const handleVerify = async (data: { token: number }) => {
+    await run(verifyEmailService(data));
     setActiveUrl("verify");
   };
-  const handleResend = ({ email }: { email: string }) => {
-    resendVerify({ email });
+  const handleResend = async (data: { email: string }) => {
+    await run(resendVerifyEmailService(data));
     setActiveUrl("resend");
   };
   useEffect(() => {
@@ -31,8 +32,7 @@ const VerifyEmail = () => {
       <VerifyEmailUI
         handleVerify={handleVerify}
         handleResend={handleResend}
-        apiError={apiError}
-        loading={loading}
+        loading={requestStatus.isPending}
       />
     </>
   );

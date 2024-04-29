@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
 const Signup = () => {
-  const { run, data: response, requestStatus, error: apiError } = useApiRequest({});
+  const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
   const { handleSetResponse } = useAuthContext();
 
@@ -28,7 +28,6 @@ const Signup = () => {
       <SignupUI
         submit={submit}
         clear={requestStatus.isResolved}
-        apiError={apiError}
         loading={requestStatus.isPending}
       />
     </>
