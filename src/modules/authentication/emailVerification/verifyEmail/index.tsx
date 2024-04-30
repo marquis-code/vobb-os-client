@@ -1,8 +1,7 @@
 import { Button, CustomInputOTP } from "components";
 import { useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { useAuthContext } from "context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Routes } from "router";
 
 interface VerifyEmailProps {
@@ -12,9 +11,11 @@ interface VerifyEmailProps {
 }
 
 const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend, loading }) => {
-  const { email, message } = useAuthContext();
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const [searchParams] = useSearchParams();
+  const encodedEmail = searchParams.get("email");
+  const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
 
   const submitVerify = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +33,7 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Check your email
         </h1>
-        <p className="text-center mb-8">{message}</p>
+        <p className="text-center mb-8">We sent a verification code to {email}</p>
 
         <form onSubmit={submitVerify}>
           <div className="flex justify-center items-center mb-10">
