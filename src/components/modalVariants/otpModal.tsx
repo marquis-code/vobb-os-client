@@ -3,6 +3,7 @@ import { Modal } from "../modal";
 import { Button } from "../ui";
 import { CustomInputOTP } from "../form";
 import { useState } from "react";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 interface OTPModalProps extends ModalProps {
   show: boolean;
@@ -16,7 +17,12 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title }) => {
   return (
     <>
       <Modal show={show} close={close}>
-        <h2 className="text-xl font-bold mb-2">{title}</h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-lg font-bold">{title}</h2>
+          <Button onClick={close} variant={"ghost"} size={"icon"}>
+            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+          </Button>
+        </div>
         <p className="mb-12">{text}</p>
         <form className="mb-16 flex justify-center align-center">
           <CustomInputOTP value={otp} onChange={setOTP} />
