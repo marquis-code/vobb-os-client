@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const Signup = () => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
@@ -15,21 +14,6 @@ const Signup = () => {
 
   const submit = (data: SignupData) => {
     run(signupService(data));
-  };
-
-  const googleSignin = () => {
-    const clientId = CLIENT_ID;
-    const redirectUri = "http://localhost:3000/login";
-    const scope = "email profile openid";
-    const responseType = "code";
-
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-      redirectUri
-    )}&scope=${encodeURIComponent(
-      scope
-    )}&response_type=${responseType}&access_type=offline&prompt=consent`;
-
-    window.location.href = authUrl;
   };
 
   useEffect(() => {
@@ -48,7 +32,6 @@ const Signup = () => {
     <>
       <SignupUI
         submit={submit}
-        handleGoogleSigniIn={googleSignin}
         clear={requestStatus.isResolved}
         loading={requestStatus.isPending}
       />

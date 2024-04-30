@@ -8,3 +8,4 @@ export interface ModalProps {
   show: boolean;
 }
 export * from "./onboarding";
+export * from "./auth";

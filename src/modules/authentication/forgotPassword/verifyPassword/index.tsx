@@ -1,5 +1,5 @@
 import { Button, CustomInputOTP } from "components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { Routes } from "router";
@@ -11,6 +11,9 @@ interface VerifyPasswordProps {
 const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const [searchParams] = useSearchParams();
+  const encodedEmail = searchParams.get("email");
+  const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
 
   return (
     <main>
@@ -20,7 +23,7 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Check your email
         </h1>
-        <p className="text-center mb-8">We sent a verification code to anjola@vobb.io</p>
+        <p className="text-center mb-8">We sent a verification code to {email}</p>
 
         <form onSubmit={() => submit()}>
           <div className="flex justify-center items-center mb-10">

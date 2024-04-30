@@ -15,33 +15,35 @@ import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 import { useMobile } from "hooks";
+import { loginData } from "types/auth";
 
 interface LoginData {
   email: string;
   password: string;
   rememberMe: boolean;
-  captcha?: string;
+  recaptcha: string;
 }
 
 const initLogin: LoginData = {
   email: "",
   password: "",
-  rememberMe: false
-  // captcha: ""
+  rememberMe: false,
+  recaptcha: ""
 };
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Required"),
   password: yup.string().required("Required"),
-  rememberMe: yup.boolean().required("")
-  // captcha: yup.string().required("Required")
+  rememberMe: yup.boolean().required(""),
+  recaptcha: yup.string().required("Required")
 });
 
 interface LoginProps {
-  submit: () => void;
+  submit: (data: loginData) => void;
+  loading: boolean;
 }
 
-const LoginUI: React.FC<LoginProps> = ({ submit }) => {
+const LoginUI: React.FC<LoginProps> = ({ submit, loading }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { isMobile } = useMobile({ size: 1024 });
 
@@ -56,9 +58,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<LoginData> = (data) => {
-    submit();
-
-    // navigate(Routes.overview);
+    submit(data);
   };
 
   return (
@@ -103,19 +103,21 @@ const LoginUI: React.FC<LoginProps> = ({ submit }) => {
                   Forgot password?
                 </Link>
               </div>
-              {/* {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
+              {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
                 <ReCAPTCHA
                   class="recaptcha"
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                   onChange={(token) => {
-                    setValue("captcha", token);
+                    setValue("recaptcha", token);
                   }}
                   ref={recaptchaRef}
                 />
-              )} */}
+              )}
 
               <Button
                 onClick={handleSubmit(onSubmit)}
+                loading={loading}
+                disabled={loading}
                 className="w-full mt-6"
                 size={"default"}
                 variant="fill">

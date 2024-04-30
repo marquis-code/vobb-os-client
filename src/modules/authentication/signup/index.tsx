@@ -37,12 +37,11 @@ const schema = yup.object({
 
 interface SignupProps {
   submit: (data: SignupData) => void;
-  handleGoogleSigniIn: () => void;
   clear: boolean;
   loading: boolean;
 }
 
-const SignupUI: React.FC<SignupProps> = ({ submit, handleGoogleSigniIn, loading }) => {
+const SignupUI: React.FC<SignupProps> = ({ submit, loading }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const {
     register,
@@ -103,7 +102,6 @@ const SignupUI: React.FC<SignupProps> = ({ submit, handleGoogleSigniIn, loading 
             </Button>
           </form>
           <Button
-            onClick={handleGoogleSigniIn}
             className="w-full mt-4 flex items-center gap-2 justify-center"
             size={"default"}
             variant="outline">

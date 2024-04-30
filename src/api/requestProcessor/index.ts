@@ -1,3 +1,4 @@
+import { refreshTokenService } from "api";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { Routes } from "router";
 
@@ -50,7 +51,16 @@ axiosInstance.interceptors.response.use(
 export const refreshToken = async (): Promise<string> => {
   let token = "";
 
-  // Make request to refresh token
+  try {
+    const response = await refreshTokenService();
+    if (response.data) {
+      token = response.data?.data?.access_token;
+    } else {
+      console.error("Unexpected response format:", response);
+    }
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+  }
 
   return token;
 };
