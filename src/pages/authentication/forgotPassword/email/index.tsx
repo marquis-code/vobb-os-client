@@ -5,7 +5,7 @@ const Email = () => {
 
   return (
     <>
-      <EmailUI submit={handleForgotPassword} apiError={"apiError"} loading={false} />
+      <EmailUI submit={handleForgotPassword} />
     </>
   );
 };

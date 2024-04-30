@@ -5,7 +5,7 @@ const NewPassword = () => {
 
   return (
     <>
-      <NewPasswordUI submit={handleForgotPassword} apiError={"apiError"} loading={false} />
+      <NewPasswordUI submit={handleForgotPassword} />
     </>
   );
 };

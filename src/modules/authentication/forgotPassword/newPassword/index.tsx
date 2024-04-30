@@ -3,12 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LockClosedIcon } from "@radix-ui/react-icons";
-import { useAuthContext } from "context";
 
 interface NewPasswordProps {
   submit: (data: any) => void;
-  apiError: any;
-  loading: boolean;
 }
 interface NewPasswordData {
   newPassword: string;
@@ -19,7 +16,7 @@ const initPasswords: NewPasswordData = {
   confirmPassword: ""
 };
 
-const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, apiError, loading }) => {
+const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
   const schema = yup.object().shape({
     newPassword: yup
       .string()
@@ -48,8 +45,6 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, apiError, loading }
     submit(data);
   };
 
-  const { message } = useAuthContext();
-
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -59,7 +54,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, apiError, loading }
           Set new Password
         </h1>
         <p className="text-center mb-8">
-          {message} <br />
+          Your new password should be different from other set passwwords. <br />
         </p>
 
         <form>
@@ -68,7 +63,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, apiError, loading }
             type="password"
             name="newPassword"
             register={register}
-            validatorMessage={errors.newPassword?.message || apiError?.response?.data?.error}
+            validatorMessage={errors.newPassword?.message}
           />
           <PasswordInput
             label="Confirm password"

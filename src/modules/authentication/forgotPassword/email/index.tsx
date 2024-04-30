@@ -9,8 +9,6 @@ import { KeyIcon } from "assets";
 
 interface ForgotPasswordProps {
   submit: ({ email }) => void;
-  apiError: any;
-  loading: boolean;
 }
 interface ForgotPasswordData {
   email: string;
@@ -19,7 +17,7 @@ const initMail: ForgotPasswordData = {
   email: ""
 };
 
-const EmailUI: React.FC<ForgotPasswordProps> = ({ submit, apiError, loading }) => {
+const EmailUI: React.FC<ForgotPasswordProps> = ({ submit }) => {
   const navigate = useNavigate();
   const schema = yup.object().shape({
     email: yup.string().email("Enter a valid email").required("Required")
@@ -54,7 +52,7 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit, apiError, loading }) =
             name="email"
             placeholder="Enter your email address"
             register={register}
-            validatorMessage={errors.email?.message || apiError?.response?.data?.error}
+            validatorMessage={errors.email?.message}
           />
 
           <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
