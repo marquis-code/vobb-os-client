@@ -198,7 +198,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
       </section>
       <div className="flex gap-2 justify-end max-w-[800px] mb-8 pt-2">
         <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
-          Reset
+          Cancel
         </Button>
         <Button disabled={!isDirty} onClick={handleSubmit(onSubmit)} variant={"fill"}>
           Save

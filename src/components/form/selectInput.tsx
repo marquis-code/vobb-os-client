@@ -34,7 +34,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
         {...props}
         isSearchable
         styles={{
-          control: (baseStyles, state) => ({
+          control: (baseStyles) => ({
             ...baseStyles,
             border: validatorMessage ? "1px solid #e62e2e" : "1px solid #d0d5dd",
             boxShadow: "0px 1px 2px 0px #1018280d",
@@ -44,9 +44,10 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
             alignItems: "center",
             borderRadius: 6,
             fontSize: "14px",
-            color: "var(--neutral-40)"
+            color: "var(--neutral-40)",
+            minHeight: "36px"
           }),
-          placeholder: (baseStyles, state) => ({
+          placeholder: (baseStyles) => ({
             ...baseStyles,
             color: "#d0d5dd"
           }),
