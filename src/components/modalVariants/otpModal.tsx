@@ -10,7 +10,7 @@ interface OTPModalProps extends ModalProps {
   close: () => void;
   title: string;
   text: string;
-  submit?: (data: { otp: string }) => void;
+  submit: (data: { otp: string }) => void;
   loading?: boolean;
 }
 

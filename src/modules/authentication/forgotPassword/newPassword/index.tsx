@@ -3,9 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LockClosedIcon } from "@radix-ui/react-icons";
+import { resetPasswordData } from "types";
 
 interface NewPasswordProps {
-  submit: (data: any) => void;
+  submit: (data: resetPasswordData) => void;
 }
 interface NewPasswordData {
   newPassword: string;

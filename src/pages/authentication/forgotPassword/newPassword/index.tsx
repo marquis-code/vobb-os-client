@@ -18,6 +18,7 @@ const NewPassword = () => {
   useMemo(() => {
     if (response?.status === 200) {
       navigate(Routes.new_password_completed);
+      localStorage.removeItem("vobbOSAccess");
     } else if (error) {
       toast({
         variant: "destructive",
