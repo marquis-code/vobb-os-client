@@ -1,4 +1,4 @@
-import { ModalProps } from "types/interfaces";
+import { ModalProps } from "types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
 import { CustomInputOTP } from "../form";

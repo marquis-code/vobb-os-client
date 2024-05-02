@@ -1,4 +1,4 @@
-import { refreshTokenService } from "api";
+import { refreshTokenURL } from "api";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { Routes } from "router";
 
@@ -50,18 +50,24 @@ axiosInstance.interceptors.response.use(
 
 export const refreshToken = async (): Promise<string> => {
   let token = "";
-
-  try {
-    const response = await refreshTokenService();
-    if (response.data) {
-      token = response.data?.data?.access_token;
-    } else {
-      console.error("Unexpected response format:", response);
+  const refreshToken = localStorage.getItem("vobbOSRefresh");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
     }
-  } catch (error) {
-    console.error("Error refreshing token:", error);
-  }
-
+  };
+  axiosInstance
+    .post(refreshTokenURL(), null, config)
+    .then((response) => {
+      if (response.data) {
+        token = response.data?.data?.access_token;
+        localStorage.setItem("vobbOSAccess", token);
+      }
+    })
+    .catch(() => {
+      localStorage.clear();
+      window.location.assign(Routes.home);
+    });
   return token;
 };
 

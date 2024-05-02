@@ -8,6 +8,7 @@ import {
   axiosInstanceUnauth,
   emailLoginURL,
   forgotPasswordURL,
+  forgotPasswordVerifyURL,
   googleSignupURL,
   login2faURL,
   patchRequest,
@@ -91,11 +92,23 @@ export const forgotPasswordService = (data: { email: string }) => {
 
 /**
  * Reset password service
- * @param data - An object containing new password and confirm password, token query.
+ * @param token - token gotten from url.
+ * @param otp - otp gotten from url.
  * @returns axios promise
  */
-export const resetPasswordService = (data: resetPasswordData, token: string | null) => {
-  return axiosInstanceUnauth.post(`${resetPasswordURL()}?token=${token}`, data);
+export const forgotPasswordVerifyService = ({ token, otp }) => {
+  return axiosInstanceUnauth.post(forgotPasswordVerifyURL({ token, otp }));
+};
+/**
+ * Reset password service
+ * @param data - An object containing new password and confirm.
+ * @returns axios promise
+ */
+export const resetPasswordService = (data: resetPasswordData) => {
+  return postRequest({
+    url: resetPasswordURL(),
+    data: data
+  });
 };
 
 /**

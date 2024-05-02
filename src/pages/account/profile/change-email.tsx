@@ -1,5 +1,5 @@
 import { ChangeEmailModal } from "components";
-import { ModalProps } from "types/interfaces";
+import { ModalProps } from "types";
 
 interface ChangeEmailProps extends ModalProps {
   callback: () => void;

@@ -3,7 +3,7 @@ import { Button, SelectInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { optionType } from "types/interfaces";
+import { optionType } from "types";
 
 const sectorOptions: optionType[] = [
   {

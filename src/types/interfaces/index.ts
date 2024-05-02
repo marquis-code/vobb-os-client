@@ -7,5 +7,3 @@ export interface ModalProps {
   close: () => void;
   show: boolean;
 }
-export * from "./onboarding";
-export * from "./auth";

@@ -2,34 +2,29 @@ import { resetPasswordService } from "api";
 import { useToast } from "components";
 import { useApiRequest } from "hooks";
 import { NewPasswordUI } from "modules";
-import { useEffect } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { resetPasswordData } from "types/auth";
 
 const NewPassword = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { run, data: response, requestStatus, error } = useApiRequest({});
-
-  const [searchParams] = useSearchParams();
-  const encodedToken = searchParams.get("token");
-  const token = encodedToken ? decodeURIComponent(encodedToken) : null;
-
+  const { run, data: response, error } = useApiRequest({});
   const handleResetPassword = (data: resetPasswordData) => {
-    run(resetPasswordService(data, token));
+    run(resetPasswordService(data));
   };
 
-  useEffect(() => {
-    if (requestStatus.isResolved && response?.status === 201) {
+  useMemo(() => {
+    if (response?.status === 200) {
       navigate(Routes.new_password_completed);
     } else if (error) {
       toast({
+        variant: "destructive",
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, requestStatus, location, toast]);
+  }, [response, error, navigate, toast]);
 
   return (
     <>

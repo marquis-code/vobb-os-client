@@ -1,16 +1,16 @@
 import { login2faService } from "api";
 import { OTPModal, useToast } from "components";
 import { useApiRequest } from "hooks";
-import { useEffect } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-import { ModalProps } from "types/interfaces";
+import { ModalProps } from "types";
 
 interface Login2FAProps extends ModalProps {
-  loading: boolean;
+  email: string;
 }
 
-const Login2FA: React.FC<Login2FAProps> = ({ show, close, loading }) => {
+const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
   const { toast } = useToast();
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
@@ -19,25 +19,30 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, loading }) => {
     run(login2faService(data));
   };
 
-  useEffect(() => {
-    if (requestStatus.isResolved && response?.status === 200) {
+  useMemo(() => {
+    if (response?.status === 200) {
       localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
+      localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
       navigate(Routes.overview);
+      toast({
+        description: response?.data?.message
+      });
     } else if (error) {
       toast({
+        variant: "destructive",
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, requestStatus, navigate, toast]);
+  }, [response, error, navigate, toast]);
   return (
     <>
       <OTPModal
         title="Two-Factor Authentication"
-        text={`We’ve sent a 6-character code to your email. The code expires shortly, so please enter it soon.`}
+        text={`We’ve sent a 6-character code to ${email}. The code expires shortly, so please enter it soon.`}
         show={show}
         close={close}
         submit={submit}
-        loading={loading}
+        loading={requestStatus.isPending}
       />
     </>
   );

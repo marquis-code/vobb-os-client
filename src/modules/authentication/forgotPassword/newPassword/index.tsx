@@ -29,7 +29,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
     confirmPassword: yup
       .string()
       .required("Required")
-      .oneOf([yup.ref("password"), ""], "Passwords must match")
+      .oneOf([yup.ref("newPassword"), ""], "Passwords must match")
   });
 
   const {
@@ -54,7 +54,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
           Set new Password
         </h1>
         <p className="text-center mb-8">
-          Your new password should be different from other set passwwords. <br />
+          Your new password must be different to previously used passwords.
         </p>
 
         <form>

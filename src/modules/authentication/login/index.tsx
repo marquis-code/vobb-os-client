@@ -20,7 +20,7 @@ import { loginData } from "types/auth";
 interface LoginData {
   email: string;
   password: string;
-  rememberMe: boolean;
+  rememberMe?: boolean;
   recaptcha: string;
 }
 
@@ -34,7 +34,7 @@ const initLogin: LoginData = {
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Required"),
   password: yup.string().required("Required"),
-  rememberMe: yup.boolean().required(""),
+  rememberMe: yup.boolean(),
   recaptcha: yup.string().required("Required")
 });
 
@@ -51,14 +51,18 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading }) => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<LoginData>({
     resolver: yupResolver(schema),
     defaultValues: initLogin
   });
-
   const onSubmit: SubmitHandler<LoginData> = (data) => {
     submit(data);
+    if (getValues()?.recaptcha !== "") {
+      setValue("recaptcha", "");
+      recaptchaRef.current.reset();
+    }
   };
 
   return (
@@ -112,6 +116,11 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading }) => {
                   }}
                   ref={recaptchaRef}
                 />
+              )}
+              {errors.recaptcha?.message && (
+                <small className="block text-[11px] mt-1 text-error-10">
+                  {errors.recaptcha?.message}
+                </small>
               )}
 
               <Button

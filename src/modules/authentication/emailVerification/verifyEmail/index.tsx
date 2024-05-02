@@ -1,5 +1,5 @@
 import { Button, CustomInputOTP } from "components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Routes } from "router";
@@ -13,6 +13,7 @@ interface VerifyEmailProps {
 const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend, loading }) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const [countdown, setCountdown] = useState(30);
   const [searchParams] = useSearchParams();
   const encodedEmail = searchParams.get("email");
   const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
@@ -24,7 +25,16 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
 
   const submitResend = () => {
     handleResend({ email });
+    setCountdown(30);
   };
+
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -50,15 +60,18 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
           </Button>
         </form>
         <p className="cursor-pointer mx-auto mt-6 text-center">
-          Didn't receive the code?{" "}
-          <strong className="text-vobb-primary-70" onClick={submitResend}>
-            Click to resend
-          </strong>
+          Didn't receive the code?
+          <Button
+            className="text-vobb-primary-70"
+            onClick={submitResend}
+            disabled={countdown > 0}
+            variant={"ghost"}>
+            Click to resend {countdown > 0 && countdown}
+          </Button>
         </p>
 
         <Button
           onClick={() => navigate(Routes.home)}
-          type="submit"
           className="w-full mt-6 flex gap-4 items-center"
           size={"default"}
           variant="link">

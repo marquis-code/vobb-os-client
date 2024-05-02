@@ -6,7 +6,7 @@ import { CityAddress } from "./address";
 import { CountrySelect } from "./country";
 import { Province } from "./province";
 import { Zipcode } from "./zipcode";
-import { optionType } from "types/interfaces";
+import { optionType } from "types";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, countries }) => {

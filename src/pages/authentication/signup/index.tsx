@@ -2,31 +2,31 @@ import { signupService } from "api";
 import { useToast } from "components";
 import { useApiRequest } from "hooks";
 import { SignupData, SignupUI } from "modules";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
 const Signup = () => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
   const { toast } = useToast();
-  const location = useLocation();
 
   const submit = (data: SignupData) => {
     run(signupService(data));
   };
 
-  useEffect(() => {
-    if (requestStatus.isResolved && response?.status === 201) {
+  useMemo(() => {
+    if (response?.status === 201) {
       localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
       const email = encodeURIComponent(response?.data?.data?.email);
       navigate(`${Routes.email_verify}?email=${email}`);
     } else if (error) {
       toast({
+        variant: "destructive",
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, requestStatus, run, location, toast]);
+  }, [response, error, navigate, toast]);
 
   return (
     <>

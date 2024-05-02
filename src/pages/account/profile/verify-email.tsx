@@ -1,5 +1,5 @@
 import { OTPModal } from "components";
-import { ModalProps } from "types/interfaces";
+import { ModalProps } from "types";
 
 interface VerifyEmailProps extends ModalProps {
   email: string;
