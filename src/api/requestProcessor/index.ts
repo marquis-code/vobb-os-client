@@ -57,7 +57,7 @@ export const refreshToken = async (): Promise<string> => {
     }
   };
   axiosInstance
-    .post(refreshTokenURL(), null, config)
+    .get(refreshTokenURL(), config)
     .then((response) => {
       if (response.data) {
         token = response.data?.data?.access_token;
