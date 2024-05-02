@@ -22,3 +22,11 @@ export const resendVerifyEmailURL = `auth/resend`;
  *
  */
 export const googleLoginURL = () => `/auth/google/login`;
+
+/**
+ * Google login URL
+ *
+ * @returns url string
+ *
+ */
+export const googleSignupURL = () => `/auth/google/register`;

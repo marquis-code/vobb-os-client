@@ -1,7 +1,6 @@
 import { Button, CustomInputOTP } from "components";
 import { useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
-import { useAuthContext } from "context";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
@@ -18,7 +17,6 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({
   apiError,
   loading
 }) => {
-  const { email, message } = useAuthContext();
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
 
@@ -27,9 +25,7 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({
     handleVerify({ token: +otp });
   };
 
-  const submitResend = () => {
-    handleResend({ email });
-  };
+  const submitResend = () => {};
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -38,7 +34,7 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Check your email
         </h1>
-        <p className="text-center mb-8">{message}</p>
+        <p className="text-center mb-8">We sent a verification code to anjola@vobb.io</p>
 
         <form onSubmit={submitVerify}>
           <div className="flex justify-center items-center mb-10">

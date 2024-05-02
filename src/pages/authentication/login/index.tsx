@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { googleSigninService } from "api";
 
-const redirectUrl = process.env.REACT_APP_REDIRECT_LOGIN;
+const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
 
 const Login = () => {
   const [twoFactor, setTwoFactor] = useState({
@@ -15,7 +15,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
-    redirectUrl
+    redirectUrl: `${redirectUrl}login`
   });
   const { run, data: response, requestStatus, error } = useApiRequest({});
 
@@ -44,7 +44,7 @@ const Login = () => {
       } else {
         navigate(Routes.overview);
       }
-    } else if (error) {
+    } else {
       console.log(error);
     }
   }, [response, error, navigate]);
