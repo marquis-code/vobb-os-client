@@ -34,12 +34,12 @@ const schema = yup.object({
   captcha: yup.string().required("Required")
 });
 
-// interface LoginProps {
-//   submit: (data) => void;
-//   clear: boolean;
-// }
+interface LoginProps {
+  handleGoogleSignin: () => void;
+  loading: boolean;
+}
 
-const LoginUI = () => {
+const LoginUI: React.FC<LoginProps> = ({ handleGoogleSignin, loading }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { isMobile } = useMobile({ size: 1024 });
   const navigate = useNavigate();
@@ -119,7 +119,9 @@ const LoginUI = () => {
             <Button
               className="w-full mt-4 flex items-center gap-2 justify-center"
               size={"default"}
-              variant="outline">
+              variant="outline"
+              onClick={handleGoogleSignin}
+              disabled={loading}>
               <GoogleLogoIcon width={20} /> Signin with Google
             </Button>
             <p className="mt-6 text-center text-[13px]">

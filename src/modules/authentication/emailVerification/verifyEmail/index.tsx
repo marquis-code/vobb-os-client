@@ -1,4 +1,4 @@
-import { Button, ButtonLoading, CustomInputOTP } from "components";
+import { Button, CustomInputOTP } from "components";
 import { useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { useAuthContext } from "context";
@@ -45,17 +45,9 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({
             <CustomInputOTP value={otp} onChange={setOtp} />
           </div>
 
-          {loading ? (
-            <ButtonLoading />
-          ) : (
-            <Button
-              disabled={otp.length !== 6}
-              size={"default"}
-              variant={"fill"}
-              className="w-full">
-              Continue
-            </Button>
-          )}
+          <Button disabled={otp.length !== 6} size={"default"} variant={"fill"} className="w-full">
+            Continue
+          </Button>
 
           {apiError && (
             <small className="block text=-xs text-error-10 text-center mt-4">

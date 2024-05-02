@@ -3,7 +3,7 @@ import { CustomInput, PasswordInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button, ButtonLoading } from "components/ui/button";
+import { Button } from "components/ui/button";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
 import { Link } from "react-router-dom";
@@ -92,17 +92,14 @@ const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) =
                 ref={recaptchaRef}
               />
             )}
-            {loading ? (
-              <ButtonLoading className="mt-6" />
-            ) : (
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                className="w-full mt-6"
-                size={"default"}
-                variant="fill">
-                Get started
-              </Button>
-            )}
+
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              className="w-full mt-6"
+              size={"default"}
+              variant="fill">
+              Get started
+            </Button>
           </form>
           <Button
             className="w-full mt-4 flex items-center gap-2 justify-center"
