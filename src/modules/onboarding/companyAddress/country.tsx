@@ -4,7 +4,7 @@ import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { optionType } from "types/interfaces";
+import { optionType } from "types";
 
 //CountrySelect.tsx
 const CountrySelect: React.FC<CompanyAddressProps> = ({ submit, countries, initData }) => {

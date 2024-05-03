@@ -1,5 +1,5 @@
 import { LogoIcon } from "assets";
-import { CustomInput, PasswordInput, Popover, PopoverContent, PopoverTrigger } from "components";
+import { CustomInput, PasswordInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -10,16 +10,16 @@ import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 
-interface SignupData {
+export interface SignupData {
   email: string;
   password: string;
-  captcha: string;
+  recaptcha: string;
 }
 
 const initSignup: SignupData = {
   email: "",
   password: "",
-  captcha: ""
+  recaptcha: ""
 };
 
 const schema = yup.object({
@@ -32,33 +32,34 @@ const schema = yup.object({
     .matches(/[a-z]/, "Password should contain an lowercase character")
     .matches(/[0-9]/, "Password should contain at least one number")
     .matches(/@|#|&|\$]/, "Password should contain at least special character (e.g. @, #, &, $)"),
-  captcha: yup.string().required("Required")
+  recaptcha: yup.string().required("Required")
 });
 
 interface SignupProps {
-  submit: (data) => void;
+  submit: (data: SignupData) => void;
   clear: boolean;
+  loading: boolean;
 }
 
-const SignupUI = () => {
+const SignupUI: React.FC<SignupProps> = ({ submit, loading }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     setValue,
-    reset
+    getValues
   } = useForm<SignupData>({
     resolver: yupResolver(schema),
     defaultValues: initSignup
   });
-
   const onSubmit: SubmitHandler<SignupData> = (data) => {
-    console.log(data);
+    submit(data);
+    if (getValues()?.recaptcha !== "") {
+      setValue("recaptcha", "");
+      recaptchaRef.current.reset();
+    }
   };
-
   return (
     <>
       <main>
@@ -88,13 +89,19 @@ const SignupUI = () => {
                 class="recaptcha"
                 sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                 onChange={(token) => {
-                  setValue("captcha", token);
+                  setValue("recaptcha", token);
                 }}
                 ref={recaptchaRef}
               />
             )}
+            {errors.recaptcha?.message && (
+              <small className="block text-[11px] mt-1 text-error-10">
+                {errors.recaptcha?.message}
+              </small>
+            )}
             <Button
               onClick={handleSubmit(onSubmit)}
+              loading={loading}
               className="w-full mt-6"
               size={"default"}
               variant="fill">

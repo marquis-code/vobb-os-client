@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { optionType } from "../interfaces";
+import { optionType } from "types/interfaces";
 
 export interface StepsType {
   icon: ReactElement<SVGElement>;
