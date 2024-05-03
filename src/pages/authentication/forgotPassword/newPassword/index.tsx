@@ -10,7 +10,7 @@ import { resetPasswordData } from "types/auth";
 const NewPassword = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { run, data: response, error } = useApiRequest({});
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleResetPassword = (data: resetPasswordData) => {
     run(resetPasswordService(data));
   };
@@ -29,7 +29,7 @@ const NewPassword = () => {
 
   return (
     <>
-      <NewPasswordUI submit={handleResetPassword} />
+      <NewPasswordUI submit={handleResetPassword} loading={requestStatus.isPending} />
     </>
   );
 };

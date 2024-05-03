@@ -7,6 +7,7 @@ import { resetPasswordData } from "types";
 
 interface NewPasswordProps {
   submit: (data: resetPasswordData) => void;
+  loading: boolean;
 }
 interface NewPasswordData {
   newPassword: string;
@@ -17,7 +18,7 @@ const initPasswords: NewPasswordData = {
   confirmPassword: ""
 };
 
-const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
+const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, loading }) => {
   const schema = yup.object().shape({
     newPassword: yup
       .string()
@@ -76,6 +77,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
 
           <Button
             onClick={handleSubmit(onSubmit)}
+            loading={loading}
             type="submit"
             className="w-full mt-6"
             size={"default"}
