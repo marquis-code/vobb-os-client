@@ -1,7 +1,7 @@
 import { cn } from "lib";
 import { ReactNode } from "react";
 import Select, { ActionMeta, SingleValue } from "react-select";
-import { optionType } from "types/interfaces";
+import { optionType } from "types";
 
 interface SelectInputProps {
   options: optionType[] | undefined;

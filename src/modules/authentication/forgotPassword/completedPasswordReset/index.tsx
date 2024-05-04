@@ -22,8 +22,12 @@ const CompletedPasswordResetUI: React.FC<CompletedProps> = ({ submit }) => {
           Your password has been successfully reset. Click below to log in magically.
         </p>
 
-        <form onSubmit={() => submit()}>
-          <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        <form>
+          <Button
+            className="w-full mt-6"
+            size={"default"}
+            variant="fill"
+            onClick={() => navigate(Routes.login)}>
             Continue
           </Button>
         </form>

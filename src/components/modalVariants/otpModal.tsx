@@ -1,4 +1,4 @@
-import { ModalProps } from "types/interfaces";
+import { ModalProps } from "types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
 import { CustomInputOTP } from "../form";
@@ -10,9 +10,11 @@ interface OTPModalProps extends ModalProps {
   close: () => void;
   title: string;
   text: string;
+  submit: (data: { otp: string }) => void;
+  loading?: boolean;
 }
 
-const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title }) => {
+const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, loading }) => {
   const [otp, setOTP] = useState("");
   return (
     <>
@@ -31,7 +33,12 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title }) => {
           <Button className="text-error-10" size={"default"} variant={"outline"}>
             Cancel
           </Button>
-          <Button disabled={otp.length !== 6} size={"default"} variant={"fill"}>
+          <Button
+            loading={loading}
+            disabled={otp.length !== 6 || loading}
+            size={"default"}
+            variant={"fill"}
+            onClick={() => submit?.({ otp })}>
             Continue
           </Button>
         </div>

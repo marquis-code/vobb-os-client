@@ -3,17 +3,27 @@ import { cn } from "lib/utils";
 
 interface CheckboxWithTextProps {
   label: string;
+  name?: string;
   instruction?: string;
   className?: string;
   labelClassName?: string;
   instructionClassName?: string;
+  handleChecked?: (checked: any) => void;
 }
 
 export const CheckboxWithText = (props: CheckboxWithTextProps) => {
-  const { label, instruction, labelClassName, instructionClassName, className } = props;
+  const {
+    label,
+    name,
+    instruction,
+    labelClassName,
+    instructionClassName,
+    className,
+    handleChecked
+  } = props;
   return (
     <div className={cn("items-top flex space-x-2", className)}>
-      <Checkbox id="terms1" />
+      <Checkbox id="terms1" name={name} onCheckedChange={handleChecked} />
       <div className="grid gap-1.5 leading-none">
         <label
           htmlFor="terms1"

@@ -11,52 +11,59 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { GoogleLogoIcon } from "assets";
 import { Routes } from "router";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 import { useMobile } from "hooks";
+import { loginData } from "types/auth";
 
 interface LoginData {
   email: string;
   password: string;
-  captcha: string;
+  rememberMe?: boolean;
+  recaptcha: string;
 }
 
 const initLogin: LoginData = {
   email: "",
   password: "",
-  captcha: ""
+  rememberMe: false,
+  recaptcha: ""
 };
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Required"),
   password: yup.string().required("Required"),
-  captcha: yup.string().required("Required")
+  rememberMe: yup.boolean(),
+  recaptcha: yup.string().required("Required")
 });
 
 interface LoginProps {
-  handleGoogleSignin: () => void;
+  submit: (data: loginData) => void;
   loading: boolean;
+  handleGoogleSignin: () => void;
 }
 
-const LoginUI: React.FC<LoginProps> = ({ handleGoogleSignin, loading }) => {
+const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { isMobile } = useMobile({ size: 1024 });
-  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<LoginData>({
     resolver: yupResolver(schema),
     defaultValues: initLogin
   });
-
   const onSubmit: SubmitHandler<LoginData> = (data) => {
-    console.log(data);
-    navigate(Routes.overview);
+    submit(data);
+    if (getValues()?.recaptcha !== "") {
+      setValue("recaptcha", "");
+      recaptchaRef.current.reset();
+    }
   };
 
   return (
@@ -90,6 +97,9 @@ const LoginUI: React.FC<LoginProps> = ({ handleGoogleSignin, loading }) => {
                   label="Stay signed in for a week"
                   labelClassName="text-[13px]"
                   className="items-center"
+                  handleChecked={(checked) => {
+                    setValue("rememberMe", checked);
+                  }}
                 />
 
                 <Link
@@ -103,13 +113,21 @@ const LoginUI: React.FC<LoginProps> = ({ handleGoogleSignin, loading }) => {
                   class="recaptcha"
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                   onChange={(token) => {
-                    setValue("captcha", token);
+                    setValue("recaptcha", token);
                   }}
                   ref={recaptchaRef}
                 />
               )}
+              {errors.recaptcha?.message && (
+                <small className="block text-[11px] mt-1 text-error-10">
+                  {errors.recaptcha?.message}
+                </small>
+              )}
+
               <Button
                 onClick={handleSubmit(onSubmit)}
+                loading={loading}
+                disabled={loading}
                 className="w-full mt-6"
                 size={"default"}
                 variant="fill">

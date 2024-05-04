@@ -8,7 +8,7 @@ import { Routes } from "router";
 import { KeyIcon } from "assets";
 
 interface ForgotPasswordProps {
-  submit: () => void;
+  submit: ({ email }) => void;
 }
 interface ForgotPasswordData {
   email: string;
@@ -33,7 +33,7 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<ForgotPasswordData> = (data) => {
-    submit();
+    submit(data);
   };
 
   return (
@@ -54,6 +54,7 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit }) => {
             register={register}
             validatorMessage={errors.email?.message}
           />
+
           <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
             Continue
           </Button>

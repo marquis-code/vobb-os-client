@@ -3,22 +3,24 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LockClosedIcon } from "@radix-ui/react-icons";
+import { resetPasswordData } from "types";
 
 interface NewPasswordProps {
-  submit: () => void;
+  submit: (data: resetPasswordData) => void;
+  loading: boolean;
 }
 interface NewPasswordData {
-  password: string;
+  newPassword: string;
   confirmPassword: string;
 }
 const initPasswords: NewPasswordData = {
-  password: "",
+  newPassword: "",
   confirmPassword: ""
 };
 
-const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
+const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, loading }) => {
   const schema = yup.object().shape({
-    password: yup
+    newPassword: yup
       .string()
       .required("Required")
       .min(8, "Password should be at least 8 characters long")
@@ -29,7 +31,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
     confirmPassword: yup
       .string()
       .required("Required")
-      .oneOf([yup.ref("password"), ""], "Passwords must match")
+      .oneOf([yup.ref("newPassword"), ""], "Passwords must match")
   });
 
   const {
@@ -42,7 +44,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<NewPasswordData> = (data) => {
-    submit();
+    submit(data);
   };
 
   return (
@@ -57,13 +59,13 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
           Your new password must be different to previously used passwords.
         </p>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <PasswordInput
-            label="Password"
+            label="New Password"
             type="password"
-            name="password"
+            name="newPassword"
             register={register}
-            validatorMessage={errors.password?.message}
+            validatorMessage={errors.newPassword?.message}
           />
           <PasswordInput
             label="Confirm password"
@@ -72,7 +74,14 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit }) => {
             register={register}
             validatorMessage={errors.confirmPassword?.message}
           />
-          <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            loading={loading}
+            type="submit"
+            className="w-full mt-6"
+            size={"default"}
+            variant="fill">
             Reset Password
           </Button>
         </form>

@@ -18,11 +18,11 @@ export const Routes = {
   new_password_completed: "/new-password/completed",
   onboarding: "/onboarding",
   completed_onboarding: "/onboarding/completed",
-  email_verify: "/email-verify",
-  completed_email_verify: "/email-verify/completed",
+  email_verify: "/verify-email",
+  completed_email_verify: "/verify-email/completed",
   recaptcha: "/recaptcha",
 
   // Dashboard
   overview: "/overview",
-  profile: "/settings/profile",
+  profile: "/settings/profile"
 };
