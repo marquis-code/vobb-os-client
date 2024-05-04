@@ -8,7 +8,8 @@ interface CheckboxWithTextProps {
   className?: string;
   labelClassName?: string;
   instructionClassName?: string;
-  handleChecked?: (checked: any) => void;
+  handleChecked: (checked: boolean) => void;
+  checked: boolean;
 }
 
 export const CheckboxWithText = (props: CheckboxWithTextProps) => {
@@ -19,11 +20,12 @@ export const CheckboxWithText = (props: CheckboxWithTextProps) => {
     labelClassName,
     instructionClassName,
     className,
-    handleChecked
+    handleChecked,
+    checked
   } = props;
   return (
     <div className={cn("items-top flex space-x-2", className)}>
-      <Checkbox id="terms1" name={name} onCheckedChange={handleChecked} />
+      <Checkbox id="terms1" checked={checked} name={name} onCheckedChange={handleChecked} />
       <div className="grid gap-1.5 leading-none">
         <label
           htmlFor="terms1"

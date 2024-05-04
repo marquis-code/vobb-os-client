@@ -13,6 +13,7 @@ const Setup2FA: React.FC<Setup2FAProps> = ({ show, close }) => {
         text={`We’ve sent a 6-character code to test@yopmail.com. The code expires shortly, so please enter it soon.`}
         show={show}
         close={close}
+        submit={console.log}
       />
     </>
   );

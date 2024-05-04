@@ -6,8 +6,8 @@ import { CheckboxWithText } from "./checkboxWithText";
 
 interface RadioGroupProps {
   options: optionType[];
-  value: optionType | null | undefined;
-  onChange: (newValue: optionType | undefined) => void;
+  value: optionType[];
+  onChange: (newValue: optionType[]) => void;
   label?: string;
   hint?: string;
   parentClassName?: string;
@@ -19,6 +19,17 @@ interface RadioGroupProps {
 const CustomCheckboxGroup: React.FC<RadioGroupProps> = (props) => {
   const { required, label, options, value, onChange, parentClassName, validatorMessage, hint } =
     props;
+
+  const handleChange = (item: optionType) => {
+    if (value && value?.some((val) => item.value === val.value)) {
+      console.log("here?");
+      const newList = value.filter((val) => item.value !== val.value);
+      onChange(newList);
+    } else {
+      value ? onChange([...value, item]) : onChange([item]);
+    }
+  };
+
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>
@@ -29,14 +40,17 @@ const CustomCheckboxGroup: React.FC<RadioGroupProps> = (props) => {
           </p>
         )}
 
-        <RadioGroup
-          onValueChange={(val) => onChange(options.find((item) => val === item.value))}
-          //   defaultValue={value?.value}
-          value={value?.value}>
-          {options.map(({ label, value }) => (
-            <CheckboxWithText label={label} />
+        <div className="grid gap-2">
+          {options.map((item) => (
+            <CheckboxWithText
+              label={item.label}
+              checked={value?.some((val) => item.value === val.value) ?? false}
+              handleChecked={() => handleChange(item)}
+              labelClassName="font-normal"
+            />
           ))}
-        </RadioGroup>
+        </div>
+
         {validatorMessage && (
           <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
         )}

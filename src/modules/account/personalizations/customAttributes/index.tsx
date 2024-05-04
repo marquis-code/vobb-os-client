@@ -89,10 +89,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
             onChange={console.log}
           />
 
-          {/* Phone number */}
-
-          {/* Country */}
-
           {/* Checkboxes */}
           <CustomCheckboxGroup
             label="Checkboxes"
@@ -110,12 +106,18 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
                 value: "option-three"
               }
             ]}
-            value={{
-              label: "Option One",
-              value: "option-one"
-            }}
+            value={[
+              {
+                label: "Option Two",
+                value: "option-two"
+              }
+            ]}
             onChange={console.log}
           />
+
+          {/* Phone number */}
+
+          {/* Country */}
 
           {/* Date */}
 
