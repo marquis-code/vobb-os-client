@@ -26,4 +26,5 @@ export const Routes = {
   overview: "/overview",
   profile: "/settings/profile",
   security: "/settings/security",
+  personalizations: "/settings/personalizations",
 };

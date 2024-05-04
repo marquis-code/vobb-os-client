@@ -20,6 +20,7 @@ const LoginHistory: React.FC<LoginHistoryProps> = ({}) => {
             <Device key={index} device={item} myIP="192.168.0.180" />
           ))}
           <Pagination
+            hidePageLimit
             handleChange={console.log}
             handlePageLimit={console.log}
             totalCount={3}

@@ -2,7 +2,6 @@ import { Button, PasswordInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { LockClosedIcon } from "@radix-ui/react-icons";
 
 interface ChangePasswordProps {
   submit: () => void;
@@ -49,6 +48,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit }) => {
     submit();
   };
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    reset();
+  };
+
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -79,7 +83,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit }) => {
             validatorMessage={errors.confirmPassword?.message}
           />
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
-            <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
+            <Button disabled={!isDirty} onClick={handleReset} variant={"outline"}>
               Cancel
             </Button>
             <Button disabled={!isDirty} onClick={handleSubmit(onSubmit)} variant={"fill"}>

@@ -11,6 +11,7 @@ export interface PaginationProps {
   pageLimit: number;
   totalPages: number;
   currentPage: number;
+  hidePageLimit?: boolean;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -20,7 +21,8 @@ const Pagination: React.FC<PaginationProps> = ({
   pageLimit = 15,
   totalCount = 1,
   currentPage = 1,
-  totalPages = 1
+  totalPages = 1,
+  hidePageLimit
 }) => {
   const handleIncrease = () => {
     if (currentPage < totalPages) handleChange(currentPage + 1);
@@ -51,19 +53,23 @@ const Pagination: React.FC<PaginationProps> = ({
     <>
       <section
         className={cn("flex items-center justify-between gap-4 text-vobb-neutral-90", className)}>
-        <div className="flex items-center gap-2 mr-auto ">
-          <p>Items per page:</p>
-          <div>
-            <SelectInput
-              options={limitOptions}
-              value={{ label: `${pageLimit}`, value: `${pageLimit}` }}
-              onChange={(val) => val && handlePageLimit(parseInt(val?.value))}
-              name={""}
-              parentClassName="w-[5rem] mb-0 !text-xs"
-              className="!text-xs"
-            />
+        {hidePageLimit ? (
+          ""
+        ) : (
+          <div className="flex items-center gap-2 mr-auto ">
+            <p>Items per page:</p>
+            <div>
+              <SelectInput
+                options={limitOptions}
+                value={{ label: `${pageLimit}`, value: `${pageLimit}` }}
+                onChange={(val) => val && handlePageLimit(parseInt(val?.value))}
+                name={""}
+                parentClassName="w-[5rem] mb-0 !text-xs"
+                className="!text-xs"
+              />
+            </div>
           </div>
-        </div>
+        )}
         <p>
           <b>{start}</b> - <b>{end}</b> of <b>{totalCount}</b> items
         </p>

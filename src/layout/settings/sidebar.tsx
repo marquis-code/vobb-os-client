@@ -59,7 +59,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Personalizations",
       icon: <FaceIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.personalizations,
       value: "personalizations"
     },
     {
@@ -87,7 +87,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       title: "Bank Accounts",
       icon: <CardStackIcon width={14} height={14} color="#101323" />,
       path: Routes.profile,
-      value: "personalizations"
+      value: "bank accounts"
     },
     {
       title: "Branding",
