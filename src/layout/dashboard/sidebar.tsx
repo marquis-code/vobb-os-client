@@ -23,7 +23,11 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
       style={{ width: sideBarWidth }}
       className="border-r border-vobb-neutral-30 h-full fixed top-0 left-0">
       <div className="border-b border-vobb-neutral-30 px-4 py-1 h-[55px] flex items-center">
-        <img className="h-[24px] w-auto object-contain object-left-center mr-2" src={logo} />{" "}
+        <img
+          className="h-[24px] w-auto object-contain object-left-center mr-2"
+          src={logo}
+          alt="logo"
+        />{" "}
         {!collapse ? <BranchMenu /> : ""}
         <button
           onClick={() => handleCollapse(!collapse)}

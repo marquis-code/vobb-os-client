@@ -1,3 +1,4 @@
+import { refreshTokenURL } from "api";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { Routes } from "router";
 
@@ -49,9 +50,24 @@ axiosInstance.interceptors.response.use(
 
 export const refreshToken = async (): Promise<string> => {
   let token = "";
-
-  // Make request to refresh token
-
+  const refreshToken = localStorage.getItem("vobbOSRefresh");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
+  };
+  axiosInstance
+    .get(refreshTokenURL(), config)
+    .then((response) => {
+      if (response.data) {
+        token = response.data?.data?.access_token;
+        localStorage.setItem("vobbOSAccess", token);
+      }
+    })
+    .catch(() => {
+      localStorage.clear();
+      window.location.assign(Routes.home);
+    });
   return token;
 };
 

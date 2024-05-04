@@ -1,17 +1,26 @@
 import { Button, CustomInputOTP } from "components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { Routes } from "router";
+import { forgotPasswordParams } from "types";
 
 interface VerifyPasswordProps {
-  submit: () => void;
+  submit: (data: forgotPasswordParams) => void;
 }
 
 const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
-
+  const [searchParams] = useSearchParams();
+  const encodedToken = searchParams.get("token");
+  const encodedEmail = searchParams.get("email");
+  const token = encodedToken ? decodeURIComponent(encodedToken) : null;
+  const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submit({ token, otp });
+  };
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -20,9 +29,9 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Check your email
         </h1>
-        <p className="text-center mb-8">We sent a verification code to anjola@vobb.io</p>
+        <p className="text-center mb-8">We sent a verification code to {email}</p>
 
-        <form onSubmit={() => submit()}>
+        <form onSubmit={handleSubmit}>
           <div className="flex justify-center items-center mb-10">
             <CustomInputOTP value={otp} onChange={setOtp} />
           </div>

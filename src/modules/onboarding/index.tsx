@@ -3,7 +3,6 @@ import {
   CompanyAddressFormData,
   CompanyFormData,
   CompanyWebsiteData,
-  CountriesProps,
   CountryType,
   FullnameFormData
 } from "types/onboarding";
@@ -29,7 +28,7 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) 
   const [companyAddressData, setCompanyAddressData] = useState<CompanyAddressFormData | undefined>(
     undefined
   );
-  
+
   return (
     <>
       {activeForm === "fullname" && (

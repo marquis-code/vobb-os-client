@@ -1,7 +1,7 @@
 import { Routes } from "router";
 import { OnboardingUI } from "modules";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFetchCountries } from "hooks";
 
 const Onboarding = () => {

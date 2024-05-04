@@ -1,17 +1,40 @@
 import { Button, CustomInputOTP } from "components";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeftIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Routes } from "router";
 
 interface VerifyEmailProps {
-  submit: () => void;
+  handleVerify: ({ token }) => void;
+  handleResend: ({ email }) => void;
+  loading: boolean;
 }
 
-const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ submit }) => {
+const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend, loading }) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const [countdown, setCountdown] = useState(30);
+  const [searchParams] = useSearchParams();
+  const encodedEmail = searchParams.get("email");
+  const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
 
+  const submitVerify = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleVerify({ token: +otp });
+  };
+
+  const submitResend = () => {
+    handleResend({ email });
+    setCountdown(30);
+  };
+
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -20,24 +43,32 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ submit }) => {
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Check your email
         </h1>
-        <p className="text-center mb-8">We sent a verification code to anjola@vobb.io</p>
+        <p className="text-center mb-8">We sent a verification code to {email}</p>
 
-        <form onSubmit={() => submit()}>
+        <form onSubmit={submitVerify}>
           <div className="flex justify-center items-center mb-10">
             <CustomInputOTP value={otp} onChange={setOtp} />
           </div>
 
-          {otp.length === 6 && (
-            <Button size={"default"} variant={"fill"} className="w-full">
-              Continue
-            </Button>
-          )}
-
-          <p className="cursor-pointer mx-auto mt-8 text-center">
-            Didn't receive the code?{" "}
-            <strong className="text-vobb-primary-70">Click to resend</strong>
-          </p>
+          <Button
+            disabled={otp.length !== 6 || loading}
+            loading={loading}
+            size={"default"}
+            variant={"fill"}
+            className="w-full">
+            Continue
+          </Button>
         </form>
+        <p className="cursor-pointer mx-auto mt-6 text-center">
+          Didn't receive the code?
+          <Button
+            className="text-vobb-primary-70"
+            onClick={submitResend}
+            disabled={countdown > 0}
+            variant={"ghost"}>
+            {countdown > 0 ? "Click to resend " : countdown}
+          </Button>
+        </p>
 
         <Button
           onClick={() => navigate(Routes.home)}
