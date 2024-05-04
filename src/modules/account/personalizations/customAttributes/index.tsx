@@ -1,10 +1,17 @@
-import { Button, CustomInput, CustomTextarea, PasswordInput, SelectInput } from "components";
+import {
+  Button,
+  CustomCheckboxGroup,
+  CustomInput,
+  CustomRadioGroup,
+  CustomTextarea,
+  PasswordInput,
+  SelectInput
+} from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
 import { initOptionType, sysLangOptions } from "lib/constants";
-import { Textarea } from "components/ui/textarea";
 
 interface CustomAttributesProps {
   submit: () => void;
@@ -44,19 +51,75 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
         </div>
         <form>
           {/* Short text */}
-          <CustomInput type="text" />
+          <CustomInput label="Short text" type="text" />
 
           {/* Long text */}
-          <CustomTextarea placeholder="" hint="0/100 words" />
+          <CustomTextarea label="Long text" placeholder="" hint="0/100 words" />
 
-          {/* Short text */}
-          <CustomInput type="number" />
+          {/* Number */}
+          <CustomInput label="Number" type="number" />
 
-          {/* Short text */}
-          <CustomInput type="email" />
+          {/* Email */}
+          <CustomInput label="Email" type="email" />
 
           {/* Dropdown */}
-          <SelectInput options={[]} value={null} onChange={console.log} />
+          <SelectInput label="Dropdown" options={[]} value={null} onChange={console.log} />
+
+          {/* Multiple choice */}
+          <CustomRadioGroup
+            label="Multiple choice"
+            options={[
+              {
+                label: "Option One",
+                value: "option-one"
+              },
+              {
+                label: "Option Two",
+                value: "option-two"
+              },
+              {
+                label: "Option Three",
+                value: "option-three"
+              }
+            ]}
+            value={{
+              label: "Option One",
+              value: "option-one"
+            }}
+            onChange={console.log}
+          />
+
+          {/* Phone number */}
+
+          {/* Country */}
+
+          {/* Checkboxes */}
+          <CustomCheckboxGroup
+            label="Checkboxes"
+            options={[
+              {
+                label: "Option One",
+                value: "option-one"
+              },
+              {
+                label: "Option Two",
+                value: "option-two"
+              },
+              {
+                label: "Option Three",
+                value: "option-three"
+              }
+            ]}
+            value={{
+              label: "Option One",
+              value: "option-one"
+            }}
+            onChange={console.log}
+          />
+
+          {/* Date */}
+
+          {/* File upload */}
 
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
             <Button onClick={() => reset()} variant={"outline"}>
