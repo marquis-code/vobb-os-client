@@ -3,4 +3,3 @@ export * from "./useApiRequest";
 export * from "./useMobile";
 export * from "./useClickOutside";
 export * from "./useFetchCountries";
-export * from "./useVerifyEmail";

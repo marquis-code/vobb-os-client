@@ -1,4 +1,4 @@
-import { optionType } from "types/interfaces";
+import { optionType } from "types";
 
 export const sectorOptions: optionType[] = [
   {

@@ -4,15 +4,14 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { AuthContextProvider } from "context";
+import { Toaster } from "components";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthContextProvider>
-        <App />
-      </AuthContextProvider>
+      <App />
+      <Toaster />
     </BrowserRouter>
   </React.StrictMode>
 );

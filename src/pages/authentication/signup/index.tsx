@@ -1,34 +1,38 @@
 import { signupService } from "api";
-import { useAuthContext } from "context";
+import { useToast } from "components";
 import { useApiRequest } from "hooks";
 import { SignupData, SignupUI } from "modules";
-import { useEffect } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
 const Signup = () => {
-  const { run, data: response, requestStatus, error: apiError } = useApiRequest({});
+  const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
-  const { handleSetResponse } = useAuthContext();
+  const { toast } = useToast();
 
   const submit = (data: SignupData) => {
     run(signupService(data));
   };
 
-  useEffect(() => {
-    if (requestStatus.isResolved && response?.status === 201) {
+  useMemo(() => {
+    if (response?.status === 201) {
       localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
-      handleSetResponse(response?.data?.data?.email, response?.data?.message);
-      navigate(Routes.email_verify);
+      const email = encodeURIComponent(response?.data?.data?.email);
+      navigate(`${Routes.email_verify}?email=${email}`);
+    } else if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
     }
-  }, [requestStatus, response, handleSetResponse, navigate]);
+  }, [response, error, navigate, toast]);
 
   return (
     <>
       <SignupUI
         submit={submit}
         clear={requestStatus.isResolved}
-        apiError={apiError}
         loading={requestStatus.isPending}
       />
     </>

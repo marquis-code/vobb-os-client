@@ -1,58 +1,51 @@
+import React, { useState, useMemo } from "react";
 import { LoginUI } from "modules";
-import { useEffect, useMemo, useState } from "react";
 import { Login2FA } from "./login2fa";
-import { useGoogleSignin } from "hooks/useGoogleSignin";
 import { useApiRequest } from "hooks";
-import { useNavigate } from "react-router-dom";
+import { emailLoginService } from "api";
+import { loginData } from "types/auth";
+import { useToast } from "components";
 import { Routes } from "router";
-import { googleSigninService } from "api";
-
-const redirectUrl = process.env.REACT_APP_REDIRECT_LOGIN;
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
   const [twoFactor, setTwoFactor] = useState({
     show: false
   });
-  const navigate = useNavigate();
-  const { authorizationCode: code, googleSignIn } = useGoogleSignin({
-    redirectUrl
-  });
+  const { toast } = useToast();
   const { run, data: response, requestStatus, error } = useApiRequest({});
+  const navigate = useNavigate();
 
-  const handleGoogleSignin = () => {
-    googleSignIn();
+  const submit = (data: loginData) => {
+    run(emailLoginService(data));
+    setEmail(data.email);
   };
-
-  useEffect(() => {
-    if (code) {
-      run(googleSigninService({ code }));
-    }
-  }, [code, run]);
 
   useMemo(() => {
     if (response?.status === 200) {
-      localStorage.setItem(
-        "vobbOSAccess",
-        response?.data?.data?.token ?? response?.data?.data?.access_token
-      );
-      localStorage.setItem(
-        "vobbOSRefresh",
-        response?.data?.data?.token ?? response?.data?.data?.refresh_token
-      );
+      localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
+      localStorage.setItem("vobbOSRefresh", response?.data?.data?.token);
       if (response?.data["2fa_status"]) {
         setTwoFactor({ show: true });
       } else {
         navigate(Routes.overview);
+        toast({
+          description: response?.data?.message
+        });
       }
     } else if (error) {
-      console.log(error);
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
     }
-  }, [response, error, navigate]);
+  }, [response, error, navigate, toast]);
 
   return (
     <>
-      <Login2FA {...twoFactor} close={() => setTwoFactor({ show: false })} />
-      <LoginUI handleGoogleSignin={handleGoogleSignin} loading={requestStatus?.isPending} />
+      <Login2FA {...twoFactor} close={() => setTwoFactor({ show: false })} email={email} />
+      <LoginUI submit={submit} loading={requestStatus.isPending} />
     </>
   );
 };

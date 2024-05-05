@@ -1,38 +1,63 @@
 import { VerifyEmailUI } from "modules";
 import { useNavigate } from "react-router-dom";
-import { useVerifyEmailService } from "hooks";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Routes } from "router";
-import { useAuthContext } from "context";
+import { useApiRequest } from "hooks";
+import { resendVerifyEmailService, verifyEmailService } from "api";
+import { useToast } from "components";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
-  const { handleSetResponse } = useAuthContext();
-  const { verifyEmail, resendVerify, response, apiError, loading } = useVerifyEmailService();
-  const [activeUrl, setActiveUrl] = useState("verify");
+  const {
+    run: runVerify,
+    data: verifyResponse,
+    error: verifyError,
+    requestStatus: verifyStatus
+  } = useApiRequest({});
+  const {
+    run: runResend,
+    data: resendResponse,
+    error: resendError,
+    requestStatus: resendStatus
+  } = useApiRequest({});
+  const { toast } = useToast();
 
-  const handleVerify = ({ token }: { token: number }) => {
-    verifyEmail({ token });
-    setActiveUrl("verify");
+  const handleVerify = (data: { token: number }) => {
+    runVerify(verifyEmailService(data));
   };
-  const handleResend = ({ email }: { email: string }) => {
-    resendVerify({ email });
-    setActiveUrl("resend");
+  const handleResend = (data: { email: string }) => {
+    runResend(resendVerifyEmailService(data));
   };
-  useEffect(() => {
-    if (response?.status === 200) {
-      activeUrl === "verify"
-        ? navigate(Routes.completed_email_verify)
-        : handleSetResponse(response?.data?.data?.email, response?.data?.data?.message);
+
+  useMemo(() => {
+    if (verifyResponse?.status === 200) {
+      navigate(Routes.completed_email_verify);
+    } else {
+      toast({
+        variant: "destructive",
+        description: verifyError?.response?.data?.error
+      });
     }
-  }, [response, navigate, handleSetResponse, activeUrl]);
+  }, [verifyResponse, verifyError, navigate, toast]);
+
+  useMemo(() => {
+    if (resendResponse?.status === 200) {
+      const email = encodeURIComponent(resendResponse?.data?.data?.email);
+      navigate(`${Routes.email_verify}?email=${email}`);
+    } else {
+      toast({
+        variant: "destructive",
+        description: resendError?.response?.data?.error
+      });
+    }
+  }, [resendResponse, resendError, navigate, toast]);
+
   return (
     <>
       <VerifyEmailUI
         handleVerify={handleVerify}
         handleResend={handleResend}
-        apiError={apiError}
-        loading={loading}
+        loading={verifyStatus.isPending || resendStatus.isPending}
       />
     </>
   );

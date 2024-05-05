@@ -36,28 +36,30 @@ const schema = yup.object({
 });
 
 interface SignupProps {
-  submit: (data) => void;
+  submit: (data: SignupData) => void;
   clear: boolean;
-  apiError: any;
   loading: boolean;
 }
 
-const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) => {
+const SignupUI: React.FC<SignupProps> = ({ submit, loading }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    getValues
   } = useForm<SignupData>({
     resolver: yupResolver(schema),
     defaultValues: initSignup
   });
-
   const onSubmit: SubmitHandler<SignupData> = (data) => {
     submit(data);
+    if (getValues()?.recaptcha !== "") {
+      setValue("recaptcha", "");
+      recaptchaRef.current.reset();
+    }
   };
-
   return (
     <>
       <main>
@@ -73,7 +75,7 @@ const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) =
               type="email"
               name="email"
               register={register}
-              validatorMessage={errors.email?.message || apiError?.response?.data?.error}
+              validatorMessage={errors.email?.message}
             />
             <PasswordInput
               label="Password"
@@ -92,9 +94,14 @@ const SignupUI: React.FC<SignupProps> = ({ submit, clear, apiError, loading }) =
                 ref={recaptchaRef}
               />
             )}
-
+            {errors.recaptcha?.message && (
+              <small className="block text-[11px] mt-1 text-error-10">
+                {errors.recaptcha?.message}
+              </small>
+            )}
             <Button
               onClick={handleSubmit(onSubmit)}
+              loading={loading}
               className="w-full mt-6"
               size={"default"}
               variant="fill">
