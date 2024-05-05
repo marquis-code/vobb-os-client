@@ -37,6 +37,9 @@ const Signup = () => {
       localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
       const email = encodeURIComponent(emailResponse?.data?.data?.email);
       navigate(`${Routes.email_verify}?email=${email}`);
+      toast({
+        description: emailResponse?.data?.message
+      });
     } else if (emailError) {
       toast({
         variant: "destructive",
@@ -59,8 +62,10 @@ const Signup = () => {
   useMemo(() => {
     if (googleResponse?.status === 201) {
       localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.token);
-      const email = encodeURIComponent(googleResponse?.data?.data?.email);
-      navigate(`${Routes.email_verify}?email=${email}`);
+      navigate(Routes.onboarding);
+      toast({
+        description: googleResponse?.data?.message
+      });
     } else if (googleError) {
       toast({
         variant: "destructive",

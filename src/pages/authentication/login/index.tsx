@@ -64,11 +64,16 @@ const Login = () => {
 
   useMemo(() => {
     if (googleResponse?.status === 200) {
-      localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.access_token);
-      localStorage.setItem("vobbOSRefresh", googleResponse?.data?.data?.refresh_token);
-      navigate(Routes.overview);
+      if (googleResponse?.data?.status === "user_details") {
+        localStorage.setItem("vobbOSAccess", googleResponse?.data?.token);
+        navigate(Routes.onboarding);
+      } else {
+        localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.access_token);
+        localStorage.setItem("vobbOSRefresh", googleResponse?.data?.data?.refresh_token);
+        navigate(Routes.overview);
+      }
       toast({
-        description: googleError?.response?.data?.message
+        description: googleResponse?.data?.message
       });
     } else if (googleError) {
       toast({
