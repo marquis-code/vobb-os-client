@@ -4,6 +4,7 @@ import {
   CustomInput,
   CustomRadioGroup,
   CustomTextarea,
+  DatePicker,
   PasswordInput,
   SelectInput
 } from "components";
@@ -12,6 +13,8 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
 import { initOptionType, sysLangOptions } from "lib/constants";
+import { useState } from "react";
+import { FileUpload } from "components/form/file-upload";
 
 interface CustomAttributesProps {
   submit: () => void;
@@ -39,6 +42,9 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
   const onSubmit: SubmitHandler<CustomAttributesData> = (data) => {
     submit();
   };
+
+  const [date, setDate] = useState<Date>();
+  const [file, setFile] = useState<File | null>(null);
 
   return (
     <>
@@ -120,8 +126,10 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
           {/* Country */}
 
           {/* Date */}
+          <DatePicker value={date} handleChange={setDate} label="Date" />
 
           {/* File upload */}
+          <FileUpload label="File upload" file={file} multiple id={"file"} onFileChange={setFile} />
 
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
             <Button onClick={() => reset()} variant={"outline"}>
