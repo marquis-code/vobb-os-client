@@ -25,11 +25,10 @@ const Login = () => {
   useMemo(() => {
     if (response?.status === 200) {
       localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
-      localStorage.setItem("vobbOSRefresh", response?.data?.data?.token);
       if (response?.data["2fa_status"]) {
         setTwoFactor({ show: true });
       } else {
-        navigate(Routes.overview);
+        navigate(Routes.onboarding_user_details);
         toast({
           description: response?.data?.message
         });

@@ -1,12 +1,12 @@
-import { CompanyFormData } from "types/onboarding";
 import { Button, CustomInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { CompanyFormData } from "types";
 
 // OrganisationForm.tsx
 interface OrganisationFormProps {
-  initData?: CompanyFormData;
+  initData: { organisation: string };
   submit: (data: CompanyFormData) => void;
 }
 
@@ -19,12 +19,12 @@ const OrganisationForm: React.FC<OrganisationFormProps> = ({ initData, submit })
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<CompanyFormData>({
+  } = useForm<{ organisation: string }>({
     resolver: yupResolver(organisationSchema),
     defaultValues: initData
   });
 
-  const onSubmit = (data: CompanyFormData) => {
+  const onSubmit = (data: { organisation: string }) => {
     submit(data);
   };
 

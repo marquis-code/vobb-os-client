@@ -4,10 +4,10 @@ import { Button, CustomInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-const Fullname: React.FC<FullnameFormProps> = ({ initData, submit }) => {
+const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) => {
   const schema = yup.object({
-    firstName: yup.string().required("Required"),
-    lastName: yup.string().required("Required")
+    first_name: yup.string().required("Required"),
+    last_name: yup.string().required("Required")
   });
   const {
     register,
@@ -32,28 +32,34 @@ const Fullname: React.FC<FullnameFormProps> = ({ initData, submit }) => {
           <p> As shown on a government issued ID</p>
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <CustomInput
           type="text"
-          name="firstName"
+          name="first_name"
           placeholder="First name"
           register={register}
-          validatorMessage={errors.firstName?.message}
+          validatorMessage={errors.first_name?.message}
         />
 
         <CustomInput
           type="text"
-          name="lastName"
+          name="last_name"
           placeholder="Last name"
           register={register}
-          validatorMessage={errors.lastName?.message}
+          validatorMessage={errors.last_name?.message}
         />
 
-        <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        <Button
+          className="w-full mt-6"
+          size={"default"}
+          variant="fill"
+          onClick={handleSubmit(onSubmit)}
+          disabled={loading}
+          loading={loading}>
           Continue
         </Button>
       </form>
     </div>
   );
 };
-export { Fullname };
+export { FullnameUI };

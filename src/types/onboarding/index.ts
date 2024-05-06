@@ -8,23 +8,26 @@ export interface StepsType {
   desc: string;
 }
 export interface FullnameFormData {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
 }
 
 export interface FullnameFormProps {
+  loading: boolean;
   initData: FullnameFormData | undefined;
   submit: (data: FullnameFormData) => void;
 }
 
 export interface CompanyFormData {
-  organisation: string;
+  organisation?: string;
+  size?: optionType | null;
   sector?: optionType | null;
-  teamSize?: optionType | null;
 }
 
 export interface CompanyFormProps {
-  initData: CompanyFormData | undefined;
+  initName: { organisation: string };
+  initSize: { size: optionType | null };
+  initSector: { sector: optionType | null };
   submit: (data: CompanyFormData) => void;
 }
 export interface CompanyFormErrors {

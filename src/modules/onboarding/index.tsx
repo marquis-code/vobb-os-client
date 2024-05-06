@@ -1,55 +1,38 @@
 import { useOnboardingContext } from "context";
-import {
-  CompanyAddressFormData,
-  CompanyFormData,
-  CompanyWebsiteData,
-  CountryType,
-  FullnameFormData
-} from "types/onboarding";
+import { CompanyWebsiteData, CountryType } from "types/onboarding";
 import { useState } from "react";
-import { Fullname } from "./fullname";
-import { CompanyInfo } from "./companyInfo";
 import { CompanyWebsite } from "./companyWebsite";
-import { CompanyAddress } from "./companyAddress";
-import { useNavigate } from "react-router-dom";
 
 interface OnboardingUIProps {
   handleSubmit: ({ data, callback }) => void;
   countries: CountryType[];
 }
 const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) => {
-  const navigate = useNavigate();
-
   const { activeForm, handleFormChange } = useOnboardingContext();
 
-  const [fullnameData, setFullnameData] = useState<FullnameFormData | undefined>(undefined);
-  const [companyData, setCompanyData] = useState<CompanyFormData | undefined>(undefined);
   const [companyUrlData, setCompanyUrlData] = useState<CompanyWebsiteData | undefined>(undefined);
-  const [companyAddressData, setCompanyAddressData] = useState<CompanyAddressFormData | undefined>(
-    undefined
-  );
 
   return (
     <>
-      {activeForm === "fullname" && (
-        <Fullname
+      {/* {activeForm === "fullname" && (
+        <FullnameUI
           initData={fullnameData}
           submit={(data) => {
             setFullnameData(data);
             handleFormChange("companyInfo", ["fullname"]);
           }}
         />
-      )}
+      )} */}
 
-      {activeForm === "companyInfo" && (
-        <CompanyInfo
+      {/* {activeForm === "companyInfo" && (
+        <CompanyInfoUI
           initData={companyData}
           submit={(data) => {
             setCompanyData(data);
             handleFormChange("companyWeb", ["fullname", "companyInfo"]);
           }}
         />
-      )}
+      )} */}
 
       {activeForm === "companyWeb" && (
         <CompanyWebsite
@@ -61,7 +44,7 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) 
         />
       )}
 
-      {activeForm === "address" && (
+      {/* {activeForm === "address" && (
         <CompanyAddress
           initData={companyAddressData}
           submit={(data) => {
@@ -84,9 +67,13 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) 
           }}
           countries={countries}
         />
-      )}
+      )} */}
     </>
   );
 };
 
+//Fix in progress
 export { OnboardingUI };
+
+export * from "./fullname";
+export * from "./companyInfo";

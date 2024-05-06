@@ -5,7 +5,6 @@ import {
   Signup,
   Login,
   Recaptcha,
-  Onboarding,
   CompletedOnboarding,
   Overview,
   Email,
@@ -14,8 +13,9 @@ import {
   NewPassword,
   VerifyEmail,
   CompletedEmailVerify,
-  AccountProfile
-
+  AccountProfile,
+  Fullname,
+  CompanyInfo
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -70,8 +70,13 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Element: CompletedPasswordReset
   },
   {
-    path: Routes.onboarding,
-    Element: Onboarding,
+    path: Routes.onboarding_user_details,
+    Element: Fullname,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.onboarding_company_info,
+    Element: CompanyInfo,
     Layout: OnboardingLayout
   },
   {
