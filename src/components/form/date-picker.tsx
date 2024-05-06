@@ -33,7 +33,6 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
     hint,
     placeholder
   } = props;
-  //   const [date, setDate] = React.useState<Date>();
 
   return (
     <div className={cn("mb-4", parentClassName)}>
@@ -48,7 +47,7 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
           <Button
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal hover:border-vobb-neutral-100 focus:border-vobb-neutral-100 hover:bg-white",
               !value && "text-muted-foreground",
               className
             )}>

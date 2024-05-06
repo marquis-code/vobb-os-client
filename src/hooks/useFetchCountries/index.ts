@@ -2,10 +2,12 @@ import { fetchCountriesService } from "api";
 import { useApiRequest } from "../useApiRequest";
 import { useMemo } from "react";
 import { CountryType } from "types/onboarding";
+import { useCountriesContext } from "context";
 
 export const useFetchCountries = () => {
   // API Request Hooks
   const { run, data: response, requestStatus, error } = useApiRequest({});
+  const { handleUpdateCountries } = useCountriesContext();
 
   const fetchCountries = () => run(fetchCountriesService());
 
@@ -14,10 +16,12 @@ export const useFetchCountries = () => {
       const data = response.data.map((item) => ({
         label: item.name.common,
         value: item.name.common,
-        postalCode: item.postalCode,
+        postalCode: item.postalCode
       }));
 
-      return data.sort((a, b) => a.label.localeCompare(b.label));
+      const countries = data.sort((a, b) => a.label.localeCompare(b.label));
+      handleUpdateCountries(countries);
+      return countries;
     }
     return [];
   }, [response, error]);

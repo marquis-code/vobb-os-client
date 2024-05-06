@@ -2,6 +2,7 @@ import {
   Button,
   CustomCheckboxGroup,
   CustomInput,
+  CustomPhoneInput,
   CustomRadioGroup,
   CustomTextarea,
   DatePicker,
@@ -15,6 +16,7 @@ import { optionType } from "types/interfaces";
 import { initOptionType, sysLangOptions } from "lib/constants";
 import { useState } from "react";
 import { FileUpload } from "components/form/file-upload";
+import { useCountriesContext } from "context";
 
 interface CustomAttributesProps {
   submit: () => void;
@@ -42,6 +44,8 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
   const onSubmit: SubmitHandler<CustomAttributesData> = (data) => {
     submit();
   };
+
+  const { countries } = useCountriesContext();
 
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
@@ -122,8 +126,14 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
           />
 
           {/* Phone number */}
+          <CustomPhoneInput
+            label="Phone number"
+            validatorMessage={undefined}
+            handleChange={console.log}
+          />
 
           {/* Country */}
+          <SelectInput label="Country" options={countries} value={null} onChange={console.log} />
 
           {/* Date */}
           <DatePicker value={date} handleChange={setDate} label="Date" />

@@ -1,3 +1,4 @@
+import { FileIcon, ImageIcon, UploadIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
 import { ReactNode } from "react";
 import Select, { ActionMeta, MultiValue, SingleValue } from "react-select";
