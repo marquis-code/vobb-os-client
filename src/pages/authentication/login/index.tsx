@@ -4,7 +4,7 @@ import { Login2FA } from "./login2fa";
 import { useApiRequest } from "hooks";
 import { emailLoginService } from "api";
 import { loginData } from "types/auth";
-import { useToast } from "components";
+import { toast } from "components";
 import { Routes } from "router";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,6 @@ const Login = () => {
   const [twoFactor, setTwoFactor] = useState({
     show: false
   });
-  const { toast } = useToast();
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
 
@@ -24,22 +23,27 @@ const Login = () => {
 
   useMemo(() => {
     if (response?.status === 200) {
-      localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
       if (response?.data["2fa_status"]) {
+        localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
         setTwoFactor({ show: true });
-      } else {
+      } else if (response?.data?.status) {
+        localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
         navigate(Routes.onboarding_user_details);
-        toast({
-          description: response?.data?.message
-        });
+      } else {
+        localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
+        localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
+        navigate(Routes.overview);
       }
+      toast({
+        description: response?.data?.message
+      });
     } else if (error) {
       toast({
         variant: "destructive",
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, toast]);
+  }, [response, error, navigate]);
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { signupService } from "api";
-import { useToast } from "components";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
 import { SignupData, SignupUI } from "modules";
 import { useMemo } from "react";
@@ -9,7 +9,6 @@ import { Routes } from "router";
 const Signup = () => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const submit = (data: SignupData) => {
     run(signupService(data));
@@ -26,7 +25,7 @@ const Signup = () => {
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, toast]);
+  }, [response, error, navigate]);
 
   return (
     <>

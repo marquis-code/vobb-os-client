@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Routes } from "router";
 import { useApiRequest } from "hooks";
 import { resendVerifyEmailService, verifyEmailService } from "api";
-import { useToast } from "components";
+import { toast } from "components";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ const VerifyEmail = () => {
     error: resendError,
     requestStatus: resendStatus
   } = useApiRequest({});
-  const { toast } = useToast();
 
   const handleVerify = (data: { token: number }) => {
     runVerify(verifyEmailService(data));
