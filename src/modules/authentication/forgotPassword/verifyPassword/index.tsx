@@ -41,7 +41,12 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
             Continue
           </Button>
         </form>
-
+        <p className="cursor-pointer mx-auto mt-6 text-center">
+          Didn't receive the code?
+          <Button className="text-vobb-primary-70" variant={"ghost"}>
+            Click to resend
+          </Button>
+        </p>
         <Button
           onClick={() => navigate(Routes.login)}
           className="w-full mt-6 flex gap-4 items-center"
