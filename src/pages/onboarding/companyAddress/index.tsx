@@ -125,11 +125,12 @@ const CompanyAddress = () => {
 
   useMemo(() => {
     if (cityResponse?.status === 200) {
+      localStorage.setItem("vobbOSAccess", cityResponse?.data?.data?.access_token);
+      localStorage.setItem("vobbOSRefresh", cityResponse?.data?.data?.refresh_token);
+      navigate(Routes.overview);
       toast({
         description: cityResponse?.data?.message
       });
-      localStorage.removeItem("vobbOSAccess");
-      navigate(Routes.completed_onboarding);
     } else if (cityError) {
       toast({
         variant: "destructive",
