@@ -15,7 +15,9 @@ import {
   CompletedEmailVerify,
   AccountProfile,
   Fullname,
-  CompanyInfo
+  CompanyInfo,
+  CompanyWebsite,
+  CompanyAddress
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -80,16 +82,26 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: OnboardingLayout
   },
   {
+    path: Routes.onboarding_company_website,
+    Element: CompanyWebsite,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.onboarding_company_address,
+    Element: CompanyAddress,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.completed_onboarding,
+    Element: CompletedOnboarding
+  },
+  {
     path: Routes.email_verify,
     Element: VerifyEmail
   },
   {
     path: Routes.completed_email_verify,
     Element: CompletedEmailVerify
-  },
-  {
-    path: Routes.completed_onboarding,
-    Element: CompletedOnboarding
   },
 
   // Dashboard Routes

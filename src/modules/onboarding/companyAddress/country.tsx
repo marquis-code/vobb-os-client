@@ -7,7 +7,12 @@ import { useForm } from "react-hook-form";
 import { optionType } from "types";
 
 //CountrySelect.tsx
-const CountrySelect: React.FC<CompanyAddressProps> = ({ submit, countries, initData }) => {
+const CountrySelect: React.FC<CompanyAddressProps> = ({
+  submit,
+  countries,
+  initCountry,
+  loading
+}) => {
   const countrySchema = yup.object().shape({
     country: yup
       .object()
@@ -25,7 +30,7 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({ submit, countries, initD
     watch
   } = useForm<CompanyAddressFormData>({
     resolver: yupResolver<any>(countrySchema),
-    defaultValues: initData
+    defaultValues: initCountry
   });
 
   const onSubmit = (data: CompanyAddressFormData) => {
@@ -39,7 +44,7 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({ submit, countries, initD
     })) ?? [];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <SelectInput
         name="country"
         label="Select Country"
@@ -53,7 +58,13 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({ submit, countries, initD
           errors.country?.label?.message
         }
       />
-      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+      <Button
+        onClick={handleSubmit(onSubmit)}
+        disabled={loading}
+        loading={loading}
+        className="w-full mt-6"
+        size={"default"}
+        variant="fill">
         Continue
       </Button>
     </form>

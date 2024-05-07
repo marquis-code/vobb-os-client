@@ -1,32 +1,23 @@
 import { CompanyInfoIcon } from "assets";
 import { useOnboardingContext } from "context";
 import { CompanyFormData, CompanyFormProps } from "types/onboarding";
-import { useState } from "react";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { OrganisationForm } from "./companyName";
 import { SectorForm } from "./sector";
 import { TeamSizeForm } from "./teamSize";
 
-const CompanyInfoUI: React.FC<CompanyFormProps> = ({ initName, initSize, initSector, submit }) => {
+const CompanyInfoUI: React.FC<CompanyFormProps> = ({
+  initName,
+  initSize,
+  initSector,
+  activeCompanyInfo,
+  handleCompanyChange,
+  submit
+}) => {
   const { handleFormChange } = useOnboardingContext();
-  const [activeCompanyInfo, setActiveCompanyInfo] = useState<string>("organisation");
 
   const handleFormSubmit = (data: CompanyFormData) => {
-    switch (activeCompanyInfo) {
-      case "organisation":
-        submit(data);
-        setActiveCompanyInfo("teamSize");
-        break;
-      case "teamSize":
-        submit(data);
-        setActiveCompanyInfo("sector");
-        break;
-      case "sector":
-        submit(data);
-        break;
-      default:
-        break;
-    }
+    submit(data);
   };
 
   const progressBtns = ["organisation", "teamSize", "sector"];
@@ -67,7 +58,7 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({ initName, initSize, initSec
             className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
               btn === activeCompanyInfo ? "bg-vobb-primary-70" : ""
             }`}
-            onClick={() => setActiveCompanyInfo(btn)}></div>
+            onClick={() => handleCompanyChange(btn)}></div>
         ))}
       </div>
     </div>

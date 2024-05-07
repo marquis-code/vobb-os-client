@@ -9,29 +9,23 @@ import { Zipcode } from "./zipcode";
 import { optionType } from "types";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
-const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, countries }) => {
+const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
+  initCountry,
+  initZipcode,
+  initState,
+  initCityAddresses,
+  activeCompanyAddress,
+  handleCompanyChange,
+  submit,
+  countries,
+  loading
+}) => {
   const { handleFormChange } = useOnboardingContext();
-  const [activeCompanyAddress, setActiveCompanyAddress] = useState<string>("country");
   const [selectedCountry, setSelectedCountry] = useState<optionType>();
 
   const handleFormSubmit = (data: CompanyAddressFormData) => {
-    switch (activeCompanyAddress) {
-      case "country":
-        setSelectedCountry(data.country);
-        setActiveCompanyAddress("zipcode");
-        break;
-      case "zipcode":
-        setActiveCompanyAddress("province");
-        break;
-      case "province":
-        setActiveCompanyAddress("city");
-        break;
-      case "city":
-        submit(data);
-        break;
-      default:
-        break;
-    }
+    activeCompanyAddress === "country" && setSelectedCountry(data.country ?? undefined);
+    submit(data);
   };
 
   const progressBtns = ["country", "zipcode", "province", "city"];
@@ -55,20 +49,35 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
         </div>
       </div>
       {activeCompanyAddress === "country" ? (
-        <CountrySelect submit={handleFormSubmit} initData={initData} countries={countries} />
+        <CountrySelect
+          submit={handleFormSubmit}
+          initCountry={initCountry}
+          countries={countries}
+          loading={loading}
+        />
       ) : activeCompanyAddress === "zipcode" ? (
         <Zipcode
           submit={handleFormSubmit}
-          initData={initData}
+          initZipcode={initZipcode}
           postalCode={
             countries?.find((item) => item.value === selectedCountry?.value)?.postalCode ??
             undefined
           }
+          loading={loading}
         />
       ) : activeCompanyAddress === "province" ? (
-        <Province submit={handleFormSubmit} initData={initData} countries={countries} />
-      ) : activeCompanyAddress === "city" ? (
-        <CityAddress submit={handleFormSubmit} initData={initData} />
+        <Province
+          submit={handleFormSubmit}
+          initState={initState}
+          loading={loading}
+          countries={countries}
+        />
+      ) : activeCompanyAddress === "cityAddress" ? (
+        <CityAddress
+          submit={handleFormSubmit}
+          initCityAddresses={initCityAddresses}
+          loading={loading}
+        />
       ) : (
         ""
       )}
@@ -80,11 +89,11 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
             className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
               btn === activeCompanyAddress ? "bg-vobb-primary-70" : ""
             }`}
-            onClick={() => setActiveCompanyAddress(btn)}></div>
+            onClick={() => handleCompanyChange?.(btn)}></div>
         ))}
       </div>
     </div>
   );
 };
 
-export { CompanyAddress };
+export { CompanyAddressUI };

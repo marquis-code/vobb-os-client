@@ -18,6 +18,8 @@ export const Routes = {
   new_password_completed: "/new-password/completed",
   onboarding_user_details: "/onboarding/user-details",
   onboarding_company_info: "/onboarding/company-info",
+  onboarding_company_website: "/onboarding/company-website",
+  onboarding_company_address: "/onboarding/company-address",
   completed_onboarding: "/onboarding/completed",
   email_verify: "/verify-email",
   completed_email_verify: "/verify-email/completed",

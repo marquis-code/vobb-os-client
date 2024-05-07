@@ -1,6 +1,7 @@
 import { Button } from "components";
 import { Check } from "assets";
 import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 const CompletedOnboardingUI = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const CompletedOnboardingUI = () => {
         <p className="text-center">You've officially set sail with us.</p>
 
         <Button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(Routes.login)}
           className="w-full mt-6"
           size={"default"}
           variant="fill">

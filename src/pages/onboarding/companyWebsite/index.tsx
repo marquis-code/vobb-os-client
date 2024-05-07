@@ -1,31 +1,27 @@
-import { personalDetailsService } from "api";
+import { companyWebsiteService } from "api";
 import { toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest } from "hooks";
-import { FullnameUI } from "modules";
+import { CompanyWebsiteUI } from "modules";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-import { FullnameFormData } from "types";
+import { CompanyWebsiteData } from "types";
 
-const initDat: FullnameFormData = {
-  first_name: "",
-  last_name: ""
-};
-const Fullname = () => {
+const CompanyWebsite = () => {
   const { handleFormChange } = useOnboardingContext();
-  const { run, data: response, error, requestStatus } = useApiRequest({});
   const navigate = useNavigate();
-  const handleSubmit = (data: FullnameFormData) => {
-    run(personalDetailsService(data));
-  };
+  const { run, data: response, error, requestStatus } = useApiRequest({});
 
+  const handleSubmit = (data: CompanyWebsiteData) => {
+    run(companyWebsiteService(data));
+  };
   useMemo(() => {
     if (response?.status === 200) {
-      navigate(Routes.onboarding_company_info);
       toast({
         description: response?.data?.message
       });
+      navigate(Routes.onboarding_company_address);
     } else if (error) {
       toast({
         variant: "destructive",
@@ -35,16 +31,16 @@ const Fullname = () => {
   }, [response, error, navigate]);
   return (
     <>
-      <FullnameUI
-        initData={initDat}
+      <CompanyWebsiteUI
+        initData={{ website: "" }}
         submit={(data) => {
           handleSubmit(data);
-          handleFormChange("companyInfo", ["fullname"]);
+          handleFormChange("address", ["fullname", "companyInfo", "companyWeb"]);
         }}
-        loading={requestStatus?.isPending}
+        loading={requestStatus.isPending}
       />
     </>
   );
 };
 
-export { Fullname };
+export { CompanyWebsite };

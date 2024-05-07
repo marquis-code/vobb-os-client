@@ -1,17 +1,10 @@
-import { useOnboardingContext } from "context";
-import { CompanyWebsiteData, CountryType } from "types/onboarding";
-import { useState } from "react";
-import { CompanyWebsite } from "./companyWebsite";
+import { CountryType } from "types/onboarding";
 
 interface OnboardingUIProps {
   handleSubmit: ({ data, callback }) => void;
   countries: CountryType[];
 }
 const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) => {
-  const { activeForm, handleFormChange } = useOnboardingContext();
-
-  const [companyUrlData, setCompanyUrlData] = useState<CompanyWebsiteData | undefined>(undefined);
-
   return (
     <>
       {/* {activeForm === "fullname" && (
@@ -34,7 +27,7 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) 
         />
       )} */}
 
-      {activeForm === "companyWeb" && (
+      {/* {activeForm === "companyWeb" && (
         <CompanyWebsite
           initData={companyUrlData}
           submit={(data) => {
@@ -42,7 +35,7 @@ const OnboardingUI: React.FC<OnboardingUIProps> = ({ handleSubmit, countries }) 
             handleFormChange("address", ["fullname", "companyInfo", "companyWeb"]);
           }}
         />
-      )}
+      )} */}
 
       {/* {activeForm === "address" && (
         <CompanyAddress
@@ -77,3 +70,5 @@ export { OnboardingUI };
 
 export * from "./fullname";
 export * from "./companyInfo";
+export * from "./companyWebsite";
+export * from "./companyAddress";

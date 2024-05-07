@@ -1,28 +1,31 @@
 import { useOnboardingContext } from "context";
 import { WeblinkIcon } from "assets";
 import { Button, CustomInput } from "components";
-import { CompanyUrlFormProps } from "types/onboarding";
+import { CompanyUrlFormProps, CompanyWebsiteData } from "types/onboarding";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
-const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => {
+const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loading }) => {
+  const navigate = useNavigate();
   const { handleFormChange } = useOnboardingContext();
   const schema = yup.object().shape({
-    companyUrl: yup.string().required("Required").url("Enter a valid URL")
+    website: yup.string().required("Required").url("Enter a valid URL")
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm({
+  } = useForm<CompanyWebsiteData>({
     resolver: yupResolver(schema),
     defaultValues: initData
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: CompanyWebsiteData) => {
     submit(data);
   };
 
@@ -44,21 +47,28 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
           <p>Neque porro quisquam est, qui dolorem ipsu.</p>
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <CustomInput
           type="text"
-          name="companyUrl"
+          name="website"
           placeholder="travelspace.ng"
           register={register}
-          validatorMessage={errors.companyUrl?.message}
+          validatorMessage={errors.website?.message}
         />
 
-        <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          disabled={loading}
+          loading={loading}
+          className="w-full mt-6"
+          size={"default"}
+          variant="fill">
           Continue
         </Button>
       </form>
       <Button
-        onClick={onSubmit}
+        onClick={() => navigate(Routes.onboarding_company_address)}
+        disabled={loading}
         className="w-full mt-6 no-underline"
         size={"default"}
         variant="ghost">
@@ -67,4 +77,4 @@ const CompanyWebsite: React.FC<CompanyUrlFormProps> = ({ initData, submit }) => 
     </div>
   );
 };
-export { CompanyWebsite };
+export { CompanyWebsiteUI };
