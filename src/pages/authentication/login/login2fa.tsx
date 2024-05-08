@@ -1,5 +1,5 @@
 import { login2faService } from "api";
-import { OTPModal, useToast } from "components";
+import { OTPModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,6 @@ interface Login2FAProps extends ModalProps {
 }
 
 const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
-  const { toast } = useToast();
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
 
@@ -33,7 +32,7 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, toast]);
+  }, [response, error, navigate]);
   return (
     <>
       <OTPModal

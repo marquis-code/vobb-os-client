@@ -38,8 +38,6 @@ export const signupService = (data: signupData) => {
 };
 
 /**
- * Google Sign up service
- * @param data - An object containing the code of type string
  * Verify Email service
  * @param data - An object containing the verification token
  * @returns axios promise

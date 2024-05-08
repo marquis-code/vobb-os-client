@@ -1,5 +1,5 @@
-import { googleSignupService, signupService } from "api";
-import { useToast } from "components";
+import { signupService, googleSignupService } from "api";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
 import { useGoogleSignin } from "hooks/useGoogleSignin";
 import { SignupData, SignupUI } from "modules";
@@ -10,7 +10,6 @@ import { Routes } from "router";
 const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
 const Signup = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
     redirectUrl
   });
@@ -46,7 +45,7 @@ const Signup = () => {
         description: emailError?.response?.data?.error
       });
     }
-  }, [emailResponse, emailError, navigate, toast]);
+  }, [emailResponse, emailError, navigate]);
 
   //google signup
   const handleGoogleSignUp = () => {
@@ -62,7 +61,7 @@ const Signup = () => {
   useMemo(() => {
     if (googleResponse?.status === 201) {
       localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.token);
-      navigate(Routes.onboarding);
+      navigate(Routes.onboarding_user_details);
       toast({
         description: googleResponse?.data?.message
       });
@@ -72,7 +71,7 @@ const Signup = () => {
         description: googleError?.response?.data?.error
       });
     }
-  }, [googleResponse, googleError, navigate, toast]);
+  }, [googleResponse, googleError, navigate]);
 
   return (
     <>

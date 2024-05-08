@@ -3,7 +3,6 @@
 AUTH URLS
 =================================
 */
-
 import { forgotPasswordParams } from "types";
 
 /**

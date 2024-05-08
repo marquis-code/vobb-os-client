@@ -6,10 +6,10 @@ import * as yup from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 //CityAddress.tsx
-const CityAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
+const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit, loading }) => {
   const schema = yup.object({
-    address1: yup.string().required("Required"),
-    address2: yup.string(),
+    address_line_1: yup.string().required("Required"),
+    address_line_2: yup.string(),
     city: yup.string().required("Required")
   });
 
@@ -19,7 +19,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
     formState: { errors }
   } = useForm<CompanyAddressFormData>({
     resolver: yupResolver<any>(schema),
-    defaultValues: initData
+    defaultValues: initCityAddresses
   });
 
   const onSubmit: SubmitHandler<CompanyAddressFormData> = (data) => {
@@ -27,20 +27,20 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <CustomInput
         type="text"
         placeholder="Address line 1"
-        name="address1"
+        name="address_line_1"
         register={register}
-        validatorMessage={errors.address1?.message}
+        validatorMessage={errors.address_line_1?.message}
       />
       <CustomInput
         type="text"
         placeholder="Address line 2"
-        name="address2"
+        name="address_line_2"
         register={register}
-        validatorMessage={errors.address2?.message}
+        validatorMessage={errors.address_line_2?.message}
       />
       <CustomInput
         type="text"
@@ -49,7 +49,13 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
         register={register}
         validatorMessage={errors.city?.message}
       />
-      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+      <Button
+        onClick={handleSubmit(onSubmit)}
+        disabled={loading}
+        loading={loading}
+        className="w-full mt-6"
+        size={"default"}
+        variant="fill">
         Continue
       </Button>
     </form>

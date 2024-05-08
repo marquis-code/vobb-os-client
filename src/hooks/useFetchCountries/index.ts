@@ -5,7 +5,7 @@ import { CountryType } from "types/onboarding";
 
 export const useFetchCountries = () => {
   // API Request Hooks
-  const { run, data: response, requestStatus, error } = useApiRequest({});
+  const { run, data: response, requestStatus } = useApiRequest({});
 
   const fetchCountries = () => run(fetchCountriesService());
 
@@ -13,14 +13,14 @@ export const useFetchCountries = () => {
     if (response?.status === 200) {
       const data = response.data.map((item) => ({
         label: item.name.common,
-        value: item.name.common,
-        postalCode: item.postalCode,
+        value: item.cca3,
+        postalCode: item.postalCode
       }));
 
       return data.sort((a, b) => a.label.localeCompare(b.label));
     }
     return [];
-  }, [response, error]);
+  }, [response]);
 
   return { fetchCountries, countries, loading: requestStatus.isPending };
 };

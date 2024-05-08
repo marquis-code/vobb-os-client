@@ -22,7 +22,7 @@ const sectorOptions: optionType[] = [
 
 // SectorForm.tsx
 interface SectorFormProps {
-  initData?: CompanyFormData;
+  initData?: { sector: optionType | null };
   submit: (data: CompanyFormData) => void;
 }
 
@@ -41,17 +41,17 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
     formState: { errors },
     setValue,
     watch
-  } = useForm<CompanyFormData>({
+  } = useForm<{ sector: optionType | null }>({
     resolver: yupResolver<any>(sectorSchema),
     defaultValues: initData
   });
 
-  const onSubmit = (data: CompanyFormData) => {
+  const onSubmit = (data: { sector: optionType | null }) => {
     submit(data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <SelectInput
         name="sector"
         placeholder="Select travel industry"
@@ -62,7 +62,11 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
           errors.sector?.message ?? errors.sector?.value?.message ?? errors.sector?.label?.message
         }
       />
-      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+      <Button
+        onClick={handleSubmit(onSubmit)}
+        className="w-full mt-6"
+        size={"default"}
+        variant="fill">
         Submit
       </Button>
     </form>

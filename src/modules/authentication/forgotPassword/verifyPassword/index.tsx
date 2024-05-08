@@ -21,6 +21,7 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
     e.preventDefault();
     submit({ token, otp });
   };
+
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -39,13 +40,13 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit }) => {
           <Button disabled={otp.length !== 6} size={"default"} variant={"fill"} className="w-full">
             Continue
           </Button>
-
-          <p className="cursor-pointer mx-auto mt-8 text-center">
-            Didn't receive the code?{" "}
-            <strong className="text-vobb-primary-70">Click to resend</strong>
-          </p>
         </form>
-
+        <p className="cursor-pointer mx-auto mt-6 text-center">
+          Didn't receive the code?
+          <Button className="text-vobb-primary-70" variant={"ghost"}>
+            Click to resend
+          </Button>
+        </p>
         <Button
           onClick={() => navigate(Routes.login)}
           className="w-full mt-6 flex gap-4 items-center"
