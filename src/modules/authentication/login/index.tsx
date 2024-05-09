@@ -65,7 +65,6 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
       recaptchaRef.current.reset();
     }
   };
-
   return (
     <>
       {isMobile ? (
