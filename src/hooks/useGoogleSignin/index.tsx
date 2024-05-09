@@ -7,9 +7,9 @@ const useGoogleSignin = ({ redirectUrl }) => {
   const googleSignIn = () => {
     const scope = "email profile openid";
     const responseType = "code";
-
+    const redirect = `http://${window.location.host}${redirectUrl}`; // window.location.host returns 'localhost:3000' without http://
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&redirect_uri=${encodeURIComponent(
-      redirectUrl
+      redirect
     )}&scope=${encodeURIComponent(
       scope
     )}&response_type=${responseType}&access_type=offline&prompt=consent`;

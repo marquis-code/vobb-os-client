@@ -77,7 +77,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: OnboardingLayout
   },
   {
-    path: Routes.onboarding_company_info,
+    path: Routes.onboarding_company_details,
     Element: CompanyInfo,
     Layout: OnboardingLayout
   },
@@ -87,7 +87,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: OnboardingLayout
   },
   {
-    path: Routes.onboarding_company_address,
+    path: Routes.onboarding_operating_address,
     Element: CompanyAddress,
     Layout: OnboardingLayout
   },

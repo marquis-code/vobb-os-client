@@ -21,7 +21,7 @@ const CompanyWebsite = () => {
       toast({
         description: response?.data?.message
       });
-      navigate(Routes.onboarding_company_address);
+      navigate(Routes.onboarding_operating_address);
     } else if (error) {
       toast({
         variant: "destructive",

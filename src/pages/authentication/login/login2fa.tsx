@@ -20,9 +20,14 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
 
   useMemo(() => {
     if (response?.status === 200) {
-      localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
-      localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
-      navigate(Routes.overview);
+      if (response?.data?.status) {
+        localStorage.setItem("vobbOSAccess", response?.data?.token);
+        navigate(`${Routes[`onboarding_${response?.data?.status}`]}`);
+      } else {
+        localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
+        localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
+        navigate(Routes.overview);
+      }
       toast({
         description: response?.data?.message
       });

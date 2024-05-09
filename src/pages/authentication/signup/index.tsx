@@ -7,11 +7,10 @@ import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
-const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
 const Signup = () => {
   const navigate = useNavigate();
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
-    redirectUrl
+    redirectUrl: Routes.home
   });
   const {
     run: runEmailSignup,

@@ -22,7 +22,7 @@ const Fullname = () => {
 
   useMemo(() => {
     if (response?.status === 200) {
-      navigate(Routes.onboarding_company_info);
+      navigate(Routes.onboarding_company_details);
       toast({
         description: response?.data?.message
       });

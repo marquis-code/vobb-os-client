@@ -67,7 +67,7 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
         </Button>
       </form>
       <Button
-        onClick={() => navigate(Routes.onboarding_company_address)}
+        onClick={() => navigate(Routes.onboarding_operating_address)}
         disabled={loading}
         className="w-full mt-6 no-underline"
         size={"default"}

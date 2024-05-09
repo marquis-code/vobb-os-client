@@ -138,7 +138,8 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
               className="w-full mt-4 flex items-center gap-2 justify-center"
               size={"default"}
               variant="outline"
-              disabled={loading}>
+              disabled={loading}
+              onClick={handleGoogleSignin}>
               <GoogleLogoIcon width={20} /> Signin with Google
             </Button>
             <p className="mt-6 text-center text-[13px]">
