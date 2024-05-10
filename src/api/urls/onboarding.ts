@@ -4,6 +4,11 @@ ONBOARDING URLS
 =================================
 */
 const prefix = "/auth/onboard";
+export type onboardQuery =
+  | "user_details"
+  | "company_details"
+  | "company_website"
+  | "operating_address";
 
 /**
  * Personal details URL
@@ -76,3 +81,11 @@ export const companyStateURL = () => `${prefix}/operating-state`;
  *
  */
 export const companyAddressesURL = () => `${prefix}/operating-address`;
+
+/**
+ * Get Onboarding Details URL
+ *
+ * @returns url string
+ *
+ */
+export const getOnboardingDetailsURL = (query: onboardQuery) => `${prefix}?status=${query}`;

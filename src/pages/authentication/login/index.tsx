@@ -15,7 +15,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
-    redirectUrl: Routes.login
+    pathname: Routes.login
   });
   const {
     run: runEmailLogin,
@@ -41,8 +41,11 @@ const Login = () => {
         localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
         setTwoFactor({ show: true });
       } else if (emailResponse?.data?.status) {
-        localStorage.setItem("vobbOSAccess", emailResponse?.data?.token);
-        navigate(`${Routes[`onboarding_${emailResponse?.data?.status}`]}`);
+        localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
+        if (emailResponse?.data?.status === "email_verify") {
+          const email = encodeURIComponent(emailResponse?.data?.data?.email);
+          navigate(`${Routes.email_verify}?email=${email}`);
+        } else navigate(`${Routes[`onboarding_${emailResponse?.data?.status}`]}`);
       } else {
         localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.access_token);
         localStorage.setItem("vobbOSRefresh", emailResponse?.data?.data?.refresh_token);

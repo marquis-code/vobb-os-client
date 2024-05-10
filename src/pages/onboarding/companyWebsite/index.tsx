@@ -1,14 +1,16 @@
 import { companyWebsiteService } from "api";
-import { toast } from "components";
+import { LoadingSpinner, toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest } from "hooks";
+import { useGetOnboardDetails } from "hooks/useGetOnboardDetails";
 import { CompanyWebsiteUI } from "modules";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { CompanyWebsiteData } from "types";
 
 const CompanyWebsite = () => {
+  const { fetchOnboardDetails, onboardData, loadingOnboard } = useGetOnboardDetails();
   const { handleFormChange } = useOnboardingContext();
   const navigate = useNavigate();
   const { run, data: response, error, requestStatus } = useApiRequest({});
@@ -29,13 +31,21 @@ const CompanyWebsite = () => {
       });
     }
   }, [response, error, navigate]);
+
+  useEffect(() => {
+    fetchOnboardDetails();
+    handleFormChange("address", ["fullname", "companyInfo", "companyWeb"]);
+  }, []);
+
+  if (loadingOnboard) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       <CompanyWebsiteUI
-        initData={{ website: "" }}
+        initData={{ website: onboardData?.website ?? "" }}
         submit={(data) => {
           handleSubmit(data);
-          handleFormChange("address", ["fullname", "companyInfo", "companyWeb"]);
         }}
         loading={requestStatus.isPending}
       />

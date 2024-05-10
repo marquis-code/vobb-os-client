@@ -13,11 +13,14 @@ import {
   companyStateURL,
   companyWebsiteURL,
   companyZipcodeURL,
+  getOnboardingDetailsURL,
+  getRequest,
+  onboardQuery,
   patchRequest,
   personalDetailsURL
 } from "api";
-import { CompanyAddressFormData, CompanyWebsiteData, optionType } from "types";
-interface personalData {
+import { companyAddressRequestBody, companySectorTypes, companySizeTypes } from "types";
+interface personalDataRequestBody {
   first_name: string;
   last_name: string;
 }
@@ -27,7 +30,7 @@ interface personalData {
  * @param data - An object containing the personal information including firstname and lastname
  * @returns axios promise
  */
-export const personalDetailsService = (data: personalData) => {
+export const personalDetailsService = (data: personalDataRequestBody) => {
   return patchRequest({
     url: personalDetailsURL(),
     data: data
@@ -39,7 +42,7 @@ export const personalDetailsService = (data: personalData) => {
  * @param data - An object containing company name, type string.
  * @returns axios promise
  */
-export const companyNameService = (data: { name: string | undefined }) => {
+export const companyNameService = (data: { name: string }) => {
   return patchRequest({
     url: companyNameURL(),
     data: data
@@ -51,7 +54,7 @@ export const companyNameService = (data: { name: string | undefined }) => {
  * @param data - An object containing company size, type string(get value from optionType)
  * @returns axios promise
  */
-export const companySizeService = (data: { size: optionType | null }) => {
+export const companySizeService = (data: { size: companySizeTypes }) => {
   return patchRequest({
     url: companySizeURL(),
     data: data
@@ -63,7 +66,7 @@ export const companySizeService = (data: { size: optionType | null }) => {
  * @param data - An object containing company sector, type string(get value from optionType).
  * @returns axios promise
  */
-export const companySectorService = (data: { sector: optionType | null }) => {
+export const companySectorService = (data: { sector: companySectorTypes }) => {
   return patchRequest({
     url: companySectorURL(),
     data: data
@@ -75,7 +78,7 @@ export const companySectorService = (data: { sector: optionType | null }) => {
  * @param data - An object containing company website, type string.
  * @returns axios promise
  */
-export const companyWebsiteService = (data: CompanyWebsiteData) => {
+export const companyWebsiteService = (data: { website: string }) => {
   return patchRequest({
     url: companyWebsiteURL(),
     data: data
@@ -87,7 +90,7 @@ export const companyWebsiteService = (data: CompanyWebsiteData) => {
  * @param data - An object containing company's operating country, type string(gotten from option value).
  * @returns axios promise
  */
-export const companyCountryService = (data: { country: optionType | null }) => {
+export const companyCountryService = (data: { country: string }) => {
   return patchRequest({
     url: companyCountryURL(),
     data: data
@@ -99,7 +102,7 @@ export const companyCountryService = (data: { country: optionType | null }) => {
  * @param data - An object containing company's operating country's zipcode, type string.
  * @returns axios promise
  */
-export const companyZipcodeService = (data: { zip_code: string | undefined }) => {
+export const companyZipcodeService = (data: { zip_code: string }) => {
   return patchRequest({
     url: companyZipcodeURL(),
     data: data
@@ -111,7 +114,7 @@ export const companyZipcodeService = (data: { zip_code: string | undefined }) =>
  * @param data - An object containing company's operating state, type string.
  * @returns axios promise
  */
-export const companyStateService = (data: { state: string | undefined }) => {
+export const companyStateService = (data: { state: string }) => {
   return patchRequest({
     url: companyStateURL(),
     data: data
@@ -123,9 +126,20 @@ export const companyStateService = (data: { state: string | undefined }) => {
  * @param data - An object containing company's address lines and city, each of type string.
  * @returns axios promise
  */
-export const companyAddressesService = (data: CompanyAddressFormData) => {
+export const companyAddressesService = (data: companyAddressRequestBody) => {
   return patchRequest({
     url: companyAddressesURL(),
     data: data
+  });
+};
+
+/**
+ * company address service
+ * @param query - A string to fetch data from resource.
+ * @returns axios promise
+ */
+export const getOnboardingDetailsService = (query: onboardQuery) => {
+  return getRequest({
+    url: getOnboardingDetailsURL(query)
   });
 };

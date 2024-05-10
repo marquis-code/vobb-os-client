@@ -1,28 +1,13 @@
-import { CompanyFormData } from "types/onboarding";
+import { CompanyFormData, companySectorTypes } from "types/onboarding";
 import { Button, SelectInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { optionType } from "types";
-
-const sectorOptions: optionType[] = [
-  {
-    label: "Education",
-    value: "Education"
-  },
-  {
-    label: "Medical and Health",
-    value: "Medical and Health"
-  },
-  {
-    label: "Tourism",
-    value: "Tourism"
-  }
-];
+import { sectorOptions } from "lib/constants";
 
 // SectorForm.tsx
 interface SectorFormProps {
-  initData?: { sector: optionType | null };
+  initData?: { sector: { label: string; value: companySectorTypes } | null };
   submit: (data: CompanyFormData) => void;
 }
 
@@ -41,12 +26,12 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
     formState: { errors },
     setValue,
     watch
-  } = useForm<{ sector: optionType | null }>({
+  } = useForm<{ sector: { label: string; value: companySectorTypes } | null }>({
     resolver: yupResolver<any>(sectorSchema),
     defaultValues: initData
   });
 
-  const onSubmit = (data: { sector: optionType | null }) => {
+  const onSubmit = (data: { sector: { label: string; value: companySectorTypes } | null }) => {
     submit(data);
   };
 

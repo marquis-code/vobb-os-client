@@ -1,13 +1,13 @@
 import { LocationIcon } from "assets";
 import { useOnboardingContext } from "context";
-import { CompanyAddressFormData, CompanyAddressProps } from "types/onboarding";
-import React, { useState } from "react";
+import { CompanyAddressProps } from "types/onboarding";
 import { CityAddress } from "./address";
 import { CountrySelect } from "./country";
 import { Province } from "./province";
 import { Zipcode } from "./zipcode";
-import { optionType } from "types";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
   initCountry,
@@ -18,16 +18,11 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
   handleCompanyChange,
   submit,
   countries,
-  loading
+  loading,
+  selectedCountry
 }) => {
   const { handleFormChange } = useOnboardingContext();
-  const [selectedCountry, setSelectedCountry] = useState<optionType>();
-
-  const handleFormSubmit = (data: CompanyAddressFormData) => {
-    activeCompanyAddress === "country" && setSelectedCountry(data.country ?? undefined);
-    submit(data);
-  };
-
+  const navigate = useNavigate();
   const progressBtns = ["country", "zipcode", "province", "city"];
 
   return (
@@ -37,7 +32,25 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
         color="#344054"
         role="button"
         className="hidden absolute top-4 left-[0] lg:block w-6 h-6 rounded-full fill-vobb-neutral-60"
-        onClick={() => handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb"])}
+        onClick={() => {
+          switch (activeCompanyAddress) {
+            case "country":
+              navigate(Routes.onboarding_company_website);
+              handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb"]);
+              break;
+            case "zipcode":
+              handleCompanyChange?.("country");
+              break;
+            case "province":
+              handleCompanyChange?.("zipcode");
+              break;
+            case "cityAddress":
+              handleCompanyChange?.("province");
+              break;
+            default:
+              break;
+          }
+        }}
       />
       <div className="hidden lg:grid">
         <LocationIcon className="mb-6 m-auto" />
@@ -50,14 +63,14 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
       </div>
       {activeCompanyAddress === "country" ? (
         <CountrySelect
-          submit={handleFormSubmit}
+          submit={submit}
           initCountry={initCountry}
           countries={countries}
           loading={loading}
         />
       ) : activeCompanyAddress === "zipcode" ? (
         <Zipcode
-          submit={handleFormSubmit}
+          submit={submit}
           initZipcode={initZipcode}
           postalCode={
             countries?.find((item) => item.value === selectedCountry?.value)?.postalCode ??
@@ -66,18 +79,9 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
           loading={loading}
         />
       ) : activeCompanyAddress === "province" ? (
-        <Province
-          submit={handleFormSubmit}
-          initState={initState}
-          loading={loading}
-          countries={countries}
-        />
+        <Province submit={submit} initState={initState} loading={loading} countries={countries} />
       ) : activeCompanyAddress === "cityAddress" ? (
-        <CityAddress
-          submit={handleFormSubmit}
-          initCityAddresses={initCityAddresses}
-          loading={loading}
-        />
+        <CityAddress submit={submit} initCityAddresses={initCityAddresses} loading={loading} />
       ) : (
         ""
       )}
@@ -88,8 +92,7 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
             key={btn}
             className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
               btn === activeCompanyAddress ? "bg-vobb-primary-70" : ""
-            }`}
-            onClick={() => handleCompanyChange?.(btn)}></div>
+            }`}></div>
         ))}
       </div>
     </div>

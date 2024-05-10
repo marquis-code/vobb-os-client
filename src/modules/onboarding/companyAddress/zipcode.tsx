@@ -18,12 +18,11 @@ const Zipcode: React.FC<ZipcodeProps> = ({
   const { format, regex } = validCode;
 
   const schema = yup.object().shape({
-    zip_code: yup
+    zipCode: yup
       .string()
       .required("Required")
       .matches(new RegExp(regex ?? ""), `Enter a valid zip code with the format ${format}`)
   });
-
   const {
     register,
     handleSubmit,
@@ -42,9 +41,9 @@ const Zipcode: React.FC<ZipcodeProps> = ({
       <CustomInput
         type="text"
         placeholder={"Zip code"}
-        name="zip_code"
+        name="zipCode"
         register={register}
-        validatorMessage={errors.zip_code?.message}
+        validatorMessage={errors.zipCode?.message}
       />
       <Button
         onClick={handleSubmit(onSubmit)}

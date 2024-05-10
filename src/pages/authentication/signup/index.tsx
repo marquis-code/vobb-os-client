@@ -10,7 +10,7 @@ import { Routes } from "router";
 const Signup = () => {
   const navigate = useNavigate();
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
-    redirectUrl: Routes.home
+    pathname: Routes.home
   });
   const {
     run: runEmailSignup,

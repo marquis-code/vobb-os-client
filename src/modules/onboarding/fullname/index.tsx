@@ -6,8 +6,8 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) => {
   const schema = yup.object({
-    first_name: yup.string().required("Required"),
-    last_name: yup.string().required("Required")
+    firstName: yup.string().required("Required"),
+    lastName: yup.string().required("Required")
   });
   const {
     register,
@@ -35,18 +35,18 @@ const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) 
       <form>
         <CustomInput
           type="text"
-          name="first_name"
+          name="firstName"
           placeholder="First name"
           register={register}
-          validatorMessage={errors.first_name?.message}
+          validatorMessage={errors.firstName?.message}
         />
 
         <CustomInput
           type="text"
-          name="last_name"
+          name="lastName"
           placeholder="Last name"
           register={register}
-          validatorMessage={errors.last_name?.message}
+          validatorMessage={errors.lastName?.message}
         />
 
         <Button

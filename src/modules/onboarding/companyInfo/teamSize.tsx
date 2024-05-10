@@ -3,11 +3,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { teamSizeOptions } from "lib/constants";
-import { CompanyFormData, optionType } from "types";
+import { CompanyFormData, companySizeTypes } from "types";
 
 // TeamSizeForm.tsx
 interface TeamSizeFormProps {
-  initData?: { size: optionType | null };
+  initData: { size: { label: string; value: companySizeTypes } | null };
   submit: (data: CompanyFormData) => void;
 }
 
@@ -26,12 +26,12 @@ const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit }) => {
     formState: { errors },
     setValue,
     watch
-  } = useForm<{ size: optionType | null }>({
+  } = useForm<{ size: { label: string; value: companySizeTypes } | null }>({
     resolver: yupResolver<any>(teamSizeSchema),
     defaultValues: initData
   });
 
-  const onSubmit = (data: { size: optionType | null }) => {
+  const onSubmit = (data: { size: { label: string; value: companySizeTypes } | null }) => {
     submit(data);
   };
 

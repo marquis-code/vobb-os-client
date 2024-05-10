@@ -1,14 +1,16 @@
 import { companyNameService, companySectorService, companySizeService } from "api";
-import { toast } from "components";
+import { LoadingSpinner, toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest } from "hooks";
+import { useGetOnboardDetails } from "hooks/useGetOnboardDetails";
 import { CompanyInfoUI } from "modules";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { CompanyFormData } from "types";
 
 const CompanyInfo = () => {
+  const { fetchOnboardDetails, onboardData, loadingOnboard } = useGetOnboardDetails();
   const { handleFormChange } = useOnboardingContext();
   const [activeCompanyInfo, setActiveCompanyInfo] = useState<string>("organisation");
   const handleCompanyChange = (step: string) => {
@@ -37,13 +39,13 @@ const CompanyInfo = () => {
   const handleSubmit = (data: CompanyFormData) => {
     switch (activeCompanyInfo) {
       case "organisation":
-        runName(companyNameService({ name: data.organisation }));
+        runName(companyNameService({ name: data.organisation ?? "" }));
         break;
       case "teamSize":
-        runSize(companySizeService({ size: (data?.size as { value: any })?.value }));
+        data?.size && runSize(companySizeService({ size: data?.size?.value }));
         break;
       case "sector":
-        runSector(companySectorService({ sector: (data?.sector as { value: any })?.value }));
+        data?.sector && runSector(companySectorService({ sector: data?.sector?.value }));
         break;
       default:
         break;
@@ -56,6 +58,7 @@ const CompanyInfo = () => {
         description: nameResponse?.data?.message
       });
       handleCompanyChange("teamSize");
+      fetchOnboardDetails();
     } else if (nameError) {
       toast({
         variant: "destructive",
@@ -70,6 +73,7 @@ const CompanyInfo = () => {
         description: sizeResponse?.data?.message
       });
       handleCompanyChange("sector");
+      fetchOnboardDetails();
     } else if (sizeError) {
       toast({
         variant: "destructive",
@@ -83,6 +87,8 @@ const CompanyInfo = () => {
       toast({
         description: sectorResponse?.data?.message
       });
+      fetchOnboardDetails();
+
       navigate(Routes.onboarding_company_website);
     } else if (sectorError) {
       toast({
@@ -92,18 +98,40 @@ const CompanyInfo = () => {
     }
   }, [sectorResponse, sectorError, navigate]);
 
+  useEffect(() => {
+    fetchOnboardDetails();
+    handleFormChange("companyWeb", ["fullname", "companyInfo"]);
+  }, []);
+
+  useEffect(() => {
+    if (!loadingOnboard && onboardData) {
+      onboardData?.name && handleCompanyChange("teamSize");
+      onboardData?.size && handleCompanyChange("sector");
+    }
+  }, [loadingOnboard, onboardData]);
+
+  if (loadingOnboard) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       <CompanyInfoUI
-        initName={{ organisation: "" }}
-        initSize={{ size: null }}
-        initSector={{ sector: null }}
+        initName={{ organisation: onboardData?.name ?? "" }}
+        initSize={{
+          size: onboardData?.size
+            ? { label: `${onboardData?.size} Team members`, value: onboardData?.size }
+            : null
+        }}
+        initSector={{
+          sector: onboardData?.sector.length
+            ? { label: onboardData?.sector[0], value: onboardData?.sector[0] }
+            : null
+        }}
         activeCompanyInfo={activeCompanyInfo}
         handleCompanyChange={handleCompanyChange}
         loading={nameStatus.isPending || sizeStatus.isPending || sectorStatus.isPending}
         submit={(data) => {
           handleSubmit(data);
-          handleFormChange("companyWeb", ["fullname", "companyInfo"]);
         }}
       />
     </>

@@ -1,12 +1,12 @@
 import { cn } from "lib";
 import { ReactNode } from "react";
-import Select, { ActionMeta, SingleValue } from "react-select";
+import Select from "react-select";
 import { optionType } from "types";
 
 interface SelectInputProps {
   options: optionType[] | undefined;
-  value: optionType | null | undefined;
-  onChange: (newValue: SingleValue<optionType>, actionMeta: ActionMeta<optionType>) => void;
+  value?: optionType | null;
+  onChange: (newValue) => void;
   placeholder?: string;
   validatorMessage?: string;
   label?: string;

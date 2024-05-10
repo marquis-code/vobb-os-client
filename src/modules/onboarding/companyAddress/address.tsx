@@ -8,8 +8,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 //CityAddress.tsx
 const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit, loading }) => {
   const schema = yup.object({
-    address_line_1: yup.string().required("Required"),
-    address_line_2: yup.string(),
+    addressLine1: yup.string().required("Required"),
+    addressLine2: yup.string(),
     city: yup.string().required("Required")
   });
 
@@ -31,16 +31,16 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
       <CustomInput
         type="text"
         placeholder="Address line 1"
-        name="address_line_1"
+        name="addressLine1"
         register={register}
-        validatorMessage={errors.address_line_1?.message}
+        validatorMessage={errors.addressLine1?.message}
       />
       <CustomInput
         type="text"
         placeholder="Address line 2"
-        name="address_line_2"
+        name="addressLine2"
         register={register}
-        validatorMessage={errors.address_line_2?.message}
+        validatorMessage={errors.addressLine2?.message}
       />
       <CustomInput
         type="text"

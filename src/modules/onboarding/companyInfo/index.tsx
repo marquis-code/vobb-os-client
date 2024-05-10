@@ -5,6 +5,8 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { OrganisationForm } from "./companyName";
 import { SectorForm } from "./sector";
 import { TeamSizeForm } from "./teamSize";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 const CompanyInfoUI: React.FC<CompanyFormProps> = ({
   initName,
@@ -15,6 +17,7 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
   submit
 }) => {
   const { handleFormChange } = useOnboardingContext();
+  const navigate = useNavigate();
 
   const handleFormSubmit = (data: CompanyFormData) => {
     submit(data);
@@ -29,7 +32,22 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
         color="#344054"
         role="button"
         className="hidden absolute top-4 left-[0] lg:block w-6 h-6 rounded-full fill-vobb-neutral-60"
-        onClick={() => handleFormChange("fullname", ["fullname"])}
+        onClick={() => {
+          switch (activeCompanyInfo) {
+            case "organisation":
+              navigate(Routes.onboarding_user_details);
+              handleFormChange("fullname", ["fullname"]);
+              break;
+            case "teamSize":
+              handleCompanyChange("organisation");
+              break;
+            case "sector":
+              handleCompanyChange("teamSize");
+              break;
+            default:
+              break;
+          }
+        }}
       />
       <div className="hidden lg:grid">
         <CompanyInfoIcon className="mb-6 m-auto" />
@@ -57,8 +75,7 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
             key={btn}
             className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
               btn === activeCompanyInfo ? "bg-vobb-primary-70" : ""
-            }`}
-            onClick={() => handleCompanyChange(btn)}></div>
+            }`}></div>
         ))}
       </div>
     </div>

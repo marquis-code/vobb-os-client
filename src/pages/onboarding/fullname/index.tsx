@@ -1,23 +1,21 @@
 import { personalDetailsService } from "api";
-import { toast } from "components";
+import { LoadingSpinner, toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest } from "hooks";
+import { useGetOnboardDetails } from "hooks/useGetOnboardDetails";
 import { FullnameUI } from "modules";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { FullnameFormData } from "types";
 
-const initDat: FullnameFormData = {
-  first_name: "",
-  last_name: ""
-};
 const Fullname = () => {
+  const { fetchOnboardDetails, onboardData, loadingOnboard } = useGetOnboardDetails();
   const { handleFormChange } = useOnboardingContext();
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const navigate = useNavigate();
   const handleSubmit = (data: FullnameFormData) => {
-    run(personalDetailsService(data));
+    run(personalDetailsService({ first_name: data.firstName, last_name: data.lastName }));
   };
 
   useMemo(() => {
@@ -33,13 +31,25 @@ const Fullname = () => {
       });
     }
   }, [response, error, navigate]);
+
+  useEffect(() => {
+    fetchOnboardDetails();
+    handleFormChange("companyInfo", ["fullname"]);
+  }, []);
+
+  const initData: FullnameFormData = {
+    firstName: onboardData?.first_name ?? "",
+    lastName: onboardData?.last_name ?? ""
+  };
+  if (loadingOnboard) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       <FullnameUI
-        initData={initDat}
+        initData={initData}
         submit={(data) => {
           handleSubmit(data);
-          handleFormChange("companyInfo", ["fullname"]);
         }}
         loading={requestStatus?.isPending}
       />

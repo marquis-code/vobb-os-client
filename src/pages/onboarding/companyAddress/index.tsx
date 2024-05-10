@@ -4,25 +4,23 @@ import {
   companyStateService,
   companyZipcodeService
 } from "api";
-import { toast } from "components";
+import { LoadingSpinner, toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest, useFetchCountries } from "hooks";
+import { useGetOnboardDetails } from "hooks/useGetOnboardDetails";
 import { CompanyAddressUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-import { CompanyAddressFormData } from "types";
-
-const initAddresses: CompanyAddressFormData = {
-  address_line_1: "",
-  address_line_2: "",
-  city: ""
-};
+import { CompanyAddressFormData, companyAddressRequestBody, optionType } from "types";
 
 const CompanyAddress = () => {
   const { handleFormChange } = useOnboardingContext();
-  const { countries, fetchCountries } = useFetchCountries();
+  const { fetchOnboardDetails, onboardData, loadingOnboard } = useGetOnboardDetails();
+  const { countries, fetchCountries, fetchCountry, country, loadingCountry } = useFetchCountries();
   const [activeCompanyAddress, setActiveCompanyInfo] = useState<string>("country");
+  const [selectedCountry, setSelectedCountry] = useState<optionType>();
+
   const handleCompanyChange = (step: string) => {
     setActiveCompanyInfo(step);
   };
@@ -57,22 +55,23 @@ const CompanyAddress = () => {
   const handleSubmit = (data: CompanyAddressFormData) => {
     switch (activeCompanyAddress) {
       case "country":
-        runCountry(companyCountryService({ country: (data?.country as { value: any })?.value }));
+        runCountry(companyCountryService({ country: data?.country?.value ?? "" }));
+        setSelectedCountry(data?.country ?? undefined);
         break;
       case "zipcode":
-        runZipcode(companyZipcodeService({ zip_code: data.zip_code }));
+        runZipcode(companyZipcodeService({ zip_code: data.zipCode ?? "" }));
         break;
       case "province":
-        runState(companyStateService({ state: data.state }));
+        runState(companyStateService({ state: data.state ?? "" }));
         break;
       case "cityAddress":
-        const requestBody: CompanyAddressFormData = {
-          address_line_1: data.address_line_1,
-          city: data.city
+        const requestBody: companyAddressRequestBody = {
+          address_line_1: data.addressLine1 ?? "",
+          city: data.city ?? ""
         };
 
-        if (data.address_line_2 && data.address_line_2.trim() !== "") {
-          requestBody.address_line_2 = data.address_line_2;
+        if (data.addressLine2 && data.addressLine2.trim() !== "") {
+          requestBody.address_line_2 = data.addressLine2;
         }
         runCity(companyAddressesService(requestBody));
         break;
@@ -87,6 +86,7 @@ const CompanyAddress = () => {
         description: countryResponse?.data?.message
       });
       handleCompanyChange("zipcode");
+      fetchOnboardDetails();
     } else if (countryError) {
       toast({
         variant: "destructive",
@@ -100,7 +100,9 @@ const CompanyAddress = () => {
       toast({
         description: zipcodeResponse?.data?.message
       });
+
       handleCompanyChange("province");
+      fetchOnboardDetails();
     } else if (zipcodeError) {
       toast({
         variant: "destructive",
@@ -115,6 +117,7 @@ const CompanyAddress = () => {
         description: stateResponse?.data?.message
       });
       handleCompanyChange("cityAddress");
+      fetchOnboardDetails();
     } else if (stateError) {
       toast({
         variant: "destructive",
@@ -125,9 +128,8 @@ const CompanyAddress = () => {
 
   useMemo(() => {
     if (cityResponse?.status === 200) {
-      localStorage.setItem("vobbOSAccess", cityResponse?.data?.data?.access_token);
-      localStorage.setItem("vobbOSRefresh", cityResponse?.data?.data?.refresh_token);
-      navigate(Routes.overview);
+      localStorage.removeItem("vobbOSAccess");
+      navigate(Routes.completed_onboarding);
       toast({
         description: cityResponse?.data?.message
       });
@@ -139,15 +141,39 @@ const CompanyAddress = () => {
     }
   }, [cityResponse, cityError, navigate]);
 
+  const initAddresses: CompanyAddressFormData = {
+    addressLine1: onboardData?.address_line_1 ?? "",
+    addressLine2: onboardData?.address_line_2 ?? "",
+    city: onboardData?.city ?? ""
+  };
+
   useEffect(() => {
     fetchCountries();
+    fetchOnboardDetails();
+    handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb", "address"]);
   }, []);
+
+  useEffect(() => {
+    if (!loadingOnboard && onboardData) {
+      onboardData?.country && fetchCountry(onboardData.country);
+      onboardData?.country && handleCompanyChange("zipcode");
+      onboardData?.zip_code && handleCompanyChange("province");
+      onboardData?.state && handleCompanyChange("cityAddress");
+    }
+  }, [onboardData, loadingOnboard]);
+
+  if (loadingOnboard || loadingCountry) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <>
       <CompanyAddressUI
-        initCountry={{ country: null }}
-        initZipcode={{ zip_code: "" }}
-        initState={{ state: "" }}
+        initCountry={{
+          country: onboardData?.country ? { label: country, value: onboardData?.country } : null
+        }}
+        initZipcode={{ zipCode: onboardData?.zip_code ?? "" }}
+        initState={{ state: onboardData?.state ?? "" }}
         initCityAddresses={initAddresses}
         activeCompanyAddress={activeCompanyAddress}
         handleCompanyChange={handleCompanyChange}
@@ -159,9 +185,9 @@ const CompanyAddress = () => {
         }
         submit={(data) => {
           handleSubmit(data);
-          handleFormChange("companyWeb", ["fullname", "companyInfo"]);
         }}
         countries={countries}
+        selectedCountry={selectedCountry}
       />
     </>
   );
