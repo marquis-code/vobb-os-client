@@ -43,7 +43,7 @@ export const useFetchCountries = () => {
     countries,
     fetchCountry,
     country,
-    loading: countriesStatus.isPending,
+    loadingCountries: countriesStatus.isPending,
     loadingCountry: countryRequest.isPending
   };
 };
