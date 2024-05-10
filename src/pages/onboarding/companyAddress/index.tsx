@@ -17,7 +17,7 @@ import { CompanyAddressFormData, companyAddressRequestBody, optionType } from "t
 const CompanyAddress = () => {
   const { handleFormChange } = useOnboardingContext();
   const { fetchOnboardDetails, onboardData, loadingOnboard } = useGetOnboardDetails();
-  const { countries, fetchCountries, fetchCountry, country, loadingCountry } = useFetchCountries();
+  const { countries, fetchCountries, loadingCountries } = useFetchCountries();
   const [activeCompanyAddress, setActiveCompanyInfo] = useState<string>("country");
   const [selectedCountry, setSelectedCountry] = useState<optionType>();
 
@@ -155,22 +155,28 @@ const CompanyAddress = () => {
 
   useEffect(() => {
     if (!loadingOnboard && onboardData) {
-      onboardData?.country && fetchCountry(onboardData.country);
-      onboardData?.country && handleCompanyChange("zipcode");
-      onboardData?.zip_code && handleCompanyChange("province");
-      onboardData?.state && handleCompanyChange("cityAddress");
+      if (!onboardData?.country) {
+        handleCompanyChange("country");
+      } else if (!onboardData?.zip_code) {
+        handleCompanyChange("zipcode");
+      } else if (!onboardData?.state) {
+        handleCompanyChange("province");
+      } else if (!onboardData?.address_line_1) {
+        handleCompanyChange("cityAddress");
+      }
     }
   }, [onboardData, loadingOnboard]);
 
-  if (loadingOnboard || loadingCountry) {
+  if (loadingOnboard || loadingCountries) {
     return <LoadingSpinner />;
   }
-
   return (
     <>
       <CompanyAddressUI
         initCountry={{
-          country: onboardData?.country ? { label: country, value: onboardData?.country } : null
+          country: onboardData?.country
+            ? countries.find((item) => item.value === onboardData.country) ?? null
+            : null
         }}
         initZipcode={{ zipCode: onboardData?.zip_code ?? "" }}
         initState={{ state: onboardData?.state ?? "" }}

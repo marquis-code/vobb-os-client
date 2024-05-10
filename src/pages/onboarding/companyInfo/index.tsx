@@ -3,6 +3,7 @@ import { LoadingSpinner, toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest } from "hooks";
 import { useGetOnboardDetails } from "hooks/useGetOnboardDetails";
+import { sectorOptions, teamSizeOptions } from "lib/constants";
 import { CompanyInfoUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -72,8 +73,9 @@ const CompanyInfo = () => {
       toast({
         description: sizeResponse?.data?.message
       });
-      handleCompanyChange("sector");
       fetchOnboardDetails();
+      console.log('change')
+      handleCompanyChange("sector");
     } else if (sizeError) {
       toast({
         variant: "destructive",
@@ -88,7 +90,6 @@ const CompanyInfo = () => {
         description: sectorResponse?.data?.message
       });
       fetchOnboardDetails();
-
       navigate(Routes.onboarding_company_website);
     } else if (sectorError) {
       toast({
@@ -105,8 +106,13 @@ const CompanyInfo = () => {
 
   useEffect(() => {
     if (!loadingOnboard && onboardData) {
-      onboardData?.name && handleCompanyChange("teamSize");
-      onboardData?.size && handleCompanyChange("sector");
+      if (!onboardData?.name) {
+        handleCompanyChange("organisation");
+      } else if (!onboardData?.size) {
+        handleCompanyChange("teamSize");
+      } else if(!onboardData?.sector.length){
+        handleCompanyChange('sector')
+      }
     }
   }, [loadingOnboard, onboardData]);
 
@@ -119,13 +125,13 @@ const CompanyInfo = () => {
         initName={{ organisation: onboardData?.name ?? "" }}
         initSize={{
           size: onboardData?.size
-            ? { label: `${onboardData?.size} Team members`, value: onboardData?.size }
+            ? teamSizeOptions.find((item) => item.value === onboardData.size) ?? null
             : null
         }}
         initSector={{
           sector: onboardData?.sector.length
-            ? { label: onboardData?.sector[0], value: onboardData?.sector[0] }
-            : null
+            ? sectorOptions.find((item) => item.value === onboardData.sector[0]) ?? null
+              : null
         }}
         activeCompanyInfo={activeCompanyInfo}
         handleCompanyChange={handleCompanyChange}
