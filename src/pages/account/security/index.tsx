@@ -15,6 +15,10 @@ const AccountSecurity = () => {
           handle2FA: () => setTwoFactor({ show: true }),
           enable2FA: false
         }}
+        connectedAccts={{
+          handleGoogleAuth: console.log,
+          enableGoogle: false
+        }}
       />
     </>
   );
