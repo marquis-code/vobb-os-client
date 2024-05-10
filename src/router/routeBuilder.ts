@@ -14,8 +14,9 @@ import {
   NewPassword,
   VerifyEmail,
   CompletedEmailVerify,
-  AccountProfile
-
+  AccountProfile,
+  AccountSecurity,
+  AccountPersonalizations
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -104,6 +105,26 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Profile",
+      parent: "Account Settings"
+    }
+  },
+  {
+    path: Routes.security,
+    Element: AccountSecurity,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Security",
+      parent: "Account Settings"
+    }
+  },
+  {
+    path: Routes.personalizations,
+    Element: AccountPersonalizations,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Personalizations",
       parent: "Account Settings"
     }
   },

@@ -24,5 +24,7 @@ export const Routes = {
 
   // Dashboard
   overview: "/overview",
-  profile: "/settings/profile"
+  profile: "/settings/profile",
+  security: "/settings/security",
+  personalizations: "/settings/personalizations",
 };
