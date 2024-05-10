@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 
 const client_id = process.env.REACT_APP_API_GOOGLE_CLIENT_ID;
 
-const useGoogleSignin = ({ redirectUrl }) => {
+const useGoogleSignin = ({ pathname }) => {
   const [authorizationCode, setAuthorizationCode] = useState<string | null>(null);
   const googleSignIn = () => {
     const scope = "email profile openid";
     const responseType = "code";
-    const redirect = `${window.location.protocol}//${window.location.host}${redirectUrl}`;
+    const redirect = `${window.location.origin}${pathname}`;
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&redirect_uri=${encodeURIComponent(
       redirect
     )}&scope=${encodeURIComponent(
