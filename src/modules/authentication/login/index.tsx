@@ -53,7 +53,8 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
     handleSubmit,
     formState: { errors },
     setValue,
-    getValues
+    getValues,
+    watch
   } = useForm<LoginData>({
     resolver: yupResolver(schema),
     defaultValues: initLogin
@@ -99,6 +100,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
                   handleChecked={(checked) => {
                     setValue("rememberMe", checked);
                   }}
+                  checked={watch("rememberMe") ?? false}
                 />
 
                 <Link

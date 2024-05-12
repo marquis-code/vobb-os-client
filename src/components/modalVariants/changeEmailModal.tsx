@@ -16,8 +16,6 @@ const schema = yup.object({
 });
 
 interface ChangeEmailModalProps extends ModalProps {
-  show: boolean;
-  close: () => void;
   submit: (email: string) => void;
 }
 

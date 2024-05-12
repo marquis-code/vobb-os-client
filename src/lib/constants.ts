@@ -1,4 +1,7 @@
 import { companySectorTypes, companySizeTypes } from "types";
+import { optionType } from "types/interfaces";
+import timezones from "timezones-list";
+
 
 interface optionTypeSize {
   label: string;
@@ -47,3 +50,37 @@ export const teamSizeOptions: optionTypeSize[] = [
     value: "51+"
   }
 ];
+
+export const initOptionType: optionType = {
+  label: "",
+  value: ""
+};
+
+export const sysLangOptions: optionType[] = [
+  {
+    label: "English",
+    value: "English"
+  }
+];
+
+export const dateFormatOptions: optionType[] = [
+  {
+    label: "DD/MM/YYYY",
+    value: "DD/MM/YYYY"
+  },
+  {
+    label: "MM/DD/YYYY",
+    value: "MM/DD/YYYY"
+  },
+  {
+    label: "Month D, Yr",
+    value: "Month D, Yr"
+  }
+];
+
+export const timeZoneOptions: optionType[] = timezones
+  .map((item) => ({
+    label: item.label,
+    value: item.tzCode
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));

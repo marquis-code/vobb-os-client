@@ -19,7 +19,7 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, title, parent }) => {
     <>
       <header
         style={{ width: `calc(100dvw - ${sideBarWidth})`, left: sideBarWidth }}
-        className="border-b border-vobb-neutral-30 w-full fixed top-0 right-0 px-4 py-1 h-[55px] flex items-center bg-white z-1">
+        className="border-b border-vobb-neutral-30 w-full fixed top-0 right-0 px-4 py-1 h-[55px] flex items-center bg-white z-[4]">
         <Breadcrumb>
           <BreadcrumbList className="text-xs">
             <BreadcrumbItem>{parent}</BreadcrumbItem>

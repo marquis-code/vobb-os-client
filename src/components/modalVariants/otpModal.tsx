@@ -6,8 +6,6 @@ import { useState } from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
 interface OTPModalProps extends ModalProps {
-  show: boolean;
-  close: () => void;
   title: string;
   text: string;
   submit: (data: { otp: string }) => void;

@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { RouteBuilder } from "./routeBuilder";
 import { ProtectedRoute } from "./protectedRoute";
 import { ErrorBoundary } from "lib";
+import { useFetchCountries } from "hooks";
 
 /**
  * MAIN ROUTER COMPONENT
@@ -16,6 +17,12 @@ import { ErrorBoundary } from "lib";
  */
 
 const MainRouter: React.FC = () => {
+  const { fetchCountries } = useFetchCountries();
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   return (
     <>
       <ScrollToTop />
