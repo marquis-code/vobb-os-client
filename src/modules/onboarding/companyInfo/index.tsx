@@ -1,30 +1,26 @@
 import { CompanyInfoIcon } from "assets";
 import { useOnboardingContext } from "context";
 import { CompanyFormData, CompanyFormProps } from "types/onboarding";
-import { useState } from "react";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { OrganisationForm } from "./companyName";
 import { SectorForm } from "./sector";
 import { TeamSizeForm } from "./teamSize";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
-const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
+const CompanyInfoUI: React.FC<CompanyFormProps> = ({
+  initName,
+  initSize,
+  initSector,
+  activeCompanyInfo,
+  handleCompanyChange,
+  submit
+}) => {
   const { handleFormChange } = useOnboardingContext();
-  const [activeCompanyInfo, setActiveCompanyInfo] = useState<string>("organisation");
+  const navigate = useNavigate();
 
   const handleFormSubmit = (data: CompanyFormData) => {
-    switch (activeCompanyInfo) {
-      case "organisation":
-        setActiveCompanyInfo("teamSize");
-        break;
-      case "teamSize":
-        setActiveCompanyInfo("sector");
-        break;
-      case "sector":
-        submit(data);
-        break;
-      default:
-        break;
-    }
+    submit(data);
   };
 
   const progressBtns = ["organisation", "teamSize", "sector"];
@@ -36,7 +32,22 @@ const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
         color="#344054"
         role="button"
         className="hidden absolute top-4 left-[0] lg:block w-6 h-6 rounded-full fill-vobb-neutral-60"
-        onClick={() => handleFormChange("fullname", ["fullname"])}
+        onClick={() => {
+          switch (activeCompanyInfo) {
+            case "organisation":
+              navigate(Routes.onboarding_user_details);
+              handleFormChange("fullname", ["fullname"]);
+              break;
+            case "teamSize":
+              handleCompanyChange("organisation");
+              break;
+            case "sector":
+              handleCompanyChange("teamSize");
+              break;
+            default:
+              break;
+          }
+        }}
       />
       <div className="hidden lg:grid">
         <CompanyInfoIcon className="mb-6 m-auto" />
@@ -49,11 +60,11 @@ const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
       </div>
       <div>
         {activeCompanyInfo === "organisation" ? (
-          <OrganisationForm initData={initData} submit={handleFormSubmit} />
+          <OrganisationForm initData={initName} submit={handleFormSubmit} />
         ) : activeCompanyInfo === "teamSize" ? (
-          <TeamSizeForm initData={initData} submit={handleFormSubmit} />
+          <TeamSizeForm initData={initSize} submit={handleFormSubmit} />
         ) : activeCompanyInfo === "sector" ? (
-          <SectorForm initData={initData} submit={handleFormSubmit} />
+          <SectorForm initData={initSector} submit={handleFormSubmit} />
         ) : (
           ""
         )}
@@ -64,12 +75,11 @@ const CompanyInfo: React.FC<CompanyFormProps> = ({ initData, submit }) => {
             key={btn}
             className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
               btn === activeCompanyInfo ? "bg-vobb-primary-70" : ""
-            }`}
-            onClick={() => setActiveCompanyInfo(btn)}></div>
+            }`}></div>
         ))}
       </div>
     </div>
   );
 };
 
-export { CompanyInfo };
+export { CompanyInfoUI };

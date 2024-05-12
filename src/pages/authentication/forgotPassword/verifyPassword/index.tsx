@@ -1,37 +1,68 @@
 import { Routes } from "router";
 import { VerifyPasswordUI } from "modules";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useApiRequest } from "hooks";
-import { forgotPasswordVerifyService } from "api";
+import { forgotPasswordService, forgotPasswordVerifyService } from "api";
 import { useMemo } from "react";
 import { toast } from "components";
 import { forgotPasswordParams } from "types";
 
 const VerifyPassword = () => {
-  const { run, data: response, error } = useApiRequest({});
-  const handleVerifyCode = (data: forgotPasswordParams) => {
-    run(forgotPasswordVerifyService(data));
-  };
+  const { run: runVerify, data: verifyResponse, error: verifyError } = useApiRequest({});
   const navigate = useNavigate();
+  const handleVerifyCode = (data: forgotPasswordParams) => {
+    runVerify(forgotPasswordVerifyService(data));
+  };
 
   useMemo(() => {
-    if (response?.status === 200) {
-      localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
+    if (verifyResponse?.status === 200) {
+      localStorage.setItem("vobbOSAccess", verifyResponse?.data?.data?.token);
 
       navigate(Routes.new_password);
       toast({
-        description: response?.data?.message
+        description: verifyResponse?.data?.message
       });
-    } else if (error) {
+    } else if (verifyError) {
       toast({
         variant: "destructive",
-        description: error?.response?.data?.error
+        description: verifyError?.response?.data?.error
       });
     }
-  }, [response, error, navigate]);
+  }, [verifyResponse, verifyError, navigate]);
+
+  const [searchParams] = useSearchParams();
+  const encodedEmail = searchParams.get("email");
+  const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
+  const {
+    run: runResend,
+    data: resendResponse,
+    error: resendError,
+    requestStatus: resendStatus
+  } = useApiRequest({});
+
+  const handleResendCode = () => {
+    email && runResend(forgotPasswordService({ email }));
+  };
+  useMemo(() => {
+    if (resendResponse?.status === 200) {
+      localStorage.setItem("vobbOSAccess", resendResponse?.data?.data?.token);
+      toast({
+        description: resendResponse?.data?.message
+      });
+    } else if (resendError) {
+      toast({
+        variant: "destructive",
+        description: resendError?.response?.data?.error
+      });
+    }
+  }, [resendResponse, resendError]);
   return (
     <>
-      <VerifyPasswordUI submit={handleVerifyCode} />
+      <VerifyPasswordUI
+        submit={handleVerifyCode}
+        handleResend={handleResendCode}
+        loading={resendStatus.isPending}
+      />
     </>
   );
 };

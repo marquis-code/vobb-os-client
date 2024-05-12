@@ -1,5 +1,5 @@
 import { resetPasswordService } from "api";
-import { useToast } from "components";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
 import { NewPasswordUI } from "modules";
 import { useMemo } from "react";
@@ -8,7 +8,6 @@ import { Routes } from "router";
 import { resetPasswordData } from "types/auth";
 
 const NewPassword = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleResetPassword = (data: resetPasswordData) => {

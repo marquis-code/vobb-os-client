@@ -3,7 +3,6 @@
 AUTH URLS
 =================================
 */
-
 import { forgotPasswordParams } from "types";
 
 /**
@@ -23,7 +22,14 @@ export const signupURL = () => `/auth/register`;
 export const verifyEmailURL = () => `/auth/verify`;
 
 /**
- * Resend Verify email URL
+ * Google login URL
+ *
+ * @returns url string
+ *
+ */
+export const googleLoginURL = () => `/auth/google/login`;
+
+/** Resend Verify email URL
  *
  * @returns url string
  *

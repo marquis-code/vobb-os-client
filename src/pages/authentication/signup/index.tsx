@@ -1,39 +1,84 @@
-import { signupService } from "api";
-import { useToast } from "components";
+import { signupService, googleSignupService } from "api";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
+import { useGoogleSignin } from "hooks/useGoogleSignin";
 import { SignupData, SignupUI } from "modules";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
 const Signup = () => {
-  const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { authorizationCode: code, googleSignIn } = useGoogleSignin({
+    pathname: Routes.home
+  });
+  const {
+    run: runEmailSignup,
+    data: emailResponse,
+    requestStatus: emailStatus,
+    error: emailError
+  } = useApiRequest({});
+  const {
+    run: runGoogleSignup,
+    data: googleResponse,
+    requestStatus: googleStatus,
+    error: googleError
+  } = useApiRequest({});
 
-  const submit = (data: SignupData) => {
-    run(signupService(data));
+  //email signup
+  const handleEmailSignup = (data: SignupData) => {
+    runEmailSignup(signupService(data));
   };
 
   useMemo(() => {
-    if (response?.status === 201) {
-      localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
-      const email = encodeURIComponent(response?.data?.data?.email);
+    if (emailResponse?.status === 201) {
+      localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
+      const email = encodeURIComponent(emailResponse?.data?.data?.email);
       navigate(`${Routes.email_verify}?email=${email}`);
-    } else if (error) {
+      toast({
+        description: emailResponse?.data?.message
+      });
+    } else if (emailError) {
       toast({
         variant: "destructive",
-        description: error?.response?.data?.error
+        description: emailError?.response?.data?.error
       });
     }
-  }, [response, error, navigate, toast]);
+  }, [emailResponse, emailError, navigate]);
+
+  //google signup
+  const handleGoogleSignUp = () => {
+    googleSignIn();
+  };
+
+  useEffect(() => {
+    if (code) {
+      runGoogleSignup(googleSignupService({ code }));
+    }
+  }, [code, runGoogleSignup]);
+
+  useMemo(() => {
+    if (googleResponse?.status === 201) {
+      localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.token);
+      navigate(Routes.onboarding_user_details);
+      toast({
+        description: googleResponse?.data?.message
+      });
+    } else if (googleError) {
+      toast({
+        variant: "destructive",
+        description: googleError?.response?.data?.error
+      });
+    }
+  }, [googleResponse, googleError, navigate]);
 
   return (
     <>
       <SignupUI
-        submit={submit}
-        clear={requestStatus.isResolved}
-        loading={requestStatus.isPending}
+        submit={handleEmailSignup}
+        clear={emailStatus.isResolved}
+        handleGoogleSignup={handleGoogleSignUp}
+        loading={emailStatus.isPending || googleStatus.isPending}
       />
     </>
   );

@@ -1,39 +1,28 @@
 import { LocationIcon } from "assets";
 import { useOnboardingContext } from "context";
-import { CompanyAddressFormData, CompanyAddressProps } from "types/onboarding";
-import React, { useState } from "react";
+import { CompanyAddressProps } from "types/onboarding";
 import { CityAddress } from "./address";
 import { CountrySelect } from "./country";
 import { Province } from "./province";
 import { Zipcode } from "./zipcode";
-import { optionType } from "types";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
-const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, countries }) => {
+const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
+  initCountry,
+  initZipcode,
+  initState,
+  initCityAddresses,
+  activeCompanyAddress,
+  handleCompanyChange,
+  submit,
+  countries,
+  loading,
+  selectedCountry
+}) => {
   const { handleFormChange } = useOnboardingContext();
-  const [activeCompanyAddress, setActiveCompanyAddress] = useState<string>("country");
-  const [selectedCountry, setSelectedCountry] = useState<optionType>();
-
-  const handleFormSubmit = (data: CompanyAddressFormData) => {
-    switch (activeCompanyAddress) {
-      case "country":
-        setSelectedCountry(data.country);
-        setActiveCompanyAddress("zipcode");
-        break;
-      case "zipcode":
-        setActiveCompanyAddress("province");
-        break;
-      case "province":
-        setActiveCompanyAddress("city");
-        break;
-      case "city":
-        submit(data);
-        break;
-      default:
-        break;
-    }
-  };
-
+  const navigate = useNavigate();
   const progressBtns = ["country", "zipcode", "province", "city"];
 
   return (
@@ -43,7 +32,25 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
         color="#344054"
         role="button"
         className="hidden absolute top-4 left-[0] lg:block w-6 h-6 rounded-full fill-vobb-neutral-60"
-        onClick={() => handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb"])}
+        onClick={() => {
+          switch (activeCompanyAddress) {
+            case "country":
+              navigate(Routes.onboarding_company_website);
+              handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb"]);
+              break;
+            case "zipcode":
+              handleCompanyChange?.("country");
+              break;
+            case "province":
+              handleCompanyChange?.("zipcode");
+              break;
+            case "cityAddress":
+              handleCompanyChange?.("province");
+              break;
+            default:
+              break;
+          }
+        }}
       />
       <div className="hidden lg:grid">
         <LocationIcon className="mb-6 m-auto" />
@@ -55,20 +62,26 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
         </div>
       </div>
       {activeCompanyAddress === "country" ? (
-        <CountrySelect submit={handleFormSubmit} initData={initData} countries={countries} />
+        <CountrySelect
+          submit={submit}
+          initCountry={initCountry}
+          countries={countries}
+          loading={loading}
+        />
       ) : activeCompanyAddress === "zipcode" ? (
         <Zipcode
-          submit={handleFormSubmit}
-          initData={initData}
+          submit={submit}
+          initZipcode={initZipcode}
           postalCode={
             countries?.find((item) => item.value === selectedCountry?.value)?.postalCode ??
             undefined
           }
+          loading={loading}
         />
       ) : activeCompanyAddress === "province" ? (
-        <Province submit={handleFormSubmit} initData={initData} countries={countries} />
-      ) : activeCompanyAddress === "city" ? (
-        <CityAddress submit={handleFormSubmit} initData={initData} />
+        <Province submit={submit} initState={initState} loading={loading} countries={countries} />
+      ) : activeCompanyAddress === "cityAddress" ? (
+        <CityAddress submit={submit} initCityAddresses={initCityAddresses} loading={loading} />
       ) : (
         ""
       )}
@@ -79,12 +92,11 @@ const CompanyAddress: React.FC<CompanyAddressProps> = ({ initData, submit, count
             key={btn}
             className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
               btn === activeCompanyAddress ? "bg-vobb-primary-70" : ""
-            }`}
-            onClick={() => setActiveCompanyAddress(btn)}></div>
+            }`}></div>
         ))}
       </div>
     </div>
   );
 };
 
-export { CompanyAddress };
+export { CompanyAddressUI };

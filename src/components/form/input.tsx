@@ -12,6 +12,7 @@ export interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputEle
   parentClassName?: string;
   className?: string;
   register?: UseFormRegister<any>;
+  defaultValue?: string;
 }
 
 const CustomInput: React.FC<CustomInputProps> = (props) => {
@@ -24,7 +25,8 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     className,
     hint,
     name,
-    register
+    register,
+    defaultValue
   } = props;
 
   return (
@@ -47,6 +49,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               min: props.min,
               max: props.max
             })}
+            defaultValue={defaultValue}
             className={cn(
               `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
               className

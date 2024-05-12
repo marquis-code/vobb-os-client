@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Routes } from "router";
 import { useApiRequest } from "hooks";
 import { resendVerifyEmailService, verifyEmailService } from "api";
-import { useToast } from "components";
+import { toast } from "components";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ const VerifyEmail = () => {
     error: resendError,
     requestStatus: resendStatus
   } = useApiRequest({});
-  const { toast } = useToast();
 
   const handleVerify = (data: { token: number }) => {
     runVerify(verifyEmailService(data));
@@ -31,26 +30,33 @@ const VerifyEmail = () => {
 
   useMemo(() => {
     if (verifyResponse?.status === 200) {
+      localStorage.removeItem("vobbOSAccess");
       navigate(Routes.completed_email_verify);
-    } else {
+      toast({
+        description: verifyResponse?.data?.message
+      });
+    } else if (verifyError) {
       toast({
         variant: "destructive",
         description: verifyError?.response?.data?.error
       });
     }
-  }, [verifyResponse, verifyError, navigate, toast]);
+  }, [verifyResponse, verifyError, navigate]);
 
   useMemo(() => {
     if (resendResponse?.status === 200) {
       const email = encodeURIComponent(resendResponse?.data?.data?.email);
       navigate(`${Routes.email_verify}?email=${email}`);
-    } else {
+      toast({
+        description: resendResponse?.data?.message
+      });
+    } else if (resendError) {
       toast({
         variant: "destructive",
         description: resendError?.response?.data?.error
       });
     }
-  }, [resendResponse, resendError, navigate, toast]);
+  }, [resendResponse, resendError, navigate]);
 
   return (
     <>

@@ -1,14 +1,26 @@
+import { companySectorTypes, companySizeTypes } from "types";
 import { optionType } from "types/interfaces";
 import timezones from "timezones-list";
 
-export const sectorOptions: optionType[] = [
+
+interface optionTypeSize {
+  label: string;
+  value: companySizeTypes;
+}
+
+interface optionTypeSector {
+  label: string;
+  value: companySectorTypes;
+}
+
+export const sectorOptions: optionTypeSector[] = [
   {
     label: "Education",
     value: "Education"
   },
   {
     label: "Medical and Health",
-    value: "Medical and Health"
+    value: "Health"
   },
   {
     label: "Tourism",
@@ -16,7 +28,7 @@ export const sectorOptions: optionType[] = [
   }
 ];
 
-export const teamSizeOptions: optionType[] = [
+export const teamSizeOptions: optionTypeSize[] = [
   {
     label: "0-5 Team members",
     value: "0-5"
@@ -35,7 +47,7 @@ export const teamSizeOptions: optionType[] = [
   },
   {
     label: "50+ Team members",
-    value: "50+"
+    value: "51+"
   }
 ];
 

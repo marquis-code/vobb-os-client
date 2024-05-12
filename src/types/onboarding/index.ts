@@ -1,6 +1,8 @@
 import { ReactElement } from "react";
 import { optionType } from "types/interfaces";
 
+export type companySizeTypes = "0-5" | "6-10" | "11-20" | "21-50" | "51+";
+export type companySectorTypes = "Education" | "Health" | "Tourism";
 export interface StepsType {
   icon: ReactElement<SVGElement>;
   name: string;
@@ -13,40 +15,42 @@ export interface FullnameFormData {
 }
 
 export interface FullnameFormProps {
-  initData: FullnameFormData | undefined;
+  loading: boolean;
+  initData: FullnameFormData;
   submit: (data: FullnameFormData) => void;
 }
 
 export interface CompanyFormData {
-  organisation: string;
-  sector?: optionType | null;
-  teamSize?: optionType | null;
+  organisation?: string;
+  size?: { label: string; value: companySizeTypes } | null;
+  sector?: { label: string; value: companySectorTypes } | null;
 }
 
 export interface CompanyFormProps {
-  initData: CompanyFormData | undefined;
+  initName: { organisation: string };
+  initSize: { size: { label: string; value: companySizeTypes } | null };
+  initSector: { sector: { label: string; value: companySectorTypes } | null };
+  activeCompanyInfo: string;
+  loading: boolean;
+  handleCompanyChange: (step: string) => void;
   submit: (data: CompanyFormData) => void;
-}
-export interface CompanyFormErrors {
-  organisation?: string;
-  sector?: string;
-  teamSize?: string;
 }
 
 export interface CompanyWebsiteData {
-  companyUrl: string;
+  website: string;
 }
 export interface CompanyUrlFormProps {
-  initData: CompanyWebsiteData | undefined;
+  initData: CompanyWebsiteData;
   submit: (data: CompanyWebsiteData) => void;
+  loading: boolean;
 }
 
 export interface CompanyAddressFormData {
-  country?: optionType;
-  zipcode?: string;
-  province?: string;
-  address1?: string;
-  address2?: string;
+  country?: optionType | null;
+  zipCode?: string;
+  state?: string;
+  addressLine1?: string;
+  addressLine2?: string;
   city?: string;
 }
 
@@ -72,18 +76,16 @@ export interface CountriesProps {
   };
 }
 export interface CompanyAddressProps {
-  initData?: CompanyAddressFormData | undefined;
+  initCountry?: CompanyAddressFormData;
+  initZipcode?: CompanyAddressFormData;
+  initState?: CompanyAddressFormData;
+  initCityAddresses?: CompanyAddressFormData;
+  activeCompanyAddress?: string;
+  loading: boolean;
+  handleCompanyChange?: (step: string) => void;
   submit: (data: CompanyAddressFormData) => void | undefined;
   countries?: CountryType[];
-  changeActiveState?: (newActiveCompanyInfo: string) => void;
-}
-export interface CompanyAddressFormErrors {
-  country?: string;
-  zipcode?: string;
-  state?: string;
-  addressline1?: string;
-  addressline2?: string;
-  city?: string;
+  selectedCountry?: optionType | undefined;
 }
 
 export interface CountryType extends optionType {
@@ -92,4 +94,13 @@ export interface CountryType extends optionType {
     regex?: string;
   };
   flag: string;
+}
+
+export interface companyAddressRequestBody {
+  country?: string;
+  zip_code?: string;
+  state?: string;
+  address_line_1: string;
+  address_line_2?: string;
+  city: string;
 }

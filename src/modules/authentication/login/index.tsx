@@ -41,9 +41,10 @@ const schema = yup.object({
 interface LoginProps {
   submit: (data: loginData) => void;
   loading: boolean;
+  handleGoogleSignin: () => void;
 }
 
-const LoginUI: React.FC<LoginProps> = ({ submit, loading }) => {
+const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { isMobile } = useMobile({ size: 1024 });
 
@@ -65,7 +66,6 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading }) => {
       recaptchaRef.current.reset();
     }
   };
-
   return (
     <>
       {isMobile ? (
@@ -138,7 +138,9 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading }) => {
             <Button
               className="w-full mt-4 flex items-center gap-2 justify-center"
               size={"default"}
-              variant="outline">
+              variant="outline"
+              disabled={loading}
+              onClick={handleGoogleSignin}>
               <GoogleLogoIcon width={20} /> Signin with Google
             </Button>
             <p className="mt-6 text-center text-[13px]">

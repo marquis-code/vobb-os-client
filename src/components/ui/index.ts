@@ -5,3 +5,4 @@ export * from "./input-otp";
 export * from "./popover";
 export * from "./use-toast";
 export * from "./toaster";
+export * from "./loading-spinner";

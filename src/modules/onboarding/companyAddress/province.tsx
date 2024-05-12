@@ -5,9 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 
-const Province: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
+const Province: React.FC<CompanyAddressProps> = ({ initState, submit, loading }) => {
   const schema = yup.object().shape({
-    province: yup.string().required("Required")
+    state: yup.string().required("Required")
   });
   const {
     register,
@@ -15,22 +15,28 @@ const Province: React.FC<CompanyAddressProps> = ({ initData, submit }) => {
     formState: { errors }
   } = useForm<CompanyAddressFormData>({
     resolver: yupResolver<any>(schema),
-    defaultValues: initData
+    defaultValues: initState
   });
 
   const onSubmit = (data: CompanyAddressFormData) => {
     submit(data);
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <CustomInput
         type="text"
         placeholder={"State/Province"}
-        name="province"
+        name="state"
         register={register}
-        validatorMessage={errors.province?.message}
+        validatorMessage={errors.state?.message}
       />
-      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+      <Button
+        onClick={handleSubmit(onSubmit)}
+        disabled={loading}
+        loading={loading}
+        className="w-full mt-6"
+        size={"default"}
+        variant="fill">
         Continue
       </Button>
     </form>

@@ -39,9 +39,10 @@ interface SignupProps {
   submit: (data: SignupData) => void;
   clear: boolean;
   loading: boolean;
+  handleGoogleSignup: () => void;
 }
 
-const SignupUI: React.FC<SignupProps> = ({ submit, loading }) => {
+const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const {
     register,
@@ -111,7 +112,8 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading }) => {
           <Button
             className="w-full mt-4 flex items-center gap-2 justify-center"
             size={"default"}
-            variant="outline">
+            variant="outline"
+            onClick={handleGoogleSignup}>
             <GoogleLogoIcon width={20} /> Signup with Google
           </Button>
           <p className="mt-6 text-center text-[13px]">

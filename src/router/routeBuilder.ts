@@ -5,7 +5,6 @@ import {
   Signup,
   Login,
   Recaptcha,
-  Onboarding,
   CompletedOnboarding,
   Overview,
   Email,
@@ -15,6 +14,10 @@ import {
   VerifyEmail,
   CompletedEmailVerify,
   AccountProfile,
+  Fullname,
+  CompanyInfo,
+  CompanyWebsite,
+  CompanyAddress,
   AccountSecurity,
   AccountPersonalizations
 } from "pages";
@@ -71,9 +74,28 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Element: CompletedPasswordReset
   },
   {
-    path: Routes.onboarding,
-    Element: Onboarding,
+    path: Routes.onboarding_user_details,
+    Element: Fullname,
     Layout: OnboardingLayout
+  },
+  {
+    path: Routes.onboarding_company_details,
+    Element: CompanyInfo,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.onboarding_company_website,
+    Element: CompanyWebsite,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.onboarding_operating_address,
+    Element: CompanyAddress,
+    Layout: OnboardingLayout
+  },
+  {
+    path: Routes.completed_onboarding,
+    Element: CompletedOnboarding
   },
   {
     path: Routes.email_verify,
@@ -82,10 +104,6 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.completed_email_verify,
     Element: CompletedEmailVerify
-  },
-  {
-    path: Routes.completed_onboarding,
-    Element: CompletedOnboarding
   },
 
   // Dashboard Routes

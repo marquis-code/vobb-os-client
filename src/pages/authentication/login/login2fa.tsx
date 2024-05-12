@@ -1,5 +1,5 @@
 import { login2faService } from "api";
-import { OTPModal, useToast } from "components";
+import { OTPModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,6 @@ interface Login2FAProps extends ModalProps {
 }
 
 const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
-  const { toast } = useToast();
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const navigate = useNavigate();
 
@@ -21,9 +20,14 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
 
   useMemo(() => {
     if (response?.status === 200) {
-      localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
-      localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
-      navigate(Routes.overview);
+      if (response?.data?.status) {
+        localStorage.setItem("vobbOSAccess", response?.data?.token);
+        navigate(`${Routes[`onboarding_${response?.data?.status}`]}`);
+      } else {
+        localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
+        localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
+        navigate(Routes.overview);
+      }
       toast({
         description: response?.data?.message
       });
@@ -33,7 +37,7 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, toast]);
+  }, [response, error, navigate]);
   return (
     <>
       <OTPModal

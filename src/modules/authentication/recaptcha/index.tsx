@@ -12,7 +12,6 @@ const RecaptchaUI: React.FC = () => {
         sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
         onChange={(token) => {
           setCaptcha(token);
-          console.log(token);
         }}
         ref={recaptchaRef}
       />

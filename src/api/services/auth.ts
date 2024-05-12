@@ -16,14 +16,24 @@ import {
   resendVerifyEmailURL,
   resetPasswordURL,
   signupURL,
-  verifyEmailURL
+  verifyEmailURL,
+  googleLoginURL
 } from "api";
-import { loginData, resetPasswordData } from "types/auth";
 
-interface signupData {
+interface signupRequestBody {
   email: string;
   password: string;
   recaptcha: string;
+}
+interface emailLoginRequestBody {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+  recaptcha: string;
+}
+interface resetPasswordRequestBody {
+  newPassword: string;
+  confirmPassword: string;
 }
 
 /**
@@ -32,7 +42,7 @@ interface signupData {
  * @returns axios promise
  */
 
-export const signupService = (data: signupData) => {
+export const signupService = (data: signupRequestBody) => {
   return axiosInstanceUnauth.post(signupURL(), data);
 };
 
@@ -65,7 +75,7 @@ export const resendVerifyEmailService = (data: { email: string }) => {
  * @param data -  An object containing the login information including email, password, and rememeberMe
  * @returns axios promise
  */
-export const emailLoginService = (data: loginData) => {
+export const emailLoginService = (data: emailLoginRequestBody) => {
   return axiosInstanceUnauth.post(emailLoginURL(), data);
 };
 
@@ -104,11 +114,20 @@ export const forgotPasswordVerifyService = ({ token, otp }) => {
  * @param data - An object containing new password and confirm.
  * @returns axios promise
  */
-export const resetPasswordService = (data: resetPasswordData) => {
+export const resetPasswordService = (data: resetPasswordRequestBody) => {
   return postRequest({
     url: resetPasswordURL(),
     data: data
   });
+};
+
+/**
+ * Google login service
+ * @param data - An object containing the code of type string
+ * @returns axios promise
+ */
+export const googleSigninService = (data: { code: string }) => {
+  return axiosInstanceUnauth.post(googleLoginURL(), data);
 };
 
 /**

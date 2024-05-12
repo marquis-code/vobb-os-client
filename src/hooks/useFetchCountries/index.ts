@@ -15,7 +15,7 @@ export const useFetchCountries = () => {
     if (response?.status === 200) {
       const data = response.data.map((item) => ({
         label: item.name.common,
-        value: item.name.common,
+        value: item.cca3,
         postalCode: item.postalCode
       }));
 
@@ -26,5 +26,5 @@ export const useFetchCountries = () => {
     return [];
   }, [response, error]);
 
-  return { fetchCountries, countries, loading: requestStatus.isPending };
+  return { fetchCountries, countries, loadingCountries: requestStatus.isPending };
 };

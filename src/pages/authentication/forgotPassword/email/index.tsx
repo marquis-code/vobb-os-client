@@ -1,5 +1,5 @@
 import { forgotPasswordService } from "api";
-import { useToast } from "components";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
 import { EmailUI } from "modules";
 import { useMemo, useState } from "react";
@@ -8,7 +8,6 @@ import { Routes } from "router";
 
 const Email = () => {
   const [email, setEmail] = useState("");
-  const { toast } = useToast();
   const { run, data: response, error } = useApiRequest({});
   const handleForgotPassword = (data: { email: string }) => {
     run(forgotPasswordService(data));
@@ -30,7 +29,7 @@ const Email = () => {
         description: error?.response?.data?.error
       });
     }
-  }, [response, error, navigate, email, toast]);
+  }, [response, error, navigate, email]);
 
   return (
     <>

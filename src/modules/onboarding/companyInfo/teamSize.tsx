@@ -1,19 +1,19 @@
-import { CompanyFormData } from "types/onboarding";
 import { Button, SelectInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { teamSizeOptions } from "lib/constants";
+import { CompanyFormData, companySizeTypes } from "types";
 
 // TeamSizeForm.tsx
 interface TeamSizeFormProps {
-  initData?: CompanyFormData;
+  initData: { size: { label: string; value: companySizeTypes } | null };
   submit: (data: CompanyFormData) => void;
 }
 
 const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit }) => {
   const teamSizeSchema = yup.object().shape({
-    teamSize: yup
+    size: yup
       .object()
       .shape({
         label: yup.string().required("Required"),
@@ -26,27 +26,25 @@ const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit }) => {
     formState: { errors },
     setValue,
     watch
-  } = useForm<CompanyFormData>({
+  } = useForm<{ size: { label: string; value: companySizeTypes } | null }>({
     resolver: yupResolver<any>(teamSizeSchema),
     defaultValues: initData
   });
 
-  const onSubmit = (data: CompanyFormData) => {
+  const onSubmit = (data: { size: { label: string; value: companySizeTypes } | null }) => {
     submit(data);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <SelectInput
-        name="teamSize"
+        name="size"
         placeholder="What is the size of your team?"
         options={teamSizeOptions}
-        onChange={(value) => setValue("teamSize", value)}
-        value={watch("teamSize")}
+        onChange={(value) => setValue("size", value)}
+        value={watch("size")}
         validatorMessage={
-          errors.teamSize?.message ??
-          errors.teamSize?.value?.message ??
-          errors.teamSize?.label?.message
+          errors.size?.message ?? errors.size?.value?.message ?? errors.size?.label?.message
         }
       />
       <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">

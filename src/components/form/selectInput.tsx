@@ -1,13 +1,13 @@
 import { FileIcon, ImageIcon, UploadIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
 import { ReactNode } from "react";
+import { optionType } from "types";
 import Select, { ActionMeta, MultiValue, SingleValue } from "react-select";
-import { optionType } from "types/interfaces";
 
 interface SelectInputProps {
   options: optionType[] | undefined;
-  value: optionType | null | undefined;
-  onChange: (newValue: SingleValue<optionType>, actionMeta: ActionMeta<optionType>) => void;
+  value?: optionType | null;
+  onChange: (newValue) => void;
   placeholder?: string;
   validatorMessage?: string;
   label?: string;
