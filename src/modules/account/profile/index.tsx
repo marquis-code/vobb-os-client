@@ -12,16 +12,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { cn } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 
-interface ProfileData {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  jobTitle: string;
-  email: string;
-  avatar: string | undefined;
-}
-
-interface ProfileFormData {
+export interface ProfileFormData {
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -29,15 +20,6 @@ interface ProfileFormData {
   email: string;
   avatarFile: any | File | null;
 }
-
-const initData: ProfileFormData = {
-  firstName: "",
-  lastName: "",
-  phoneNumber: "",
-  jobTitle: "",
-  email: "",
-  avatarFile: null
-};
 
 const isFile = (value: any): value is File => value instanceof File;
 
@@ -54,26 +36,36 @@ const schema = yup.object({
 });
 
 interface AccountProfileProps {
+  profile: any;
+  updateProfile: (data: ProfileFormData) => void;
+  loadingUpdate: Boolean;
   handleChangeEmail: () => void;
 }
 
-const AccountProfileUI = ({ handleChangeEmail }) => {
+const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUpdate }) => {
+  const initData: ProfileFormData = {
+    firstName: profile?.first_name ?? "",
+    lastName: profile?.last_name ?? "",
+    phoneNumber: profile?.phone_number ?? "",
+    jobTitle: profile?.role ?? "",
+    email: profile?.email ?? "",
+    avatarFile: profile?.avatar ?? null
+  };
   const {
     register,
     handleSubmit,
     formState: { errors, isDirty },
     watch,
     setValue,
-    reset
+    reset,
+    getValues
   } = useForm<ProfileFormData>({
     resolver: yupResolver(schema),
     defaultValues: initData
   });
-
   const onSubmit: SubmitHandler<ProfileFormData> = (data) => {
-    console.log(data);
+    updateProfile(data);
   };
-
   return (
     <>
       <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">
@@ -83,9 +75,14 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
         <div className="flex gap-4 mb-8">
           <Avatar className="w-16 h-16">
             <AvatarImage
-              src={watch("avatarFile") ? URL.createObjectURL(watch("avatarFile")) : ""}
+              src={
+                watch("avatarFile") instanceof File
+                  ? URL.createObjectURL(watch("avatarFile"))
+                  : watch("avatarFile") || ""
+              }
               alt="@shadcn"
             />
+
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div>
@@ -136,6 +133,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
           <CustomPhoneInput
             label="Phone Number"
             name="phoneNumber"
+            defaultValue={profile?.phone_number}
             validatorMessage={errors.phoneNumber?.message}
             handleChange={(val) => setValue("phoneNumber", val)}
             parentClassName="mb-2"
@@ -200,7 +198,10 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
         <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
           Cancel
         </Button>
-        <Button disabled={!isDirty} onClick={handleSubmit(onSubmit)} variant={"fill"}>
+        <Button
+          disabled={!isDirty || loadingUpdate}
+          onClick={handleSubmit(onSubmit)}
+          variant={"fill"}>
           Save
         </Button>
       </div>

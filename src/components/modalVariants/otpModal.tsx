@@ -36,7 +36,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, l
             disabled={otp.length !== 6 || loading}
             size={"default"}
             variant={"fill"}
-            onClick={() => submit?.({ otp })}>
+            onClick={() => submit({ otp })}>
             Continue
           </Button>
         </div>

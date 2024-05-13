@@ -16,7 +16,7 @@ const schema = yup.object({
 });
 
 interface ChangeEmailModalProps extends ModalProps {
-  submit: (email: string) => void;
+  submit: ({ email }) => void;
 }
 
 const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit }) => {
@@ -30,7 +30,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit
   });
 
   const onSubmit: SubmitHandler<ChangeEmailData> = (data) => {
-    submit(data.email);
+    submit(data);
   };
 
   return (
