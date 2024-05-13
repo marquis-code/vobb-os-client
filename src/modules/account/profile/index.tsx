@@ -1,15 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Button, CustomInput, CustomPhoneInput } from "components";
-import {
-  CheckCircledIcon,
-  CrossCircledIcon,
-  QuestionMarkCircledIcon,
-  UploadIcon
-} from "@radix-ui/react-icons";
+import { CheckCircledIcon, QuestionMarkCircledIcon, UploadIcon } from "@radix-ui/react-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn } from "lib";
+import { cn, isFile } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 
 interface ProfileData {
@@ -17,7 +12,7 @@ interface ProfileData {
   lastName: string;
   phoneNumber: string;
   jobTitle: string;
-  email: string;
+  email: { value: string; isVerified: boolean };
   avatar: string | undefined;
 }
 
@@ -39,14 +34,12 @@ const initData: ProfileFormData = {
   avatarFile: null
 };
 
-const isFile = (value: any): value is File => value instanceof File;
-
 const schema = yup.object({
   firstName: yup.string().required("Required"),
   lastName: yup.string().required("Required"),
   phoneNumber: yup.string().required("Required"),
   jobTitle: yup.string().required("Required"),
-  email: yup.string().required("Required"),
+  email: yup.string().required("Required").email("Enter a valid email"),
   avatarFile: yup
     .mixed()
     .required("Profile picture is required")
@@ -55,6 +48,7 @@ const schema = yup.object({
 
 interface AccountProfileProps {
   handleChangeEmail: () => void;
+  // profile: ProfileData;
 }
 
 const AccountProfileUI = ({ handleChangeEmail }) => {
@@ -84,7 +78,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={watch("avatarFile") ? URL.createObjectURL(watch("avatarFile")) : ""}
-              alt="@shadcn"
+              alt="avatar"
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
@@ -163,7 +157,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
               <div className="absolute -right-8 top-7">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
                       {/* <CheckCircledIcon width={20} height={20} color="var(--success-50)" /> */}{" "}
                       {/* Verified email icon */}
                       <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />

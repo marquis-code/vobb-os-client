@@ -71,7 +71,9 @@ const Menu = () => {
         <DropdownMenuLabel>Profile</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Organization Settings</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate(Routes.organization)}>
+            Organization Settings
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate(Routes.profile)}>
             Account Settings
             {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}

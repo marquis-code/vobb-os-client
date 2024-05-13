@@ -19,7 +19,8 @@ import {
   CompanyWebsite,
   CompanyAddress,
   AccountSecurity,
-  AccountPersonalizations
+  AccountPersonalizations,
+  OrgProfile
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -144,6 +145,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Personalizations",
       parent: "Account Settings"
+    }
+  },
+  {
+    path: Routes.organization,
+    Element: OrgProfile,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Organization",
+      parent: "Workspace"
     }
   },
 
