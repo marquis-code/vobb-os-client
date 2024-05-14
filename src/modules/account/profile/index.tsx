@@ -158,7 +158,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                      {/* <CheckCircledIcon width={20} height={20} color="var(--success-50)" /> */}{" "}
+                      <CheckCircledIcon width={20} height={20} color="var(--success-50)" />{" "}
                       {/* Verified email icon */}
                       <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
                     </TooltipTrigger>

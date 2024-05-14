@@ -80,8 +80,8 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Branches",
       icon: <HomeIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "security"
+      path: Routes.branches,
+      value: "branches"
     },
     {
       title: "Bank Accounts",
