@@ -19,9 +19,10 @@ interface NavBarProps {
   sideBarWidth: string;
   collapse: boolean;
   title: string;
+  logout: () => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
+const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title, logout }) => {
   return (
     <>
       <header
@@ -42,7 +43,7 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
             <p className="font-workSans font-bold mb-[2px] text-sm leading-4">First name</p>
             <p className="text-[11px] text-vobb-neutral-60 leading-3">Role</p>
           </div>
-          <Menu />
+          <Menu logout={logout} />
         </div>
       </header>
     </>
@@ -58,7 +59,7 @@ const UserAvatar = () => {
   );
 };
 
-const Menu = () => {
+const Menu = ({ logout }) => {
   const navigate = useNavigate();
   return (
     <DropdownMenu>
@@ -93,7 +94,7 @@ const Menu = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>Support</DropdownMenuItem>
         {/* <DropdownMenuSeparator /> */}
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
