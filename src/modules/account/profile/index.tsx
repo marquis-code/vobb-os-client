@@ -11,6 +11,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { cn } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import { useState } from "react";
 
 export interface ProfileFormData {
   firstName: string;
@@ -18,22 +19,25 @@ export interface ProfileFormData {
   phoneNumber: string;
   jobTitle: string;
   email: string;
-  avatarFile: any | File | null;
+  avatarFile?: any | File | null;
 }
 
 const isFile = (value: any): value is File => value instanceof File;
-
-const schema = yup.object({
+const baseSchema = yup.object({
   firstName: yup.string().required("Required"),
   lastName: yup.string().required("Required"),
   phoneNumber: yup.string().required("Required"),
   jobTitle: yup.string().required("Required"),
-  email: yup.string().required("Required"),
-  avatarFile: yup
-    .mixed()
-    .required("Profile picture is required")
-    .test("fileSize", "Image is too large", (value) => isFile(value) && value.size <= 1048576 * 10)
+  email: yup.string().required("Required")
 });
+
+const avatarSchema = yup
+  .mixed()
+  .test(
+    "fileSize",
+    "Image is too large",
+    (value) => !value || (isFile(value) && value.size <= 1048576 * 10)
+  );
 
 interface AccountProfileProps {
   profile: any;
@@ -43,6 +47,8 @@ interface AccountProfileProps {
 }
 
 const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUpdate }) => {
+  const [avatarChanged, setAvatarChanged] = useState(false);
+  const [numberChanged, setNumberChanged] = useState(false);
   const initData: ProfileFormData = {
     firstName: profile?.first_name ?? "",
     lastName: profile?.last_name ?? "",
@@ -51,21 +57,47 @@ const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUp
     email: profile?.email ?? "",
     avatarFile: profile?.avatar ?? null
   };
+
+  //THis is because avatar validation throws error when other values are being updated without it.
+  const validationSchema = baseSchema.shape({
+    avatarFile: avatarChanged ? avatarSchema.required("Profile picture is required") : yup.mixed()
+  });
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, dirtyFields },
     watch,
     setValue,
-    reset,
-    getValues
+    reset
   } = useForm<ProfileFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(validationSchema),
     defaultValues: initData
   });
-  const onSubmit: SubmitHandler<ProfileFormData> = (data) => {
-    updateProfile(data);
+
+  const handleAvatarChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setValue("avatarFile", e.target.files[0]);
+      setAvatarChanged(true);
+    }
   };
+  const onSubmit: SubmitHandler<ProfileFormData> = (data) => {
+    const formData = new FormData();
+    if (dirtyFields.firstName && data.firstName.trim() !== "") {
+      formData.append("first_name", data.firstName);
+    }
+    if (dirtyFields.lastName && data.lastName.trim() !== "") {
+      formData.append("last_name", data.lastName);
+    }
+    if (numberChanged && data.phoneNumber.trim() !== "") {
+      formData.append("phone_number", data.phoneNumber.replace(/\D/g, ""));
+    }
+    if (avatarChanged) {
+      formData.append("avatar", data.avatarFile);
+    }
+    updateProfile(formData);
+  };
+  const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
+  const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
   return (
     <>
       <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">
@@ -98,7 +130,8 @@ const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUp
               htmlFor="avatar">
               <UploadIcon /> <span>Upload image</span>
               <input
-                onChange={(e) => e.target.files && setValue("avatarFile", e.target.files[0])}
+                {...register("avatarFile")}
+                onChange={handleAvatarChange}
                 className="hidden"
                 id="avatar"
                 type="file"
@@ -135,7 +168,10 @@ const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUp
             name="phoneNumber"
             defaultValue={profile?.phone_number}
             validatorMessage={errors.phoneNumber?.message}
-            handleChange={(val) => setValue("phoneNumber", val)}
+            handleChange={(val) => {
+              setValue("phoneNumber", val);
+              setNumberChanged(true);
+            }}
             parentClassName="mb-2"
           />
           <CustomInput

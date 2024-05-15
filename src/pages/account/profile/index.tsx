@@ -25,16 +25,10 @@ const AccountProfile = () => {
     requestStatus: updateStatus
   } = useApiRequest({});
 
-  const fetchProfile=()=>{
+  const fetchProfile = () => {
     runProfile(personalAccountDetailsService());
-
-  }
-  const updateProfile = (data: ProfileFormData) => {
-    const formData = new FormData();
-    formData.append("first_name", data.firstName);
-    formData.append("last_name", data.lastName);
-    formData.append("phone_number", data.phoneNumber.replace(/\D/g, ""));
-    formData.append("avatar", data.avatarFile);
+  };
+  const updateProfile = (formData: FormData) => {
     runUpdate(personalAccountUpdateService(formData));
   };
   useMemo(() => {
@@ -63,7 +57,7 @@ const AccountProfile = () => {
   }, [updateResponse, updateError]);
 
   useEffect(() => {
-    fetchProfile()
+    fetchProfile();
   }, []);
 
   if (profileStatus.isPending) {
