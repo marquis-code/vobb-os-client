@@ -16,7 +16,7 @@ const LoginHistory: React.FC<LoginHistoryProps> = ({
 }) => {
   const { currentPage, totalCount, totalPages } = historyMetaData;
   const handleChangePage = (page: number) => {
-    handleFetchLoginHistory(page); // Fetch login history for the new page
+    handleFetchLoginHistory(page);
   };
   return (
     <>
@@ -78,7 +78,7 @@ const Device: React.FC<DeviceProps> = ({ device, myIP }) => {
           </span>
         </p>
         <p className="text-xs text-vobb-neutral-70">
-          {location} | {format(new Date(time), "MM/dd/yyyy")} at {format(new Date(time), "HH:mm")}
+          {location} | {format(new Date(time), "dd/MM/yyyy")} at {format(new Date(time), "HH:mm")}
         </p>
       </div>
       {myIP !== ipAddress ? (
