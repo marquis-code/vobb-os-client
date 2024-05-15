@@ -6,7 +6,8 @@ import { optionType } from "types/interfaces";
 import { initOptionType, sysLangOptions } from "lib/constants";
 
 interface SystemLanguageProps {
-  submit: () => void;
+  submit: (formData: FormData) => void;
+  loadingSytemLang: boolean;
 }
 interface SystemLanguageData {
   language: optionType;
@@ -15,7 +16,7 @@ const initSysLang: SystemLanguageData = {
   language: initOptionType
 };
 
-const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit }) => {
+const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLang }) => {
   const schema = yup.object().shape({
     language: yup.object({
       label: yup.string().required("Required"),
@@ -29,7 +30,11 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<SystemLanguageData> = (data) => {
-    submit();
+    const formData = new FormData();
+    if (data) {
+      formData.append("language", data.language.value);
+    }
+    submit(formData);
   };
 
   const handleReset = (e) => {
@@ -52,10 +57,14 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit }) => {
             placeholder="Select a language"
           />
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
-            <Button onClick={handleReset} variant={"outline"}>
+            <Button onClick={handleReset} variant={"outline"} disabled={loadingSytemLang}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} variant={"fill"}>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              variant={"fill"}
+              disabled={loadingSytemLang}
+              loading={loadingSytemLang}>
               Save
             </Button>
           </div>
