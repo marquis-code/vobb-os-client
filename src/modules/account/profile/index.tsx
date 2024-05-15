@@ -11,7 +11,8 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { cn } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUserContext } from "context";
 
 export interface ProfileFormData {
   firstName: string;
@@ -40,23 +41,15 @@ const avatarSchema = yup
   );
 
 interface AccountProfileProps {
-  profile: any;
   updateProfile: (data: ProfileFormData) => void;
   loadingUpdate: Boolean;
   handleChangeEmail: () => void;
 }
 
-const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUpdate }) => {
+const AccountProfileUI = ({ handleChangeEmail, updateProfile, loadingUpdate }) => {
   const [avatarChanged, setAvatarChanged] = useState(false);
   const [numberChanged, setNumberChanged] = useState(false);
-  const initData: ProfileFormData = {
-    firstName: profile?.first_name ?? "",
-    lastName: profile?.last_name ?? "",
-    phoneNumber: profile?.phone_number ?? "",
-    jobTitle: profile?.role ?? "",
-    email: profile?.email ?? "",
-    avatarFile: profile?.avatar ?? null
-  };
+  const { userDetails: profile } = useUserContext();
 
   //THis is because avatar validation throws error when other values are being updated without it.
   const validationSchema = baseSchema.shape({
@@ -71,8 +64,28 @@ const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUp
     reset
   } = useForm<ProfileFormData>({
     resolver: yupResolver(validationSchema),
-    defaultValues: initData
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      jobTitle: "",
+      email: "",
+      avatarFile: null
+    }
   });
+
+  useEffect(() => {
+    if (profile) {
+      reset({
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        phoneNumber: profile.phone_number,
+        jobTitle: profile.role,
+        email: profile.email,
+        avatarFile: profile.avatar
+      });
+    }
+  }, [profile, reset]);
 
   const handleAvatarChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -98,6 +111,7 @@ const AccountProfileUI = ({ handleChangeEmail, profile, updateProfile, loadingUp
   };
   const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
   const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
+
   return (
     <>
       <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">

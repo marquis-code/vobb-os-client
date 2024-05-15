@@ -14,9 +14,11 @@ const Login = () => {
     show: false
   });
   const navigate = useNavigate();
+
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
     pathname: Routes.login
   });
+
   const {
     run: runEmailLogin,
     data: emailResponse,

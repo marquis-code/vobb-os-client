@@ -1,7 +1,7 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
-import { useMobile } from "hooks";
+import { useFetchUser, useMobile } from "hooks";
 import { UnsupportedScreenSize, toast } from "components";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
@@ -16,11 +16,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
   const [collapse, setCollapse] = useState(false);
   const sideBarWidth = collapse ? "60px" : "275px";
   const navigate = useNavigate();
+  const { fetchUserDetails } = useFetchUser();
+
   const logout = () => {
     localStorage.clear();
     navigate(Routes.login);
     toast({ description: "Log out successful." });
   };
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
   return isMobile ? (
     <UnsupportedScreenSize />
   ) : (

@@ -1,15 +1,13 @@
 import { toggle2faStusService } from "api";
 import { OTPModal, toast } from "components";
+import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps } from "types/interfaces";
 
-interface Setup2FAProps extends ModalProps {
-  // email: string
-}
-
-const Setup2FA: React.FC<Setup2FAProps> = ({ show, close }) => {
+const Setup2FA: React.FC<ModalProps> = ({ show, close }) => {
   const { run, data: response, error } = useApiRequest({});
+  const { userDetails } = useUserContext();
 
   const handleSubmit = ({ otp }) => {
     run(toggle2faStusService({ otp }));
@@ -27,12 +25,12 @@ const Setup2FA: React.FC<Setup2FAProps> = ({ show, close }) => {
       });
     }
   }, [response, error]);
-
+  const email = userDetails?.email;
   return (
     <>
       <OTPModal
         title="Two-Factor Authentication"
-        text={`We’ve sent a 6-character code to test@yopmail.com. The code expires shortly, so please enter it soon.`}
+        text={`We’ve sent a 6-character code to ${email}. The code expires shortly, so please enter it soon.`}
         show={show}
         close={close}
         submit={handleSubmit}

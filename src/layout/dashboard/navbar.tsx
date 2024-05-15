@@ -14,6 +14,7 @@ import {
 import { Button } from "components";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import { useUserContext } from "context";
 
 interface NavBarProps {
   sideBarWidth: string;
@@ -23,6 +24,7 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title, logout }) => {
+  const { userDetails } = useUserContext();
   return (
     <>
       <header
@@ -40,8 +42,10 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title, logout }
         <div className="flex items-center gap-2 ml-auto">
           <UserAvatar />
           <div className="mr-1 text-left">
-            <p className="font-workSans font-bold mb-[2px] text-sm leading-4">First name</p>
-            <p className="text-[11px] text-vobb-neutral-60 leading-3">Role</p>
+            <p className="font-workSans font-bold mb-[2px] text-sm leading-4">
+              {userDetails?.first_name}
+            </p>
+            <p className="text-[11px] text-vobb-neutral-60 leading-3">{userDetails?.role}</p>
           </div>
           <Menu logout={logout} />
         </div>
@@ -51,9 +55,10 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title, logout }
 };
 
 const UserAvatar = () => {
+  const { userDetails } = useUserContext();
   return (
     <Avatar className="w-8 h-8">
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+      <AvatarImage src={userDetails?.avatar ?? "https://github.com/shadcn.png"} alt="@shadcn" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   );

@@ -1,17 +1,16 @@
 import { personalEmailUpdateVerifyService } from "api";
 import { OTPModal, toast } from "components";
-import { useApiRequest } from "hooks";
+import { useApiRequest, useFetchUser } from "hooks";
 import { useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Routes } from "router";
 import { ModalProps } from "types";
 
-interface VerifyEmailProps extends ModalProps {
-  fetchProfile: () => void;
-}
-const VerifyEmail: React.FC<VerifyEmailProps> = ({ show, close, fetchProfile }) => {
+const VerifyEmail: React.FC<ModalProps> = ({ show, close }) => {
   const navigate = useNavigate();
   const { run, data: response, error, requestStatus } = useApiRequest({});
+  const { fetchUserDetails } = useFetchUser();
+
   const [searchParams] = useSearchParams();
   const encodedEmail = searchParams.get("email");
   const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
@@ -22,7 +21,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ show, close, fetchProfile }) 
   useMemo(() => {
     if (response?.status === 200) {
       close();
-      fetchProfile();
+      fetchUserDetails();
       toast({
         description: response?.data?.message
       });
