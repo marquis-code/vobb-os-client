@@ -3,10 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-interface ChangePasswordProps {
-  submit: () => void;
-}
-interface ChangePasswordData {
+export interface ChangePasswordData {
   currentPassword: string;
   password: string;
   confirmPassword: string;
@@ -16,8 +13,12 @@ const initPasswords: ChangePasswordData = {
   password: "",
   confirmPassword: ""
 };
+interface ChangePasswordProps {
+  submit: (data: ChangePasswordData) => void;
+  loadingPasswordChange: boolean;
+}
 
-const ChangePassword: React.FC<ChangePasswordProps> = ({ submit }) => {
+const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPasswordChange }) => {
   const schema = yup.object().shape({
     currentPassword: yup.string().required("Required"),
     password: yup
@@ -45,7 +46,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<ChangePasswordData> = (data) => {
-    submit();
+    submit(data);
   };
 
   const handleReset = (e) => {
@@ -58,7 +59,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit }) => {
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
         <div>
           <h2 className="text-[16px] font-semibold mb-2">Password</h2>
-          <p  className="text-xs">Update your password</p>
+          <p className="text-xs">Update your password</p>
         </div>
         <form>
           <PasswordInput
@@ -86,7 +87,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit }) => {
             <Button disabled={!isDirty} onClick={handleReset} variant={"outline"}>
               Cancel
             </Button>
-            <Button disabled={!isDirty} onClick={handleSubmit(onSubmit)} variant={"fill"}>
+            <Button
+              disabled={isDirty || loadingPasswordChange}
+              loading={loadingPasswordChange}
+              onClick={handleSubmit(onSubmit)}
+              variant={"fill"}>
               Save
             </Button>
           </div>

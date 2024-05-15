@@ -1,10 +1,23 @@
 import { Button, Pagination } from "components";
+import { ISOStringFormat, format } from "date-fns";
 import { cn } from "lib";
-import { loginHistoryMock } from "lib/mockData";
+import { MetaDataProps } from "pages";
 
-interface LoginHistoryProps {}
+interface LoginHistoryProps {
+  loginHistory: any;
+  historyMetaData: MetaDataProps;
+  handleFetchLoginHistory: (page: number) => void;
+}
 
-const LoginHistory: React.FC<LoginHistoryProps> = ({}) => {
+const LoginHistory: React.FC<LoginHistoryProps> = ({
+  loginHistory,
+  historyMetaData,
+  handleFetchLoginHistory
+}) => {
+  const { currentPage, totalCount, totalPages } = historyMetaData;
+  const handleChangePage = (page: number) => {
+    handleFetchLoginHistory(page); // Fetch login history for the new page
+  };
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 mb-12 max-w-[800px]">
@@ -16,17 +29,18 @@ const LoginHistory: React.FC<LoginHistoryProps> = ({}) => {
           </p>
         </div>
         <div className="">
-          {loginHistoryMock.map((item, index) => (
-            <Device key={index} device={item} myIP="192.168.0.180" />
-          ))}
+          {loginHistory &&
+            loginHistory?.map((item, index) => (
+              <Device key={index} device={item} myIP="192.168.0.180" />
+            ))}
           <Pagination
             hidePageLimit
-            handleChange={console.log}
+            handleChange={handleChangePage}
             handlePageLimit={console.log}
-            totalCount={3}
+            totalCount={totalCount}
             pageLimit={3}
-            totalPages={1}
-            currentPage={1}
+            totalPages={totalPages}
+            currentPage={currentPage}
             className="mt-8"
           />
         </div>
@@ -39,8 +53,8 @@ export interface DeviceData {
   location: string;
   date: string;
   time: string;
-  isActive: boolean;
-  ipAddress: string;
+  isActive?: boolean;
+  ip: string;
 }
 
 interface DeviceProps {
@@ -49,7 +63,7 @@ interface DeviceProps {
 }
 
 const Device: React.FC<DeviceProps> = ({ device, myIP }) => {
-  const { time, location, isActive, date, ipAddress } = device;
+  const { time, location, isActive, date, ip: ipAddress } = device;
   return (
     <div className="flex items-center justify-between mb-4 pb-4 border-b border-vobb-neutral-20 text-sm">
       <div>
@@ -64,7 +78,7 @@ const Device: React.FC<DeviceProps> = ({ device, myIP }) => {
           </span>
         </p>
         <p className="text-xs text-vobb-neutral-70">
-          {location} | {date} at {time}
+          {location} | {format(new Date(time), "MM/dd/yyyy")} at {format(new Date(time), "HH:mm")}
         </p>
       </div>
       {myIP !== ipAddress ? (
