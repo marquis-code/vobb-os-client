@@ -150,6 +150,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       className="border-r border-vobb-neutral-30 h-full fixed top-0 left-0">
       <div className="border-b border-vobb-neutral-30 px-4 py-1 h-[55px] flex items-center">
         <Button onClick={() => navigate(Routes.overview)} variant={"ghost"} size={"icon"}>
+          <span className="sr-only">Back to overview</span>
           <ChevronLeftIcon />
         </Button>
         <p className="ml-2 font-workSans font-bold text-lg">Settings</p>

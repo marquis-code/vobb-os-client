@@ -64,6 +64,7 @@ const Menu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="p-1">
+          <span className="sr-only">Open menu</span>
           <DotsVerticalIcon />
         </Button>
       </DropdownMenuTrigger>
