@@ -20,7 +20,6 @@ export interface ProfileFormData {
   phoneNumber: string;
   jobTitle: string;
   email: string;
-  pendingEmail: string | null;
   avatarFile: any | File | null;
 }
 
@@ -30,7 +29,6 @@ const initData: ProfileFormData = {
   phoneNumber: "",
   jobTitle: "",
   email: "",
-  pendingEmail: "",
   avatarFile: null
 };
 
@@ -76,6 +74,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   const validationSchema = baseSchema.shape({
     avatarFile: validateAvatar ? avatarSchema.required("Profile picture is required") : yup.mixed()
   });
+
   const {
     register,
     handleSubmit,
@@ -96,9 +95,8 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
         lastName: profile.lastName,
         phoneNumber: profile.phoneNumber,
         jobTitle: profile.role,
-        email: profile.email,
-        avatarFile: profile.avatar,
-        pendingEmail: profile.pendingEmail
+        email: profile.pendingEmail ?? profile.email,
+        avatarFile: profile.avatar
       });
     }
   }, [profile, reset]);
@@ -109,10 +107,10 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
 
   const onSubmit: SubmitHandler<ProfileFormData> = (data) => {
     const formData = new FormData();
-    if (firstName !== profile?.firstName) {
+    if (dirtyFields.firstName) {
       formData.append("first_name", data.firstName);
     }
-    if (lastName !== profile?.lastName) {
+    if (dirtyFields.lastName) {
       formData.append("last_name", data.lastName);
     }
     if (numberChanged) {
@@ -225,6 +223,29 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                 disabled
                 parentClassName="mb-0"
               />
+
+              <div className="absolute -right-8 top-7">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      {profile?.pendingEmail ? (
+                        <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      ) : (
+                        <CheckCircledIcon width={20} height={20} color="var(--success-50)" />
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {profile?.pendingEmail
+                          ? "Email is unverified, please request a new verification email"
+                          : "Email is verified!"}
+                      </p>{" "}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+            <div className="flex justify-between">
               <Button
                 onClick={(e) => {
                   e.preventDefault();
@@ -235,44 +256,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                 variant={"link"}>
                 Change email address
               </Button>
-              <div className="absolute right-3 top-7">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <CheckCircledIcon width={20} height={20} color="var(--success-50)" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Email is verified!</p>{" "}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-          </div>
-
-          {profile?.pendingEmail && (
-            <div className="mb-2">
-              <div className="relative">
-                <CustomInput
-                  label="Secondary Email Address"
-                  type="email"
-                  name="pendingEmail"
-                  register={register}
-                  disabled
-                  parentClassName="mb-0"
-                />
-                <div className="absolute right-3 top-7">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Email is unverified, please request a new verification email</p>{" "}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+              {profile?.pendingEmail && (
                 <Button
                   className="p-0 underline text-vobb-primary-50"
                   size={"sm"}
@@ -282,10 +266,10 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                     handleResendEmail();
                   }}>
                   Resend verification mail
-                </Button>{" "}
-              </div>
+                </Button>
+              )}
             </div>
-          )}
+          </div>
         </form>
       </section>
       <div className="flex gap-2 justify-end max-w-[800px] mb-8 pt-2">

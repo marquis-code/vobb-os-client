@@ -6,6 +6,7 @@ import { useMemo } from "react";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
+
   const {
     run: runSystemLanguage,
     data: systemLangResponse,

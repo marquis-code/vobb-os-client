@@ -26,7 +26,7 @@ export const useFetchUser = () => {
         timezone: user.timezone ?? "",
         language: user.language ?? "",
         twoFaStatus: user.two_fa_status ?? false,
-        googleStatus: user.google_status ?? false,
+        googleStatus: user.google_signup ?? false,
         pendingEmail: user.pending_email ?? null
       };
       handleUpdateUser(profile);

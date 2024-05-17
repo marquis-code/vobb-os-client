@@ -74,7 +74,6 @@ const CompanyInfo = () => {
         description: sizeResponse?.data?.message
       });
       fetchOnboardDetails();
-      console.log('change')
       handleCompanyChange("sector");
     } else if (sizeError) {
       toast({
@@ -110,8 +109,8 @@ const CompanyInfo = () => {
         handleCompanyChange("organisation");
       } else if (!onboardData?.size) {
         handleCompanyChange("teamSize");
-      } else if(!onboardData?.sector.length){
-        handleCompanyChange('sector')
+      } else if (!onboardData?.sector.length) {
+        handleCompanyChange("sector");
       }
     }
   }, [loadingOnboard, onboardData]);
@@ -131,7 +130,7 @@ const CompanyInfo = () => {
         initSector={{
           sector: onboardData?.sector.length
             ? sectorOptions.find((item) => item.value === onboardData.sector[0]) ?? null
-              : null
+            : null
         }}
         activeCompanyInfo={activeCompanyInfo}
         handleCompanyChange={handleCompanyChange}
