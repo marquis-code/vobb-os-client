@@ -5,23 +5,31 @@ SETTINGS SERVICES
 */
 
 import {
+  blacklistIpAddressURL,
   changePasswordProfileURL,
   fetchLoginHistoryURL,
   getRequest,
   patchRequest,
   personalAccountDetailsURL,
   personalAccountUpdateURL,
+  personalEmailResendVerifyURL,
   personalEmailUpdateURL,
   personalEmailUpdateVerifyURL,
   postRequest,
   send2faCodeURL,
-  toggle2faStatusURL
+  toggle2faStatusURL,
+  toggleGoogleAuthURL
 } from "api";
 
 interface changePasswordRequestBody {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
+}
+
+interface blacklistRequestBody {
+  ip: string;
+  blacklist_status: boolean;
 }
 /*
 PERSONAL PROFILE SERVICES
@@ -57,6 +65,17 @@ export const personalEmailUpdateService = (data: { email: string }) => {
   return postRequest({
     url: personalEmailUpdateURL(),
     data
+  });
+};
+
+/**
+ * Resend personal email update otp service
+ * @param data - An object containing otp, type string.
+ * @returns axios promise
+ */
+export const personalEmailResendVerifyService = () => {
+  return postRequest({
+    url: personalEmailResendVerifyURL()
   });
 };
 
@@ -121,5 +140,29 @@ export const toggle2faStusService = (data: { otp: string }) => {
 export const fetchLoginHistoryService = ({ page, limit }) => {
   return getRequest({
     url: fetchLoginHistoryURL({ page, limit })
+  });
+};
+
+/**
+ * Toggle google auth service
+ * @param data - An object containing login_with_google, boolean.
+ * @returns axios promise
+ */
+export const toggleGoogleAuthService = (data: { login_with_google: Boolean }) => {
+  return patchRequest({
+    url: toggleGoogleAuthURL(),
+    data: data
+  });
+};
+
+/**
+ * Blacklist/Whitelist ipAddress service
+ * @param data - An object containing ip, string and blacklist_status of either 'allowed' or 'blocked'.
+ * @returns axios promise
+ */
+export const blacklistIpAddressService = (data: blacklistRequestBody) => {
+  return patchRequest({
+    url: blacklistIpAddressURL(),
+    data: data
   });
 };

@@ -1,6 +1,12 @@
 import { createContext, useState, useContext, ReactNode } from "react";
+import { UserProfileProps } from "types";
 
-const UserDetailsContext = createContext<any>(undefined);
+interface UserContextProps {
+  userDetails: UserProfileProps | null;
+  handleUpdateUser: (userDetails: UserProfileProps) => void;
+}
+
+const UserDetailsContext = createContext<UserContextProps | undefined>(undefined);
 
 export const useUserContext = () => {
   const context = useContext(UserDetailsContext);
@@ -11,9 +17,9 @@ export const useUserContext = () => {
 };
 
 export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState<UserProfileProps | null>(null);
 
-  const handleUpdateUser = (userDetails: any) => {
+  const handleUpdateUser = (userDetails: UserProfileProps) => {
     setUserDetails(userDetails);
   };
 

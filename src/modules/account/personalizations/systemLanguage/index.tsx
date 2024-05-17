@@ -4,34 +4,38 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
 import { initOptionType, sysLangOptions } from "lib/constants";
+import { useUserContext } from "context";
 
-interface SystemLanguageProps {
+export interface SystemLanguageProps {
   submit: (formData: FormData) => void;
   loadingSytemLang: boolean;
 }
 interface SystemLanguageData {
-  language: optionType;
+  language: optionType | undefined;
 }
-const initSysLang: SystemLanguageData = {
-  language: initOptionType
-};
 
 const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLang }) => {
+  const { userDetails } = useUserContext();
   const schema = yup.object().shape({
     language: yup.object({
       label: yup.string().required("Required"),
       value: yup.string().required("Required")
     })
   });
+  const initSysLang: SystemLanguageData = {
+    language: userDetails?.language
+      ? sysLangOptions.find((item) => item.value === userDetails.language)
+      : initOptionType
+  };
 
   const { handleSubmit, reset, watch, setValue } = useForm<SystemLanguageData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver<SystemLanguageData | any>(schema),
     defaultValues: initSysLang
   });
 
   const onSubmit: SubmitHandler<SystemLanguageData> = (data) => {
     const formData = new FormData();
-    if (data) {
+    if (data.language) {
       formData.append("language", data.language.value);
     }
     submit(formData);
@@ -52,7 +56,7 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLan
         <form>
           <SelectInput
             options={sysLangOptions}
-            value={watch("language").value === "" ? null : watch("language")}
+            value={watch("language")?.value === "" ? null : watch("language")}
             onChange={(val) => val && setValue("language", val)}
             placeholder="Select a language"
           />

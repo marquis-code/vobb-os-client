@@ -2,12 +2,8 @@ import { Button, PasswordInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { ChangePasswordData } from "types";
 
-export interface ChangePasswordData {
-  currentPassword: string;
-  password: string;
-  confirmPassword: string;
-}
 const initPasswords: ChangePasswordData = {
   currentPassword: "",
   password: "",

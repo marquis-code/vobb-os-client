@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { LoginUI } from "modules";
 import { Login2FA } from "./login2fa";
-import { useApiRequest, useGoogleSignin } from "hooks";
+import { useApiRequest, useFetchUser, useGoogleSignin } from "hooks";
 import { emailLoginService, googleSigninService } from "api";
 import { loginData } from "types/auth";
 import { toast } from "components";
@@ -36,6 +36,7 @@ const Login = () => {
     runEmailLogin(emailLoginService(data));
     setEmail(data.email);
   };
+  const { fetchUserDetails, loadingUser } = useFetchUser();
 
   useMemo(() => {
     if (emailResponse?.status === 200) {
@@ -51,6 +52,7 @@ const Login = () => {
       } else {
         localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.access_token);
         localStorage.setItem("vobbOSRefresh", emailResponse?.data?.data?.refresh_token);
+        fetchUserDetails();
         navigate(Routes.overview);
       }
       toast({
@@ -83,7 +85,8 @@ const Login = () => {
       } else {
         localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.access_token);
         localStorage.setItem("vobbOSRefresh", googleResponse?.data?.data?.refresh_token);
-        navigate(Routes.overview);
+        fetchUserDetails();
+        !loadingUser && navigate(Routes.overview);
       }
       toast({
         description: googleResponse?.data?.message

@@ -49,7 +49,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
 
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
-
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">

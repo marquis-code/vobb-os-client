@@ -1,6 +1,6 @@
 import { personalEmailUpdateService } from "api";
 import { ChangeEmailModal, toast } from "components";
-import { useApiRequest } from "hooks";
+import { useApiRequest, useFetchUser } from "hooks";
 import { useMemo } from "react";
 import { ModalProps } from "types";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ interface ChangeEmailProps extends ModalProps {
 
 const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
   const { run, data: response, error } = useApiRequest({});
-  const navigate = useNavigate();
+  const { fetchUserDetails } = useFetchUser();
 
   const handleSubmit = (data: { email: string }) => {
     run(personalEmailUpdateService(data));
@@ -20,11 +20,11 @@ const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
 
   useMemo(() => {
     if (response?.status === 200) {
-      callback();
+      fetchUserDetails();
       toast({
         description: response?.data?.message
       });
-      navigate(`${Routes.profile}?email=${response?.data?.data}`);
+      callback();
     } else if (error) {
       toast({
         variant: "destructive",

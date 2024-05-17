@@ -1,27 +1,51 @@
 import { AccountSecurityUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { Setup2FA } from "./setup2fa";
-import { useApiRequest } from "hooks";
+import { useApiRequest, useFetchUser } from "hooks";
 import { toast } from "components";
-import { changePasswordProfileService, fetchLoginHistoryService, send2faCodeService } from "api";
-import { ChangePasswordData } from "modules/account/security/changePassword";
+import {
+  blacklistIpAddressService,
+  changePasswordProfileService,
+  fetchLoginHistoryService,
+  send2faCodeService,
+  toggleGoogleAuthService
+} from "api";
+import { BlacklistProps, ChangePasswordData } from "types";
 
-export interface MetaDataProps {
+export interface LoginHistoryDeviceProps {
+  device: string;
+  ipAddress: string;
+  location: string;
+  time: string;
+  user: string;
+  isBlacklisted: boolean;
+}
+
+interface MetaDataProps {
   currentPage: number;
   totalCount: number;
   totalPages: number;
 }
+
+export interface LoginHistoryDataProps {
+  loginHistory: LoginHistoryDeviceProps[];
+  historyMetaData: MetaDataProps;
+}
+
+const defaultLoginHistoryData: LoginHistoryDataProps = {
+  loginHistory: [],
+  historyMetaData: {
+    currentPage: 1,
+    totalCount: 0,
+    totalPages: 0
+  }
+};
+
 const AccountSecurity = () => {
   const [twoFactor, setTwoFactor] = useState({
     show: false
   });
-  const [loginHistory, setLoginHistory] = useState(null);
-  const [historyMetaData, setHistoryMetaData] = useState<MetaDataProps>({
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0
-  });
-
+  const { fetchUserDetails } = useFetchUser();
   const {
     run: runPassword,
     data: passwordResponse,
@@ -41,6 +65,14 @@ const AccountSecurity = () => {
     error: historyError
   } = useApiRequest({});
 
+  const {
+    run: runGoogleToggle,
+    data: googleToggleResponse,
+    error: googleToggleError
+  } = useApiRequest({});
+
+  const { run: runBlacklist, data: blacklistResponse, error: blacklistError } = useApiRequest({});
+
   const handlePasswordChange = (data: ChangePasswordData) => {
     runPassword(
       changePasswordProfileService({
@@ -55,8 +87,16 @@ const AccountSecurity = () => {
     runSend2faCode(send2faCodeService({ enable2FA }));
   };
 
+  const handleGoogleAuthToggle = (data: boolean) => {
+    runGoogleToggle(toggleGoogleAuthService({ login_with_google: data }));
+  };
+
   const handleFetchLoginHistory = (page: number) => {
-    runFetchLoginHistory(fetchLoginHistoryService({ page, limit: 3 }));
+    runFetchLoginHistory(fetchLoginHistoryService({ page, limit: 8 }));
+  };
+
+  const handleBlacklistAdress = (data: BlacklistProps) => {
+    runBlacklist(blacklistIpAddressService({ ip: data.ipAddress, blacklist_status: data.status }));
   };
 
   useMemo(() => {
@@ -86,21 +126,53 @@ const AccountSecurity = () => {
     }
   }, [send2faCodeResponse, send2faCodeError]);
 
-  useMemo(() => {
+  const loginHistoryData = useMemo<LoginHistoryDataProps>(() => {
     if (historyResponse?.status === 200) {
-      setLoginHistory(historyResponse?.data?.data?.history);
-      setHistoryMetaData({
-        currentPage: historyResponse?.data?.data?.page,
+      const loginHistory = historyResponse?.data?.data?.history.map((item) => ({
+        device: item.device,
+        ipAddress: item.ip,
+        location: item.location,
+        time: item.time,
+        user: item.user,
+        isBlacklisted: item.blacklist_status ?? false
+      }));
+      const historyMetaData = {
+        currentPage: historyResponse?.data?.data?.page ?? 1,
         totalPages: historyResponse?.data?.data?.total_pages,
         totalCount: historyResponse?.data?.data?.total_count
+      };
+      return { loginHistory, historyMetaData };
+    }
+    return defaultLoginHistoryData;
+  }, [historyResponse, historyError]);
+
+  useMemo(() => {
+    if (googleToggleResponse?.status === 200) {
+      toast({
+        description: googleToggleResponse?.data?.message
       });
-    } else if (historyError) {
+      fetchUserDetails();
+    } else if (googleToggleError) {
       toast({
         variant: "destructive",
-        description: historyError?.response?.data?.error
+        description: googleToggleError?.response?.data?.error
       });
     }
-  }, [historyResponse, historyError]);
+  }, [googleToggleResponse, googleToggleError]);
+
+  useMemo(() => {
+    if (blacklistResponse?.status === 200) {
+      toast({
+        description: blacklistResponse?.data?.message
+      });
+      handleFetchLoginHistory(loginHistoryData.historyMetaData.currentPage);
+    } else if (blacklistError) {
+      toast({
+        variant: "destructive",
+        description: blacklistError?.response?.data?.error
+      });
+    }
+  }, [blacklistResponse, blacklistError]);
 
   useEffect(() => {
     handleFetchLoginHistory(1);
@@ -109,19 +181,13 @@ const AccountSecurity = () => {
     <>
       <Setup2FA {...twoFactor} close={() => setTwoFactor({ show: false })} />
       <AccountSecurityUI
-        twoFactor={{
-          handle2FA: handleSend2faCode,
-          enable2FA: false
-        }}
-        connectedAccts={{
-          handleGoogleAuth: console.log,
-          enableGoogle: false
-        }}
+        handle2FA={handleSend2faCode}
+        connectedAccts={handleGoogleAuthToggle}
         submitPasswordChange={handlePasswordChange}
         loadingPasswordChange={passwordStatus.isPending}
-        loginHistory={loginHistory}
-        historyMetaData={historyMetaData}
+        loginHistoryData={loginHistoryData}
         handleFetchLoginHistory={handleFetchLoginHistory}
+        handleBlacklistAdress={handleBlacklistAdress}
       />
     </>
   );

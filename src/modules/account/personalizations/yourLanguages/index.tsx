@@ -5,8 +5,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
 import { initOptionType, sysLangOptions } from "lib/constants";
 
-interface YourLanguagesProps {
-  submit: () => void;
+export interface YourLanguagesProps {
+  submit: (formData: FormData) => void;
+  loadingPreferredLang: boolean;
 }
 interface YourLanguagesData {
   languages: optionType[];
@@ -15,7 +16,7 @@ const initSysLang: YourLanguagesData = {
   languages: []
 };
 
-const YourLanguages: React.FC<YourLanguagesProps> = ({ submit }) => {
+const YourLanguages: React.FC<YourLanguagesProps> = ({ submit, loadingPreferredLang }) => {
   const schema = yup.object().shape({
     languages: yup
       .array()
@@ -34,7 +35,8 @@ const YourLanguages: React.FC<YourLanguagesProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<YourLanguagesData> = (data) => {
-    submit();
+    const formData = new FormData();
+    console.log(formData);
   };
 
   const handleReset = (e) => {
@@ -63,7 +65,11 @@ const YourLanguages: React.FC<YourLanguagesProps> = ({ submit }) => {
             <Button onClick={handleReset} variant={"outline"}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} variant={"fill"}>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              variant={"fill"}
+              loading={loadingPreferredLang}
+              disabled={loadingPreferredLang}>
               Save
             </Button>
           </div>

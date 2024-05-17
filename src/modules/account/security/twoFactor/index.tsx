@@ -1,15 +1,16 @@
 import { Button, LearnMoreModal } from "components";
 import { Switch } from "components/ui/switch";
+import { useUserContext } from "context";
 import { useState } from "react";
 
 export interface TwoFactorProps {
   handle2FA: (enable: boolean) => void;
-  enable2FA: boolean;
 }
 
-const TwoFactor: React.FC<TwoFactorProps> = ({ handle2FA, enable2FA }) => {
+const TwoFactor: React.FC<TwoFactorProps> = ({ handle2FA }) => {
+  const { userDetails } = useUserContext();
   const [learn, setLearn] = useState(false);
-  const [enabled, setEnabled] = useState(!enable2FA);
+  const enabled = userDetails?.twoFaStatus;
   const learnMoreText1 = `Two-Factor Authentication (2FA) is an advanced security measure that fortifies your account against unauthorized access. 
   When you log in, 2FA demands two distinct forms of identification: your password and a unique verification code sent to your registered email. 
   This additional security step adds a critical barrier, making it exceedingly difficult for malicious actors to breach your account.`;
@@ -45,7 +46,6 @@ const TwoFactor: React.FC<TwoFactorProps> = ({ handle2FA, enable2FA }) => {
               checked={enabled}
               onCheckedChange={() => {
                 handle2FA(!enabled);
-                setEnabled(!enabled);
               }}
             />
           </span>

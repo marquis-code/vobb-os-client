@@ -1,27 +1,28 @@
-import { MetaDataProps } from "pages";
+import { LoginHistoryDataProps } from "pages";
 import { ChangePassword } from "./changePassword";
-import { ConnectedAccounts, ConnectedAccountsProps } from "./connectedAccounts";
+import { ConnectedAccounts } from "./connectedAccounts";
 import { LoginHistory } from "./loginHistory";
-import { TwoFactor, TwoFactorProps } from "./twoFactor";
+import { TwoFactor } from "./twoFactor";
+import { BlacklistProps, ChangePasswordData } from "types";
 
 interface AccountSecurityUIProps {
-  twoFactor: TwoFactorProps;
-  connectedAccts: ConnectedAccountsProps;
-  submitPasswordChange: (data) => void;
+  handle2FA: (enable: boolean) => void;
+  connectedAccts: (enable: boolean) => void;
+  submitPasswordChange: (data: ChangePasswordData) => void;
   loadingPasswordChange: boolean;
-  loginHistory: any;
-  historyMetaData: MetaDataProps;
+  loginHistoryData: LoginHistoryDataProps;
   handleFetchLoginHistory: (page: number) => void;
+  handleBlacklistAdress: (data: BlacklistProps) => void;
 }
 
 const AccountSecurityUI: React.FC<AccountSecurityUIProps> = ({
-  twoFactor,
+  handle2FA,
   connectedAccts,
   submitPasswordChange,
   loadingPasswordChange,
-  loginHistory,
-  historyMetaData,
-  handleFetchLoginHistory
+  loginHistoryData,
+  handleFetchLoginHistory,
+  handleBlacklistAdress
 }) => {
   return (
     <>
@@ -29,12 +30,12 @@ const AccountSecurityUI: React.FC<AccountSecurityUIProps> = ({
         <h1 className="text-lg font-bold mb-4">Account Security</h1>
       </section>
       <ChangePassword submit={submitPasswordChange} loadingPasswordChange={loadingPasswordChange} />
-      <TwoFactor {...twoFactor} />
-      <ConnectedAccounts {...connectedAccts} />
+      <TwoFactor handle2FA={handle2FA} />
+      <ConnectedAccounts handleGoogleAuth={connectedAccts} />
       <LoginHistory
-        loginHistory={loginHistory}
-        historyMetaData={historyMetaData}
+        loginHistoryData={loginHistoryData}
         handleFetchLoginHistory={handleFetchLoginHistory}
+        handleBlacklist={handleBlacklistAdress}
       />
     </>
   );

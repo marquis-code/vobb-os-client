@@ -5,3 +5,4 @@ export * from "./useClickOutside";
 export * from "./useFetchCountries";
 export * from "./useGoogleSignin";
 export * from "./useFetchUser";
+export * from "./useLogout";

@@ -1,12 +1,13 @@
 import { toggle2faStusService } from "api";
 import { OTPModal, toast } from "components";
 import { useUserContext } from "context";
-import { useApiRequest } from "hooks";
+import { useApiRequest, useFetchUser } from "hooks";
 import { useMemo } from "react";
 import { ModalProps } from "types/interfaces";
 
 const Setup2FA: React.FC<ModalProps> = ({ show, close }) => {
   const { run, data: response, error } = useApiRequest({});
+  const { fetchUserDetails } = useFetchUser();
   const { userDetails } = useUserContext();
 
   const handleSubmit = ({ otp }) => {
@@ -17,6 +18,7 @@ const Setup2FA: React.FC<ModalProps> = ({ show, close }) => {
       toast({
         description: response?.data?.message
       });
+      fetchUserDetails();
       close();
     } else if (error) {
       toast({

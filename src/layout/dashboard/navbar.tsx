@@ -15,16 +15,18 @@ import { Button } from "components";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { useUserContext } from "context";
+import { useFetchUser, useLogout } from "hooks";
 
 interface NavBarProps {
   sideBarWidth: string;
   collapse: boolean;
   title: string;
-  logout: () => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title, logout }) => {
+const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
   const { userDetails } = useUserContext();
+  const { logout } = useLogout();
+
   return (
     <>
       <header
@@ -43,7 +45,7 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title, logout }
           <UserAvatar />
           <div className="mr-1 text-left">
             <p className="font-workSans font-bold mb-[2px] text-sm leading-4">
-              {userDetails?.first_name}
+              {userDetails?.firstName}
             </p>
             <p className="text-[11px] text-vobb-neutral-60 leading-3">{userDetails?.role}</p>
           </div>
@@ -58,8 +60,11 @@ const UserAvatar = () => {
   const { userDetails } = useUserContext();
   return (
     <Avatar className="w-8 h-8">
-      <AvatarImage src={userDetails?.avatar ?? "https://github.com/shadcn.png"} alt="@shadcn" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage src={userDetails?.avatar} alt="profile picture" />
+      <AvatarFallback>
+        {userDetails?.firstName.charAt(0)}
+        {userDetails?.lastName.charAt(0)}
+      </AvatarFallback>
     </Avatar>
   );
 };

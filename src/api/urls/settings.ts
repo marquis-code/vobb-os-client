@@ -34,6 +34,16 @@ export const personalAccountUpdateURL = () => `${prefix}/profile`;
 export const personalEmailUpdateURL = () => `${prefix}/new-email`;
 
 /**
+ * Resend New Email Verification URL
+ *
+ * @returns url string
+ *
+ */
+export const personalEmailResendVerifyURL = () => `${prefix}/resend-email-code`;
+
+/* 
+
+/**
  * Verify New Email URL
  *
  * @returns url string
@@ -73,3 +83,17 @@ export const toggle2faStatusURL = () => `${prefix}/toggle-2fa`;
  */
 export const fetchLoginHistoryURL = ({ page, limit }) =>
   `${prefix}/login-history?page=${page}&limit=${limit}`;
+
+/**
+ * Toggle google auth URL
+ * @returns url string
+ *
+ */
+export const toggleGoogleAuthURL = () => `${prefix}/google-auth`;
+
+/**
+ * Blacklist IP address URL
+ * @returns url string
+ *
+ */
+export const blacklistIpAddressURL = () => `${prefix}/blacklist-ip`;

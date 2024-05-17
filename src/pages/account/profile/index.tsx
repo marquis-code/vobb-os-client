@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { ChangeEmail } from "./change-email";
 import { VerifyEmail } from "./verify-email";
 import { useApiRequest, useFetchUser } from "hooks";
-import { toast } from "components";
-import { personalAccountUpdateService } from "api";
+import { LoadingSpinner, toast } from "components";
+import { personalAccountUpdateService, personalEmailResendVerifyService } from "api";
 
 const AccountProfile = () => {
   const [changeEmail, setChangeEmail] = useState(false);
@@ -16,9 +16,14 @@ const AccountProfile = () => {
     error: updateError,
     requestStatus: updateStatus
   } = useApiRequest({});
+  const { run: runResend, data: resendResponse, error: resendError } = useApiRequest({});
 
   const updateProfile = (formData: FormData) => {
     runUpdate(personalAccountUpdateService(formData));
+  };
+
+  const handleResendEmailVerify = () => {
+    runResend(personalEmailResendVerifyService());
   };
 
   useMemo(() => {
@@ -35,10 +40,19 @@ const AccountProfile = () => {
     }
   }, [updateResponse, updateError]);
 
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
-
+  useMemo(() => {
+    if (resendResponse?.status === 200) {
+      setEmailOTP(true);
+      toast({
+        description: resendResponse?.data?.message
+      });
+    } else if (resendError) {
+      toast({
+        variant: "destructive",
+        description: resendError?.response?.data?.error
+      });
+    }
+  }, [resendResponse, resendError]);
   return (
     <>
       <ChangeEmail
@@ -51,6 +65,7 @@ const AccountProfile = () => {
         updateProfile={updateProfile}
         loadingUpdate={updateStatus.isPending}
         handleChangeEmail={() => setChangeEmail(true)}
+        handleResendEmail={handleResendEmailVerify}
       />
     </>
   );

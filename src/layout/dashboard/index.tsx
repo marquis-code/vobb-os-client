@@ -2,9 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
 import { useFetchUser, useMobile } from "hooks";
-import { UnsupportedScreenSize, toast } from "components";
-import { useNavigate } from "react-router-dom";
-import { Routes } from "router";
+import { UnsupportedScreenSize } from "components";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -13,16 +11,10 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const { isMobile } = useMobile({ size: 1024 });
+  const { fetchUserDetails } = useFetchUser();
   const [collapse, setCollapse] = useState(false);
   const sideBarWidth = collapse ? "60px" : "275px";
-  const navigate = useNavigate();
-  const { fetchUserDetails } = useFetchUser();
 
-  const logout = () => {
-    localStorage.clear();
-    navigate(Routes.login);
-    toast({ description: "Log out successful." });
-  };
   useEffect(() => {
     fetchUserDetails();
   }, []);
@@ -30,7 +22,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
     <UnsupportedScreenSize />
   ) : (
     <>
-      <NavBar title={title} collapse={collapse} sideBarWidth={sideBarWidth} logout={logout} />
+      <NavBar title={title} collapse={collapse} sideBarWidth={sideBarWidth} />
       <SideBar collapse={collapse} handleCollapse={setCollapse} sideBarWidth={sideBarWidth} />
       <main style={{ marginLeft: sideBarWidth }} className="mt-[55px]">
         {children}

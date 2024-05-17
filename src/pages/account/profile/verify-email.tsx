@@ -1,5 +1,6 @@
 import { personalEmailUpdateVerifyService } from "api";
 import { OTPModal, toast } from "components";
+import { useUserContext } from "context";
 import { useApiRequest, useFetchUser } from "hooks";
 import { useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -9,11 +10,9 @@ import { ModalProps } from "types";
 const VerifyEmail: React.FC<ModalProps> = ({ show, close }) => {
   const navigate = useNavigate();
   const { run, data: response, error, requestStatus } = useApiRequest({});
+  const { userDetails } = useUserContext();
   const { fetchUserDetails } = useFetchUser();
 
-  const [searchParams] = useSearchParams();
-  const encodedEmail = searchParams.get("email");
-  const email = encodedEmail ? decodeURIComponent(encodedEmail) : null;
   const handleSubmit = (data: { otp: string }) => {
     run(personalEmailUpdateVerifyService(data));
   };
@@ -38,7 +37,7 @@ const VerifyEmail: React.FC<ModalProps> = ({ show, close }) => {
     <>
       <OTPModal
         title="Verify Your Email"
-        text={`We’ve sent a 6-character code to ${email} The code expires shortly, so please enter it soon.`}
+        text={`We’ve sent a 6-character code to ${userDetails?.pendingEmail} The code expires shortly, so please enter it soon.`}
         show={show}
         close={close}
         submit={handleSubmit}

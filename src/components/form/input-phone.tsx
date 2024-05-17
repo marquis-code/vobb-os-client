@@ -12,7 +12,6 @@ interface InputProps extends PhoneInputProps {
   label?: string;
   handleChange: (value: string) => void;
   hint?: string;
-  defaultValue?: string
 }
 
 const CustomPhoneInput: React.FC<InputProps> = (props) => {
@@ -26,8 +25,7 @@ const CustomPhoneInput: React.FC<InputProps> = (props) => {
     onChange,
     handleChange,
     name,
-    hint,
-    defaultValue, 
+    hint
   } = props;
   return (
     <>
@@ -42,7 +40,6 @@ const CustomPhoneInput: React.FC<InputProps> = (props) => {
           data-testid={dataTestID}
           country="ng"
           placeholder="Your phone number"
-          value={defaultValue}
           {...props}
           inputProps={{
             name,
