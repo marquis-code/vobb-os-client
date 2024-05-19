@@ -27,6 +27,7 @@ export interface UserProfileProps {
   googleStatus: boolean;
   timezone: string;
   pendingEmail: string | null;
+  fluentLanguages: string[];
 }
 
 export interface BlacklistProps {

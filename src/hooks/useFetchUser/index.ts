@@ -25,9 +25,10 @@ export const useFetchUser = () => {
         dateFormat: user.date_format ?? "",
         timezone: user.timezone ?? "",
         language: user.language ?? "",
-        twoFaStatus: user.two_fa_status ?? false,
-        googleStatus: user.google_signup ?? false,
-        pendingEmail: user.pending_email ?? null
+        twoFaStatus: user.two_fa_status,
+        googleStatus: user.google_signup,
+        pendingEmail: user.pending_email ?? null,
+        fluentLanguages: user.fluent_languages
       };
       handleUpdateUser(profile);
       return profile;

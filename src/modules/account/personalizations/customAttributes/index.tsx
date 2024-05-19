@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { initOptionType, sysLangOptions } from "lib/constants";
+import { initOptionType } from "lib";
 import { useState } from "react";
 import { FileUpload } from "components/form/file-upload";
 import { useCountriesContext } from "context";

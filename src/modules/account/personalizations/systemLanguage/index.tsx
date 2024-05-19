@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { initOptionType, sysLangOptions } from "lib/constants";
+import { initOptionType, languagesOptions, sysLangOptions } from "lib";
 import { useUserContext } from "context";
 
 export interface SystemLanguageProps {
@@ -55,7 +55,7 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLan
         </div>
         <form>
           <SelectInput
-            options={sysLangOptions}
+            options={languagesOptions}
             value={watch("language")?.value === "" ? null : watch("language")}
             onChange={(val) => val && setValue("language", val)}
             placeholder="Select a language"

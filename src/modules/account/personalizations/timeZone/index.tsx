@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { timeZoneOptions, initOptionType } from "lib/constants";
+import { timeZoneOptions, initOptionType } from "lib";
 import { useUserContext } from "context";
 
 export interface TimeZoneProps {

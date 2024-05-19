@@ -3,7 +3,7 @@ import { LoadingSpinner, toast } from "components";
 import { useOnboardingContext } from "context";
 import { useApiRequest } from "hooks";
 import { useGetOnboardDetails } from "hooks/useGetOnboardDetails";
-import { sectorOptions, teamSizeOptions } from "lib/constants";
+import { sectorOptions, teamSizeOptions } from "lib";
 import { CompanyInfoUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";

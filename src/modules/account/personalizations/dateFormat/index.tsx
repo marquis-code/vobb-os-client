@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { dateFormatOptions, initOptionType, sysLangOptions } from "lib/constants";
+import { dateFormatOptions, initOptionType, sysLangOptions } from "lib";
 import { useUserContext } from "context";
 
 export interface DateFormatProps {

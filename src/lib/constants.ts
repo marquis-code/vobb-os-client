@@ -1,7 +1,7 @@
 import { companySectorTypes, companySizeTypes } from "types";
 import { optionType } from "types/interfaces";
 import timezones from "timezones-list";
-
+import { languages } from "./languages";
 
 interface optionTypeSize {
   label: string;
@@ -82,5 +82,12 @@ export const timeZoneOptions: optionType[] = timezones
   .map((item) => ({
     label: item.label,
     value: item.tzCode
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));
+
+export const languagesOptions: optionType[] = languages
+  .map((item) => ({
+    label: item.name,
+    value: item.name
   }))
   .sort((a, b) => a.label.localeCompare(b.label));

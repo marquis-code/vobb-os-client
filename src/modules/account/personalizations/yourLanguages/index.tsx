@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { initOptionType, sysLangOptions } from "lib/constants";
+import { initOptionType, languagesOptions, sysLangOptions } from "lib";
 
 export interface YourLanguagesProps {
   submit: (formData: FormData) => void;
@@ -53,7 +53,7 @@ const YourLanguages: React.FC<YourLanguagesProps> = ({ submit, loadingPreferredL
         </div>
         <form>
           <MultiSelectInput
-            options={sysLangOptions}
+            options={languagesOptions}
             value={watch("languages")}
             onChange={(val) => {
               const value = val as optionType[];

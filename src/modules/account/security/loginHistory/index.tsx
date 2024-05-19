@@ -1,6 +1,5 @@
 import { Button, Pagination } from "components";
 import { useUserContext } from "context";
-import { format } from "date-fns";
 import { cn } from "lib";
 import { LoginHistoryDataProps, LoginHistoryDeviceProps } from "pages";
 import { BlacklistProps } from "types";
@@ -65,7 +64,7 @@ interface DeviceProps {
 }
 
 const Device: React.FC<DeviceProps> = ({ device, myIP, handleBlacklist }) => {
-  const { location, ipAddress, time, user, device: gadget, isBlacklisted } = device;
+  const { location, ipAddress, time, isBlacklisted } = device;
   return (
     <div className="flex items-center justify-between mb-4 pb-4 border-b border-vobb-neutral-20 text-sm">
       <div>
@@ -80,8 +79,7 @@ const Device: React.FC<DeviceProps> = ({ device, myIP, handleBlacklist }) => {
           </span>
         </p>
         <p className="text-xs text-vobb-neutral-70">
-          {location} |
-          {/* {format(new Date(time), "dd/MM/yyyy")} at {format(new Date(time), "HH:mm")} */}
+          {location} | {time}
         </p>
       </div>
       {myIP !== ipAddress ? (
