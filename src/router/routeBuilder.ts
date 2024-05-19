@@ -21,7 +21,8 @@ import {
   AccountSecurity,
   AccountPersonalizations,
   OrgProfile,
-  OrgBranches
+  OrgBranches,
+  OrgBranding
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -165,6 +166,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Branches",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.branding,
+    Element: OrgBranding,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Branding",
       parent: "Workspace"
     }
   },

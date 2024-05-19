@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { cn, isFile } from "lib";
 import { CheckCircledIcon, UploadIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { Button, CustomInput, CustomPhoneInput, MultiSelectInput } from "components";
+import { Button, CustomInput, CustomPhoneInput, MultiSelectInput, SettingsPageTitle } from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { sectorOptions } from "lib/constants";
@@ -88,9 +88,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
 
   return (
     <>
-      <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">
-        <h1 className="text-lg font-bold mb-4">Organization Profile</h1>
-      </section>
+      <SettingsPageTitle title="Organization Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
         <div className="flex gap-4 mb-8">
           <Avatar className="w-16 h-16">

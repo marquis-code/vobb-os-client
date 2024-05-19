@@ -4,7 +4,8 @@ import {
   BranchTableActions,
   Button,
   getBranchTableColumns,
-  Pagination
+  Pagination,
+  SettingsPageTitle
 } from "components";
 import { BranchTableMock } from "lib";
 import { useMemo } from "react";
@@ -26,9 +27,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
 
   return (
     <>
-      <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">
-        <h1 className="text-lg font-bold mb-4">Branches</h1>
-      </section>
+      <SettingsPageTitle title="Branches" />
       <section className="pb-8 mb-12 max-w-[800px]">
         <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
           <PlusCircledIcon /> New branch

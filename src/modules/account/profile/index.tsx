@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
-import { Button, CustomInput, CustomPhoneInput } from "components";
+import { Button, CustomInput, CustomPhoneInput, SettingsPageTitle } from "components";
 import { CheckCircledIcon, QuestionMarkCircledIcon, UploadIcon } from "@radix-ui/react-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -70,9 +70,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
 
   return (
     <>
-      <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">
-        <h1 className="text-lg font-bold mb-4">Profile</h1>
-      </section>
+      <SettingsPageTitle title="Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
         <div className="flex gap-4 mb-8">
           <Avatar className="w-16 h-16">

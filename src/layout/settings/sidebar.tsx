@@ -86,14 +86,14 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Bank Accounts",
       icon: <CardStackIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.bank_accounts,
       value: "bank accounts"
     },
     {
       title: "Branding",
       icon: <GridIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "notifications"
+      path: Routes.branding,
+      value: "branding"
     },
     {
       title: "Billing",
