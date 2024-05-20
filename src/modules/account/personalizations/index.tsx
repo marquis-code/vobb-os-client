@@ -1,4 +1,4 @@
-import React from "react";
+import { SettingsPageTitle } from "components";
 import { CustomAttributes } from "./customAttributes";
 import { DateFormat, DateFormatProps } from "./dateFormat";
 import { SystemLanguage, SystemLanguageProps } from "./systemLanguage";

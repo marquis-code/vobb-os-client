@@ -1,15 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
-import { Button, CustomInput, CustomPhoneInput } from "components";
-import {
-  CheckCircledIcon,
-  CrossCircledIcon,
-  QuestionMarkCircledIcon,
-  UploadIcon
-} from "@radix-ui/react-icons";
+import { Button, CustomInput, CustomPhoneInput, SettingsPageTitle } from "components";
+import { CheckCircledIcon, QuestionMarkCircledIcon, UploadIcon } from "@radix-ui/react-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn } from "lib";
+import { cn, isFile } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "context";
@@ -38,7 +33,6 @@ interface AccountProfileProps {
   updateProfile: (formData: FormData) => void;
   loadingUpdate: boolean;
   handleChangeEmail: () => void;
-  handleResendEmail: () => void;
 }
 const AccountProfileUI: React.FC<AccountProfileProps> = ({
   handleChangeEmail,
@@ -128,9 +122,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   const phoneNumberWatch = watch("phoneNumber", profile?.phoneNumber);
   return (
     <>
-      <section className="border-b border-vobb-neutral-20 mb-4 max-w-[800px]">
-        <h1 className="text-lg font-bold mb-4">Profile</h1>
-      </section>
+      <SettingsPageTitle title="Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
         <div className="flex gap-4 mb-8">
           <Avatar className="w-16 h-16">
@@ -227,7 +219,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
               <div className="absolute -right-8 top-7">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
                       {profile?.pendingEmail ? (
                         <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
                       ) : (

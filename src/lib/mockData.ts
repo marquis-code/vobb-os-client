@@ -1,3 +1,5 @@
+import { BranchTableData } from "components";
+
 export const loginHistoryMock = [
   {
     location: "Lagos, Nigeria",
@@ -19,5 +21,26 @@ export const loginHistoryMock = [
     time: "5:25pm",
     ipAddress: "192.168.012.180",
     isBlacklisted: true
+  }
+];
+
+export const BranchTableMock: BranchTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Headquarters",
+    country: "Nigeria",
+    state: "Lagos",
+    city: "Ikeja",
+    timeZone: "GMT +1",
+    isPrimary: true
+  },
+  {
+    id: "728ed52f",
+    name: "Branch Ide",
+    country: "Canada",
+    state: "Ontario",
+    city: "Toronto",
+    timeZone: "GMT -6",
+    isPrimary: false
   }
 ];

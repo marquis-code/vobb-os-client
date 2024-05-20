@@ -8,3 +8,4 @@ export * from "./textarea";
 export * from "./radio-group";
 export * from "./checkbox-group";
 export * from "./date-picker";
+export * from "./color-picker";

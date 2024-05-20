@@ -1,4 +1,5 @@
 import { LoginHistoryDataProps } from "pages";
+import { SettingsPageTitle } from "components";
 import { ChangePassword } from "./changePassword";
 import { ConnectedAccounts } from "./connectedAccounts";
 import { LoginHistory } from "./loginHistory";
