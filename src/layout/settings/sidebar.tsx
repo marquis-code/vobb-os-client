@@ -74,26 +74,26 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Organization",
       icon: <BackpackIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.organization,
       value: "organization"
     },
     {
       title: "Branches",
       icon: <HomeIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "security"
+      path: Routes.branches,
+      value: "branches"
     },
     {
       title: "Bank Accounts",
       icon: <CardStackIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.bank_accounts,
       value: "bank accounts"
     },
     {
       title: "Branding",
       icon: <GridIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "notifications"
+      path: Routes.branding,
+      value: "branding"
     },
     {
       title: "Billing",
@@ -104,8 +104,8 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Communication",
       icon: <PaperPlaneIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "notifications"
+      path: Routes.communication,
+      value: "communication"
     },
     {
       title: "Attributes",
@@ -149,7 +149,8 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       style={{ width: sideBarWidth }}
       className="border-r border-vobb-neutral-30 h-full fixed top-0 left-0">
       <div className="border-b border-vobb-neutral-30 px-4 py-1 h-[55px] flex items-center">
-        <Button onClick={() => navigate(-1)} variant={"ghost"} size={"icon"}>
+        <Button onClick={() => navigate(Routes.overview)} variant={"ghost"} size={"icon"}>
+          <span className="sr-only">Back to overview</span>
           <ChevronLeftIcon />
         </Button>
         <p className="ml-2 font-workSans font-bold text-lg">Settings</p>

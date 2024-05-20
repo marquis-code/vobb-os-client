@@ -33,7 +33,7 @@ const Modal: React.FC<ModalUIProps> = ({
         <section
           ref={modalRef}
           className={cn(
-            `bg-white p-4 rounded-lg w-full max-w-[450px]`,
+            `bg-white p-4 rounded-lg w-full max-w-[450px] max-h-[90dvh] overflow-auto`,
             `${position === "right" ? "" : position === "left" ? "" : "m-auto"}`,
             contentClassName
           )}>
