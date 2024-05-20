@@ -1,9 +1,11 @@
-import { Button, MultiSelectInput, PasswordInput, SelectInput } from "components";
+import { Button, LoadingSpinner, MultiSelectInput, PasswordInput, SelectInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { initOptionType, languagesOptions, sysLangOptions } from "lib";
+import { initOptionType, languagesOptions } from "lib";
+import { useUserContext } from "context";
+import { useEffect } from "react";
 
 export interface YourLanguagesProps {
   submit: (formData: FormData) => void;
@@ -12,11 +14,10 @@ export interface YourLanguagesProps {
 interface YourLanguagesData {
   languages: optionType[];
 }
-const initSysLang: YourLanguagesData = {
-  languages: []
-};
 
 const YourLanguages: React.FC<YourLanguagesProps> = ({ submit, loadingPreferredLang }) => {
+  const { userDetails } = useUserContext();
+
   const schema = yup.object().shape({
     languages: yup
       .array()
@@ -30,20 +31,35 @@ const YourLanguages: React.FC<YourLanguagesProps> = ({ submit, loadingPreferredL
   });
 
   const { handleSubmit, reset, watch, setValue } = useForm<YourLanguagesData>({
-    resolver: yupResolver(schema),
-    defaultValues: initSysLang
+    resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    if (userDetails) {
+      const languages = userDetails.fluentLanguages
+        ? userDetails.fluentLanguages.map(
+            (lang) => languagesOptions.find((option) => option.value === lang) || initOptionType
+          )
+        : [];
+      setValue("languages", languages);
+    }
+  }, [userDetails]);
 
   const onSubmit: SubmitHandler<YourLanguagesData> = (data) => {
     const formData = new FormData();
-    console.log(formData);
+    const { languages } = data;
+    if (languages.length) {
+      languages.forEach((language, index) => {
+        formData.append(`fluent_languages[${index}]`, language.value);
+      });
+      submit(formData);
+    }
   };
 
   const handleReset = (e) => {
     e.preventDefault();
     reset();
   };
-
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">

@@ -6,7 +6,7 @@ interface ChangeEmailProps extends ModalProps {
 }
 
 const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
-  const handleSubmit = (email: string) => {
+  const handleSubmit = ({ email }) => {
     console.log(email);
     callback();
   };

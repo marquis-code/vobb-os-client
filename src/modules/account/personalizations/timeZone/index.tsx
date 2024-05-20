@@ -5,23 +5,19 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
 import { timeZoneOptions, initOptionType } from "lib";
 import { useUserContext } from "context";
+import { useEffect } from "react";
 
 export interface TimeZoneProps {
   submit: (formData: FormData) => void;
   loadingTimezone: boolean;
 }
 interface TimeZoneData {
-  timeZone: optionType | undefined;
+  timeZone: optionType;
 }
 
 const TimeZone: React.FC<TimeZoneProps> = ({ submit, loadingTimezone }) => {
   const { userDetails } = useUserContext();
 
-  const initSysLang: TimeZoneData = {
-    timeZone: userDetails?.timezone
-      ? timeZoneOptions.find((item) => item.value === userDetails.timezone)
-      : initOptionType
-  };
   const schema = yup.object().shape({
     timeZone: yup.object({
       label: yup.string().required("Required"),
@@ -30,9 +26,17 @@ const TimeZone: React.FC<TimeZoneProps> = ({ submit, loadingTimezone }) => {
   });
 
   const { handleSubmit, reset, watch, setValue } = useForm<TimeZoneData>({
-    resolver: yupResolver<TimeZoneData | any>(schema),
-    defaultValues: initSysLang
+    resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    if (userDetails) {
+      const timeZone = userDetails?.timezone
+        ? timeZoneOptions.find((item) => item.value === userDetails.timezone) || initOptionType
+        : initOptionType;
+      setValue("timeZone", timeZone);
+    }
+  }, [userDetails]);
 
   const onSubmit: SubmitHandler<TimeZoneData> = (data) => {
     const formData = new FormData();

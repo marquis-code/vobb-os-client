@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
-import { useFetchUser, useMobile } from "hooks";
+import { useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
 
 interface DashboardLayoutProps {
@@ -11,13 +11,9 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const { isMobile } = useMobile({ size: 1024 });
-  const { fetchUserDetails } = useFetchUser();
   const [collapse, setCollapse] = useState(false);
   const sideBarWidth = collapse ? "60px" : "275px";
 
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
   return isMobile ? (
     <UnsupportedScreenSize />
   ) : (

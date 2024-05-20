@@ -3,7 +3,7 @@ import { UserProfileProps } from "types";
 
 interface UserContextProps {
   userDetails: UserProfileProps | null;
-  handleUpdateUser: (userDetails: UserProfileProps) => void;
+  handleUpdateUser: (userDetails: UserProfileProps | null) => void;
 }
 
 const UserDetailsContext = createContext<UserContextProps | undefined>(undefined);
@@ -19,7 +19,7 @@ export const useUserContext = () => {
 export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
   const [userDetails, setUserDetails] = useState<UserProfileProps | null>(null);
 
-  const handleUpdateUser = (userDetails: UserProfileProps) => {
+  const handleUpdateUser = (userDetails: UserProfileProps | null) => {
     setUserDetails(userDetails);
   };
 

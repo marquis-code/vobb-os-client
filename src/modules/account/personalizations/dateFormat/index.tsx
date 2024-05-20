@@ -5,23 +5,22 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
 import { dateFormatOptions, initOptionType, sysLangOptions } from "lib";
 import { useUserContext } from "context";
+import { useEffect } from "react";
 
 export interface DateFormatProps {
   submit: (formData: FormData) => void;
   loadingDateFormat: boolean;
 }
 interface DateFormatData {
-  dateFormat: optionType | undefined;
+  dateFormat: optionType;
 }
+
+const initSysLang: DateFormatData = {
+  dateFormat: initOptionType
+};
 
 const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) => {
   const { userDetails } = useUserContext();
-
-  const initSysLang: DateFormatData = {
-    dateFormat: userDetails?.dateFormat
-      ? dateFormatOptions.find((item) => item.value === userDetails.dateFormat)
-      : initOptionType
-  };
 
   const schema = yup.object().shape({
     dateFormat: yup.object({
@@ -31,10 +30,16 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) =>
   });
 
   const { handleSubmit, reset, watch, setValue } = useForm<DateFormatData>({
-    resolver: yupResolver<DateFormatData | any>(schema),
-    defaultValues: initSysLang
+    resolver: yupResolver(schema)
   });
-
+  useEffect(() => {
+    if (userDetails) {
+      const dateFormat = userDetails?.dateFormat
+        ? dateFormatOptions.find((item) => item.value === userDetails.dateFormat) || initOptionType
+        : initOptionType;
+      setValue("dateFormat", dateFormat);
+    }
+  }, [userDetails]);
   const onSubmit: SubmitHandler<DateFormatData> = (data) => {
     const formData = new FormData();
     if (data.dateFormat) {

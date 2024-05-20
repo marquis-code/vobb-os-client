@@ -4,7 +4,7 @@ import { CheckCircledIcon, QuestionMarkCircledIcon, UploadIcon } from "@radix-ui
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn, isFile } from "lib";
+import { cn } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "context";
@@ -33,6 +33,7 @@ interface AccountProfileProps {
   updateProfile: (formData: FormData) => void;
   loadingUpdate: boolean;
   handleChangeEmail: () => void;
+  handleResendEmail: () => void;
 }
 const AccountProfileUI: React.FC<AccountProfileProps> = ({
   handleChangeEmail,
