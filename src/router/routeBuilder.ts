@@ -22,7 +22,8 @@ import {
   AccountPersonalizations,
   OrgProfile,
   OrgBranches,
-  OrgBranding
+  OrgBranding,
+  OrgCommunication
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -176,6 +177,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Branding",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.communication,
+    Element: OrgCommunication,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Communication",
       parent: "Workspace"
     }
   },

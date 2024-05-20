@@ -104,8 +104,8 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Communication",
       icon: <PaperPlaneIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "notifications"
+      path: Routes.communication,
+      value: "communication"
     },
     {
       title: "Attributes",

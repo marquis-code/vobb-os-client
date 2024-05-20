@@ -8,7 +8,10 @@ const OrgBrandingUI = () => {
 
   return (
     <>
-      <SettingsPageTitle title="Branding" className="max-w-none" />
+      <SettingsPageTitle
+        title="Branding"
+        className="max-w-none"
+      />
       <section className="grid grid-cols-[1fr,2fr] gap-4 pt-4">
         <div>
           <div className="mb-8">
