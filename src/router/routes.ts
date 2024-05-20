@@ -31,6 +31,7 @@ export const Routes = {
   security: "/settings/security",
   personalizations: "/settings/personalizations",
   notifications: "/settings/notifications",
+  account_activity: "/settings/account-activity",
   organization: "/settings/organisation",
   branches: "/settings/branches",
   bank_accounts: "/settings/bank-accounts",
@@ -42,4 +43,5 @@ export const Routes = {
   migration: "/settings/migration",
   reports: "/settings/reports",
   workflows: "/settings/workflows",
+  organization_activity: "/settings/organization-activity",
 };
