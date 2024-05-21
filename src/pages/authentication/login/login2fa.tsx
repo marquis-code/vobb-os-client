@@ -1,6 +1,6 @@
 import { login2faService } from "api";
 import { OTPModal, toast } from "components";
-import { useApiRequest, useFetchUser } from "hooks";
+import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
@@ -12,7 +12,6 @@ interface Login2FAProps extends ModalProps {
 
 const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { fetchUserDetails, loadingUser } = useFetchUser();
   const navigate = useNavigate();
 
   const submit = (data: { otp: string }) => {
@@ -27,8 +26,7 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
       } else {
         localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
         localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
-        fetchUserDetails();
-        !loadingUser && navigate(Routes.overview);
+        navigate(Routes.overview);
       }
       toast({
         description: response?.data?.message
