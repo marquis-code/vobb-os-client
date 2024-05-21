@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { initOptionType, sysLangOptions } from "lib/constants";
+import { initOptionType } from "lib";
 import { useState } from "react";
 import { FileUpload } from "components/form/file-upload";
 import { useCountriesContext } from "context";
@@ -49,7 +49,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
 
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
-
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
