@@ -120,7 +120,6 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
   const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
 
-  const phoneNumberWatch = watch("phoneNumber", profile?.phoneNumber);
   return (
     <>
       <SettingsPageTitle title="Profile" />
@@ -189,7 +188,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
           <CustomPhoneInput
             label="Phone Number"
             name="phoneNumber"
-            value={phoneNumberWatch}
+            value={watch("phoneNumber", profile?.phoneNumber)}
             validatorMessage={errors.phoneNumber?.message}
             handleChange={(val) => {
               setValue("phoneNumber", val);

@@ -82,6 +82,7 @@ interface OrgProfileProps {
   };
   updateEmails: { submit: (data: { action: "primary" | "support" }) => void; loading: boolean };
 }
+
 const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
 
 const OrgProfileUI: React.FC<OrgProfileProps> = ({
@@ -92,8 +93,9 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
 }) => {
   const navigate = useNavigate();
   const { submit: submitUpdate, loading: submitLoading } = updateProfile;
-  const { submit: submitResendEmails, loading: emailsResendLoading } = updateEmails;
+  const { submit: submitResendEmails } = updateEmails;
   const { submit: submitUpdateNumbers, loading: numbersLoading } = updateNumbers;
+
   const searchParams = new URLSearchParams(window.location.search);
 
   const handleSetParams = (action: "primary" | "support") => {
@@ -142,6 +144,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
   }, [profile, reset]);
 
   const { logo, primaryNumber, secondaryNumber, sector } = getValues();
+
+  //Tracking changes not caught by dirtyFields.
   const logoChanged = logo !== profile?.logo;
   const sectorChanged = !arraysHaveSameElements(
     sector.map((item) => item.value),
@@ -182,6 +186,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
       }
     };
 
+    //
     if (!isEmptyObj(dirtyFields) || logoChanged || sectorChanged) handleProfileUpdate();
     handleNumbersUpdate();
   };
@@ -192,9 +197,6 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     secondaryNumChanged ||
     logoChanged ||
     sectorChanged;
-
-  const primaryNumberWatch = watch("primaryNumber", profile?.primaryPhoneNumber);
-  const secondaryNumberWatch = watch("secondaryNumber", profile?.secondaryPhoneNumber);
 
   return (
     <>
@@ -270,7 +272,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           <CustomPhoneInput
             label="Primary Phone Number"
             name="primaryNumber"
-            value={primaryNumberWatch}
+            value={watch("primaryNumber", profile?.primaryPhoneNumber)}
             validatorMessage={errors.primaryNumber?.message}
             handleChange={(val) => setValue("primaryNumber", val)}
             parentClassName="mb-2"
@@ -278,7 +280,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           <CustomPhoneInput
             label="Secondary Phone Number"
             name="secondaryNumber"
-            value={secondaryNumberWatch}
+            value={watch("secondaryNumber", profile?.secondaryPhoneNumber)}
             validatorMessage={errors.secondaryNumber?.message}
             handleChange={(val) => setValue("secondaryNumber", val)}
             parentClassName="mb-2"
@@ -417,7 +419,11 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
         <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
           Cancel
         </Button>
-        <Button disabled={!isDirty} onClick={handleSubmit(onSubmit)} variant={"fill"}>
+        <Button
+          disabled={!isDirty}
+          loading={submitLoading || numbersLoading}
+          onClick={handleSubmit(onSubmit)}
+          variant={"fill"}>
           Save
         </Button>
       </div>
