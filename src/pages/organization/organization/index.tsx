@@ -76,6 +76,7 @@ const OrgProfile = () => {
       toast({
         description: numbersResponse?.data?.message
       });
+      fetchOrgDetails();
     } else if (numbersError) {
       toast({
         variant: "destructive",

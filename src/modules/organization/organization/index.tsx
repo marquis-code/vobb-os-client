@@ -81,20 +81,25 @@ interface OrgProfileProps {
     loading: boolean;
   };
   updateEmails: { submit: (data: { action: "primary" | "support" }) => void; loading: boolean };
-
-  // organization: OrgProfileData;
 }
+const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
 
 const OrgProfileUI: React.FC<OrgProfileProps> = ({
   handleChangeEmail,
   updateProfile,
-  updateEmails
+  updateEmails,
+  updateNumbers
 }) => {
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(window.location.search);
   const { submit: submitUpdate, loading: submitLoading } = updateProfile;
   const { submit: submitResendEmails, loading: emailsResendLoading } = updateEmails;
-  const { submit: submitUpdateNumbers, loading: numbersLoading } = updateEmails;
+  const { submit: submitUpdateNumbers, loading: numbersLoading } = updateNumbers;
+  const searchParams = new URLSearchParams(window.location.search);
+
+  const handleSetParams = (action: "primary" | "support") => {
+    searchParams.set("action", action);
+    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+  };
 
   const { orgDetails: profile } = useUserContext();
 
@@ -125,6 +130,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
         website: profile.website,
         primaryEmail: profile.pendingPrimaryEmail ?? profile.primaryEmail,
         secondaryEmail: profile.pendingSecondaryEmail ?? profile.secondaryEmail,
+        primaryNumber: profile.primaryPhoneNumber,
+        secondaryNumber: profile.secondaryPhoneNumber,
         sector: profile.sector
           ? profile.sector.map(
               (sector) => sectorOptions.find((option) => option.value === sector) || initOptionType
@@ -134,32 +141,60 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     }
   }, [profile, reset]);
 
-  const { logo, primaryNumber, secondaryNumber } = getValues();
+  const { logo, primaryNumber, secondaryNumber, sector } = getValues();
   const logoChanged = logo !== profile?.logo;
-  const primaryNumChanged = primaryNumber?.replace(/\D/g, "");
-  const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "");
+  const sectorChanged = !arraysHaveSameElements(
+    sector.map((item) => item.value),
+    profile?.sector.map((item) => item)
+  );
+  const primaryNumChanged = primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
+  const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
 
   const onSubmit: SubmitHandler<OrgProfileFormData> = (data) => {
-    const formData = new FormData();
-    if (dirtyFields.name) {
-      formData.append("name", data.name);
-    }
-    if (dirtyFields.website) {
-      formData.append("website", data.website);
-    }
+    const handleProfileUpdate = () => {
+      const formData = new FormData();
+      if (dirtyFields.name) {
+        formData.append("name", data.name);
+      }
+      if (dirtyFields.website) {
+        formData.append("website", data.website);
+      }
 
-    if (logoChanged) {
-      formData.append("logo", data.logo);
-    }
+      if (logoChanged) {
+        formData.append("logo", data.logo);
+      }
 
-    submitUpdate(formData);
+      if (data.sector.length) {
+        data.sector.forEach((sector, index) => {
+          formData.append(`sector[${index}]`, sector.value);
+        });
+      }
+
+      submitUpdate(formData);
+    };
+
+    const handleNumbersUpdate = () => {
+      if (primaryNumChanged) {
+        submitUpdateNumbers({ number: data.primaryNumber.replace(/\D/g, ""), action: "primary" });
+      }
+      if (secondaryNumChanged) {
+        submitUpdateNumbers({ number: data.secondaryNumber.replace(/\D/g, ""), action: "support" });
+      }
+    };
+
+    if (!isEmptyObj(dirtyFields) || logoChanged || sectorChanged) handleProfileUpdate();
+    handleNumbersUpdate();
   };
-  console.log(dirtyFields);
-  const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
-  const isDirty = !isEmptyObj(dirtyFields) || logoChanged;
 
-  const primaryNumberWatch = watch("primaryNumber");
-  const secondaryNumberWatch = watch("secondaryNumber");
+  const isDirty =
+    !isEmptyObj(dirtyFields) ||
+    primaryNumChanged ||
+    secondaryNumChanged ||
+    logoChanged ||
+    sectorChanged;
+
+  const primaryNumberWatch = watch("primaryNumber", profile?.primaryPhoneNumber);
+  const secondaryNumberWatch = watch("secondaryNumber", profile?.secondaryPhoneNumber);
 
   return (
     <>
@@ -288,8 +323,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   handleChangeEmail();
-                  searchParams.set("action", "primary");
-                  navigate(`${window.location.pathname}?${searchParams.toString()}`);
+                  handleSetParams("primary");
                 }}
                 className="p-0 underline"
                 size={"sm"}
@@ -305,8 +339,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                   variant={"link"}
                   onClick={() => {
                     submitResendEmails({ action: "primary" });
-                    searchParams.set("action", "primary");
-                    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+                    handleSetParams("primary");
                   }}>
                   Resend verification mail
                 </Button>
@@ -353,8 +386,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   handleChangeEmail();
-                  searchParams.set("action", "support");
-                  navigate(`${window.location.pathname}?${searchParams.toString()}`);
+                  handleSetParams("support");
                 }}
                 className="p-0 underline"
                 size={"sm"}
@@ -372,7 +404,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                   onClick={() => {
                     submitResendEmails({ action: "support" });
                     searchParams.set("action", "support");
-                    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+                    handleSetParams("support");
                   }}>
                   Resend verification mail
                 </Button>
@@ -394,3 +426,20 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
 };
 
 export { OrgProfileUI };
+
+function arraysHaveSameElements<T>(arr1: T[], arr2: T[] | undefined): boolean {
+  if (arr1.length !== arr2?.length) {
+    return false;
+  }
+
+  const sortedArr1 = [...arr1].sort();
+  const sortedArr2 = [...arr2].sort();
+
+  for (let i = 0; i < sortedArr1.length; i++) {
+    if (sortedArr1[i] !== sortedArr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}

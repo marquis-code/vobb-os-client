@@ -44,4 +44,6 @@ export interface OrganisationProfileProps {
   secondaryEmail: string;
   pendingPrimaryEmail: string;
   pendingSecondaryEmail: string;
+  primaryPhoneNumber: string;
+  secondaryPhoneNumber: string;
 }
