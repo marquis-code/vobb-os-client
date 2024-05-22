@@ -25,7 +25,8 @@ export const useFetchOrganisation = () => {
         pendingPrimaryEmail: org.pending_primary_email ?? null,
         pendingSecondaryEmail: org.pending_support_email ?? null,
         primaryPhoneNumber: org.primary_phone_number ?? null,
-        secondaryPhoneNumber: org.support_phone_number ?? null
+        secondaryPhoneNumber: org.support_phone_number ?? null,
+        suspensionNotice: org.suspension_notify ?? false
       };
       handleUpdateOrg(profile);
       return profile;

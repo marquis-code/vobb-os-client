@@ -1,5 +1,6 @@
 import { Button, SettingsPageTitle } from "components";
 import { Switch } from "components/ui/switch";
+import { useUserContext } from "context";
 import { useState } from "react";
 
 interface NoticeData {
@@ -8,13 +9,18 @@ interface NoticeData {
   key: string;
 }
 
-const OrgCommunicationUI = () => {
+interface OrgCommProps {
+  submitSuspend: ({ suspend }) => void;
+}
+
+const OrgCommunicationUI: React.FC<OrgCommProps> = ({ submitSuspend }) => {
   const [preview, setPreview] = useState<string | undefined>();
+  const { orgDetails } = useUserContext();
 
   const notices: NoticeData[] = [
     {
       title: "Temporary suspension notice",
-      isEnabled: true,
+      isEnabled: orgDetails?.suspensionNotice ?? false,
       key: "temporary-suspension"
     },
     {
@@ -23,7 +29,6 @@ const OrgCommunicationUI = () => {
       key: "deactivation"
     }
   ];
-
   return (
     <>
       <SettingsPageTitle
@@ -44,7 +49,10 @@ const OrgCommunicationUI = () => {
                   onClick={() => setPreview(key)}>
                   Preview mail
                 </Button>
-                <Switch checked={isEnabled} onCheckedChange={console.log} />
+                <Switch
+                  checked={isEnabled}
+                  onCheckedChange={() => submitSuspend({ suspend: !isEnabled })}
+                />
               </span>
             </div>
           ))}

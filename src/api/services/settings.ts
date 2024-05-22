@@ -22,9 +22,11 @@ import {
   send2faCodeURL,
   toggle2faStatusURL,
   toggleGoogleAuthURL,
+  updateOrgBrandingURL,
   updateOrgEmailsURL,
   updateOrgNumbersURL,
   updateOrgProfileURL,
+  updateOrgSusNotifyURL,
   verifyOrgEmailsURL
 } from "api";
 
@@ -52,6 +54,11 @@ interface verifyOrgEmailsRequestBody {
 interface updateOrgNumbersRequestBody {
   number: string;
   action: "primary" | "support";
+}
+
+interface updateBrandingRequestBody {
+  primary_color: string;
+  secondary_color: string;
 }
 /*
 PERSONAL PROFILE SERVICES
@@ -256,6 +263,28 @@ export const verifyOrgEmailsService = (data: verifyOrgEmailsRequestBody) => {
 export const updateOrgNumbersService = (data: updateOrgNumbersRequestBody) => {
   return patchRequest({
     url: updateOrgNumbersURL(),
+    data
+  });
+};
+
+/**
+ * Update org branding service
+ * @returns axios promise
+ */
+export const updateOrgBrandingService = (data: updateBrandingRequestBody) => {
+  return patchRequest({
+    url: updateOrgBrandingURL(),
+    data
+  });
+};
+
+/**
+ * Update org suspension service
+ * @returns axios promise
+ */
+export const updateOrgSusNotifyService = (data: { suspension_notify: boolean }) => {
+  return patchRequest({
+    url: updateOrgSusNotifyURL(),
     data
   });
 };

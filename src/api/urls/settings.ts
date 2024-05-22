@@ -144,3 +144,17 @@ export const verifyOrgEmailsURL = () => `${prefixOrg}/email/verify`;
  *
  */
 export const updateOrgNumbersURL = () => `${prefixOrg}/number`;
+
+/**
+ *  Update org branding URL
+ * @returns url string
+ *
+ */
+export const updateOrgBrandingURL = () => `${prefixOrg}/branding`;
+
+/**
+ *  Update suspension notify URL
+ * @returns url string
+ *
+ */
+export const updateOrgSusNotifyURL = () => `${prefixOrg}/suspension`;
