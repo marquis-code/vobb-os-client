@@ -4,10 +4,19 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { cn, isFile } from "lib";
 import { CheckCircledIcon, UploadIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { Button, CustomInput, CustomPhoneInput, MultiSelectInput, SettingsPageTitle } from "components";
+import {
+  Button,
+  CustomInput,
+  CustomPhoneInput,
+  MultiSelectInput,
+  SettingsPageTitle
+} from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
-import { sectorOptions } from "lib/constants";
+import { initOptionType, sectorOptions } from "lib/constants";
+import { useUserContext } from "context";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface OrgProfileData {
   name: string;
@@ -66,25 +75,91 @@ const schema = yup.object({
 
 interface OrgProfileProps {
   handleChangeEmail: () => void;
+  updateProfile: { submit: (formData: FormData) => void; loading: boolean };
+  updateNumbers: {
+    submit: (data: { number: string; action: "primary" | "support" }) => void;
+    loading: boolean;
+  };
+  updateEmails: { submit: (data: { action: "primary" | "support" }) => void; loading: boolean };
+
   // organization: OrgProfileData;
 }
 
-const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
+const OrgProfileUI: React.FC<OrgProfileProps> = ({
+  handleChangeEmail,
+  updateProfile,
+  updateEmails
+}) => {
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(window.location.search);
+  const { submit: submitUpdate, loading: submitLoading } = updateProfile;
+  const { submit: submitResendEmails, loading: emailsResendLoading } = updateEmails;
+  const { submit: submitUpdateNumbers, loading: numbersLoading } = updateEmails;
+
+  const { orgDetails: profile } = useUserContext();
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setValue("logo", e.target.files[0]);
+    }
+  };
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, dirtyFields },
     watch,
     setValue,
+    getValues,
     reset
   } = useForm<OrgProfileFormData>({
     resolver: yupResolver(schema),
     defaultValues: initData
   });
 
+  useEffect(() => {
+    if (profile) {
+      reset({
+        name: profile.organisation,
+        logo: profile.logo,
+        website: profile.website,
+        primaryEmail: profile.pendingPrimaryEmail ?? profile.primaryEmail,
+        secondaryEmail: profile.pendingSecondaryEmail ?? profile.secondaryEmail,
+        sector: profile.sector
+          ? profile.sector.map(
+              (sector) => sectorOptions.find((option) => option.value === sector) || initOptionType
+            )
+          : []
+      });
+    }
+  }, [profile, reset]);
+
+  const { logo, primaryNumber, secondaryNumber } = getValues();
+  const logoChanged = logo !== profile?.logo;
+  const primaryNumChanged = primaryNumber?.replace(/\D/g, "");
+  const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "");
+
   const onSubmit: SubmitHandler<OrgProfileFormData> = (data) => {
-    console.log(data);
+    const formData = new FormData();
+    if (dirtyFields.name) {
+      formData.append("name", data.name);
+    }
+    if (dirtyFields.website) {
+      formData.append("website", data.website);
+    }
+
+    if (logoChanged) {
+      formData.append("logo", data.logo);
+    }
+
+    submitUpdate(formData);
   };
+  console.log(dirtyFields);
+  const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
+  const isDirty = !isEmptyObj(dirtyFields) || logoChanged;
+
+  const primaryNumberWatch = watch("primaryNumber");
+  const secondaryNumberWatch = watch("secondaryNumber");
 
   return (
     <>
@@ -92,8 +167,18 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
         <div className="flex gap-4 mb-8">
           <Avatar className="w-16 h-16">
-            <AvatarImage src={watch("logo") ? URL.createObjectURL(watch("logo")) : ""} alt="logo" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={
+                watch("logo") instanceof File
+                  ? URL.createObjectURL(watch("logo"))
+                  : watch("logo") || ""
+              }
+              alt="logo"
+            />{" "}
+            <AvatarFallback>
+              {profile?.organisation.charAt(0)}
+              {profile?.organisation.charAt(1)}
+            </AvatarFallback>
           </Avatar>
           <div>
             <p className={cn("font-semibold mb-2", errors.logo?.message ? "text-error-10" : "")}>
@@ -104,7 +189,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
               htmlFor="avatar">
               <UploadIcon /> <span>Upload image</span>
               <input
-                onChange={(e) => e.target.files && setValue("logo", e.target.files[0])}
+                onChange={handleLogoChange}
                 className="hidden"
                 id="avatar"
                 type="file"
@@ -150,6 +235,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
           <CustomPhoneInput
             label="Primary Phone Number"
             name="primaryNumber"
+            value={primaryNumberWatch}
             validatorMessage={errors.primaryNumber?.message}
             handleChange={(val) => setValue("primaryNumber", val)}
             parentClassName="mb-2"
@@ -157,6 +243,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
           <CustomPhoneInput
             label="Secondary Phone Number"
             name="secondaryNumber"
+            value={secondaryNumberWatch}
             validatorMessage={errors.secondaryNumber?.message}
             handleChange={(val) => setValue("secondaryNumber", val)}
             parentClassName="mb-2"
@@ -176,13 +263,20 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                      {/* <CheckCircledIcon width={20} height={20} color="var(--success-50)" /> */}{" "}
-                      {/* Verified email icon */}
-                      <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      {profile?.pendingPrimaryEmail ? (
+                        <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      ) : profile?.primaryEmail ? (
+                        <CheckCircledIcon width={20} height={20} color="var(--success-50)" />
+                      ) : (
+                        ""
+                      )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Email is unverified, please request a new verification email</p>{" "}
-                      {/* If verified, change text to: Email is verified! */}
+                      <p>
+                        {profile?.pendingPrimaryEmail
+                          ? "Email is unverified, please request a new verification email"
+                          : "Email is verified!"}
+                      </p>{" "}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -194,16 +288,29 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   handleChangeEmail();
+                  searchParams.set("action", "primary");
+                  navigate(`${window.location.pathname}?${searchParams.toString()}`);
                 }}
                 className="p-0 underline"
                 size={"sm"}
                 variant={"link"}>
-                Change email address
+                {profile?.primaryEmail || profile?.pendingPrimaryEmail
+                  ? "Change email address"
+                  : "Add email address"}
               </Button>
-              <Button className="p-0 underline text-vobb-primary-50" size={"sm"} variant={"link"}>
-                Resend verification mail
-              </Button>{" "}
-              {/* Hide this button when email is verified */}
+              {profile?.pendingPrimaryEmail && (
+                <Button
+                  className="p-0 underline text-vobb-primary-50"
+                  size={"sm"}
+                  variant={"link"}
+                  onClick={() => {
+                    submitResendEmails({ action: "primary" });
+                    searchParams.set("action", "primary");
+                    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+                  }}>
+                  Resend verification mail
+                </Button>
+              )}
             </div>
           </div>
           <div style={{ maxWidth: "calc(50% - 0.5rem)" }} className="mb-2 col-span-2">
@@ -221,13 +328,20 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                      {/* <CheckCircledIcon width={20} height={20} color="var(--success-50)" /> */}{" "}
-                      {/* Verified email icon */}
-                      <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      {profile?.pendingSecondaryEmail ? (
+                        <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      ) : profile?.secondaryEmail ? (
+                        <CheckCircledIcon width={20} height={20} color="var(--success-50)" />
+                      ) : (
+                        ""
+                      )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Email is unverified, please request a new verification email</p>{" "}
-                      {/* If verified, change text to: Email is verified! */}
+                      <p>
+                        {profile?.pendingSecondaryEmail
+                          ? "Email is unverified, please request a new verification email"
+                          : "Email is verified!"}
+                      </p>{" "}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -239,16 +353,30 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({ handleChangeEmail }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   handleChangeEmail();
+                  searchParams.set("action", "support");
+                  navigate(`${window.location.pathname}?${searchParams.toString()}`);
                 }}
                 className="p-0 underline"
                 size={"sm"}
                 variant={"link"}>
-                Change email address
+                {profile?.secondaryEmail || profile?.pendingSecondaryEmail
+                  ? "Change email address"
+                  : "Add email address"}
               </Button>
-              <Button className="p-0 underline text-vobb-primary-50" size={"sm"} variant={"link"}>
-                Resend verification mail
-              </Button>{" "}
-              {/* Hide this button when email is verified */}
+
+              {profile?.pendingSecondaryEmail && (
+                <Button
+                  className="p-0 underline text-vobb-primary-50"
+                  size={"sm"}
+                  variant={"link"}
+                  onClick={() => {
+                    submitResendEmails({ action: "support" });
+                    searchParams.set("action", "support");
+                    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+                  }}>
+                  Resend verification mail
+                </Button>
+              )}
             </div>
           </div>
         </form>

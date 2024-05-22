@@ -34,3 +34,14 @@ export interface BlacklistProps {
   ipAddress: string;
   status: boolean;
 }
+
+export interface OrganisationProfileProps {
+  organisation: string;
+  logo: string;
+  sector: string[];
+  website: string;
+  primaryEmail: string;
+  secondaryEmail: string;
+  pendingPrimaryEmail: string;
+  pendingSecondaryEmail: string;
+}

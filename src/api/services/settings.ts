@@ -8,6 +8,7 @@ import {
   blacklistIpAddressURL,
   changePasswordProfileURL,
   fetchLoginHistoryURL,
+  fetchOrgDetailsURL,
   getRequest,
   patchRequest,
   personalAccountDetailsURL,
@@ -16,9 +17,15 @@ import {
   personalEmailUpdateURL,
   personalEmailUpdateVerifyURL,
   postRequest,
+  putRequest,
+  resendCodeOrgEmailsURL,
   send2faCodeURL,
   toggle2faStatusURL,
-  toggleGoogleAuthURL
+  toggleGoogleAuthURL,
+  updateOrgEmailsURL,
+  updateOrgNumbersURL,
+  updateOrgProfileURL,
+  verifyOrgEmailsURL
 } from "api";
 
 interface changePasswordRequestBody {
@@ -30,6 +37,21 @@ interface changePasswordRequestBody {
 interface blacklistRequestBody {
   ip: string;
   blacklist_status: boolean;
+}
+
+interface updateOrgEmailsRequestBody {
+  email: string;
+  action: "primary" | "support";
+}
+
+interface verifyOrgEmailsRequestBody {
+  token: string;
+  action: "primary" | "support";
+}
+
+interface updateOrgNumbersRequestBody {
+  number: string;
+  action: "primary" | "support";
 }
 /*
 PERSONAL PROFILE SERVICES
@@ -87,7 +109,7 @@ export const personalEmailResendVerifyService = () => {
 export const personalEmailUpdateVerifyService = (data: { otp: string }) => {
   return patchRequest({
     url: personalEmailUpdateVerifyURL(),
-    data: data
+    data
   });
 };
 
@@ -103,7 +125,7 @@ SECURITY SERVICES
 export const changePasswordProfileService = (data: changePasswordRequestBody) => {
   return patchRequest({
     url: changePasswordProfileURL(),
-    data: data
+    data
   });
 };
 
@@ -115,7 +137,7 @@ export const changePasswordProfileService = (data: changePasswordRequestBody) =>
 export const send2faCodeService = (data: { enable2FA: Boolean }) => {
   return postRequest({
     url: send2faCodeURL(),
-    data: data
+    data
   });
 };
 
@@ -127,7 +149,7 @@ export const send2faCodeService = (data: { enable2FA: Boolean }) => {
 export const toggle2faStusService = (data: { otp: string }) => {
   return patchRequest({
     url: toggle2faStatusURL(),
-    data: data
+    data
   });
 };
 
@@ -151,7 +173,7 @@ export const fetchLoginHistoryService = ({ page, limit }) => {
 export const toggleGoogleAuthService = (data: { login_with_google: Boolean }) => {
   return patchRequest({
     url: toggleGoogleAuthURL(),
-    data: data
+    data
   });
 };
 
@@ -163,6 +185,77 @@ export const toggleGoogleAuthService = (data: { login_with_google: Boolean }) =>
 export const blacklistIpAddressService = (data: blacklistRequestBody) => {
   return patchRequest({
     url: blacklistIpAddressURL(),
-    data: data
+    data
+  });
+};
+
+/*
+ORGANIZATION SERVICES
+*/
+
+/**
+ * Fetch org details service
+ * @returns axios promise
+ */
+export const fetchOrgDetailsService = () => {
+  return getRequest({
+    url: fetchOrgDetailsURL()
+  });
+};
+
+/**
+ * Update organization profile service
+ * @param formData containing update info
+ * @returns axios promise
+ */
+export const updateOrgProfileService = (data: FormData) => {
+  return putRequest({
+    url: updateOrgProfileURL(),
+    data
+  });
+};
+
+/**
+ * Update org emails service
+ * @param data containing email update, string and action indicating primary or support
+ * @returns axios promise
+ */
+export const updateOrgEmailsService = (data: updateOrgEmailsRequestBody) => {
+  return patchRequest({
+    url: updateOrgEmailsURL(),
+    data
+  });
+};
+
+/**
+ * REsend verification code for org emails service
+ * @returns axios promise
+ */
+export const resendCodeOrgEmailsService = (data: { action: "primary" | "support" }) => {
+  return patchRequest({
+    url: resendCodeOrgEmailsURL(),
+    data
+  });
+};
+
+/**
+ * Verify org emails service
+ * @returns axios promise
+ */
+export const verifyOrgEmailsService = (data: verifyOrgEmailsRequestBody) => {
+  return patchRequest({
+    url: verifyOrgEmailsURL(),
+    data
+  });
+};
+
+/**
+ * Update org numbers service
+ * @returns axios promise
+ */
+export const updateOrgNumbersService = (data: updateOrgNumbersRequestBody) => {
+  return patchRequest({
+    url: updateOrgNumbersURL(),
+    data
   });
 };

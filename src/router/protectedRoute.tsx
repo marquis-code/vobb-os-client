@@ -1,6 +1,5 @@
-import { useFetchUser, useLogout } from "hooks";
+import { useFetchOrganisation, useFetchUser, useLogout } from "hooks";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 /**
  * PROTECTED ROUTE COMPONENT
@@ -14,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProtectedRoute: React.FC<{ children: any }> = ({ children }) => {
   const { fetchUserDetails } = useFetchUser();
-  const navigate = useNavigate();
+  const { fetchOrgDetails } = useFetchOrganisation();
   const { logout } = useLogout();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,6 +26,7 @@ const ProtectedRoute: React.FC<{ children: any }> = ({ children }) => {
     }
     setIsLoggedIn(true);
     fetchUserDetails();
+    fetchOrgDetails();
   };
 
   useEffect(() => {

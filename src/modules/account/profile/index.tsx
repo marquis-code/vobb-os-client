@@ -96,7 +96,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
     }
   }, [profile, reset]);
 
-  const { firstName, lastName, phoneNumber, avatarFile } = getValues();
+  const { phoneNumber, avatarFile } = getValues();
   const avatarChanged = avatarFile !== profile?.avatar;
   const numberChanged = phoneNumber.replace(/\D/g, "") !== profile?.phoneNumber;
 

@@ -7,7 +7,8 @@ SETTINGS URLS
 /*
 PERSONAL PROFILE URLS
 */
-const prefix = "/settings/acc";
+const prefixAcc = "/settings/acc";
+const prefixOrg = "/settings/org";
 
 /**
  * Personal account details URL
@@ -15,7 +16,7 @@ const prefix = "/settings/acc";
  * @returns url string
  *
  */
-export const personalAccountDetailsURL = () => `${prefix}/details`;
+export const personalAccountDetailsURL = () => `${prefixAcc}/details`;
 
 /**
  * Update personal account URL
@@ -23,7 +24,7 @@ export const personalAccountDetailsURL = () => `${prefix}/details`;
  * @returns url string
  *
  */
-export const personalAccountUpdateURL = () => `${prefix}/profile`;
+export const personalAccountUpdateURL = () => `${prefixAcc}/profile`;
 
 /**
  * Update New Email URL
@@ -31,7 +32,7 @@ export const personalAccountUpdateURL = () => `${prefix}/profile`;
  * @returns url string
  *
  */
-export const personalEmailUpdateURL = () => `${prefix}/new-email`;
+export const personalEmailUpdateURL = () => `${prefixAcc}/new-email`;
 
 /**
  * Resend New Email Verification URL
@@ -39,7 +40,7 @@ export const personalEmailUpdateURL = () => `${prefix}/new-email`;
  * @returns url string
  *
  */
-export const personalEmailResendVerifyURL = () => `${prefix}/resend-email-code`;
+export const personalEmailResendVerifyURL = () => `${prefixAcc}/resend-email-code`;
 
 /* 
 
@@ -49,7 +50,7 @@ export const personalEmailResendVerifyURL = () => `${prefix}/resend-email-code`;
  * @returns url string
  *
  */
-export const personalEmailUpdateVerifyURL = () => `${prefix}/verify-email`;
+export const personalEmailUpdateVerifyURL = () => `${prefixAcc}/verify-email`;
 
 /* 
 SECURITY URLS
@@ -60,21 +61,21 @@ SECURITY URLS
  * @returns url string
  *
  */
-export const changePasswordProfileURL = () => `${prefix}/change-password`;
+export const changePasswordProfileURL = () => `${prefixAcc}/change-password`;
 
 /**
  * Send 2fa code URL
  * @returns url string
  *
  */
-export const send2faCodeURL = () => `${prefix}/send-2fa-code`;
+export const send2faCodeURL = () => `${prefixAcc}/send-2fa-code`;
 
 /**
  * Toggle 2fa status URL
  * @returns url string
  *
  */
-export const toggle2faStatusURL = () => `${prefix}/toggle-2fa`;
+export const toggle2faStatusURL = () => `${prefixAcc}/toggle-2fa`;
 
 /**
  * Fetch login history URL
@@ -82,18 +83,64 @@ export const toggle2faStatusURL = () => `${prefix}/toggle-2fa`;
  *
  */
 export const fetchLoginHistoryURL = ({ page, limit }) =>
-  `${prefix}/login-history?page=${page}&limit=${limit}`;
+  `${prefixAcc}/login-history?page=${page}&limit=${limit}`;
 
 /**
  * Toggle google auth URL
  * @returns url string
  *
  */
-export const toggleGoogleAuthURL = () => `${prefix}/google-auth`;
+export const toggleGoogleAuthURL = () => `${prefixAcc}/google-auth`;
 
 /**
  * Blacklist IP address URL
  * @returns url string
  *
  */
-export const blacklistIpAddressURL = () => `${prefix}/blacklist-ip`;
+export const blacklistIpAddressURL = () => `${prefixAcc}/blacklist-ip`;
+
+/* 
+ORGANIZATION URLS
+*/
+
+/**
+ * FEtch org details URL
+ * @returns url string
+ *
+ */
+export const fetchOrgDetailsURL = () => `${prefixOrg}/details`;
+
+/**
+ * Update organization profile URL
+ * @returns url string
+ *
+ */
+export const updateOrgProfileURL = () => `${prefixOrg}/profile`;
+
+/**
+ * Update org emails URL
+ * @returns url string
+ *
+ */
+export const updateOrgEmailsURL = () => `${prefixOrg}/email`;
+
+/**
+ * REsend verification code for org emails URL
+ * @returns url string
+ *
+ */
+export const resendCodeOrgEmailsURL = () => `${prefixOrg}/email/resend`;
+
+/**
+ *  Verify org emails URL
+ * @returns url string
+ *
+ */
+export const verifyOrgEmailsURL = () => `${prefixOrg}/email/verify`;
+
+/**
+ *  Update org numbers URL
+ * @returns url string
+ *
+ */
+export const updateOrgNumbersURL = () => `${prefixOrg}/number`;
