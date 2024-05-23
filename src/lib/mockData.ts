@@ -1,5 +1,5 @@
 import { BranchTableData } from "components";
-import { AccountActivityData } from "modules";
+import { AccountActivityData, OrgActivityData } from "modules";
 import { DeviceData } from "modules/account/security/loginHistory";
 
 export const loginHistoryMock: DeviceData[] = [
@@ -165,5 +165,118 @@ export const accountActivityMockData: AccountActivityData[] = [
     time: "5:05pm",
     initiator: "self",
     metadata: undefined
+  }
+];
+
+export const orgActivityMockData: OrgActivityData[] = [
+  {
+    action: "updated_branding",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: undefined
+  },
+  {
+    action: "new_bank_account",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      currency: "USD"
+    }
+  },
+  {
+    action: "removed_bank_account",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      currency: "USD"
+    }
+  },
+  {
+    action: "added_member_attribute",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      attribute: "Date of birth"
+    }
+  },
+  {
+    action: "disabled_client_attribute",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      attribute: "interest"
+    }
+  },
+  {
+    action: "added_client_attribute",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      attribute: "interest"
+    }
+  },
+  {
+    action: "removed_branch",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      branchName: "Headquarters",
+      branchId: "Headquarters"
+    }
+  },
+  {
+    action: "removed_team",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      teamName: "Finance",
+      teamId: "Finance"
+    }
+  },
+  {
+    action: "updated_profile",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "James Arukpo", id: "james" },
+    metadata: {
+      fields: "Name, Logo"
+    }
+  },
+  {
+    action: "added_team",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      teamName: "Finance",
+      teamId: "Finance"
+    }
+  },
+  {
+    action: "added_branch",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      branchName: "Headquarters",
+      branchId: "Headquarters"
+    }
+  },
+  {
+    action: "created",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      organization: "Bloomberg"
+    }
   }
 ];

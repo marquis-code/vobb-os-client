@@ -120,7 +120,7 @@ const getMessage = ({
     case "joined_branch":
       message = (
         <>
-          Added to the branch <span className="text-vobb-primary-70">{metadata?.branchName}</span>
+          Added to the branch <span className="font-semibold">{metadata?.branchName}</span>
         </>
       );
       break;
@@ -151,15 +151,15 @@ const getMessage = ({
       message = (
         <>
           {initiator === "self" ? "You" : initiator.name} changed your email from{" "}
-          <span className="text-vobb-primary-70">{metadata.oldEmail}</span> to{" "}
-          <span className="text-vobb-primary-70">{metadata.newEmail}</span>
+          <span className="font-semibold">{metadata.oldEmail}</span> to{" "}
+          <span className="font-semibold">{metadata.newEmail}</span>
         </>
       );
       break;
     case "verified_email":
       message = (
         <>
-          Your new email <span className="text-vobb-primary-70">{metadata.email}</span> was
+          Your new email <span className="font-semibold">{metadata.email}</span> was
           verified!
         </>
       );
@@ -179,7 +179,7 @@ const getMessage = ({
     case "assigned_role":
       message = (
         <>
-          Asigned the role of <span className="text-vobb-primary-70">{metadata.role}</span>
+          Assigned the role of <span className="font-semibold">{metadata.role}</span>
         </>
       );
       break;
@@ -187,8 +187,8 @@ const getMessage = ({
       message = (
         <>
           {initiator === "self" ? "You" : initiator.name} updated your role from{" "}
-          <span className="text-vobb-primary-70">{metadata.oldRole}</span> to{" "}
-          <span className="text-vobb-primary-70">{metadata.newRole}</span>
+          <span className="font-semibold">{metadata.oldRole}</span> to{" "}
+          <span className="font-semibold">{metadata.newRole}</span>
         </>
       );
       break;
