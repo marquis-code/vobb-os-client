@@ -1,8 +1,35 @@
-import { ActivityCard, ActivityCardProps, Pagination, SettingsPageTitle } from "components";
+import {
+  ActivityCard,
+  ActivityCardProps,
+  Pagination,
+  SettingsPageTitle,
+  SortBy,
+  DateFilter,
+  SortOrderType
+} from "components";
 import { accountActivityMockData, cn } from "lib";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";
+import { optionType } from "types";
+
+// {
+//   from: addDays(new Date(), -30),
+//   to: new Date()
+// }
+
+const sortOptions: optionType[] = [
+  {
+    label: "Date",
+    value: "date"
+  }
+];
 
 const AccountActivityUI = () => {
+  const [date, setDate] = useState<DateRange | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<optionType | undefined>(sortOptions[0]);
+  const [sortOrder, setSortOrder] = useState<SortOrderType | undefined>(undefined);
+
   const activityList: ActivityCardProps[] = accountActivityMockData.map(
     ({ date, time, action, metadata, initiator }) => ({
       time,
@@ -19,6 +46,22 @@ const AccountActivityUI = () => {
         description={"Monitor your account activities over time"}
       />
       <section className="grid gap-4 max-w-[800px]">
+        <div className="flex gap-2">
+          <SortBy
+            isClearable
+            sort={{
+              active: sortBy,
+              items: sortOptions,
+              handleChange: setSortBy
+            }}
+            order={{
+              show: true,
+              active: sortOrder,
+              handleChange: setSortOrder
+            }}
+          />
+          <DateFilter showPreset value={date} handleChange={setDate} />
+        </div>
         {activityList.map((item, index) => (
           <ActivityCard {...item} key={`${index}_${item.date}`} />
         ))}
