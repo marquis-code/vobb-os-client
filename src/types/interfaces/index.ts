@@ -46,5 +46,8 @@ export interface OrganisationProfileProps {
   pendingSecondaryEmail: string;
   primaryPhoneNumber: string;
   secondaryPhoneNumber: string;
-  suspensionNotice: boolean;
+  tempSuspensionNotice: boolean;
+  indefiniteSuspensionNotice: boolean;
+  primaryBrandColor: string;
+  secondaryBrandColor: string;
 }

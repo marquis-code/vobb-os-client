@@ -186,7 +186,6 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
       }
     };
 
-    //
     if (!isEmptyObj(dirtyFields) || logoChanged || sectorChanged) handleProfileUpdate();
     handleNumbersUpdate();
   };

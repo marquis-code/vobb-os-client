@@ -279,10 +279,21 @@ export const updateOrgBrandingService = (data: updateBrandingRequestBody) => {
 };
 
 /**
- * Update org suspension service
+ * Update temporary suspension service
  * @returns axios promise
  */
-export const updateOrgSusNotifyService = (data: { suspension_notify: boolean }) => {
+export const updateTempSusNotifyService = (data: { temporary_suspension_notify: boolean }) => {
+  return patchRequest({
+    url: updateOrgSusNotifyURL(),
+    data
+  });
+};
+
+/**
+ * Update indefinite suspension service
+ * @returns axios promise
+ */
+export const updateIndefSusNotifyService = (data: { indefinite_suspension_notify: boolean }) => {
   return patchRequest({
     url: updateOrgSusNotifyURL(),
     data

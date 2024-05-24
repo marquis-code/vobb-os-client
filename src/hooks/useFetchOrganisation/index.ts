@@ -17,16 +17,19 @@ export const useFetchOrganisation = () => {
       const org = response.data.data;
       const profile = {
         organisation: org.name,
-        logo: org.logo ?? "",
         sector: org.sector,
-        website: org.website,
+        logo: org.logo ?? "",
+        website: org.website ?? "",
         primaryEmail: org.primary_email ?? null,
         secondaryEmail: org.support_email ?? null,
         pendingPrimaryEmail: org.pending_primary_email ?? null,
         pendingSecondaryEmail: org.pending_support_email ?? null,
         primaryPhoneNumber: org.primary_phone_number ?? null,
         secondaryPhoneNumber: org.support_phone_number ?? null,
-        suspensionNotice: org.suspension_notify ?? false
+        tempSuspensionNotice: org.temporary_suspension_notify ?? false,
+        indefiniteSuspensionNotice: org.indefinite_suspension_notify ?? false,
+        primaryBrandColor: org.primary_color ?? "#dde6ee",
+        secondaryBrandColor: org.secondary_color ?? "#000000"
       };
       handleUpdateOrg(profile);
       return profile;

@@ -1,4 +1,5 @@
 import { Button, ColorPicker, SettingsPageTitle } from "components";
+import { useUserContext } from "context";
 import { useState } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 
@@ -11,12 +12,15 @@ interface OrgBrandingProps {
   loading: boolean;
 }
 const OrgBrandingUI: React.FC<OrgBrandingProps> = ({ submit, loading }) => {
-  const [primary, setPrimary] = useState("#dde6ee");
-  const [secondary, setSecondary] = useState("#000000");
+  const { orgDetails } = useUserContext();
+  const { primaryBrandColor = "", secondaryBrandColor = "" } = orgDetails || {};
+
+  const [primary, setPrimary] = useState<string>(primaryBrandColor);
+  const [secondary, setSecondary] = useState<string>(secondaryBrandColor);
 
   const handleDefault = () => {
-    setPrimary("#dde6ee");
-    setSecondary("#000000");
+    setPrimary(primaryBrandColor);
+    setSecondary(secondaryBrandColor);
   };
 
   const handleSubmit = () => {
