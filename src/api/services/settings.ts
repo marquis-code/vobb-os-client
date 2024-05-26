@@ -5,9 +5,11 @@ SETTINGS SERVICES
 */
 
 import {
+  addNewOrgBranchURL,
   blacklistIpAddressURL,
   changePasswordProfileURL,
   fetchLoginHistoryURL,
+  fetchOrgBranchesURL,
   fetchOrgDetailsURL,
   getRequest,
   patchRequest,
@@ -22,6 +24,7 @@ import {
   send2faCodeURL,
   toggle2faStatusURL,
   toggleGoogleAuthURL,
+  updateOrgBranchURL,
   updateOrgBrandingURL,
   updateOrgEmailsURL,
   updateOrgNumbersURL,
@@ -60,6 +63,21 @@ interface updateBrandingRequestBody {
   primary_color: string;
   secondary_color: string;
 }
+
+interface organisationRequestBody {
+  name: string;
+  country: number;
+  zip_code: number;
+  state: string;
+  address_line_1: string;
+  address_line_2: string;
+  city: string;
+  timezone: string;
+}
+interface addNewBranchRequestBody {
+  branches: [organisationRequestBody];
+}
+
 /*
 PERSONAL PROFILE SERVICES
 */
@@ -297,5 +315,53 @@ export const updateIndefSusNotifyService = (data: { indefinite_suspension_notify
   return patchRequest({
     url: updateOrgSusNotifyURL(),
     data
+  });
+};
+
+/**
+ * Fetch organisation's branches service
+ * @param page showing page number requested,
+ * @param limit showing number of items per page
+ * @returns axios promise
+ */
+export const fetchOrgBranchesService = ({ page, limit }) => {
+  return getRequest({
+    url: fetchOrgBranchesURL({ page, limit })
+  });
+};
+
+/**
+ * Add a new organisation's branch service
+ * @param branches array of properties for the branch
+ * @returns axios promise
+ */
+export const addNewOrgBranchService = (data: addNewBranchRequestBody) => {
+  return postRequest({
+    url: addNewOrgBranchURL(),
+    data
+  });
+};
+
+/**
+ * Update an organisation's branch service
+ * @param id of organisation's branch
+ * @param updateData branch's details to be changed.
+ * @returns axios promise
+ */
+export const updateOrgBranchService = (id: string, updateData: organisationRequestBody) => {
+  return putRequest({
+    url: updateOrgBranchURL(id),
+    data: updateData
+  });
+};
+
+/**
+ * Mark branch as primary service
+ * @param id of organisation's branch
+ * @returns axios promise
+ */
+export const markBranchAsPrimaryService = (id: string) => {
+  return patchRequest({
+    url: updateOrgBranchURL(id)
   });
 };

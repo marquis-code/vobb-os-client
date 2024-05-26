@@ -10,7 +10,7 @@ import {
   send2faCodeService,
   toggleGoogleAuthService
 } from "api";
-import { BlacklistProps, ChangePasswordData } from "types";
+import { BlacklistProps, ChangePasswordData, MetaDataProps } from "types";
 
 export interface LoginHistoryDeviceProps {
   device: string;
@@ -21,20 +21,14 @@ export interface LoginHistoryDeviceProps {
   isBlacklisted: boolean;
 }
 
-interface MetaDataProps {
-  currentPage: number;
-  totalCount: number;
-  totalPages: number;
-}
-
 export interface LoginHistoryDataProps {
   loginHistory: LoginHistoryDeviceProps[];
-  historyMetaData: MetaDataProps;
+  metaData: MetaDataProps;
 }
 
 const defaultLoginHistoryData: LoginHistoryDataProps = {
   loginHistory: [],
-  historyMetaData: {
+  metaData: {
     currentPage: 1,
     totalCount: 0,
     totalPages: 0
@@ -136,12 +130,12 @@ const AccountSecurity = () => {
         user: item.user,
         isBlacklisted: item.blacklist_status ?? false
       }));
-      const historyMetaData = {
+      const metaData = {
         currentPage: historyResponse?.data?.data?.page ?? 1,
         totalPages: historyResponse?.data?.data?.total_pages,
         totalCount: historyResponse?.data?.data?.total_count
       };
-      return { loginHistory, historyMetaData };
+      return { loginHistory, metaData };
     }
     return defaultLoginHistoryData;
   }, [historyResponse, historyError]);
@@ -165,7 +159,7 @@ const AccountSecurity = () => {
       toast({
         description: blacklistResponse?.data?.message
       });
-      handleFetchLoginHistory(loginHistoryData.historyMetaData.currentPage);
+      handleFetchLoginHistory(loginHistoryData.metaData.currentPage);
     } else if (blacklistError) {
       toast({
         variant: "destructive",

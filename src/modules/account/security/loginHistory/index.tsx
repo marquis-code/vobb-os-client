@@ -15,8 +15,8 @@ const LoginHistory: React.FC<LoginHistoryProps> = ({
   handleFetchLoginHistory,
   handleBlacklist
 }) => {
-  const { loginHistory, historyMetaData } = loginHistoryData;
-  const { currentPage, totalCount, totalPages } = historyMetaData;
+  const { loginHistory, metaData } = loginHistoryData;
+  const { currentPage, totalCount, totalPages } = metaData;
   const handleChangePage = (page: number) => {
     handleFetchLoginHistory(page);
   };

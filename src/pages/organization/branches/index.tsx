@@ -1,10 +1,13 @@
 import { OrgBranchesUI } from "modules";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { ConfirmationModal } from "components";
+import { useFetchBranches } from "hooks";
 
 const OrgBranches = () => {
+  const { fetchOrgBranches, branchesMetaData } = useFetchBranches();
+  const { currentPage, totalCount } = branchesMetaData;
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, id: "" });
@@ -30,6 +33,9 @@ const OrgBranches = () => {
     setConfirm(false);
   };
 
+  useEffect(() => {
+    fetchOrgBranches({ page: currentPage, limit: totalCount });
+  }, []);
   return (
     <>
       <ConfirmationModal

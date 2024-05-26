@@ -7,6 +7,8 @@ import {
   Pagination,
   SettingsPageTitle
 } from "components";
+import { useUserContext } from "context";
+import { useFetchBranches } from "hooks";
 import { BranchTableMock } from "lib";
 import { useMemo } from "react";
 
@@ -25,6 +27,27 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch]
   );
 
+  const { fetchOrgBranches, branchesMetaData } = useFetchBranches();
+  const { currentPage, totalCount, totalPages } = branchesMetaData;
+  const { orgBranches } = useUserContext();
+  const handleChangePage = (page: number) => {
+    fetchOrgBranches({ page, limit: totalCount });
+  };
+
+  const handlePageLimit = (limit: number) => {
+    fetchOrgBranches({ page: currentPage, limit });
+  };
+
+  const tableData = orgBranches?.map((item) => ({
+    id: item.id,
+    name: item.name,
+    country: item.country,
+    state: item.province,
+    city: item.city,
+    timeZone: item.timeZone,
+    isPrimary: item.isPrimary
+  }));
+
   return (
     <>
       <SettingsPageTitle title="Branches" />
@@ -32,15 +55,15 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
         <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
           <PlusCircledIcon /> New branch
         </Button>
-        <BranchesTable columns={columns} data={BranchTableMock} />
+        <BranchesTable columns={columns} data={tableData} />
         <Pagination
           // hidePageLimit
-          handleChange={console.log}
-          handlePageLimit={console.log}
-          totalCount={3}
-          pageLimit={3}
-          totalPages={1}
-          currentPage={1}
+          handleChange={handleChangePage}
+          handlePageLimit={handlePageLimit}
+          totalCount={totalCount}
+          pageLimit={totalCount}
+          totalPages={totalPages}
+          currentPage={currentPage}
           className="mt-4"
         />
       </section>

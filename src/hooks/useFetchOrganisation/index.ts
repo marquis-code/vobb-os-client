@@ -12,10 +12,10 @@ export const useFetchOrganisation = () => {
 
   const fetchOrgDetails = () => run(fetchOrgDetailsService());
 
-  const profile = useMemo<OrganisationProfileProps | null>(() => {
+  const organisation = useMemo<OrganisationProfileProps | null>(() => {
     if (response?.status === 200) {
       const org = response.data.data;
-      const profile = {
+      const organisation = {
         organisation: org.name,
         sector: org.sector,
         logo: org.logo ?? "",
@@ -31,12 +31,12 @@ export const useFetchOrganisation = () => {
         primaryBrandColor: org.primary_color ?? "#dde6ee",
         secondaryBrandColor: org.secondary_color ?? "#000000"
       };
-      handleUpdateOrg(profile);
-      return profile;
+      handleUpdateOrg(organisation);
+      return organisation;
     } else if (error) logout();
 
     return null;
   }, [response, error]);
 
-  return { fetchOrgDetails, profile, loadingOrg: requestStatus.isPending };
+  return { fetchOrgDetails, organisation, loadingOrg: requestStatus.isPending };
 };

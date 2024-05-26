@@ -158,3 +158,25 @@ export const updateOrgBrandingURL = () => `${prefixOrg}/branding`;
  *
  */
 export const updateOrgSusNotifyURL = () => `${prefixOrg}/suspension`;
+
+/**
+ * Fetch organisation's branches URL
+ * @returns url string
+ *
+ */
+export const fetchOrgBranchesURL = ({ page, limit }) =>
+  `${prefixOrg}/branch?page=${page}&limit=${limit}`;
+
+/**
+ * Add a new organisation's branch URL
+ * @returns url string
+ *
+ */
+export const addNewOrgBranchURL = () => `${prefixOrg}/branch`;
+
+/**
+ * Update an organisation's branch URL
+ * @returns url string
+ *
+ */
+export const updateOrgBranchURL = (id: string) => `${prefixOrg}/branch/${id}`;

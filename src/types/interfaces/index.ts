@@ -30,6 +30,12 @@ export interface UserProfileProps {
   fluentLanguages: string[];
 }
 
+export interface MetaDataProps {
+  currentPage: number;
+  totalCount: number;
+  totalPages: number;
+}
+
 export interface BlacklistProps {
   ipAddress: string;
   status: boolean;
@@ -50,4 +56,17 @@ export interface OrganisationProfileProps {
   indefiniteSuspensionNotice: boolean;
   primaryBrandColor: string;
   secondaryBrandColor: string;
+}
+
+export interface OrganisationBranchesProps {
+  id: string;
+  name: string;
+  country: string;
+  zipCode: string;
+  province: string;
+  isPrimary: boolean;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  timeZone: string;
 }
