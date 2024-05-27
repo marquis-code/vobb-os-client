@@ -2,7 +2,7 @@ import { fetchOrgBranchesService } from "api";
 import { useApiRequest } from "../useApiRequest";
 import { useMemo } from "react";
 import { useUserContext } from "context";
-import { BranchesDataProps, MetaDataProps, OrganisationBranchesProps } from "types";
+import { BranchesDataProps, MetaDataProps, OrganisationBranchesData } from "types";
 
 const defaultBranchesData: BranchesDataProps = {
   branchesArray: [],
@@ -29,7 +29,8 @@ export const useFetchBranches = () => {
         isPrimary: item.is_primary,
         addressLine1: item.address_line_1,
         addressLine2: item.address_line_2 ?? "",
-        city: item.city
+        city: item.city,
+        timeZone: item.timezone ?? ""
       }));
       const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
       const branchesMetaData = {

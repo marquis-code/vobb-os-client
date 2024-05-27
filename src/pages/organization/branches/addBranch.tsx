@@ -1,5 +1,5 @@
-import { addNewOrgBranchService } from "api";
-import { AddBranchModal, toast } from "components";
+import { addNewOrgBranchService, organisationBranchRequestBody } from "api";
+import { AddBranchData, AddBranchModal, toast } from "components";
 import { useUserContext } from "context";
 import { useApiRequest, useFetchBranches } from "hooks";
 import { useMemo } from "react";
@@ -9,22 +9,38 @@ const AddBranch: React.FC<ModalProps> = ({ show, close }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const { fetchOrgBranches } = useFetchBranches();
   const { orgBranches } = useUserContext();
-  const { currentPage: page, totalCount: limit } = orgBranches?.branchesMetaData || {
+  const { currentPage, totalCount } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 15,
     totalPages: 0
   };
 
-  const submit = (data) => {
-    run(addNewOrgBranchService(data));
+  const submit = (data: AddBranchData) => {
+    const requestBody: organisationBranchRequestBody = {
+      name: data.name,
+      country: data.country.value,
+      zip_code: data.postalCode,
+      state: data.state,
+      address_line_1: data.addressLine1,
+      city: data.city,
+      timezone: data.timeZone.value
+    };
+    if (data.addressLine2 && data.addressLine2.trim() !== "") {
+      requestBody.address_line_2 = data.addressLine2;
+    }
+    run(
+      addNewOrgBranchService({
+        branches: [requestBody]
+      })
+    );
   };
 
   useMemo(() => {
-    if (response?.status === 200) {
+    if (response?.status === 201) {
       toast({
         description: response?.data?.message
       });
-      fetchOrgBranches({ page, limit });
+      fetchOrgBranches({ page: currentPage, limit: totalCount });
     } else if (error) {
       toast({
         variant: "destructive",
@@ -35,12 +51,7 @@ const AddBranch: React.FC<ModalProps> = ({ show, close }) => {
 
   return (
     <>
-      <AddBranchModal
-        show={show}
-        close={close}
-        submit={console.log}
-        loading={requestStatus.isPending}
-      />
+      <AddBranchModal show={show} close={close} submit={submit} loading={requestStatus.isPending} />
     </>
   );
 };

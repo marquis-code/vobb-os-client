@@ -9,20 +9,12 @@ import {
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 import { TrashIcon, Pencil1Icon, StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import { OrganisationBranchesData } from "types";
 
 // This type is used to define the shape of our data.
-export type BranchTableData = {
-  id: string;
-  name: string;
-  country: string;
-  state: string;
-  city: string;
-  timeZone: string;
-  isPrimary: boolean;
-};
 
 export interface BranchTableActions {
-  handleEditBranch: (id: string) => void;
+  handleEditBranch: (data: OrganisationBranchesData) => void;
   handleDeleteBranch: (id: string) => void;
   handlePrimaryBranch: (id: string) => void;
 }
@@ -31,7 +23,7 @@ export const getBranchTableColumns = ({
   handleDeleteBranch,
   handleEditBranch,
   handlePrimaryBranch
-}: BranchTableActions): ColumnDef<BranchTableData>[] => [
+}: BranchTableActions): ColumnDef<OrganisationBranchesData>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -49,7 +41,7 @@ export const getBranchTableColumns = ({
     header: "Country"
   },
   {
-    accessorKey: "state",
+    accessorKey: "province",
     header: "State"
   },
   {
@@ -64,9 +56,10 @@ export const getBranchTableColumns = ({
     id: "actions",
     cell: ({ row }) => {
       const { isPrimary, id: branchId } = row.original;
+      const { ...branchData } = row.original;
 
       const editBranch = () => {
-        handleEditBranch(branchId);
+        handleEditBranch(branchData);
       };
       const deleteBranch = () => {
         handleDeleteBranch(branchId);

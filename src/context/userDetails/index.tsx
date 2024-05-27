@@ -2,7 +2,7 @@ import { createContext, useState, useContext, ReactNode } from "react";
 import {
   BranchesDataProps,
   MetaDataProps,
-  OrganisationBranchesProps,
+  OrganisationBranchesData,
   OrganisationProfileProps,
   UserProfileProps
 } from "types";

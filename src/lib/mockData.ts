@@ -1,5 +1,3 @@
-import { BranchTableData } from "components";
-
 export const loginHistoryMock = [
   {
     location: "Lagos, Nigeria",
@@ -24,7 +22,7 @@ export const loginHistoryMock = [
   }
 ];
 
-export const BranchTableMock: BranchTableData[] = [
+export const BranchTableMock = [
   {
     id: "728ed52f",
     name: "Headquarters",

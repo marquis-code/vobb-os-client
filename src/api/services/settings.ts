@@ -64,18 +64,18 @@ interface updateBrandingRequestBody {
   secondary_color: string;
 }
 
-interface organisationRequestBody {
+export interface organisationBranchRequestBody {
   name: string;
-  country: number;
-  zip_code: number;
+  country: string;
+  zip_code: string;
   state: string;
   address_line_1: string;
-  address_line_2: string;
+  address_line_2?: string;
   city: string;
   timezone: string;
 }
 interface addNewBranchRequestBody {
-  branches: [organisationRequestBody];
+  branches: [organisationBranchRequestBody];
 }
 
 /*
@@ -348,7 +348,7 @@ export const addNewOrgBranchService = (data: addNewBranchRequestBody) => {
  * @param updateData branch's details to be changed.
  * @returns axios promise
  */
-export const updateOrgBranchService = (id: string, updateData: organisationRequestBody) => {
+export const updateOrgBranchService = (id: string, updateData: organisationBranchRequestBody) => {
   return putRequest({
     url: updateOrgBranchURL(id),
     data: updateData

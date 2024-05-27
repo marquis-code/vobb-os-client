@@ -41,9 +41,16 @@ const schema = yup.object({
 interface EditBranchModalProps extends ModalProps {
   submit: (data) => void;
   initData: EditBranchData;
+  loading: boolean;
 }
 
-const EditBranchModal: React.FC<EditBranchModalProps> = ({ show, close, submit, initData }) => {
+const EditBranchModal: React.FC<EditBranchModalProps> = ({
+  show,
+  close,
+  submit,
+  initData,
+  loading
+}) => {
   const { countries } = useCountriesContext();
   const {
     register,
@@ -146,12 +153,14 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({ show, close, submit, 
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty}
+            disabled={!isDirty || loading}
+            loading={loading}
             size={"default"}
             variant={"fill"}>
             Create

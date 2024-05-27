@@ -58,7 +58,7 @@ export interface OrganisationProfileProps {
   secondaryBrandColor: string;
 }
 
-export interface OrganisationBranchesProps {
+export interface OrganisationBranchesData {
   id: string;
   name: string;
   country: string;
@@ -72,6 +72,6 @@ export interface OrganisationBranchesProps {
 }
 
 export interface BranchesDataProps {
-  branchesArray: OrganisationBranchesProps[];
+  branchesArray: OrganisationBranchesData[];
   branchesMetaData: MetaDataProps;
 }

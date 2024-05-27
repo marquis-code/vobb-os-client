@@ -42,19 +42,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     fetchOrgBranches({ page: currentPage, limit });
   };
 
-  const tableData =
-    (orgBranches &&
-      orgBranches.branchesArray.map((item) => ({
-        id: item.id,
-        name: item.name,
-        country: item.country,
-        state: item.province,
-        city: item.city,
-        timeZone: item.timeZone,
-        isPrimary: item.isPrimary
-      }))) ||
-    [];
-
+  const tableData = orgBranches?.branchesArray || [];
   return (
     <>
       <SettingsPageTitle title="Branches" />
