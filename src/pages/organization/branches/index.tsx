@@ -4,10 +4,16 @@ import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { ConfirmationModal } from "components";
 import { useFetchBranches } from "hooks";
+import { useUserContext } from "context";
 
 const OrgBranches = () => {
-  const { fetchOrgBranches, branchesMetaData } = useFetchBranches();
-  const { currentPage, totalCount } = branchesMetaData;
+  const { fetchOrgBranches } = useFetchBranches();
+  const { orgBranches } = useUserContext();
+  const { currentPage, totalCount } = orgBranches?.branchesMetaData || {
+    currentPage: 1,
+    totalCount: 15,
+    totalPages: 0
+  };
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, id: "" });

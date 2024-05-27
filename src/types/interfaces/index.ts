@@ -70,3 +70,8 @@ export interface OrganisationBranchesProps {
   city: string;
   timeZone: string;
 }
+
+export interface BranchesDataProps {
+  branchesArray: OrganisationBranchesProps[];
+  branchesMetaData: MetaDataProps;
+}

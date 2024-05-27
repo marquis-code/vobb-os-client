@@ -2,12 +2,7 @@ import { fetchOrgBranchesService } from "api";
 import { useApiRequest } from "../useApiRequest";
 import { useMemo } from "react";
 import { useUserContext } from "context";
-import { MetaDataProps, OrganisationBranchesProps } from "types";
-
-export interface BranchesDataProps {
-  branchesArray: OrganisationBranchesProps[];
-  branchesMetaData: MetaDataProps;
-}
+import { BranchesDataProps, MetaDataProps, OrganisationBranchesProps } from "types";
 
 const defaultBranchesData: BranchesDataProps = {
   branchesArray: [],
@@ -37,19 +32,18 @@ export const useFetchBranches = () => {
         city: item.city
       }));
       const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
-      handleUpdateBranches(branchesArray);
-
       const branchesMetaData = {
         currentPage: response?.data?.data?.page ?? 1,
         totalPages: response?.data?.data?.total_pages,
         totalCount: response?.data?.data?.total_count
       };
+      handleUpdateBranches({ branchesArray, branchesMetaData });
       return { branchesArray, branchesMetaData };
     }
 
     return defaultBranchesData;
   }, [response, error]);
 
-  const { branchesArray, branchesMetaData } = branches;
-  return { fetchOrgBranches, branchesArray, branchesMetaData, loadingOrg: requestStatus.isPending };
+  const { branchesArray } = branches;
+  return { fetchOrgBranches, branchesArray, loadingOrg: requestStatus.isPending };
 };

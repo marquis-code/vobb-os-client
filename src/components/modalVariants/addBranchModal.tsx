@@ -39,9 +39,10 @@ const schema = yup.object({
 
 interface AddBranchModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
 }
 
-const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit }) => {
+const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, loading }) => {
   const { countries } = useCountriesContext();
   const {
     register,
@@ -55,7 +56,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit }) 
   });
 
   const onSubmit: SubmitHandler<AddBranchData> = (data) => {
-    submit(data);
+    console.log(data);
   };
 
   return (

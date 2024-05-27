@@ -27,9 +27,13 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch]
   );
 
-  const { fetchOrgBranches, branchesMetaData } = useFetchBranches();
-  const { currentPage, totalCount, totalPages } = branchesMetaData;
+  const { fetchOrgBranches } = useFetchBranches();
   const { orgBranches } = useUserContext();
+  const { currentPage, totalCount, totalPages } = orgBranches?.branchesMetaData || {
+    currentPage: 1,
+    totalCount: 15,
+    totalPages: 0
+  };
   const handleChangePage = (page: number) => {
     fetchOrgBranches({ page, limit: totalCount });
   };
@@ -38,15 +42,18 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     fetchOrgBranches({ page: currentPage, limit });
   };
 
-  const tableData = orgBranches?.map((item) => ({
-    id: item.id,
-    name: item.name,
-    country: item.country,
-    state: item.province,
-    city: item.city,
-    timeZone: item.timeZone,
-    isPrimary: item.isPrimary
-  }));
+  const tableData =
+    (orgBranches &&
+      orgBranches.branchesArray.map((item) => ({
+        id: item.id,
+        name: item.name,
+        country: item.country,
+        state: item.province,
+        city: item.city,
+        timeZone: item.timeZone,
+        isPrimary: item.isPrimary
+      }))) ||
+    [];
 
   return (
     <>

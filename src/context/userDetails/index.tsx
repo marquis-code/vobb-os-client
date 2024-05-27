@@ -1,13 +1,19 @@
 import { createContext, useState, useContext, ReactNode } from "react";
-import { OrganisationBranchesProps, OrganisationProfileProps, UserProfileProps } from "types";
+import {
+  BranchesDataProps,
+  MetaDataProps,
+  OrganisationBranchesProps,
+  OrganisationProfileProps,
+  UserProfileProps
+} from "types";
 
 interface UserContextProps {
   userDetails: UserProfileProps | null;
   orgDetails: OrganisationProfileProps | null;
-  orgBranches: OrganisationBranchesProps[];
+  orgBranches: BranchesDataProps | null;
   handleUpdateUser: (userDetails: UserProfileProps | null) => void;
   handleUpdateOrg: (orgDetails: OrganisationProfileProps | null) => void;
-  handleUpdateBranches: (orgBranches: OrganisationBranchesProps[]) => void;
+  handleUpdateBranches: (orgBranches: BranchesDataProps | null) => void;
 }
 
 const UserDetailsContext = createContext<UserContextProps | undefined>(undefined);
@@ -23,7 +29,7 @@ export const useUserContext = () => {
 export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
   const [userDetails, setUserDetails] = useState<UserProfileProps | null>(null);
   const [orgDetails, setOrgDetails] = useState<OrganisationProfileProps | null>(null);
-  const [orgBranches, setOrgBranches] = useState<OrganisationBranchesProps[]>([]);
+  const [orgBranches, setOrgBranches] = useState<BranchesDataProps | null>(null);
 
   const handleUpdateUser = (userDetails: UserProfileProps | null) => {
     setUserDetails(userDetails);
@@ -33,7 +39,7 @@ export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
     setOrgDetails(orgDetails);
   };
 
-  const handleUpdateBranches = (orgBranches: OrganisationBranchesProps[]) => {
+  const handleUpdateBranches = (orgBranches: BranchesDataProps | null) => {
     setOrgBranches(orgBranches);
   };
 
