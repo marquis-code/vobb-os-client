@@ -2,7 +2,7 @@ import { optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn, isFile } from "lib";
+import { arraysHaveSameElements, cn, isEmptyObj, isFile } from "lib";
 import { CheckCircledIcon, UploadIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import {
   Button,
@@ -15,19 +15,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { initOptionType, sectorOptions } from "lib/constants";
 import { useUserContext } from "context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-interface OrgProfileData {
-  name: string;
-  sector: optionType[];
-  website: string;
-  primaryEmail: { value: string; isVerified: boolean };
-  secondaryEmail: { value: string; isVerified: boolean };
-  primaryNumber: string;
-  secondaryNumber: string;
-  logo: string | undefined;
-}
 
 interface OrgProfileFormData {
   name: string;
@@ -37,7 +26,7 @@ interface OrgProfileFormData {
   secondaryEmail: string;
   primaryNumber: string;
   secondaryNumber: string;
-  logo: any | File | null;
+  logo: any;
 }
 
 const initData: OrgProfileFormData = {
@@ -51,28 +40,6 @@ const initData: OrgProfileFormData = {
   logo: null
 };
 
-const schema = yup.object({
-  name: yup.string().required("Required"),
-  sector: yup
-    .array()
-    .of(
-      yup.object({
-        label: yup.string().required("Required"),
-        value: yup.string().required("Required")
-      })
-    )
-    .required("Required"),
-  website: yup.string().required("Required").url("Enter a valid url"),
-  primaryEmail: yup.string().required("Required").email("Enter a valid email"),
-  secondaryEmail: yup.string().required("Required").email("Enter a valid email"),
-  primaryNumber: yup.string().required("Required"),
-  secondaryNumber: yup.string().required("Required"),
-  logo: yup
-    .mixed()
-    .required("Logo is required")
-    .test("fileSize", "Image is too large", (value) => isFile(value) && value.size <= 1048576 * 10)
-});
-
 interface OrgProfileProps {
   handleChangeEmail: () => void;
   updateProfile: { submit: (formData: FormData) => void; loading: boolean };
@@ -83,19 +50,18 @@ interface OrgProfileProps {
   updateEmails: { submit: (data: { action: "primary" | "support" }) => void; loading: boolean };
 }
 
-const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
-
 const OrgProfileUI: React.FC<OrgProfileProps> = ({
   handleChangeEmail,
   updateProfile,
   updateEmails,
   updateNumbers
 }) => {
-  const navigate = useNavigate();
   const { submit: submitUpdate, loading: submitLoading } = updateProfile;
   const { submit: submitResendEmails } = updateEmails;
   const { submit: submitUpdateNumbers, loading: numbersLoading } = updateNumbers;
+  const [validateLogo, setValidateLogo] = useState(false);
 
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(window.location.search);
 
   const handleSetParams = (action: "primary" | "support") => {
@@ -108,8 +74,40 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setValue("logo", e.target.files[0]);
+      setValidateLogo(true);
     }
   };
+
+  const baseSchema = yup.object({
+    name: yup.string().required("Required"),
+    sector: yup
+      .array()
+      .of(
+        yup.object({
+          label: yup.string().required("Required"),
+          value: yup.string().required("Required")
+        })
+      )
+      .required("Required"),
+    website: yup.string().required("Required").url("Enter a valid url"),
+    primaryEmail: yup.string().required("Required").email("Enter a valid email"),
+    secondaryEmail: yup.string().required("Required").email("Enter a valid email"),
+    primaryNumber: yup.string().required("Required"),
+    secondaryNumber: yup.string().required("Required")
+  });
+
+  const logoSchema = yup
+    .mixed()
+    .required("Logo is required")
+    .test(
+      "fileSize",
+      "Image is too large",
+      (value) => !value || (isFile(value) && value.size <= 1048576 * 10)
+    );
+
+  const validationSchema = baseSchema.shape({
+    logo: validateLogo ? logoSchema.required("Logo is required") : yup.mixed()
+  });
 
   const {
     register,
@@ -120,7 +118,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     getValues,
     reset
   } = useForm<OrgProfileFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver<any>(validationSchema),
     defaultValues: initData
   });
 
@@ -147,10 +145,11 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
 
   //Tracking changes not caught by dirtyFields.
   const logoChanged = logo !== profile?.logo;
-  const sectorChanged = !arraysHaveSameElements(
-    sector.map((item) => item.value),
-    profile?.sector.map((item) => item)
-  );
+  const sectorChanged =
+    !arraysHaveSameElements(
+      sector.map((item) => item.value),
+      profile?.sector.map((item) => item)
+    ) && sector.length;
   const primaryNumChanged = primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
   const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
 
@@ -168,7 +167,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
         formData.append("logo", data.logo);
       }
 
-      if (data.sector.length) {
+      if (data.sector.length && sectorChanged) {
         data.sector.forEach((sector, index) => {
           formData.append(`sector[${index}]`, sector.value);
         });
@@ -431,20 +430,3 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
 };
 
 export { OrgProfileUI };
-
-function arraysHaveSameElements<T>(arr1: T[], arr2: T[] | undefined): boolean {
-  if (arr1.length !== arr2?.length) {
-    return false;
-  }
-
-  const sortedArr1 = [...arr1].sort();
-  const sortedArr2 = [...arr2].sort();
-
-  for (let i = 0; i < sortedArr1.length; i++) {
-    if (sortedArr1[i] !== sortedArr2[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}

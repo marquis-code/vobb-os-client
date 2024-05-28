@@ -43,6 +43,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   };
 
   const tableData = orgBranches?.branchesArray || [];
+
   return (
     <>
       <SettingsPageTitle title="Branches" />

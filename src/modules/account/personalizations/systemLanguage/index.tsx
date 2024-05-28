@@ -59,7 +59,7 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLan
         </div>
         <form>
           <SelectInput
-            options={languagesOptions}
+            options={[{ label: "English", value: "English" }]}
             value={watch("language")?.value === "" ? null : watch("language")}
             onChange={(val) => val && setValue("language", val)}
             placeholder="Select a language"

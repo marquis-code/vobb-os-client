@@ -9,6 +9,7 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { useCountriesContext } from "context";
 import { timeZoneOptions } from "lib/constants";
 import { useEffect } from "react";
+import { organisationBranchRequestBody } from "api";
 
 interface EditBranchData {
   name: string;
@@ -55,9 +56,10 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
     watch,
     setValue,
+    getValues,
     reset
   } = useForm<EditBranchData>({
     resolver: yupResolver(schema)
@@ -68,9 +70,29 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
     reset(initData);
   }, [initData]);
 
+  const { country, timeZone } = getValues();
+  const { country: initCountry, timeZone: initTimezone } = initData;
+
+  const countryChanged = country?.value !== initCountry?.value;
+  const timezoneChanged = timeZone?.value !== initTimezone?.value;
+
   const onSubmit: SubmitHandler<EditBranchData> = (data) => {
-    submit(data);
+    let requestBody: Partial<organisationBranchRequestBody> = {};
+    const { name, postalCode, state, addressLine1, addressLine2, city } = dirtyFields;
+
+    if (name) requestBody.name = data.name;
+    if (postalCode) requestBody.zip_code = data.postalCode;
+    if (state) requestBody.state = data.state;
+    if (addressLine1) requestBody.address_line_1 = data.addressLine1;
+    if (addressLine2) requestBody.address_line_2 = data.addressLine2;
+    if (city) requestBody.city = data.city;
+    if (countryChanged) requestBody.country = data.country.value;
+    if (timezoneChanged) requestBody.timezone = data.timeZone.value;
+
+    submit(requestBody);
   };
+
+  const hasChangedFields = isDirty || countryChanged || timezoneChanged;
 
   return (
     <>
@@ -159,11 +181,11 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty || loading}
+            disabled={!hasChangedFields || loading}
             loading={loading}
             size={"default"}
             variant={"fill"}>
-            Create
+            Save
           </Button>
         </div>
       </Modal>

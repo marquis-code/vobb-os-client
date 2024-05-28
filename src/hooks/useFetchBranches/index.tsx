@@ -1,7 +1,7 @@
 import { fetchOrgBranchesService } from "api";
 import { useApiRequest } from "../useApiRequest";
 import { useMemo } from "react";
-import { useUserContext } from "context";
+import { useCountriesContext, useUserContext } from "context";
 import { BranchesDataProps, MetaDataProps, OrganisationBranchesData } from "types";
 
 const defaultBranchesData: BranchesDataProps = {
@@ -14,6 +14,7 @@ const defaultBranchesData: BranchesDataProps = {
 };
 export const useFetchBranches = () => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
+  const { countries } = useCountriesContext();
   const { handleUpdateBranches } = useUserContext();
 
   const fetchOrgBranches = ({ page, limit }) => run(fetchOrgBranchesService({ page, limit }));
@@ -23,7 +24,7 @@ export const useFetchBranches = () => {
       const data = response.data.data.branches.map((item) => ({
         id: item._id,
         name: item.name,
-        country: item.country,
+        country: countries.find((country) => country.value === item.country)?.label,
         zipCode: item.zip_code,
         province: item.state,
         isPrimary: item.is_primary,

@@ -22,9 +22,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
       .required("Required")
       .min(8, "Password should be at least 8 characters long")
       .matches(/[A-Z]/, "Password should contain an uppercase character")
-      .matches(/[a-z]/, "Password should contain an lowercase character")
+      .matches(/[a-z]/, "Password should contain a lowercase character")
       .matches(/[0-9]/, "Password should contain at least one number")
-      .matches(/@|#|&|\$]/, "Password should contain at least special character (e.g. @, #, &, $)"),
+      .matches(
+        /[@#&$]/,
+        "Password should contain at least one special character (e.g. @, #, &, $)"
+      ),
+
     confirmPassword: yup
       .string()
       .required("Required")
@@ -84,7 +88,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
               Cancel
             </Button>
             <Button
-              disabled={isDirty || loadingPasswordChange}
+              disabled={!isDirty || loadingPasswordChange}
               loading={loadingPasswordChange}
               onClick={handleSubmit(onSubmit)}
               variant={"fill"}>

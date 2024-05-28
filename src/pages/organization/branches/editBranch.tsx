@@ -1,5 +1,5 @@
 import { organisationBranchRequestBody, updateOrgBranchService } from "api";
-import { AddBranchData, EditBranchModal, toast } from "components";
+import { EditBranchModal, toast } from "components";
 import { useUserContext } from "context";
 import { useApiRequest, useFetchBranches } from "hooks";
 import { useMemo } from "react";
@@ -19,20 +19,8 @@ const EditBranch: React.FC<Props> = ({ show, close, branchData }) => {
     totalPages: 0
   };
 
-  const submit = (data: AddBranchData) => {
-    const requestBody: organisationBranchRequestBody = {
-      name: data.name,
-      country: data.country.value,
-      zip_code: data.postalCode,
-      state: data.state,
-      address_line_1: data.addressLine1,
-      city: data.city,
-      timezone: data.timeZone.value
-    };
-    if (data.addressLine2 && data.addressLine2.trim() !== "") {
-      requestBody.address_line_2 = data.addressLine2;
-    }
-    run(updateOrgBranchService(branchData.id, requestBody));
+  const submit = (data: organisationBranchRequestBody) => {
+    run(updateOrgBranchService(branchData.id, data));
   };
 
   useMemo(() => {

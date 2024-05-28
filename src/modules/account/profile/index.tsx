@@ -4,7 +4,7 @@ import { CheckCircledIcon, QuestionMarkCircledIcon, UploadIcon } from "@radix-ui
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn } from "lib";
+import { cn, isEmptyObj, isFile } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "context";
@@ -26,8 +26,6 @@ const initData: ProfileFormData = {
   email: "",
   avatarFile: null
 };
-
-const isFile = (value: any): value is File => value instanceof File;
 
 interface AccountProfileProps {
   updateProfile: (formData: FormData) => void;
@@ -117,7 +115,6 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
     updateProfile(formData);
   };
 
-  const isEmptyObj = (obj: {}) => Object.keys(obj).length === 0;
   const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
 
   return (

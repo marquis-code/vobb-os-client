@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Logo, LogoIcon } from "assets";
 import { Button, SettingsPageTitle } from "components";
 import { Switch } from "components/ui/switch";
@@ -94,7 +95,14 @@ const PreviewDisplay = ({ preview }: PreviewProps) => {
 
   return (
     <section>
-      <Logo className="block mb-8" />
+      <Avatar className="w-16 h-16">
+        <AvatarImage src={orgDetails?.logo} alt="logo" />
+
+        <AvatarFallback>
+          {orgDetails?.organisation.charAt(0)}
+          {orgDetails?.organisation.charAt(1)}
+        </AvatarFallback>
+      </Avatar>
       <div className="py-8">
         <h2 className="text-2xl text-center mb-10 font-semibold">
           {previewType} suspension on {orgDetails?.organisation}'s Vobb Workspace
