@@ -102,3 +102,4 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
 };
 
 export { ChangePassword };
+
