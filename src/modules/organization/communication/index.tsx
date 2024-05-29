@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
-import { Logo, LogoIcon } from "assets";
 import { Button, SettingsPageTitle } from "components";
 import { Switch } from "components/ui/switch";
 import { useUserContext } from "context";
@@ -67,13 +66,7 @@ const OrgCommunicationUI: React.FC<OrgCommProps> = ({
             </div>
           ))}
         </div>
-        <div
-          style={{
-            background: orgDetails?.primaryBrandColor,
-            border: "4px solid",
-            borderColor: orgDetails?.secondaryBrandColor
-          }}
-          className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20">
+        <div className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20">
           {preview ? <PreviewDisplay preview={preview} /> : "No notice selected for preview"}
         </div>
       </section>
@@ -88,10 +81,8 @@ interface PreviewProps {
 }
 
 const PreviewDisplay = ({ preview }: PreviewProps) => {
-  const { orgDetails, userDetails } = useUserContext();
+  const { orgDetails } = useUserContext();
   const previewType = preview === "temporary-suspension" ? "Temporary" : "Indefinite";
-  const reason = "Non-compliance to rules and guidelines";
-  const endDate = "30/12/2024";
 
   return (
     <section>
@@ -104,43 +95,48 @@ const PreviewDisplay = ({ preview }: PreviewProps) => {
         </AvatarFallback>
       </Avatar>
       <div className="py-8">
-        <h2 className="text-2xl text-center mb-10 font-semibold">
-          {previewType} suspension on {orgDetails?.organisation}'s Vobb Workspace
-        </h2>
-        <div className="pb-4">
-          <p className="text-xl mb-6 font-semibold">Hi {userDetails?.firstName},</p>
-          <p className="mb-4 ">
+        <h1 className="text-3xl text-center mb-10 text-gray-900">
+          {previewType} on {orgDetails?.organisation}'s Vobb Workspace
+        </h1>
+        <div className="pb-8">
+          <p className="text-xl text-gray-900 mb-6 font-semibold">Hi (your team member's name),</p>
+          <p className="text-base text-gray-500 mb-4 leading-7">
             We regret to inform you that your access to {orgDetails?.organisation}'s Vobb workspace
             has been {previewType === "Temporary" ? "temporarily" : "indefinitely"} suspended,
             effective immediately for the following reason:
           </p>
-          <p className="mb-4  font-semibold pl-4 py-1 border-l-2 border-indigo-700">{reason}</p>
-          <p className="mb-4 ">
-            Your access will remain suspended untill {endDate}. During this time, you will be unable
-            to log in to the Vobb platform or participate in any activities within our workspace.
+          <p className="text-base text-gray-900 mb-4 leading-7 font-semibold pl-4 py-1 border-l-2 border-vobb-primary-70">
+            (the reason for suspension)
           </p>
-          <p className="mb-4 ">
+          <p className="text-base text-gray-500 mb-4 leading-7">
+            Your access will remain suspended (expiration date of suspension). During this time, you
+            will be unable to log in to the Vobb platform or participate in any activities within
+            our workspace.
+          </p>
+          <p className="text-base text-gray-500 mb-4 leading-7">
             If you have any questions or would like to discuss this matter further, please feel free
             to reach out to your team lead.
           </p>
         </div>
-        <p>
-          Thanks,
-          <br /> The team
-        </p>
+        <div className="leading-8 text-base text-gray-500">
+          <p>
+            Thanks,
+            <br /> The team
+          </p>
+        </div>
       </div>
-      <div className="border-t border-gray-300">
-        <p>
+      <footer className="border-t border-gray-300 pt-8">
+        <p className="text-base text-gray-500 leading-7">
           This email was sent to{" "}
-          <span className="text-indigo-700 font-semibold">{userDetails?.email}</span>. If this is
-          not you, please ignore this email.
+          <span className="text-vobb-primary-70 font-semibold">{orgDetails?.primaryEmail}</span>. If
+          this is not you, please ignore this email.
         </p>
-        <p className="mt-4">
+        <p className="text-base text-gray-500 leading-7 mt-4">
           © 2024 Vobb
           <br />
-          71-75 Shelton Street, London, United Kingdom
+          71-75 Shelton Street, London, United Kingdom.
         </p>
-      </div>
+      </footer>
     </section>
   );
 };
