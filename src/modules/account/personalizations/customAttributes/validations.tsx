@@ -1,43 +1,50 @@
+import * as yup from "yup";
 import { FormFieldConfig } from "types/formField";
-import * as Yup from "yup";
+import { isFile } from "lib";
 
-export const generateValidationSchema = (config) => {
+export const generateValidationSchema = (config: FormFieldConfig[]) => {
   const shape = {};
 
-  config.forEach((field: FormFieldConfig) => {
+  config.forEach((field) => {
     let schema;
 
     switch (field.type) {
       case "text":
       case "email":
-        schema = Yup.string();
+        schema = yup.string();
         if (field.type === "email") {
           schema = schema.email("Invalid email format");
         }
         break;
       case "number":
-        schema = Yup.number().typeError("Must be a number");
+        schema = yup.number().typeError("Must be a number");
         break;
       case "date":
-        schema = Yup.date().typeError("Invalid date format");
+        schema = yup.date().typeError("Invalid date format");
+        break;
+      case "file":
+        schema = yup
+          .mixed()
+          .test(
+            "fileSize",
+            "Image is too large",
+            (value) => !value || (isFile(value) && value.size <= 1048576 * 10)
+          );
         break;
       case "select":
       case "radio":
       case "checkbox":
-        schema = Yup.mixed();
-        break;
-      case "file":
-        schema = Yup.mixed();
+        schema = yup.mixed();
         break;
       default:
-        schema = Yup.mixed();
+        schema = yup.mixed();
     }
 
     if (field.required) {
       schema = schema.required(`${field.label} is required`);
     }
 
-    if (field.minimum) {
+    if (field.minimum !== undefined) {
       if (field.type === "number") {
         schema = schema.min(
           Number(field.minimum),
@@ -56,7 +63,7 @@ export const generateValidationSchema = (config) => {
       }
     }
 
-    if (field.maximum) {
+    if (field.maximum !== undefined) {
       if (field.type === "number") {
         schema = schema.max(
           Number(field.maximum),
@@ -78,5 +85,5 @@ export const generateValidationSchema = (config) => {
     shape[field.name] = schema;
   });
 
-  return Yup.object().shape(shape);
+  return yup.object().shape(shape);
 };

@@ -12,10 +12,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller, FieldValues } from "react-hook-form";
 import { MockDynamicData } from "lib";
 import { useState } from "react";
-import { FileUpload } from "components/form/file-upload";
 import { generateValidationSchema } from "./validations";
 import { FormFieldConfig } from "types/formField";
-import { endOfDay, format, formatISO, parse } from "date-fns";
+import { endOfDay, format } from "date-fns";
+import { FileUpload } from "components/form/file-upload";
 
 interface CustomAttributesProps {
   submit: () => void;
@@ -24,7 +24,11 @@ interface CustomAttributesProps {
 type FormData = {
   [key: string]: string | number | boolean | Date | File | null;
 };
+
 const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
+  const [date, setDate] = useState<Date>();
+  const [file, setFile] = useState<File | null>(null);
+
   const validationSchema = generateValidationSchema(MockDynamicData);
   const {
     control,
@@ -37,11 +41,8 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+    console.log(data, file);
   };
-
-  const [date, setDate] = useState<Date>();
-  const [file, setFile] = useState<File | null>(null);
 
   const renderField = (field: FormFieldConfig) => {
     const getErrorMessage = (fieldName: string): string | undefined => {
@@ -51,7 +52,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
       }
       return undefined;
     };
-
     switch (field.type) {
       case "text":
       case "email":
@@ -175,7 +175,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
             render={({ field: controllerField }) => (
               <DatePicker
                 {...controllerField}
-                value={field.defaultValue}
+                value={date}
                 handleChange={(value) => {
                   if (value) {
                     setDate(value);
@@ -191,23 +191,17 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
         );
       case "file":
         return (
-          <Controller
+          <FileUpload
             key={field.key}
-            name={field.name}
-            control={control}
-            defaultValue={field.defaultValue}
-            render={({ field: controllerField }) => (
-              <FileUpload
-                {...controllerField}
-                label={field.label}
-                required={field.required}
-                file={field.defaultValue}
-                multiple
-                id={"file"}
-                onFileChange={setFile}
-                validatorMessage={getErrorMessage(field.name)}
-              />
-            )}
+            label={field.label}
+            required={field.required}
+            file={file}
+            multiple
+            id={"file"}
+            onFileChange={(value) => {
+              setFile(value);
+            }}
+            validatorMessage={getErrorMessage(field.name)}
           />
         );
       default:
