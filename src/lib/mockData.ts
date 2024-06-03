@@ -80,6 +80,15 @@ export const MockDynamicData: FormFieldConfig[] = [
     defaultValue: ""
   },
   {
+    key: "phoneNumber",
+    name: "phoneNumber",
+    type: "phone",
+    label: "Phone Number",
+    required: true,
+    placeholder: "Phone Number",
+    defaultValue: ""
+  },
+  {
     key: "userEmail",
     name: "userEmail",
     type: "email",
@@ -94,8 +103,8 @@ export const MockDynamicData: FormFieldConfig[] = [
     type: "date",
     label: "Date of Birth",
     required: true,
-    maximum: "2020-05-01T20:29:56.421Z",
-    minimum: "1990-10-25T20:29:56.421Z",
+    maximum: "2010-01-01T20:29:56.421Z",
+    minimum: "1900-10-25T20:29:56.421Z",
     placeholder: "Enter your date of birth",
     defaultValue: ""
   },
