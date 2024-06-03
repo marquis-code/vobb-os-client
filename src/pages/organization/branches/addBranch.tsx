@@ -40,6 +40,7 @@ const AddBranch: React.FC<ModalProps> = ({ show, close }) => {
       toast({
         description: response?.data?.message
       });
+      close();
       fetchOrgBranches({ page: currentPage, limit: totalCount });
     } else if (error) {
       toast({

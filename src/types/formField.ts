@@ -25,7 +25,7 @@ export type dropdown_type = optionType;
 export type file_type = File;
 export type date_type = Date;
 
-export type formFieldTypess = short_text_type | long_text_type | number_type
+export type formFieldTypess = short_text_type | long_text_type | number_type;
 
 interface short_text_data {
   value: short_text_type;
@@ -44,9 +44,31 @@ interface email_type_data {
   value: email_type;
 }
 
-
 interface formFieldData {
-    value: formFieldTypess
-    word_limit?: number;
-    options: optionType[]
+  value: formFieldTypess;
+  word_limit?: number;
+  options: optionType[];
+}
+
+export interface FormFieldConfig {
+  key: string;
+  name: string;
+  type:
+    | "text"
+    | "number"
+    | "email"
+    | "date"
+    | "select"
+    | "radio"
+    | "checkbox"
+    | "textarea"
+    | "phone"
+    | "file";
+  label: string;
+  required: boolean;
+  minimum?: string | number;
+  maximum?: string | number;
+  placeholder?: string;
+  defaultValue: string | number | boolean | string[] | any;
+  options?: Array<{ label: string; value: string | number }> | any;
 }

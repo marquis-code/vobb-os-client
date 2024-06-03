@@ -6,49 +6,215 @@ import {
   CustomRadioGroup,
   CustomTextarea,
   DatePicker,
-  PasswordInput,
   SelectInput
 } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { optionType } from "types/interfaces";
-import { initOptionType } from "lib";
+import { useForm, SubmitHandler, Controller, FieldValues } from "react-hook-form";
+import { MockDynamicData } from "lib";
 import { useState } from "react";
 import { FileUpload } from "components/form/file-upload";
-import { useCountriesContext } from "context";
+import { generateValidationSchema } from "./validations";
+import { FormFieldConfig } from "types/formField";
+import { endOfDay, format, formatISO, parse } from "date-fns";
 
 interface CustomAttributesProps {
   submit: () => void;
 }
-interface CustomAttributesData {
-  language: optionType;
-}
-const initSysLang: CustomAttributesData = {
-  language: initOptionType
+
+type FormData = {
+  [key: string]: string | number | boolean | Date | File | null;
 };
-
 const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
-  const schema = yup.object().shape({
-    language: yup.object({
-      label: yup.string().required("Required"),
-      value: yup.string().required("Required")
-    })
+  const validationSchema = generateValidationSchema(MockDynamicData);
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors }
+  } = useForm<FieldValues>({
+    resolver: yupResolver(validationSchema)
   });
 
-  const { handleSubmit, reset, watch, setValue } = useForm<CustomAttributesData>({
-    resolver: yupResolver(schema),
-    defaultValues: initSysLang
-  });
-
-  const onSubmit: SubmitHandler<CustomAttributesData> = (data) => {
-    submit();
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    console.log(data);
   };
-
-  const { countries } = useCountriesContext();
 
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
+
+  const renderField = (field: FormFieldConfig) => {
+    const getErrorMessage = (fieldName: string): string | undefined => {
+      const error = errors[fieldName];
+      if (error) {
+        return error.message as string;
+      }
+      return undefined;
+    };
+
+    switch (field.type) {
+      case "text":
+      case "email":
+      case "number":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <CustomInput
+                {...controllerField}
+                label={field.label}
+                type={field.type}
+                placeholder={field.placeholder}
+                required={field.required}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      case "textarea":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <CustomTextarea
+                {...controllerField}
+                label={field.label}
+                placeholder={field.placeholder}
+                required={field.required}
+                validatorMessage={getErrorMessage(field.name)}
+                hint={`${field.minimum}/${field.maximum} words`}
+              />
+            )}
+          />
+        );
+      case "select":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <SelectInput
+                {...controllerField}
+                label={field.label}
+                options={field.options}
+                required={field.required}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      case "radio":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <CustomRadioGroup
+                {...controllerField}
+                label={field.label}
+                options={field.options}
+                required={field.required}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      case "checkbox":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <CustomCheckboxGroup
+                {...controllerField}
+                label={field.label}
+                options={field.options}
+                required={field.required}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      case "phone":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <CustomPhoneInput
+                {...controllerField}
+                label={field.label}
+                required={field.required}
+                handleChange={(value) => setValue(field.name, value)}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      case "date":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <DatePicker
+                {...controllerField}
+                value={field.defaultValue}
+                handleChange={(value) => {
+                  if (value) {
+                    setDate(value);
+                    setValue(field.name, format(endOfDay(value), "yyyy-MM-dd'T'HH:mm:ssXX"));
+                  }
+                }}
+                label={field.label}
+                required={field.required}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      case "file":
+        return (
+          <Controller
+            key={field.key}
+            name={field.name}
+            control={control}
+            defaultValue={field.defaultValue}
+            render={({ field: controllerField }) => (
+              <FileUpload
+                {...controllerField}
+                label={field.label}
+                required={field.required}
+                file={field.defaultValue}
+                multiple
+                id={"file"}
+                onFileChange={setFile}
+                validatorMessage={getErrorMessage(field.name)}
+              />
+            )}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -59,86 +225,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
           </p>
         </div>
         <form>
-          {/* Short text */}
-          <CustomInput label="Short text" type="text" />
-
-          {/* Long text */}
-          <CustomTextarea label="Long text" placeholder="" hint="0/100 words" />
-
-          {/* Number */}
-          <CustomInput label="Number" type="number" />
-
-          {/* Email */}
-          <CustomInput label="Email" type="email" />
-
-          {/* Dropdown */}
-          <SelectInput label="Dropdown" options={[]} value={null} onChange={console.log} />
-
-          {/* Multiple choice */}
-          <CustomRadioGroup
-            label="Multiple choice"
-            options={[
-              {
-                label: "Option One",
-                value: "option-one"
-              },
-              {
-                label: "Option Two",
-                value: "option-two"
-              },
-              {
-                label: "Option Three",
-                value: "option-three"
-              }
-            ]}
-            value={{
-              label: "Option One",
-              value: "option-one"
-            }}
-            onChange={console.log}
-          />
-
-          {/* Checkboxes */}
-          <CustomCheckboxGroup
-            label="Checkboxes"
-            options={[
-              {
-                label: "Option One",
-                value: "option-one"
-              },
-              {
-                label: "Option Two",
-                value: "option-two"
-              },
-              {
-                label: "Option Three",
-                value: "option-three"
-              }
-            ]}
-            value={[
-              {
-                label: "Option Two",
-                value: "option-two"
-              }
-            ]}
-            onChange={console.log}
-          />
-
-          {/* Phone number */}
-          <CustomPhoneInput
-            label="Phone number"
-            validatorMessage={undefined}
-            handleChange={console.log}
-          />
-
-          {/* Country */}
-          <SelectInput label="Country" options={countries} value={null} onChange={console.log} />
-
-          {/* Date */}
-          <DatePicker value={date} handleChange={setDate} label="Date" />
-
-          {/* File upload */}
-          <FileUpload label="File upload" file={file} multiple id={"file"} onFileChange={setFile} />
+          {MockDynamicData.map((field) => renderField(field))}
 
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
             <Button onClick={() => reset()} variant={"outline"}>
