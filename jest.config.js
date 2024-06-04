@@ -1,4 +1,7 @@
 module.exports = {
-  preset: "ts-jest/presets/js-with-ts",
-  testEnvironment: "node"
+  preset: "ts-jest",
+  testEnvironment: "node",
+  setupFilesAfterEnv: ["./src/tests/setupTests.ts"],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  testTimeout: 20000
 };
