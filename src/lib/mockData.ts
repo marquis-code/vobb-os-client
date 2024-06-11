@@ -1,4 +1,4 @@
-import { FormFieldConfig } from "types/formField";
+import { optionType, formFieldData } from "types";
 
 export const loginHistoryMock = [
   {
@@ -44,115 +44,84 @@ export const BranchTableMock = [
     isPrimary: false
   }
 ];
+const mockOptions: optionType[] = [
+  { value: "option1", label: "Option 1" },
+  { value: "option2", label: "Option 2" }
+];
 
-export const MockDynamicData: FormFieldConfig[] = [
+export const MockDynamicData: formFieldData[] = [
   {
-    key: "firstName",
-    name: "firstName",
-    type: "text",
-    label: "First name",
-    required: true,
-    maximum: "20",
-    minimum: "5",
-    placeholder: "Enter your first name",
-    defaultValue: ""
+    short_text: {
+      value: "John Doe",
+      type: "short_text"
+    }
   },
   {
-    key: "lastName",
-    name: "lastName",
-    type: "text",
-    label: "Last name",
-    required: true,
-    maximum: "20",
-    minimum: "5",
-    placeholder: "Enter your last name",
-    defaultValue: ""
+    long_text: {
+      value: "This is a long text field example.",
+      word_limit: 100,
+      type: "long_text"
+    }
   },
   {
-    key: "age",
-    name: "age",
-    type: "number",
-    label: "Age",
-    required: true,
-    maximum: "60",
-    minimum: "18",
-    placeholder: "Enter your age",
-    defaultValue: ""
+    number: {
+      value: 30,
+      type: "number"
+    }
   },
   {
-    key: "phoneNumber",
-    name: "phoneNumber",
-    type: "phone",
-    label: "Phone Number",
-    required: true,
-    placeholder: "Phone Number",
-    defaultValue: ""
+    email: {
+      value: "johndoe@example.com",
+      type: "email"
+    }
   },
   {
-    key: "userEmail",
-    name: "userEmail",
-    type: "email",
-    label: "User Email",
-    required: true,
-    placeholder: "Enter your email Address",
-    defaultValue: ""
+    phone_number: {
+      value: "+1234567890",
+      type: "phone_number"
+    }
   },
   {
-    key: "dob",
-    name: "dob",
-    type: "date",
-    label: "Date of Birth",
-    required: true,
-    maximum: "2010-01-01T20:29:56.421Z",
-    minimum: "1900-10-25T20:29:56.421Z",
-    placeholder: "Enter your date of birth",
-    defaultValue: ""
+    country: {
+      value: mockOptions[0],
+      options: mockOptions,
+      type: "country"
+    }
   },
   {
-    key: "favoriteColor",
-    name: "favoriteColor",
-    type: "select",
-    label: "Favorite Color",
-    required: true,
-    options: [
-      { label: "Red", value: "red" },
-      { label: "Blue", value: "blue" },
-      { label: "Green", value: "green" }
-    ],
-    defaultValue: ""
+    multiple_choice: {
+      value: [mockOptions[0]],
+      options: mockOptions,
+      type: "multiple_choice"
+    }
   },
   {
-    key: "gender",
-    name: "gender",
-    type: "radio",
-    label: "Gender",
-    required: false,
-    options: [
-      { label: "Male", value: "male" },
-      { label: "Female", value: "female" },
-      { label: "Other", value: "other" }
-    ],
-    defaultValue: "male"
+    checkbox: {
+      value: [mockOptions[0]],
+      options: mockOptions,
+      type: "checkbox"
+    }
   },
   {
-    key: "hobbies",
-    name: "hobbies",
-    type: "checkbox",
-    label: "Hobbies",
-    required: false,
-    options: [
-      { label: "Reading", value: "reading" },
-      { label: "Traveling", value: "traveling" },
-      { label: "Cooking", value: "cooking" }
-    ],
-    defaultValue: ["reading"]
+    dropdown: {
+      value: mockOptions[0],
+      options: mockOptions,
+      type: "dropdown"
+    }
   },
   {
-    key: "resume",
-    name: "resume",
-    type: "file",
-    label: "Resume",
-    required: false,
-    defaultValue: null
+    file: {
+      value: new File([""], "example.png"),
+      fileType: ["image", "pdf"],
+      maxSize: 5 * 1024 * 1024,
+      type: "file"
+    }
+  },
+  {
+    date: {
+      value: new Date(),
+      dateFormat: "DD/MM/YYYY",
+      type: "date"
+    }
   }
 ];

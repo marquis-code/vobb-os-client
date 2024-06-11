@@ -8,7 +8,7 @@ const defaultBranchesData: BranchesDataProps = {
   branchesArray: [],
   branchesMetaData: {
     currentPage: 1,
-    totalCount: 15,
+    totalCount: 0,
     totalPages: 0
   }
 };

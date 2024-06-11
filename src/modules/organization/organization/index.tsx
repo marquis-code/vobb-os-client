@@ -146,10 +146,12 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
   //Tracking changes not caught by dirtyFields.
   const logoChanged = logo !== profile?.logo;
   const sectorChanged =
+    profile &&
     !arraysHaveSameElements(
       sector.map((item) => item.value),
-      profile?.sector.map((item) => item)
-    ) && sector.length;
+      profile.sector.map((item) => item)
+    ) &&
+    sector.length;
   const primaryNumChanged = primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
   const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
 

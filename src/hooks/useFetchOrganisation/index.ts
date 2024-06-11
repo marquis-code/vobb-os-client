@@ -28,8 +28,8 @@ export const useFetchOrganisation = () => {
         secondaryPhoneNumber: org.support_phone_number ?? null,
         tempSuspensionNotice: org.temporary_suspension_notify ?? false,
         indefiniteSuspensionNotice: org.indefinite_suspension_notify ?? false,
-        primaryBrandColor: org.primary_color ?? "#dde6ee",
-        secondaryBrandColor: org.secondary_color ?? "#000000"
+        primaryBrandColor: org.primary_color,
+        secondaryBrandColor: org.secondary_color
       };
       handleUpdateOrg(organisation);
       return organisation;
