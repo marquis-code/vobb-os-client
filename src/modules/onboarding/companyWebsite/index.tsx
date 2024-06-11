@@ -55,7 +55,7 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
         <CustomInput
           type="text"
           name="website"
-          placeholder="travelspace.ng"
+          placeholder="https://travelspace.ng"
           register={register}
           validatorMessage={errors.website?.message}
         />
