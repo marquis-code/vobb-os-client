@@ -44,4 +44,7 @@ export const Routes = {
   reports: "/settings/reports",
   workflows: "/settings/workflows",
   organization_activity: "/settings/organization-activity",
+
+  // Team
+  team: (id = ":id") => `/teams/${id}`
 };

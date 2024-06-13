@@ -23,7 +23,7 @@ export type BranchTableData = {
 
 export interface BranchTableActions {
   handleEditBranch: (id: string) => void;
-  handleDeleteBranch: (id: string) => void;
+  handleDeleteBranch: (id: string, name: string) => void;
   handlePrimaryBranch: (id: string) => void;
 }
 
@@ -63,13 +63,13 @@ export const getBranchTableColumns = ({
   {
     id: "actions",
     cell: ({ row }) => {
-      const { isPrimary, id: branchId } = row.original;
+      const { isPrimary, id: branchId, name } = row.original;
 
       const editBranch = () => {
         handleEditBranch(branchId);
       };
       const deleteBranch = () => {
-        handleDeleteBranch(branchId);
+        handleDeleteBranch(branchId, name);
       };
       const primaryBranch = () => {
         handlePrimaryBranch(branchId);
@@ -108,9 +108,13 @@ const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch }) =>
         <DropdownMenuItem onClick={editBranch} className="gap-2 cursor-pointer">
           <Pencil1Icon /> Edit branch
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={deleteBranch} className="gap-2 cursor-pointer">
-          <TrashIcon /> Delete branch
-        </DropdownMenuItem>
+        {!isPrimary ? (
+          <DropdownMenuItem onClick={deleteBranch} className="gap-2 cursor-pointer">
+            <TrashIcon /> Delete branch
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

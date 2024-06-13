@@ -3,18 +3,26 @@ import { useCallback, useState } from "react";
 import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { ConfirmationModal } from "components";
+import { PreventDeleteBranch } from "./preventDeleteBranch";
+import { DeleteBranch } from "./deleteBranch";
+import { previousDay } from "date-fns";
 
 const OrgBranches = () => {
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, id: "" });
+  const [deleteBranch, setDeleteBranch] = useState({ show: false, id: "", name: "" });
 
   const handleEditBranch = (id: string) => {
     setEditBranch({ show: true, id });
   };
 
-  const handleDeleteBranch = (id: string) => {
+  const handleDeleteBranch = () => {
     setConfirm(true);
+  };
+
+  const handleInitiateDeleteBranch = (id: string, name: string) => {
+    setDeleteBranch({ id, name, show: true });
   };
 
   const handlePrimaryBranch = useCallback((id: string) => {
@@ -32,19 +40,19 @@ const OrgBranches = () => {
 
   return (
     <>
-      <ConfirmationModal
-        text={"Are you sure you want to delete xxx branch?"}
-        handleContinue={console.log}
-        close={handleCloseConfirmation}
-        show={confirm}
-        isDestructive
+      <PreventDeleteBranch
+        {...deleteBranch}
+        handleDeleteBranch={handleDeleteBranch}
+        close={() => setDeleteBranch((prev) => ({ ...prev, show: false }))}
+        handleOpen={() => setDeleteBranch((prev) => ({ ...prev, show: true }))}
       />
+      <DeleteBranch {...deleteBranch} close={handleCloseConfirmation} show={confirm} />
       <AddBranch show={addBranch} close={() => setAddBranch(false)} />
       <EditBranch {...editBranch} close={() => setEditBranch({ show: false, id: "" })} />
       <OrgBranchesUI
         handleAddBranch={handleAddBranch}
         handleEditBranch={handleEditBranch}
-        handleDeleteBranch={handleDeleteBranch}
+        handleDeleteBranch={handleInitiateDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
       />
     </>
