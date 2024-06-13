@@ -17,9 +17,10 @@ const schema = yup.object({
 
 interface ChangeEmailModalProps extends ModalProps {
   submit: ({ email }) => void;
+  loading: boolean;
 }
 
-const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit }) => {
+const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit, loading }) => {
   const {
     register,
     handleSubmit,
@@ -56,12 +57,13 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
+            disabled={loading}
             variant={"outline"}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty}
+            disabled={!isDirty || loading}
             size={"default"}
             variant={"fill"}>
             Continue

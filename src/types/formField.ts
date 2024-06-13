@@ -91,15 +91,29 @@ interface date_data {
 }
 
 export interface formFieldData {
-  short_text?: short_text_data;
-  long_text?: long_text_data;
+  shortText?: short_text_data;
+  longText?: long_text_data;
   number?: number_type_data;
   email?: email_type_data;
-  phone_number?: phone_number_data | string | null;
+  phoneNumber?: phone_number_data;
   country?: country_data;
-  multiple_choice?: multiple_choice_data | optionType;
-  checkbox?: checkbox_data | optionType[];
+  multipleChoice?: multiple_choice_data;
+  checkbox?: checkbox_data;
   dropdown?: dropdown_data;
   file?: file_data;
   date?: date_data | string;
+}
+
+export interface CustomAttributesFormData {
+  shortText?: string;
+  longText?: string;
+  number?: string;
+  email?: string;
+  phoneNumber?: string | null;
+  country?: optionType | null;
+  multipleChoice?: optionType;
+  checkbox?: string[];
+  dropdown?: optionType[];
+  file?: File | null;
+  date?: string;
 }

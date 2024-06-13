@@ -51,13 +51,13 @@ const mockOptions: optionType[] = [
 
 export const MockDynamicData: formFieldData[] = [
   {
-    short_text: {
+    shortText: {
       value: "John Doe",
       type: "short_text"
     }
   },
   {
-    long_text: {
+    longText: {
       value: "This is a long text field example.",
       word_limit: 100,
       type: "long_text"
@@ -76,8 +76,8 @@ export const MockDynamicData: formFieldData[] = [
     }
   },
   {
-    phone_number: {
-      value: "+1234567890",
+    phoneNumber: {
+      value: "+2347045678906",
       type: "phone_number"
     }
   },
@@ -89,7 +89,7 @@ export const MockDynamicData: formFieldData[] = [
     }
   },
   {
-    multiple_choice: {
+    multipleChoice: {
       value: [mockOptions[0]],
       options: mockOptions,
       type: "multiple_choice"

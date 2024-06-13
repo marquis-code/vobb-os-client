@@ -10,7 +10,7 @@ interface ChangeEmailProps extends ModalProps {
 }
 
 const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
-  const { run, data: response, error } = useApiRequest({});
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const { fetchOrgDetails } = useFetchOrganisation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,7 +44,12 @@ const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
 
   return (
     <>
-      <ChangeEmailModal show={show} close={modalClose} submit={handleSubmit} />
+      <ChangeEmailModal
+        show={show}
+        close={modalClose}
+        submit={handleSubmit}
+        loading={requestStatus.isPending}
+      />
     </>
   );
 };

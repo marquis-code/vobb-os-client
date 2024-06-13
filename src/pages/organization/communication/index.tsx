@@ -6,8 +6,18 @@ import { useMemo } from "react";
 
 const OrgCommunication = () => {
   const { fetchOrgDetails } = useFetchOrganisation();
-  const { run: runTempSuspend, data: tempSusResponse, error: tempSusError } = useApiRequest({});
-  const { run: runIndefSuspend, data: indefSusResponse, error: indefSusError } = useApiRequest({});
+  const {
+    run: runTempSuspend,
+    data: tempSusResponse,
+    error: tempSusError,
+    requestStatus: tempSusStatus
+  } = useApiRequest({});
+  const {
+    run: runIndefSuspend,
+    data: indefSusResponse,
+    error: indefSusError,
+    requestStatus: indefSusStatus
+  } = useApiRequest({});
 
   const handleTempSuspend = (data: { suspend: boolean }) => {
     runTempSuspend(updateTempSusNotifyService({ temporary_suspension_notify: data.suspend }));
@@ -47,8 +57,8 @@ const OrgCommunication = () => {
   return (
     <>
       <OrgCommunicationUI
-        submitTempSuspend={handleTempSuspend}
-        submitIndefiniteSuspend={handleIndefSuspend}
+        submitTempSuspend={{ loadingTemp: tempSusStatus.isPending, handleTempSuspend }}
+        submitIndefiniteSuspend={{ loadingIndef: tempSusStatus.isPending, handleIndefSuspend }}
       />
     </>
   );

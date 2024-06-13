@@ -52,6 +52,7 @@ const VerifyEmail: React.FC<ModalProps> = ({ show, close }) => {
         show={show}
         close={modalClose}
         submit={handleSubmit}
+        loading={requestStatus.isPending}
       />
     </>
   );

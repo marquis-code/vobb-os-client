@@ -8,38 +8,39 @@ import {
   SettingsPageTitle
 } from "components";
 import { useUserContext } from "context";
-import { useFetchBranches } from "hooks";
-import { BranchTableMock } from "lib";
 import { useMemo } from "react";
 
 interface OrgBranchesUIProps extends BranchTableActions {
   handleAddBranch: () => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   handleDeleteBranch,
   handleEditBranch,
   handlePrimaryBranch,
-  handleAddBranch
+  handleAddBranch,
+  setPage,
+  setLimit
 }) => {
   const columns = useMemo(
     () => getBranchTableColumns({ handleEditBranch, handleDeleteBranch, handlePrimaryBranch }),
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch]
   );
 
-  const { fetchOrgBranches } = useFetchBranches();
   const { orgBranches } = useUserContext();
   const { currentPage, totalCount, totalPages } = orgBranches?.branchesMetaData || {
     currentPage: 1,
-    totalCount: 15,
+    totalCount: 0,
     totalPages: 0
   };
   const handleChangePage = (page: number) => {
-    fetchOrgBranches({ page, limit: totalCount });
+    setPage(page);
   };
 
   const handlePageLimit = (limit: number) => {
-    fetchOrgBranches({ page: currentPage, limit });
+    setLimit(limit);
   };
 
   const tableData = orgBranches?.branchesArray || [];

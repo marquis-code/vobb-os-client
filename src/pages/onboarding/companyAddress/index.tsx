@@ -130,7 +130,7 @@ const CompanyAddress = () => {
     if (cityResponse?.status === 200) {
       localStorage.setItem("vobbOSAccess", cityResponse?.data?.data?.access_token);
       localStorage.setItem("vobbOSRefresh", cityResponse?.data?.data?.refresh_token);
-      navigate(Routes.overview);
+      navigate(Routes.completed_onboarding);
       toast({
         description: cityResponse?.data?.message
       });

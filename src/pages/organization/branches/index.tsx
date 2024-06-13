@@ -3,10 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { ConfirmationModal, toast } from "components";
-import { useApiRequest, useFetchBranches } from "hooks";
-import { useUserContext } from "context";
-import { OrganisationBranchesData } from "types";
-import { markBranchAsPrimaryService } from "api";
+import { useApiRequest } from "hooks";
+import { useCountriesContext, useUserContext } from "context";
+import { BranchesDataProps, OrganisationBranchesData } from "types";
+import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
 const initBranchData = {
   id: "",
   name: "",
@@ -19,6 +19,15 @@ const initBranchData = {
   addressLine2: "",
   isPrimary: false
 };
+
+const defaultBranchesData: BranchesDataProps = {
+  branchesArray: [],
+  branchesMetaData: {
+    currentPage: 1,
+    totalCount: 0,
+    totalPages: 0
+  }
+};
 const OrgBranches = () => {
   const {
     run: runPrimary,
@@ -26,13 +35,14 @@ const OrgBranches = () => {
     requestStatus: primaryStatus,
     error: primaryError
   } = useApiRequest({});
-  const { fetchOrgBranches } = useFetchBranches();
   const { orgBranches } = useUserContext();
   const { currentPage, totalCount } = orgBranches?.branchesMetaData || {
     currentPage: 1,
-    totalCount: 15,
+    totalCount: 0,
     totalPages: 0
   };
+  const [page, setPage] = useState(currentPage);
+  const [limit, setLimit] = useState(totalCount);
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
@@ -71,9 +81,48 @@ const OrgBranches = () => {
     }
   }, [primaryResponse, primaryError]);
 
+  const {
+    run: runFetchBranches,
+    data: fetchResponse,
+    requestStatus: fetchStatus,
+    error: fetchError
+  } = useApiRequest({});
+  const { countries } = useCountriesContext();
+  const { handleUpdateBranches } = useUserContext();
+
+  const fetchOrgBranches = ({ page, limit }) =>
+    runFetchBranches(fetchOrgBranchesService({ page, limit }));
+
+  useMemo<BranchesDataProps>(() => {
+    if (fetchResponse?.status === 200) {
+      const data = fetchResponse.data.data.branches.map((item) => ({
+        id: item._id,
+        name: item.name,
+        country: countries.find((country) => country.value === item.country)?.label,
+        zipCode: item.zip_code,
+        province: item.state,
+        isPrimary: item.is_primary,
+        addressLine1: item.address_line_1,
+        addressLine2: item.address_line_2 ?? "",
+        city: item.city,
+        timeZone: item.timezone ?? ""
+      }));
+      const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
+      const branchesMetaData = {
+        currentPage: fetchResponse?.data?.data?.page ?? 1,
+        totalPages: fetchResponse?.data?.data?.total_pages,
+        totalCount: fetchResponse?.data?.data?.total_count
+      };
+      handleUpdateBranches({ branchesArray, branchesMetaData });
+      return { branchesArray, branchesMetaData };
+    }
+
+    return defaultBranchesData;
+  }, [fetchResponse, fetchError]);
+
   useEffect(() => {
-    fetchOrgBranches({ page: currentPage, limit: totalCount });
-  }, []);
+    fetchOrgBranches({ page, limit });
+  }, [page, limit]);
   return (
     <>
       <ConfirmationModal
@@ -83,16 +132,23 @@ const OrgBranches = () => {
         show={confirm}
         isDestructive
       />
-      <AddBranch show={addBranch} close={() => setAddBranch(false)} />
+      <AddBranch
+        show={addBranch}
+        close={() => setAddBranch(false)}
+        fetchOrgBranches={fetchOrgBranches}
+      />
       <EditBranch
         {...editBranch}
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
+        fetchOrgBranches={fetchOrgBranches}
       />
       <OrgBranchesUI
         handleAddBranch={handleAddBranch}
         handleEditBranch={handleEditBranch}
         handleDeleteBranch={handleDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
+        setPage={setPage}
+        setLimit={setLimit}
       />
     </>
   );
