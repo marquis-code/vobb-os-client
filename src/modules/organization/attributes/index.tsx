@@ -25,7 +25,13 @@ const OrgAttributesUI = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="member">
-          <MemberAttributes />
+          <MemberAttributes
+            handleAddAttribute={console.log}
+            handleEditAttribute={console.log}
+            handleDuplicateAttribute={console.log}
+            handleRestoreAttribute={console.log}
+            handleArchiveAttribute={console.log}
+          />
         </TabsContent>
         <TabsContent value="client">
           <ClientAttributes />

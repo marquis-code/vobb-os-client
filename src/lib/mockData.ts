@@ -1,4 +1,4 @@
-import { BranchTableData } from "components";
+import { AttributeTableData, BranchTableData } from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
 import { DeviceData } from "modules/account/security/loginHistory";
 
@@ -278,5 +278,53 @@ export const orgActivityMockData: OrgActivityData[] = [
     metadata: {
       organization: "Bloomberg"
     }
+  }
+];
+
+export const AttributesTableMock: AttributeTableData[] = [
+  {
+    id: "1234",
+    title: "First name",
+    type: "text",
+    icon: "people",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "Last name",
+    type: "text",
+    icon: "people",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "Email",
+    type: "email",
+    icon: "letter",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "728ed52f",
+    title: "Date of birth",
+    type: "date",
+    icon: "calendar",
+    required: true,
+    isSystem: false,
+    isActive: true
+  },
+  {
+    id: "728ed52f",
+    title: "Start date",
+    type: "date",
+    icon: "calendar",
+    required: true,
+    isSystem: false,
+    isActive: false
   }
 ];

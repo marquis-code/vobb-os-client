@@ -1,12 +1,12 @@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "components/ui/table";
 
-interface BranchesTableProps<TData, TValue> {
+interface AttributesTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-const BranchesTable = <TData, TValue>({ columns, data }: BranchesTableProps<TData, TValue>) => {
+const AttributesTable = <TData, TValue>({ columns, data }: AttributesTableProps<TData, TValue>) => {
   const table = useReactTable({
     data,
     columns,
@@ -55,5 +55,5 @@ const BranchesTable = <TData, TValue>({ columns, data }: BranchesTableProps<TDat
   );
 };
 
-export { BranchesTable };
+export { AttributesTable };
 export * from "./columns";
