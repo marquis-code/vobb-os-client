@@ -3,7 +3,10 @@ import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 
-const OrgAttributesUI = () => {
+interface OrgAttributesUIProps {
+  handleAddMemberAttr: () => void;
+}
+const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }) => {
   return (
     <>
       <SettingsPageTitle
@@ -26,7 +29,7 @@ const OrgAttributesUI = () => {
         </TabsList>
         <TabsContent value="member">
           <MemberAttributes
-            handleAddAttribute={console.log}
+            handleAddAttribute={handleAddMemberAttr}
             handleEditAttribute={console.log}
             handleDuplicateAttribute={console.log}
             handleRestoreAttribute={console.log}

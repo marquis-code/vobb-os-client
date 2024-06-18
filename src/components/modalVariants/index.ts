@@ -6,3 +6,4 @@ export * from "./editBranchModal";
 export * from "./confirmationModal";
 export * from "./preventDeleteBranchModal";
 export * from "./transferTeamModal";
+export * from "./addAttributeModal";

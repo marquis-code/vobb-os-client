@@ -2,7 +2,6 @@ import { companySectorTypes, companySizeTypes } from "types";
 import { optionType } from "types/interfaces";
 import timezones from "timezones-list";
 
-
 interface optionTypeSize {
   label: string;
   value: companySizeTypes;
@@ -84,3 +83,60 @@ export const timeZoneOptions: optionType[] = timezones
     value: item.tzCode
   }))
   .sort((a, b) => a.label.localeCompare(b.label));
+
+export const attributeTypeOptions: optionType[] = [
+  {
+    label: "Short text",
+    value: "text"
+  },
+  {
+    label: "Long text",
+    value: "long-text"
+  },
+  {
+    label: "Number",
+    value: "number"
+  },
+  {
+    label: "Email",
+    value: "email"
+  },
+  {
+    label: "Phone number",
+    value: "phone-number"
+  },
+  {
+    label: "Country",
+    value: "country"
+  },
+  {
+    label: "Multiple choice",
+    value: "multiple-choice"
+  },
+  {
+    label: "Checkbox",
+    value: "checkbox"
+  },
+  {
+    label: "Dropdown",
+    value: "dropdown"
+  },
+  {
+    label: "File",
+    value: "file"
+  },
+  {
+    label: "Date",
+    value: "date"
+  }
+];
+export const fileTypeOptions: optionType[] = [
+  {
+    label: "PDF",
+    value: "pdf"
+  },
+  {
+    label: "Image",
+    value: "image"
+  }
+];

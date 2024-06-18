@@ -111,6 +111,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
               </div>
               {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
                 <ReCAPTCHA
+                  id="g-recaptcha"
                   class="recaptcha"
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                   onChange={(token) => {

@@ -130,7 +130,7 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = (props) => {
             borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))",
             "&:hover": {
               borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))"
-            },
+            }
           }),
           placeholder: (baseStyles) => ({
             ...baseStyles,
