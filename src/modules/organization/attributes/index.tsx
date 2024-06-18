@@ -37,7 +37,13 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }
           />
         </TabsContent>
         <TabsContent value="client">
-          <ClientAttributes />
+          <ClientAttributes
+            handleAddAttribute={console.log}
+            handleEditAttribute={console.log}
+            handleDuplicateAttribute={console.log}
+            handleRestoreAttribute={console.log}
+            handleArchiveAttribute={console.log}
+          />
         </TabsContent>
       </Tabs>
     </>

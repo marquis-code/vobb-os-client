@@ -286,7 +286,6 @@ export const AttributesTableMock: AttributeTableData[] = [
     id: "1234",
     title: "First name",
     type: "text",
-    icon: "people",
     required: true,
     isSystem: true,
     isActive: true
@@ -295,7 +294,22 @@ export const AttributesTableMock: AttributeTableData[] = [
     id: "1234",
     title: "Last name",
     type: "text",
-    icon: "people",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "Bio",
+    type: "long-text",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "SSN",
+    type: "number",
     required: true,
     isSystem: true,
     isActive: true
@@ -304,7 +318,30 @@ export const AttributesTableMock: AttributeTableData[] = [
     id: "1234",
     title: "Email",
     type: "email",
-    icon: "letter",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "CV",
+    type: "file",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "Next of kin number",
+    type: "phone-number",
+    required: true,
+    isSystem: true,
+    isActive: true
+  },
+  {
+    id: "1234",
+    title: "Nationality",
+    type: "country",
     required: true,
     isSystem: true,
     isActive: true
@@ -313,7 +350,30 @@ export const AttributesTableMock: AttributeTableData[] = [
     id: "728ed52f",
     title: "Date of birth",
     type: "date",
-    icon: "calendar",
+    required: true,
+    isSystem: false,
+    isActive: true
+  },
+  {
+    id: "728ed52f",
+    title: "City",
+    type: "dropdown",
+    required: true,
+    isSystem: false,
+    isActive: true
+  },
+  {
+    id: "728ed52f",
+    title: "Language",
+    type: "multiple-choice",
+    required: true,
+    isSystem: false,
+    isActive: true
+  },
+  {
+    id: "728ed52f",
+    title: "Remote",
+    type: "checkbox",
     required: true,
     isSystem: false,
     isActive: true
@@ -322,7 +382,6 @@ export const AttributesTableMock: AttributeTableData[] = [
     id: "728ed52f",
     title: "Start date",
     type: "date",
-    icon: "calendar",
     required: true,
     isSystem: false,
     isActive: false

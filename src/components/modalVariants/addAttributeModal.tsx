@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { attributeTypeOptions, fileTypeOptions } from "lib/constants";
+import { attributeTypeIcons, attributeTypeOptions, fileTypeOptions } from "lib/constants";
 import { Switch } from "components/ui/switch";
 import { getOptionTypeValidationMsg } from "lib";
 import { useState } from "react";
@@ -79,6 +79,7 @@ interface AddAttributeModalProps extends ModalProps {
 }
 
 const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, submit }) => {
+  const [createNew, setCreateNew] = useState(false);
   const {
     register,
     handleSubmit,
@@ -92,11 +93,6 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
   const onSubmit: SubmitHandler<AddBranchData> = (data) => {
     submit(data);
   };
-
-  console.log(errors);
-  console.log(watch());
-
-  const [createNew, setCreateNew] = useState(false);
 
   const attrType = watch("type");
 
@@ -123,6 +119,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
             value={watch("type")?.value === "" ? null : watch("type")}
             onChange={(val) => val && setValue("type", val)}
             validatorMessage={getOptionTypeValidationMsg(errors.type)}
+            icon={attrType ? attributeTypeIcons[attrType.value].icon : undefined}
           />
           {attrType?.value === "long-text" ? (
             <CustomInput

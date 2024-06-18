@@ -30,51 +30,54 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
           {required ? <span className={"text-error-50"}>*</span> : ""}
         </label>
       )}
-      {icon && icon}
-      <Select
-        {...props}
-        isSearchable
-        styles={{
-          control: (baseStyles, state) => ({
-            ...baseStyles,
-            border: validatorMessage ? "1px solid #e62e2e" : "1px solid hsl(var(--input))",
-            boxShadow: "0px 1px 2px 0px #1018280d",
-            height: "36px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 6,
-            fontSize: "14px",
-            color: "var(--neutral-40)",
-            minHeight: "36px",
-            borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))",
-            "&:hover": {
-              borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))"
-            }
-          }),
-          placeholder: (baseStyles) => ({
-            ...baseStyles,
-            color: "var(--neutral-50)"
-          }),
-          indicatorSeparator: () => ({
-            display: "none"
-          }),
-          valueContainer: (base, props) => ({
-            ...base,
-            marginTop: "-2px"
-          }),
-          option: (base, state) => ({
-            ...base,
-            backgroundColor: state.isSelected ? "var(--vobb-primary-40)" : "#fff",
-            "&:hover": {
-              backgroundColor: state.isSelected
-                ? "var(--vobb-primary-40)"
-                : "var(--vobb-primary-20)"
-            }
-          })
-        }}
-        menuShouldScrollIntoView
-      />
+      <div className="relative">
+        {icon ? <span className="absolute left-2 top-[10px] z-[1]">{icon}</span> : ""}
+        <Select
+          {...props}
+          isSearchable
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              border: validatorMessage ? "1px solid #e62e2e" : "1px solid hsl(var(--input))",
+              boxShadow: "0px 1px 2px 0px #1018280d",
+              height: "36px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 6,
+              fontSize: "14px",
+              color: "var(--neutral-40)",
+              minHeight: "36px",
+              borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))",
+              "&:hover": {
+                borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))"
+              },
+              paddingLeft: icon ? "24px" : "0px"
+            }),
+            placeholder: (baseStyles) => ({
+              ...baseStyles,
+              color: "var(--neutral-50)"
+            }),
+            indicatorSeparator: () => ({
+              display: "none"
+            }),
+            valueContainer: (base, props) => ({
+              ...base,
+              marginTop: "-2px"
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isSelected ? "var(--vobb-primary-40)" : "#fff",
+              "&:hover": {
+                backgroundColor: state.isSelected
+                  ? "var(--vobb-primary-40)"
+                  : "var(--vobb-primary-20)"
+              }
+            })
+          }}
+          menuShouldScrollIntoView
+        />
+      </div>
       {validatorMessage && (
         <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
       )}

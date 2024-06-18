@@ -38,32 +38,35 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
             {required ? <span className={"text-error-50"}>*</span> : ""}
           </label>
         )}
-        {icon && icon}
-        {register && name ? (
-          <Input
-            {...props}
-            {...register(name, {
-              required: required,
-              minLength: props.minLength,
-              onChange: props.onChange,
-              min: props.min,
-              max: props.max
-            })}
-            defaultValue={defaultValue}
-            className={cn(
-              `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
-              className
-            )}
-          />
-        ) : (
-          <Input
-            className={cn(
-              `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
-              className
-            )}
-            {...props}
-          />
-        )}
+        <div className="relative">
+          {icon ? <span className="absolute left-2 top-[10px]">{icon}</span> : ""}
+          {register && name ? (
+            <Input
+              {...props}
+              {...register(name, {
+                required: required,
+                minLength: props.minLength,
+                onChange: props.onChange,
+                min: props.min,
+                max: props.max
+              })}
+              defaultValue={defaultValue}
+              className={cn(
+                `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
+                className,
+                icon ? "pl-8" :""
+               )}
+            />
+          ) : (
+            <Input
+              className={cn(
+                `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
+                className
+              )}
+              {...props}
+            />
+          )}
+        </div>
         {validatorMessage && (
           <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
         )}

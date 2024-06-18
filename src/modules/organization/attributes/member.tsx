@@ -1,4 +1,4 @@
-import { Component1Icon, MixIcon } from "@radix-ui/react-icons";
+import { MixIcon } from "@radix-ui/react-icons";
 import {
   AttributesTable,
   AttributeTableActions,
@@ -37,11 +37,10 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
           onClick={handleAddAttribute}
           className="flex mt-8 mb-6 gap-2 ml-auto"
           variant={"fill"}>
-          <MixIcon /> New attribute
+          <MixIcon /> New member attribute
         </Button>
         <AttributesTable columns={columns} data={AttributesTableMock} />
         <Pagination
-          // hidePageLimit
           handleChange={console.log}
           handlePageLimit={console.log}
           totalCount={3}

@@ -1,6 +1,18 @@
 import { companySectorTypes, companySizeTypes } from "types";
 import { optionType } from "types/interfaces";
 import timezones from "timezones-list";
+import {
+  CalendarIcon,
+  DropdownMenuIcon,
+  EnvelopeClosedIcon,
+  FileIcon,
+  FrameIcon,
+  LetterCaseCapitalizeIcon,
+  ListBulletIcon,
+  MixIcon,
+  TextAlignJustifyIcon
+} from "@radix-ui/react-icons";
+import { CheckDoneIcon, FlagIcon, HashIcon, PhoneIcon } from "assets";
 
 interface optionTypeSize {
   label: string;
@@ -140,3 +152,102 @@ export const fileTypeOptions: optionType[] = [
     value: "image"
   }
 ];
+
+export const attributeTypeIconss = [
+  {
+    type: "text",
+    icon: <LetterCaseCapitalizeIcon />
+  },
+  {
+    type: "long-text",
+    icon: <TextAlignJustifyIcon />
+  },
+  {
+    type: "number",
+    icon: <FrameIcon />
+  },
+  {
+    value: "email",
+    icon: <EnvelopeClosedIcon />
+  },
+  {
+    value: "phone-number",
+    icon: <MixIcon />
+  },
+  {
+    value: "country",
+    icon: <MixIcon />
+  },
+  {
+    value: "multiple-choice",
+    icon: <ListBulletIcon />
+  },
+  {
+    value: "checkbox",
+    icon: <MixIcon />
+  },
+  {
+    value: "dropdown",
+    icon: <MixIcon />
+  },
+  {
+    value: "file",
+    icon: <FileIcon />
+  },
+  {
+    value: "date",
+    icon: <CalendarIcon />
+  }
+];
+
+interface tt {
+  key: string;
+  icon: string;
+}
+
+export const attributeTypeIcons = {
+  text: {
+    icon: <LetterCaseCapitalizeIcon />,
+    label: "Short text"
+  },
+  "long-text": {
+    icon: <TextAlignJustifyIcon />,
+    label: "Long text"
+  },
+  number: {
+    icon: <HashIcon width={15} height={15} strokeWidth={1} />,
+    label: "Number"
+  },
+  email: {
+    icon: <EnvelopeClosedIcon />,
+    label: "Email"
+  },
+  "phone-number": {
+    icon: <PhoneIcon width={15} height={15} />,
+    label: "Phone number"
+  },
+  country: {
+    icon: <FlagIcon width={15} height={15} />,
+    label: "Country"
+  },
+  "multiple-choice": {
+    icon: <ListBulletIcon />,
+    label: "Multiple choice"
+  },
+  checkbox: {
+    icon: <CheckDoneIcon width={15} height={15} />,
+    label: "Checkbox"
+  },
+  dropdown: {
+    icon: <DropdownMenuIcon />,
+    label: "Dropdown"
+  },
+  file: {
+    icon: <FileIcon />,
+    label: "File"
+  },
+  date: {
+    icon: <CalendarIcon />,
+    label: "Date"
+  }
+};

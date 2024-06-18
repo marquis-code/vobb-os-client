@@ -9,23 +9,20 @@ import {
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 import {
-  TrashIcon,
   Pencil1Icon,
-  StarIcon,
   DrawingPinIcon,
   CopyIcon,
-  ThickArrowLeftIcon,
-  ThickArrowRightIcon,
-  ThickArrowUpIcon
+  ThickArrowUpIcon,
+  ThickArrowDownIcon
 } from "@radix-ui/react-icons";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { attributeTypeIcons } from "lib/constants";
 
 // This type is used to define the shape of our data.
 export type AttributeTableData = {
   id: string;
   title: string;
   type: string;
-  icon: string;
   required: boolean;
   isSystem: boolean;
   isActive: boolean;
@@ -48,10 +45,10 @@ export const getAttributeTableColumns = ({
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => {
-      const { icon, title } = row.original;
+      const { type, title } = row.original;
       return (
         <div className="flex gap-2 items-center text-right font-medium">
-          {icon} {title}
+          {attributeTypeIcons[type].icon} {title}
         </div>
       );
     }
@@ -61,7 +58,7 @@ export const getAttributeTableColumns = ({
     header: "Type",
     cell: ({ row }) => {
       const { type } = row.original;
-      return <span className="capitalize">{type}</span>;
+      return <span className="capitalize">{attributeTypeIcons[type].label}</span>;
     }
   },
   {
@@ -159,14 +156,14 @@ const ActionColumn = ({
             <DropdownMenuItem
               onClick={archiveAttribute}
               className="gap-2 cursor-pointer text-vobb-error-20">
-              <ThickArrowUpIcon />
+              <ThickArrowDownIcon />
               Archive attribute
             </DropdownMenuItem>
           ) : (
             <>
               <Separator />
               <DropdownMenuItem onClick={restoreAttribute} className="gap-2 cursor-pointer">
-                <ThickArrowRightIcon />
+                <ThickArrowUpIcon />
                 Restore attribute
               </DropdownMenuItem>
             </>
