@@ -95,6 +95,12 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
   };
 
   const attrType = watch("type");
+  const hasOptions =
+    attrType?.value === "multiple-choice" ||
+    attrType?.value === "checkbox" ||
+    attrType?.value === "dropdown";
+
+  console.log(watch());
 
   return (
     <>
@@ -151,9 +157,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
             validatorMessage={errors.description?.message}
             placeholder="Describe your attribute, use case, ..."
           />
-          {attrType?.value === "multiple-choice" ||
-          attrType?.value === "checkbox" ||
-          attrType?.value === "dropdown" ? (
+          {hasOptions ? (
             <CreateOptions
               label="Options"
               validatorMessage={errors.options?.message}

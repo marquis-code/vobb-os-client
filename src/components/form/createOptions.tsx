@@ -24,14 +24,8 @@ const CreateOptions: React.FC<CreateOptionsProps> = (props) => {
   const ref = useRef(null);
   const close = () => {
     setShow(false);
-    onChange(options);
-    console.log("here");
   };
   useClickOutside(ref, close);
-
-  // useEffect(() => {
-  //  !show && setOptions(value);
-  // }, [value]);
 
   const handleRemove = (index: number) => {
     setOptions((prev) => {
@@ -41,12 +35,21 @@ const CreateOptions: React.FC<CreateOptionsProps> = (props) => {
     });
   };
 
-  const handleAppend = (val) => setOptions((prev) => [...prev, val]);
+  const handleAppend = (val) =>
+    setOptions((prev) => {
+      const newOptions = [...prev, val];
+      onChange(newOptions);
+      return newOptions;
+    });
 
   const handleInputChange = (value: string, index) => {
-    setOptions((prev) =>
-      prev.map((option, optionIndex) => (optionIndex === index ? value : option))
-    );
+    setOptions((prev) => {
+      const newOptions = prev.map((option, optionIndex) =>
+        optionIndex === index ? value : option
+      );
+      onChange(newOptions);
+      return newOptions;
+    });
   };
 
   return (
