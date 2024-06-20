@@ -54,6 +54,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
               `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
               className
             )}
+            aria-label={label}
           />
         ) : (
           <Input

@@ -1,7 +1,9 @@
 module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "node",
-  setupFilesAfterEnv: ["./src/tests/setupTests.ts"],
-  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
-  testTimeout: 20000
+  testEnvironment: "jsdom",
+
+  transform: {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  },
+
+  setupFilesAfterEnv: ["@testing-library/jest-dom"]
 };

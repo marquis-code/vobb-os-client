@@ -51,14 +51,15 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
               break;
           }
         }}
+        data-cy="arrow-icon"
       />
       <div className="hidden lg:grid">
-        <LocationIcon className="mb-6 m-auto" />
+        <LocationIcon className="mb-6 m-auto" data-cy="logo" />
         <div className="mb-8 text-center mx-auto">
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Company Address
           </h1>
-          <p>Neque porro quisquam est, qui dolorem ipsu.</p>
+          <p data-cy="subtitle">Neque porro quisquam est, qui dolorem ipsu.</p>
         </div>
       </div>
       {activeCompanyAddress === "country" ? (
