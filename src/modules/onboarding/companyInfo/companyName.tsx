@@ -36,7 +36,7 @@ const OrganisationForm: React.FC<OrganisationFormProps> = ({ initData, submit })
         name="organisation"
         register={register}
         validatorMessage={errors.organisation?.message}
-        data-cy="onboarding-input"
+        data-cy="organisation-name"
       />
       <Button
         type="submit"

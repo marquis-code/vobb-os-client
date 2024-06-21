@@ -57,7 +57,6 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
           errors.country?.value?.message ??
           errors.country?.label?.message
         }
-        data-cy="onboarding-input"
       />
       <Button
         onClick={handleSubmit(onSubmit)}

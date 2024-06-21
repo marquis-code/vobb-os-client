@@ -23,8 +23,6 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
     submit(data);
   };
 
-  const progressBtns = ["organisation", "teamSize", "sector"];
-
   return (
     <div className="max-w-[400px] m-auto relative">
       <ArrowLeftIcon
@@ -71,13 +69,24 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
         )}
       </div>
       <div className="flex justify-center items-center gap-4 mt-8">
-        {progressBtns.map((btn) => (
-          <div
-            key={btn}
-            className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
-              btn === activeCompanyInfo ? "bg-vobb-primary-70" : ""
-            }`}></div>
-        ))}
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "organisation" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange("organisation")}
+          data-cy="organisation-name-state"></div>
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "teamSize" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange("teamSize")}
+          data-cy="teamsize-state"></div>
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "sector" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange("sector")}
+          data-cy="sector-state"></div>
       </div>
     </div>
   );

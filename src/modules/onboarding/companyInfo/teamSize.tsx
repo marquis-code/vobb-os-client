@@ -46,7 +46,7 @@ const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit }) => {
         validatorMessage={
           errors.size?.message ?? errors.size?.value?.message ?? errors.size?.label?.message
         }
-        data-cy="onboarding-input"
+        data-cy="teamsize"
       />
       <Button
         type="submit"

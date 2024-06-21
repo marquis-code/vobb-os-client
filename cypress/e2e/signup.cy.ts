@@ -28,29 +28,41 @@ describe("Signup page", () => {
     cy.url().should("include", "/login");
   });
 
-  const mailer = "@mailinator.com";
-
-  // Random string generator for the first name
-  const randomFirstName = () => {
-    const possible = "abcdefghijklmnopqrstuvwxyz";
-    const length = Math.floor(Math.random() * 8) + 10;
-    let randomName = "";
-    for (let i = 0; i < length; i++) {
-      randomName += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return randomName;
-  };
-
-  // Append random firstname to email
-  const randomEmail = () => {
-    return randomFirstName() + mailer;
-  };
-
   it("should register successfully", () => {
+    const mailer = "@mailinator.com";
+
+    // Random string generator for the first name
+    const randomFirstName = () => {
+      const possible = "abcdefghijklmnopqrstuvwxyz";
+      const length = Math.floor(Math.random() * 8) + 10;
+      let randomName = "";
+      for (let i = 0; i < length; i++) {
+        randomName += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return randomName;
+    };
+
+    // Append random firstname to email
+    const randomEmail = () => {
+      return randomFirstName() + mailer;
+    };
+
     cy.get('[data-cy="email"]').type(randomEmail());
     cy.get('[data-cy="password"]').type("@Password123");
     cy.solveGoogleReCAPTCHA();
     cy.get('[data-cy="signup-btn"]').click().wait(500);
     cy.url().should("includes", "/verify-email");
+
+    //verify email
+    cy.get('[data-cy="logo"]').should("exist");
+    cy.get("h1").should("contain", "Check your email");
+    cy.get('[data-cy="subtitle"]').should("exist");
+    cy.get('[data-cy="otp"]').should("exist");
+    cy.get('[data-cy="continue-btn"]').should("exist");
+    cy.get('[data-cy="resend-btn"]').should("exist");
+    cy.get('[data-cy="back-btn"]').should("exist");
+
+    cy.get('[data-cy="back-btn"]').click();
+    cy.url().should("eq", "http://localhost:3000/");
   });
 });
