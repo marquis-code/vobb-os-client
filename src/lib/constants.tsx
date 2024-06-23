@@ -153,58 +153,6 @@ export const fileTypeOptions: optionType[] = [
   }
 ];
 
-export const attributeTypeIconss = [
-  {
-    type: "text",
-    icon: <LetterCaseCapitalizeIcon />
-  },
-  {
-    type: "long-text",
-    icon: <TextAlignJustifyIcon />
-  },
-  {
-    type: "number",
-    icon: <FrameIcon />
-  },
-  {
-    value: "email",
-    icon: <EnvelopeClosedIcon />
-  },
-  {
-    value: "phone-number",
-    icon: <MixIcon />
-  },
-  {
-    value: "country",
-    icon: <MixIcon />
-  },
-  {
-    value: "multiple-choice",
-    icon: <ListBulletIcon />
-  },
-  {
-    value: "checkbox",
-    icon: <MixIcon />
-  },
-  {
-    value: "dropdown",
-    icon: <MixIcon />
-  },
-  {
-    value: "file",
-    icon: <FileIcon />
-  },
-  {
-    value: "date",
-    icon: <CalendarIcon />
-  }
-];
-
-interface tt {
-  key: string;
-  icon: string;
-}
-
 export const attributeTypeIcons = {
   text: {
     icon: <LetterCaseCapitalizeIcon />,

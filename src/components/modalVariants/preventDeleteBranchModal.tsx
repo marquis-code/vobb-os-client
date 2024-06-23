@@ -1,21 +1,14 @@
 import { ModalProps } from "types/interfaces";
 import { Modal } from "../modal";
-import { Button } from "../ui";
-import {
-  ArrowTopRightIcon,
-  Cross1Icon,
-  GearIcon,
-  ThickArrowRightIcon
-} from "@radix-ui/react-icons";
-import { ReactNode } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from "components/ui/accordion";
-import { Link } from "react-router-dom";
-import { Routes } from "router";
+import { Button, Checkbox } from "../ui";
+import { Cross1Icon, ThickArrowRightIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+
+interface BranchMemberData {
+  name: string;
+  id: string;
+  teams: string[];
+}
 
 interface PreventDeleteBranchModalProps extends ModalProps {
   handleContinue: (teamId?: string) => void;
@@ -28,113 +21,99 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
   handleContinue,
   name
 }) => {
+  const [selected, setSelected] = useState<BranchMemberData[]>([]);
+
+  const branchMembers: BranchMemberData[] = [
+    {
+      name: "John Doe",
+      id: "1234",
+      teams: ["Finance", "Operations"]
+    },
+    {
+      name: "Jason Doe",
+      id: "12345",
+      teams: ["Support", "Engineering"]
+    },
+    {
+      name: "John Derulo",
+      id: "12364",
+      teams: ["Sales"]
+    },
+    {
+      name: "John Tunmise",
+      id: "12347",
+      teams: ["Marketing"]
+    },
+    {
+      name: "Ayodele Tunmide",
+      id: "12348",
+      teams: ["Marketing"]
+    }
+  ];
+
+  const handleSelectMember = (member: BranchMemberData) => {
+    // check if member is seleted
+    if (selected.find((item) => item.id === member.id)) {
+      // remove
+      setSelected((prev) => prev.filter((item) => item.id !== member.id));
+    } else {
+      // add
+      setSelected((prev) => [...prev, member]);
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selected.length === branchMembers.length) {
+      setSelected([]);
+    } else {
+      setSelected(branchMembers);
+    }
+  };
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
-        <div className="flex items-center justify-between mb-2">
+        <section className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-bold">Unable to delete branch - {name}</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"}>
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
-        </div>
-        <div className="mb-8">
+        </section>
+        <section className="mb-8">
           <p className="text-sm text-vobb-neutral-70 mb-4">
-            You cannot delete a non-empty branch. Please transfer the teams under this branch to a
+            You cannot delete a non-empty branch. Please transfer the users under this branch to a
             different branch or remove all team members.
           </p>
-          <Accordion type="multiple">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="font-semibold !no-underline py-2">
-                <span className="hover:underline">Finance (3 members)</span>
-                <Button
-                  className="ml-auto mr-2 font-semibold text-vobb-primary-70 gap-1"
-                  variant={"ghost"}
-                  size={"sm"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleContinue("1234");
-                  }}>
-                  Transfer <ThickArrowRightIcon />
-                </Button>
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul className="leading-6">
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                </ul>
-                <Link
-                  className="flex items-center gap-1 text-vobb-primary-70 font-medium hover:underline mt-2 text-xs w-fit"
-                  target="blank"
-                  to={Routes.team("")}>
-                  Go to team
-                  <ArrowTopRightIcon />
-                </Link>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="font-semibold !no-underline py-2">
-                <span className="hover:underline">Applications (2 members)</span>
-                <Button
-                  className="ml-auto mr-2 font-semibold text-vobb-primary-70 gap-1"
-                  variant={"ghost"}
-                  size={"sm"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleContinue("1234");
-                  }}>
-                  Transfer <ThickArrowRightIcon />
-                </Button>
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul className="leading-6">
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                </ul>
-                <Link
-                  className="flex items-center gap-1 text-vobb-primary-70 font-medium hover:underline mt-2 text-xs w-fit"
-                  target="blank"
-                  to={Routes.team("")}>
-                  Go to team
-                  <ArrowTopRightIcon />
-                </Link>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="font-semibold !no-underline py-2">
-                <span className="hover:underline">Customer Success (12 members)</span>
-                <Button
-                  className="ml-auto mr-2 font-semibold text-vobb-primary-70 gap-1"
-                  variant={"ghost"}
-                  size={"sm"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleContinue("1234");
-                  }}>
-                  Transfer <ThickArrowRightIcon />
-                </Button>
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul className="leading-6">
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                  <li>Jola Agbayi</li>
-                </ul>
-                <Link
-                  className="flex items-center gap-1 text-vobb-primary-70 font-medium hover:underline mt-2 text-xs w-fit"
-                  target="blank"
-                  to={Routes.team("")}>
-                  View all members
-                  <ArrowTopRightIcon />
-                </Link>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        <div className="flex justify-end gap-2">
+          <div className="">
+            <Button
+              onClick={handleSelectAll}
+              variant={"link"}
+              className="text-vobb-primary-70 p-0 items-center gap-2">
+              <Checkbox
+                checked={selected.length === branchMembers.length}
+                onCheckedChange={() => handleSelectAll()}
+              />
+              {selected.length === branchMembers.length ? "Unselect" : "Select"} all
+            </Button>
+            <ul className="max-h-[calc(100vh-300px)] overflow-scroll leading-7 text-vobb-neutral-70">
+              {branchMembers.map((member) => {
+                const { id, name, teams } = member;
+                return (
+                  <li className="flex items-center gap-2 ">
+                    <Checkbox
+                      checked={selected.find((item) => item.id === id) ? true : false}
+                      onCheckedChange={() => handleSelectMember(member)}
+                    />
+                    <span>{name}</span>
+                    <span className="font-semibold ml-auto mr-2 text-vobb-neutral-100 text-xs">
+                      {teams.join(", ")}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+        <section className="flex justify-end gap-2">
           <Button onClick={close} size={"default"} variant={"outline"}>
             Cancel
           </Button>
@@ -143,9 +122,11 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
             size={"default"}
             variant={"fill"}
             onClick={() => handleContinue()}>
-            Transfer all <ThickArrowRightIcon />
+            Transfer{" "}
+            {selected.length > 0 && selected.length !== branchMembers.length ? "selected" : "all"}{" "}
+            <ThickArrowRightIcon />
           </Button>
-        </div>
+        </section>
       </Modal>
     </>
   );
