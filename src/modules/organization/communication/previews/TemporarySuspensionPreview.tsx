@@ -10,12 +10,12 @@ const TemporarySuspensionPreview = () => {
         <AvatarImage src={orgDetails?.logo} alt="logo" />
 
         <AvatarFallback>
-          {orgDetails?.organisation.charAt(0)}
-          {orgDetails?.organisation.charAt(1)}
+          {orgDetails?.organisation.charAt(0).toUpperCase()}
+          {orgDetails?.organisation.charAt(1).toUpperCase()}
         </AvatarFallback>
       </Avatar>
       <div className="py-8">
-        <h1 className="text-3xl text-center mb-10 text-gray-900">
+        <h1 className="text-3xl text-center mb-10 text-gray-900 font-inter capitalize">
           Temporary suspension of {orgDetails?.organisation}'s Vobb Workspace
         </h1>
         <div className="pb-8">

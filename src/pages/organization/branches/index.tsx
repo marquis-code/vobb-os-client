@@ -29,20 +29,15 @@ const defaultBranchesData: BranchesDataProps = {
   }
 };
 const OrgBranches = () => {
-  const {
-    run: runPrimary,
-    data: primaryResponse,
-    requestStatus: primaryStatus,
-    error: primaryError
-  } = useApiRequest({});
+  const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
   const { orgBranches } = useUserContext();
-  const { currentPage, totalCount } = orgBranches?.branchesMetaData || {
+  const { currentPage } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
     totalPages: 0
   };
   const [page, setPage] = useState(currentPage);
-  const [limit, setLimit] = useState(totalCount);
+  const [limit, setLimit] = useState(8);
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
@@ -72,7 +67,7 @@ const OrgBranches = () => {
       toast({
         description: primaryResponse?.data?.message
       });
-      fetchOrgBranches({ page: currentPage, limit: totalCount });
+      fetchOrgBranches({ page: currentPage, limit });
     } else if (primaryError) {
       toast({
         variant: "destructive",
@@ -81,12 +76,7 @@ const OrgBranches = () => {
     }
   }, [primaryResponse, primaryError]);
 
-  const {
-    run: runFetchBranches,
-    data: fetchResponse,
-    requestStatus: fetchStatus,
-    error: fetchError
-  } = useApiRequest({});
+  const { run: runFetchBranches, data: fetchResponse, error: fetchError } = useApiRequest({});
   const { countries } = useCountriesContext();
   const { handleUpdateBranches } = useUserContext();
 

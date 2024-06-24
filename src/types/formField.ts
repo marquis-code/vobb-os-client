@@ -117,3 +117,14 @@ export interface CustomAttributesFormData {
   file?: File | null;
   date?: string;
 }
+
+export interface fieldDataTypes {
+  type: formFieldTypes;
+  value: any;
+  required?: boolean;
+  options?: optionType[] | any;
+  fileType?: string[];
+  maxSize?: number;
+  dateFormat?: string;
+  word_limit?: string;
+}

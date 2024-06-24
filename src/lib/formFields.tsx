@@ -9,89 +9,92 @@ import {
   SelectInput
 } from "components";
 import { endOfDay, format } from "date-fns";
-import { isFile } from "lib";
+import { isFile, isValidFileType } from "lib";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { CustomAttributesFormData, optionType } from "types";
+import { CustomAttributesFormData, fieldDataTypes, formFieldData, optionType } from "types";
 import * as yup from "yup";
 
 interface DynamicFormProps {
-  fieldData: any;
+  fieldData: fieldDataTypes;
   index: number;
   register: UseFormRegister<CustomAttributesFormData>;
   errors: FieldErrors<CustomAttributesFormData>;
   setValue: UseFormSetValue<CustomAttributesFormData>;
   longTextCount?: number;
   countries?: optionType[];
-  selectedRadioValue?: optionType | undefined;
-  handleRadioChange?: (newValue: optionType | undefined) => void;
-  selectedCheckboxValues?: optionType[];
-  handleCheckboxChange?: (newValue: optionType[]) => void;
-  date?: Date | undefined;
-  setDate?: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  file?: File | null;
-  setFile?: React.Dispatch<React.SetStateAction<File | null>>;
+  radio?: {
+    value: optionType | undefined;
+    handleChange: (newValue: optionType | undefined) => void;
+  };
+  checkbox?: {
+    value: optionType[];
+    handleChange: (newValue: optionType[]) => void;
+  };
+  date?: {
+    value: Date | undefined;
+    handleChange: (date: Date) => void;
+  };
+  file?: {
+    value: File | null;
+    handleChange: (file: File) => void;
+  };
 }
 
-export const dynamicValidationSchema = (field: any) => {
+export const dynamicValidationSchema = (field: formFieldData) => {
   const fieldName = Object.keys(field)[0];
   const fieldData = field[fieldName];
 
-  if (fieldData.type === "short_text") {
-    return yup.string().required("Required");
-  }
-  if (fieldData.type === "long_text") {
-    return yup
-      .string()
-      .required("Required")
-      .max(fieldData.word_limit, `Maximum ${fieldData.word_limit} words`);
-  }
-  if (fieldData.type === "number") {
-    return yup.number().required("Required");
-  }
-  if (fieldData.type === "email") {
-    return yup.string().email("Enter a valid email").required("Required");
-  }
-  if (fieldData.type === "phone_number") {
-    return yup.string().required("Required");
-  }
-  if (fieldData.type === "country") {
-    return yup.object().shape({
-      label: yup.string().required("Required"),
-      value: yup.string().required("Required")
-    });
-  }
-  if (fieldData.type === "multiple_choice") {
-    return yup.object().shape({
-      label: yup.string().required("Required"),
-      value: yup.string().required("Required")
-    });
-  }
-  if (fieldData.type === "checkbox") {
-    return yup
-      .array()
-      .of(yup.string().required("Required"))
-      .min(1, "At least one option is required")
-      .required("Required");
-  }
+  const isRequired = fieldData.required ? yup.mixed().required("Required") : yup.mixed();
 
-  if (fieldData.type === "dropdown") {
-    return yup.string().required("Required");
-  }
-  if (fieldData.type === "file") {
-    return yup
-      .mixed()
-      .test(
-        "fileSize",
-        "Image is too large",
-        (value) => !value || (isFile(value) && value.size <= field.maxSize)
+  switch (fieldData.type) {
+    case "short_text":
+      return isRequired.concat(yup.string());
+    case "long_text":
+      return isRequired.concat(
+        yup.string().test("wordLimit", `Maximum ${fieldData.word_limit} words`, function (value) {
+          const words = value ? value.trim().split(/\s+/) : [];
+          return words.length <= fieldData.word_limit;
+        })
       );
+    case "number":
+      return isRequired.concat(yup.number());
+    case "email":
+      return isRequired.concat(yup.string().email("Enter a valid email"));
+    case "phone_number":
+      return isRequired.concat(yup.string());
+    case "multiple_choice":
+      return yup.object().shape({
+        label: isRequired.concat(yup.string()),
+        value: isRequired.concat(yup.string())
+      });
+    case "checkbox":
+      return yup
+        .array()
+        .of(isRequired.concat(yup.string()))
+        .min(1, "At least one option is required");
+    case "dropdown":
+      return isRequired.concat(yup.string());
+    case "file":
+      return isRequired.concat(
+        yup
+          .mixed()
+          .test(
+            "fileSize",
+            "File has exceeded the 5mb limit",
+            (value) => !value || (isFile(value) && value.size <= fieldData.maxSize)
+          )
+          .test(
+            "fileType",
+            "Unsupported file format. Only images and pdfs are allowed.",
+            (value) => !value || (isFile(value) && isValidFileType(value))
+          )
+      );
+    case "date":
+      return isRequired.concat(yup.date());
+    default:
+      return yup.mixed();
   }
-  if (fieldData.type === "date") {
-    return yup.date().required("Required");
-  }
-  return yup.mixed();
 };
-
 export const renderFormFields = ({
   fieldData,
   index,
@@ -100,14 +103,10 @@ export const renderFormFields = ({
   setValue,
   longTextCount,
   countries,
-  selectedRadioValue,
-  handleRadioChange = () => {},
-  selectedCheckboxValues,
-  handleCheckboxChange = () => {},
+  radio,
+  checkbox,
   date,
-  setDate = () => {},
-  file,
-  setFile = () => {}
+  file
 }: DynamicFormProps) => {
   switch (fieldData.type) {
     case "short_text":
@@ -185,8 +184,8 @@ export const renderFormFields = ({
           key={index}
           label="Multiple choice"
           options={fieldData.options}
-          value={selectedRadioValue}
-          onChange={handleRadioChange}
+          value={radio?.value}
+          onChange={() => (radio?.handleChange ? radio.handleChange : () => {})}
           validatorMessage={
             errors.multipleChoice?.label?.message || errors.multipleChoice?.value?.message
           }
@@ -198,8 +197,8 @@ export const renderFormFields = ({
           key={index}
           label="Checkboxes"
           options={fieldData.options}
-          value={selectedCheckboxValues ?? [{ label: "", value: "" }]}
-          onChange={handleCheckboxChange}
+          value={checkbox?.value ?? [{ label: "", value: "" }]}
+          onChange={() => (checkbox?.handleChange ? checkbox.handleChange : () => {})}
           validatorMessage={errors.checkbox?.message}
         />
       );
@@ -217,10 +216,10 @@ export const renderFormFields = ({
       return (
         <DatePicker
           key={index}
-          value={date}
+          value={date?.value}
           handleChange={(value) => {
             if (value) {
-              setDate?.(value);
+              date?.handleChange?.(value);
               setValue("date", format(endOfDay(value), "yyyy-MM-dd'T'HH:mm:ssXX"));
             }
           }}
@@ -233,10 +232,10 @@ export const renderFormFields = ({
         <FileUpload
           key={index}
           label="File upload"
-          file={file ?? null}
+          file={file?.value ?? null}
           multiple
           id={"file"}
-          onFileChange={setFile}
+          onFileChange={() => (file?.handleChange ? file.handleChange : () => {})}
           validatorMessage={errors.file?.message}
         />
       );

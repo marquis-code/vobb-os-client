@@ -11,12 +11,6 @@ interface AddBranchProps extends ModalProps {
 
 const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { orgBranches } = useUserContext();
-  const { currentPage, totalCount } = orgBranches?.branchesMetaData || {
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0
-  };
 
   const submit = (data: AddBranchData) => {
     const requestBody: organisationBranchRequestBody = {
@@ -43,7 +37,7 @@ const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches }) 
       toast({
         description: response?.data?.message
       });
-      fetchOrgBranches({ page: currentPage, limit: totalCount + 1 });
+      fetchOrgBranches({ page: 1, limit: 8 });
       close();
     } else if (error) {
       toast({

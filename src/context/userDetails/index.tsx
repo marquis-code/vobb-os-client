@@ -1,11 +1,5 @@
 import { createContext, useState, useContext, ReactNode } from "react";
-import {
-  BranchesDataProps,
-  MetaDataProps,
-  OrganisationBranchesData,
-  OrganisationProfileProps,
-  UserProfileProps
-} from "types";
+import { BranchesDataProps, OrganisationProfileProps, UserProfileProps } from "types";
 
 interface UserContextProps {
   userDetails: UserProfileProps | null;

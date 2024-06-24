@@ -51,7 +51,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
   });
 
   const longText = watch("longText") || "";
-  const longTextCount = longText.length;
+  const longTextCount = longText.trim().split(/\s+/).length;
 
   const onSubmit: SubmitHandler<CustomAttributesFormData> = (data) => {
     console.log(data);
@@ -80,14 +80,22 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
               setValue,
               longTextCount,
               countries,
-              selectedRadioValue,
-              handleRadioChange,
-              selectedCheckboxValues,
-              handleCheckboxChange,
-              date,
-              setDate,
-              file,
-              setFile
+              radio: {
+                value: selectedRadioValue,
+                handleChange: handleRadioChange
+              },
+              checkbox: {
+                value: selectedCheckboxValues,
+                handleChange: handleCheckboxChange
+              },
+              date: {
+                value: date,
+                handleChange: setDate
+              },
+              file: {
+                value: file,
+                handleChange: setFile
+              }
             });
           })}
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
