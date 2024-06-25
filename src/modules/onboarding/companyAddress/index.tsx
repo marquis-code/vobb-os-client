@@ -23,7 +23,6 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
 }) => {
   const { handleFormChange } = useOnboardingContext();
   const navigate = useNavigate();
-  const progressBtns = ["country", "zipcode", "province", "city"];
 
   return (
     <div className="relative max-w-[400px] m-auto ">
@@ -88,13 +87,30 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
       )}
 
       <div className="flex justify-center items-center gap-4 mt-8">
-        {progressBtns.map((btn) => (
-          <div
-            key={btn}
-            className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
-              btn === activeCompanyAddress ? "bg-vobb-primary-70" : ""
-            }`}></div>
-        ))}
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "country" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange?.("country")}
+          data-cy="country-state"></div>
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "zipcode" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange?.("zipcode")}
+          data-cy="zipcode-state"></div>
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "province" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange?.("province")}
+          data-cy="province-state"></div>
+        <div
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+            "city" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
+          }`}
+          onClick={() => handleCompanyChange?.("city")}
+          data-cy="city-state"></div>
       </div>
     </div>
   );

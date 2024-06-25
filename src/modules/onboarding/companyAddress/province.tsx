@@ -29,7 +29,7 @@ const Province: React.FC<CompanyAddressProps> = ({ initState, submit, loading })
         name="state"
         register={register}
         validatorMessage={errors.state?.message}
-        data-cy="onboarding-input"
+        data-cy="province-input"
       />
       <Button
         onClick={handleSubmit(onSubmit)}

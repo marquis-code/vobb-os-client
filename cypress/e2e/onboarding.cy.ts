@@ -31,6 +31,7 @@ describe("Onboarding flow", () => {
     cy.get('input[name="sector"]').should("exist").type("Tourism");
     cy.get('[data-cy="continue-btn"]').should("exist").click();
 
+    //company website
     cy.get('[data-cy="skip-btn"]').should("exist").click();
     cy.url().should("contain", "/operating_address");
     cy.visit("/onboarding/company_website");
@@ -41,10 +42,33 @@ describe("Onboarding flow", () => {
     cy.get('[data-cy="website-input"]').should("exist").type("https://hamsa.com");
     cy.get('[data-cy="continue-btn"]').should("exist").click();
 
+    //company address
     cy.get('[data-cy="arrow-icon"]').should("exist");
     cy.get('[data-cy="logo"]').should("exist");
     cy.get("h1").should("contain", "Company Address");
     cy.get('[data-cy="subtitle"]').should("exist");
-    cy.get('[data-cy="continue-btn"]').should("exist");
+    cy.get('[data-cy="country-state"]').click();
+    cy.get('input[name="country"]').should("exist").type("Nigeria");
+    cy.get('[data-cy="continue-btn"]').should("exist").click();
+
+    cy.get('[data-cy="zipcode-state"]').click();
+    cy.get('[data-cy="zipcode-input"]').type("123456");
+    cy.get('[data-cy="continue-btn"]').should("exist").click();
+
+    cy.get('[data-cy="province-state"]').click();
+    cy.get('[data-cy="province-input"]').type("Lagos");
+    cy.get('[data-cy="continue-btn"]').should("exist").click();
+
+    cy.get('[data-cy="city-state"]').click();
+    cy.get('[data-cy="address-input"]').first().type("87 Olatunji Avenue");
+    cy.get('[data-cy="address-input"]').last().type("Ogudu Area");
+    cy.get('[data-cy="continue-btn"]').should("exist").click();
+    cy.url().should("include", "/onboarding/completed");
+
+    //completed Onboarding
+    cy.get("h1").should("contain", "All done, yay!");
+    cy.get('[data-cy="subtitle"]').should("exist").contain(`You've officially set sail with us.`);
+    cy.get('[data-cy="continue-btn"]').should("exist").click();
+    cy.url().should("include", "/login");
   });
 });

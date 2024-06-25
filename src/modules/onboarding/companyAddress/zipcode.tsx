@@ -44,7 +44,7 @@ const Zipcode: React.FC<ZipcodeProps> = ({
         name="zipCode"
         register={register}
         validatorMessage={errors.zipCode?.message}
-        data-cy="onboarding-input"
+        data-cy="zipcode-input"
       />
       <Button
         onClick={handleSubmit(onSubmit)}

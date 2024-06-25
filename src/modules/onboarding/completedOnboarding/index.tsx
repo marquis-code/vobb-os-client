@@ -13,13 +13,16 @@ const CompletedOnboardingUI = () => {
         <h1 className="text-xl sm:text-2xl font-bold mb-8 text-vobb-neutral-100 text-center">
           All done, yay!
         </h1>
-        <p className="text-center">You've officially set sail with us.</p>
+        <p className="text-center" data-cy="subtitle">
+          You've officially set sail with us.
+        </p>
 
         <Button
           onClick={() => navigate(Routes.login)}
           className="w-full mt-6"
           size={"default"}
-          variant="fill">
+          variant="fill"
+          data-cy="continue-btn">
           Continue
         </Button>
       </section>
