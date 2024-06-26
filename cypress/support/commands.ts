@@ -47,6 +47,7 @@ declare namespace Cypress {
     checkRecaptchaValueExists(
       value?: string /* eslint-disable-line */
     ): Chainable<JQuery<HTMLElement>>;
+    checkValidPasswordCriteria(password: string, btnId: string): void;
   }
 }
 
@@ -87,19 +88,39 @@ Cypress.Commands.add("checkAndCloseToastNotification", (message) => {
 });
 Cypress.Commands.add("checkRequiredFieldError", (field, btnId) => {
   cy.get(`[data-cy="${field}"]`).clear(); // Clear the field if it has any value
-  cy.get(`[data-cy="${btnId}"]`).click(); // Attempt to submit the form
-  cy.get("small").should("be.visible").and("contain.text", "Required");
+  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.contains("small", "Required").should("exist");
 });
 
 Cypress.Commands.add("checkInvalidEmailError", (email, btnId) => {
   cy.get('[data-cy="email"]').clear().type(email); // Enter invalid email
-  cy.get(`[data-cy="${btnId}"]`).click(); // Attempt to submit the form
-  cy.get("small").should("be.visible").and("contain.text", "Enter a valid email");
+  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.contains("small", "Enter a valid email").should("exist");
 });
 
-Cypress.Commands.add("checkRecaptchaValueExists", () => {
+Cypress.Commands.add("checkRecaptchaValueExists", (btnId) => {
   cy.frameLoaded('iframe[title="reCAPTCHA"]');
   cy.iframe('iframe[title="reCAPTCHA"]').find(".recaptcha-checkbox-unchecked").should("be.visible");
-  cy.get('[data-cy="signin-btn"]').click();
-  cy.get("small").should("be.visible").and("contain.text", "Required");
+  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.contains("small", "Required").should("exist");
+});
+
+Cypress.Commands.add("checkValidPasswordCriteria", (password, btnId) => {
+  cy.get('[data-cy="password"]').clear().type(password);
+
+  cy.get(`[data-cy="${btnId}"]`).click();
+  if (password.length < 8) {
+    cy.contains("small", "Password should be at least 8 characters long").should("exist");
+  } else if (!/[A-Z]/.test(password)) {
+    cy.contains("small", "Password should contain an uppercase character").should("exist");
+  } else if (!/[a-z]/.test(password)) {
+    cy.contains("small", "Password should contain an lowercase character").should("exist");
+  } else if (!/\d/.test(password)) {
+    cy.contains("small", "Password should contain at least one number").should("exist");
+  } else if (!/@|#|&|\$]/.test(password)) {
+    cy.contains(
+      "small",
+      "Password should contain at least special character (e.g. @, #, &, $)"
+    ).should("exist");
+  }
 });

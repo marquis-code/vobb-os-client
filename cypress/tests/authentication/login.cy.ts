@@ -64,7 +64,9 @@ describe("Login page", () => {
   });
 
   it("should show required error when recaptcha value is absent", () => {
-    cy.checkRecaptchaValueExists();
+    cy.get('input[name="email"]').type("hamsacodes@gmail.com");
+    cy.get('input[name="password"]').type("myPassword");
+    cy.checkRecaptchaValueExists("signin-btn");
   });
 
   it("should show error when user with invalid credentials tries to log in", () => {
