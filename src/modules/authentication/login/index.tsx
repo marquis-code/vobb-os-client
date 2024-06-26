@@ -116,12 +116,6 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
                 <ReCAPTCHA
                   class="recaptcha"
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                  // sitekey={
-                  //   //@ts-ignore
-                  //   typeof window !== "undefined" && window?.Cypress
-                  //     ? "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                  //     : process.env.REACT_APP_RECAPTCHA_SITE_KEY!
-                  // }
                   onChange={(token) => {
                     setValue("recaptcha", token);
                   }}
@@ -153,7 +147,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
               disabled={loading}
               onClick={handleGoogleSignin}
               data-cy="signin-google-btn">
-              <GoogleLogoIcon width={20} /> Signin with Google
+              <GoogleLogoIcon width={20} /> Sign in with Google
             </Button>
             <p className="mt-6 text-center text-[13px]" data-cy="dont-have-account">
               Don't have an account?{" "}

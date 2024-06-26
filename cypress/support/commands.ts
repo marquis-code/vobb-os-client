@@ -41,11 +41,18 @@ declare namespace Cypress {
   interface Chainable {
     solveGoogleReCAPTCHA(value?: string /* eslint-disable-line */): Chainable<JQuery<HTMLElement>>;
     loginUserWithEmail(email: string, password: string): void;
+    checkAndCloseToastNotification(message: string): void;
+    checkRequiredFieldError(field: string, btnId: string): void;
+    checkInvalidEmailError(email: string, btnId: string): void;
+    checkRecaptchaValueExists(
+      value?: string /* eslint-disable-line */
+    ): Chainable<JQuery<HTMLElement>>;
   }
 }
 
 Cypress.Commands.add("solveGoogleReCAPTCHA", () => {
   cy.frameLoaded('iframe[title="reCAPTCHA"]');
+
   cy.iframe('iframe[title="reCAPTCHA"]')
     .find(".recaptcha-checkbox-unchecked")
     .should("be.visible")
@@ -66,10 +73,33 @@ Cypress.Commands.add("loginUserWithEmail", (email, password) => {
   cy.get('[data-cy="password"]').type(password);
   cy.solveGoogleReCAPTCHA();
   cy.get('[data-cy="signin-btn"]').click().wait(500);
+});
 
-  cy.url().should((url) => {
-    expect(url).to.satisfy(
-      (url: string) => url.includes("/onboarding") || url.includes("/overview")
-    );
-  });
+Cypress.Commands.add("checkAndCloseToastNotification", (message) => {
+  cy.get('li[role="status"]')
+    .should("be.visible")
+    .within(() => {
+      cy.get("div > div").should("contain.text", message);
+      cy.get('button[type="button"]').click();
+    });
+
+  cy.get('li[role="status"]').should("not.exist");
+});
+Cypress.Commands.add("checkRequiredFieldError", (field, btnId) => {
+  cy.get(`[data-cy="${field}"]`).clear(); // Clear the field if it has any value
+  cy.get(`[data-cy="${btnId}"]`).click(); // Attempt to submit the form
+  cy.get("small").should("be.visible").and("contain.text", "Required");
+});
+
+Cypress.Commands.add("checkInvalidEmailError", (email, btnId) => {
+  cy.get('[data-cy="email"]').clear().type(email); // Enter invalid email
+  cy.get(`[data-cy="${btnId}"]`).click(); // Attempt to submit the form
+  cy.get("small").should("be.visible").and("contain.text", "Enter a valid email");
+});
+
+Cypress.Commands.add("checkRecaptchaValueExists", () => {
+  cy.frameLoaded('iframe[title="reCAPTCHA"]');
+  cy.iframe('iframe[title="reCAPTCHA"]').find(".recaptcha-checkbox-unchecked").should("be.visible");
+  cy.get('[data-cy="signin-btn"]').click();
+  cy.get("small").should("be.visible").and("contain.text", "Required");
 });

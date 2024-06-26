@@ -6,7 +6,8 @@ export default defineConfig({
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
-    }
+    },
+    specPattern: "cypress/tests/**/*.cy.{js,jsx,ts,tsx}"
   },
   chromeWebSecurity: false,
   viewportWidth: 1440,
