@@ -50,7 +50,7 @@ describe("Signup page", () => {
   });
 
   it("should show an error for invalid email format", () => {
-    cy.checkInvalidEmailError("invalid-email", "signup-btn");
+    cy.checkInvalidEmailError("email", "invalid-email", "signup-btn");
   });
 
   it("should show required error when recaptcha value is absent", () => {
@@ -60,11 +60,11 @@ describe("Signup page", () => {
   });
 
   it("should show specific errors for invalid password criteria", () => {
-    cy.checkValidPasswordCriteria("weak", "signup-btn");
-    cy.checkValidPasswordCriteria("noUpperCase1", "signup-btn");
-    cy.checkValidPasswordCriteria("NoLowercase1", "signup-btn");
-    cy.checkValidPasswordCriteria("NoNumber@", "signup-btn");
-    cy.checkValidPasswordCriteria("NoSpecialCharacter8", "signup-btn");
+    cy.checkValidPasswordCriteria("password", "weak", "signup-btn");
+    cy.checkValidPasswordCriteria("password", "noUpperCase1", "signup-btn");
+    cy.checkValidPasswordCriteria("password", "NoLowercase1", "signup-btn");
+    cy.checkValidPasswordCriteria("password", "NoNumber@", "signup-btn");
+    cy.checkValidPasswordCriteria("password", "NoSpecialCharacter8", "signup-btn");
   });
 
   it("should successfully go to sign in page", () => {
@@ -91,13 +91,6 @@ describe("Signup page", () => {
     return randomFirstName() + mailer;
   };
 
-  it("should should error when user exists", () => {
-    cy.get('[data-cy="email"]').type("hamsacodes@gmail.com");
-    cy.get('[data-cy="password"]').type("@Password123");
-    cy.solveGoogleReCAPTCHA();
-    cy.checkAndCloseToastNotification("An account with this email exists already");
-  });
-
   it("should register successfully", () => {
     cy.get('[data-cy="email"]').type(randomEmail());
     cy.get('[data-cy="password"]').type("@Password123");
@@ -110,5 +103,13 @@ describe("Signup page", () => {
         cy.get('button[type="button"]').click();
       });
     cy.get('li[role="status"]').should("not.exist");
+  });
+
+  it("should should error when user exists", () => {
+    cy.get('[data-cy="email"]').type("hamsacodes@gmail.com");
+    cy.get('[data-cy="password"]').type("@Password123");
+    cy.solveGoogleReCAPTCHA();
+    cy.get('[data-cy="signup-btn"]').click();
+    cy.checkAndCloseToastNotification("An account with this email exists already");
   });
 });

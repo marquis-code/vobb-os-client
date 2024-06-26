@@ -8,7 +8,7 @@ import { Routes } from "router";
 
 const Email = () => {
   const [email, setEmail] = useState("");
-  const { run, data: response, error } = useApiRequest({});
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleForgotPassword = (data: { email: string }) => {
     run(forgotPasswordService(data));
     setEmail(data.email);
@@ -33,7 +33,7 @@ const Email = () => {
 
   return (
     <>
-      <EmailUI submit={handleForgotPassword} />
+      <EmailUI submit={handleForgotPassword} loading={requestStatus.isPending} />
     </>
   );
 };

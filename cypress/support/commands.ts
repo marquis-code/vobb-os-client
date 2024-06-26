@@ -43,11 +43,11 @@ declare namespace Cypress {
     loginUserWithEmail(email: string, password: string): void;
     checkAndCloseToastNotification(message: string): void;
     checkRequiredFieldError(field: string, btnId: string): void;
-    checkInvalidEmailError(email: string, btnId: string): void;
+    checkInvalidEmailError(emailId: string, email: string, btnId: string): void;
     checkRecaptchaValueExists(
       value?: string /* eslint-disable-line */
     ): Chainable<JQuery<HTMLElement>>;
-    checkValidPasswordCriteria(password: string, btnId: string): void;
+    checkValidPasswordCriteria(fieldId: string, password: string, btnId: string): void;
   }
 }
 
@@ -92,8 +92,8 @@ Cypress.Commands.add("checkRequiredFieldError", (field, btnId) => {
   cy.contains("small", "Required").should("exist");
 });
 
-Cypress.Commands.add("checkInvalidEmailError", (email, btnId) => {
-  cy.get('[data-cy="email"]').clear().type(email); // Enter invalid email
+Cypress.Commands.add("checkInvalidEmailError", (emailId, email, btnId) => {
+  cy.get(`[data-cy="${emailId}"]`).clear().type(email); // Enter invalid email
   cy.get(`[data-cy="${btnId}"]`).click();
   cy.contains("small", "Enter a valid email").should("exist");
 });
@@ -105,8 +105,8 @@ Cypress.Commands.add("checkRecaptchaValueExists", (btnId) => {
   cy.contains("small", "Required").should("exist");
 });
 
-Cypress.Commands.add("checkValidPasswordCriteria", (password, btnId) => {
-  cy.get('[data-cy="password"]').clear().type(password);
+Cypress.Commands.add("checkValidPasswordCriteria", (fieldId, password, btnId) => {
+  cy.get(`[data-cy="${fieldId}"]`).clear().type(password);
 
   cy.get(`[data-cy="${btnId}"]`).click();
   if (password.length < 8) {

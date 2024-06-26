@@ -63,7 +63,7 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
           </Button>
         </form>
         <p className="cursor-pointer mx-auto mt-6 text-center">
-          Didn't receive the code?
+          <span>Didn't receive the code?</span>
           <Button
             className="text-vobb-primary-70"
             onClick={submitResend}
@@ -80,7 +80,7 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
           size={"default"}
           variant="link"
           data-cy="back-btn">
-          <ArrowLeftIcon /> Back to sign up
+          <ArrowLeftIcon data-cy="arrow-icon" /> Back to sign up
         </Button>
       </section>
     </main>

@@ -54,13 +54,14 @@ describe("Login page", () => {
     cy.get('input[name="password"]').type("myPassword");
     cy.checkRequiredFieldError("email", "signin-btn");
   });
+
   it("should show required error when password is left blank", () => {
     cy.get('input[name="email"]').type("hamsacodes@gmail.com");
     cy.checkRequiredFieldError("password", "signin-btn");
   });
 
   it("should show an error for invalid email format", () => {
-    cy.checkInvalidEmailError("invalid-email", "signin-btn");
+    cy.checkInvalidEmailError("email", "invalid-email", "signin-btn");
   });
 
   it("should show required error when recaptcha value is absent", () => {
