@@ -27,7 +27,8 @@ import {
   OrgBankAccounts,
   OrgAttributes,
   AccountActivity,
-  OrgActivity
+  OrgActivity,
+  OrgBranch
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -167,6 +168,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.branches,
     Element: OrgBranches,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Branches",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.branch(":id"),
+    Element: OrgBranch,
     isProtected: true,
     Layout: SettingsLayout,
     props: {

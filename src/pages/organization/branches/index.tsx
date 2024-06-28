@@ -2,12 +2,13 @@ import { OrgBranchesUI } from "modules";
 import { useCallback, useState } from "react";
 import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
-import { ConfirmationModal } from "components";
 import { PreventDeleteBranch } from "./preventDeleteBranch";
 import { DeleteBranch } from "./deleteBranch";
-import { previousDay } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 const OrgBranches = () => {
+  const navigate = useNavigate();
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, id: "" });
@@ -38,6 +39,10 @@ const OrgBranches = () => {
     setConfirm(false);
   };
 
+  const handleViewBranch = (id: string) => {
+    navigate(Routes.branch(id));
+  };
+
   return (
     <>
       <PreventDeleteBranch
@@ -54,9 +59,11 @@ const OrgBranches = () => {
         handleEditBranch={handleEditBranch}
         handleDeleteBranch={handleInitiateDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
+        handleViewBranch={handleViewBranch}
       />
     </>
   );
 };
 
 export { OrgBranches };
+export * from "./branch";

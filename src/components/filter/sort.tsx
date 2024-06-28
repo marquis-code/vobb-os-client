@@ -7,16 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  CaretSortIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  Cross1Icon,
-  DotsVerticalIcon,
-  MixIcon
-} from "@radix-ui/react-icons";
+import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "components";
 import { optionType } from "types";
 

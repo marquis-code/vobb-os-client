@@ -8,7 +8,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { TrashIcon, Pencil1Icon, StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import {
+  TrashIcon,
+  Pencil1Icon,
+  StarIcon,
+  StarFilledIcon,
+  EyeOpenIcon
+} from "@radix-ui/react-icons";
 
 // This type is used to define the shape of our data.
 export type BranchTableData = {
@@ -25,12 +31,14 @@ export interface BranchTableActions {
   handleEditBranch: (id: string) => void;
   handleDeleteBranch: (id: string, name: string) => void;
   handlePrimaryBranch: (id: string) => void;
+  handleViewBranch: (id: string) => void;
 }
 
 export const getBranchTableColumns = ({
   handleDeleteBranch,
   handleEditBranch,
-  handlePrimaryBranch
+  handlePrimaryBranch,
+  handleViewBranch
 }: BranchTableActions): ColumnDef<BranchTableData>[] => [
   {
     accessorKey: "name",
@@ -74,6 +82,9 @@ export const getBranchTableColumns = ({
       const primaryBranch = () => {
         handlePrimaryBranch(branchId);
       };
+      const viewBranch = () => {
+        handleViewBranch(branchId);
+      };
 
       return (
         <ActionColumn
@@ -81,13 +92,14 @@ export const getBranchTableColumns = ({
           primaryBranch={primaryBranch}
           editBranch={editBranch}
           deleteBranch={deleteBranch}
+          viewBranch={viewBranch}
         />
       );
     }
   }
 ];
 
-const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch }) => {
+const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch, viewBranch }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -105,6 +117,9 @@ const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch }) =>
         ) : (
           ""
         )}
+        <DropdownMenuItem onClick={viewBranch} className="gap-2 cursor-pointer">
+          <EyeOpenIcon /> View branch
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={editBranch} className="gap-2 cursor-pointer">
           <Pencil1Icon /> Edit branch
         </DropdownMenuItem>

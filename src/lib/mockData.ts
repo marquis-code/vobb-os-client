@@ -1,4 +1,9 @@
-import { AttributeTableData, BranchTableData } from "components";
+import {
+  AttributeTableData,
+  BranchMemberTableData,
+  BranchTableData,
+  BranchTeamTableData
+} from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
 import { DeviceData } from "modules/account/security/loginHistory";
 
@@ -385,5 +390,79 @@ export const AttributesTableMock: AttributeTableData[] = [
     required: true,
     isSystem: false,
     isActive: false
+  }
+];
+
+export const BranchMemberTableMock: BranchMemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Team lead",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Engineering", "Operations", "Support", "Tech"],
+    role: "Branch manager",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derulo",
+    email: "jason@gmail.com",
+    teams: ["Support"],
+    role: "Team manager",
+    date: "12/12/2023"
+  }
+];
+
+export const BranchTeamTableMock: BranchTeamTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Finance",
+    icon: "momey",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12
+  },
+  {
+    id: "728ed52f",
+    name: "Engineering",
+    icon: "tool",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12
+  },
+  {
+    id: "728ed52f",
+    name: "Support",
+    icon: "momey",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12
+  },
+  {
+    id: "728ed52f",
+    name: "Sales",
+    icon: "momey",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12
   }
 ];

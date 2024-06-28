@@ -2,7 +2,7 @@ import { FileIcon, ImageIcon, UploadIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
 import { ReactNode } from "react";
 import { optionType } from "types";
-import Select, { ActionMeta, MultiValue, SingleValue } from "react-select";
+import Select, { ActionMeta, CSSObjectWithLabel, MultiValue, SingleValue } from "react-select";
 
 interface SelectInputProps {
   options: optionType[] | undefined;
@@ -17,10 +17,11 @@ interface SelectInputProps {
   className?: string;
   icon?: ReactNode;
   required?: boolean;
+  styles?: CSSObjectWithLabel;
 }
 
 const SelectInput: React.FC<SelectInputProps> = (props) => {
-  const { label, validatorMessage, parentClassName, hint, icon, required } = props;
+  const { label, validatorMessage, parentClassName, hint, icon, required, styles } = props;
 
   return (
     <div className={cn("mb-4", parentClassName)}>
@@ -52,7 +53,8 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
               "&:hover": {
                 borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))"
               },
-              paddingLeft: icon ? "24px" : "0px"
+              paddingLeft: icon ? "24px" : "0px",
+              ...styles
             }),
             placeholder: (baseStyles) => ({
               ...baseStyles,

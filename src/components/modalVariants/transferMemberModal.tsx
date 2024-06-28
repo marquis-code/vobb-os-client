@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
-interface TransferTeamData {
+interface TransferMemberData {
   branch: optionType;
 }
 
@@ -18,23 +18,28 @@ const schema = yup.object({
   })
 });
 
-interface TransferTeamModalProps extends ModalProps {
+interface TransferMemberModalProps extends ModalProps {
   submit: (data) => void;
   multiple: boolean;
 }
 
-const TransferTeamModal: React.FC<TransferTeamModalProps> = ({ show, close, submit, multiple }) => {
+const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
+  show,
+  close,
+  submit,
+  multiple
+}) => {
   const {
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     watch,
     setValue,
     reset
-  } = useForm<TransferTeamData>({
+  } = useForm<TransferMemberData>({
     resolver: yupResolver(schema)
   });
 
-  const onSubmit: SubmitHandler<TransferTeamData> = (data) => {
+  const onSubmit: SubmitHandler<TransferMemberData> = (data) => {
     submit(data);
   };
 
@@ -42,13 +47,13 @@ const TransferTeamModal: React.FC<TransferTeamModalProps> = ({ show, close, subm
     <>
       <Modal show={show} close={close}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Transfer {multiple ? "Teams" : "Team"}</h2>
+          <h2 className="text-lg font-bold">Transfer {multiple ? "Members" : "Member"}</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"}>
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
         <p className="text-sm text-vobb-neutral-70 mb-4">
-          Select the branch you want to transfer the {multiple ? "teams" : "multiple"} to
+          Select the branch you want to transfer the {multiple ? "members" : "member"} to
         </p>
 
         <SelectInput
@@ -79,4 +84,4 @@ const TransferTeamModal: React.FC<TransferTeamModalProps> = ({ show, close, subm
   );
 };
 
-export { TransferTeamModal };
+export { TransferMemberModal };

@@ -11,7 +11,7 @@ interface BranchMemberData {
 }
 
 interface PreventDeleteBranchModalProps extends ModalProps {
-  handleContinue: (teamId?: string) => void;
+  handleContinue: (teamId?: string, memberIds?: string[]) => void;
   name: string;
 }
 

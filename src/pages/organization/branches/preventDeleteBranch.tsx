@@ -1,6 +1,6 @@
 import { PreventDeleteBranchModal } from "components";
 import { ModalProps } from "types";
-import { TransferTeam } from "./transferTeam";
+import { TransferMember } from "./transferMember";
 import { useState } from "react";
 
 interface Props extends ModalProps {
@@ -18,12 +18,12 @@ const PreventDeleteBranch: React.FC<Props> = ({
   handleOpen,
   handleDeleteBranch
 }) => {
-  const [transfer, setTransfer] = useState<{ show: boolean; teamId?: string }>({
+  const [transfer, setTransfer] = useState<{ show: boolean; memberIds?: string[] }>({
     show: false
   });
 
   const handleTransfer = () => {
-    transfer.teamId ? handleOpen() : handleDeleteBranch();
+    transfer.memberIds ? handleOpen() : handleDeleteBranch();
     setTransfer({ show: false });
   };
 
@@ -32,21 +32,21 @@ const PreventDeleteBranch: React.FC<Props> = ({
       <PreventDeleteBranchModal
         show={show}
         close={close}
-        handleContinue={(teamId) => {
-          setTransfer({ show: true, teamId });
+        handleContinue={(_, memberIds) => {
+          setTransfer({ show: true, memberIds });
           close();
         }}
         name={name}
       />
-      <TransferTeam
-        id={transfer.teamId ? transfer.teamId : id}
+      <TransferMember
+        id={transfer.memberIds ? transfer.memberIds : id}
         handleTransfer={handleTransfer}
         close={() => {
-          setTransfer({ show: false, teamId: "" });
+          setTransfer({ show: false, memberIds: [] });
           handleOpen();
         }}
         show={transfer.show}
-        type={transfer.teamId ? "team" : "branch"}
+        type={transfer.memberIds ? "member" : "branch"}
       />
     </>
   );

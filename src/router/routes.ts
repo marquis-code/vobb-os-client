@@ -34,6 +34,7 @@ export const Routes = {
   account_activity: "/settings/account-activity",
   organization: "/settings/organisation",
   branches: "/settings/branches",
+  branch: (id = ":id") => `/settings/branch/${id}`,
   bank_accounts: "/settings/bank-accounts",
   branding: "/settings/branding",
   communication: "/settings/communication",
