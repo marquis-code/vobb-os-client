@@ -131,7 +131,6 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = (props) => {
             "&:hover": {
               borderColor: state.isFocused ? "var(--neutral-100)" : "hsl(var(--input))"
             },
-            paddingTop: "2px"
           }),
           placeholder: (baseStyles) => ({
             ...baseStyles,
@@ -139,10 +138,6 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = (props) => {
           }),
           indicatorSeparator: () => ({
             display: "none"
-          }),
-          valueContainer: (base, props) => ({
-            ...base,
-            marginTop: "-2px"
           }),
           option: (base, state) => ({
             ...base,

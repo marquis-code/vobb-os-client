@@ -14,6 +14,8 @@ import {
 import { Button } from "components";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import { useUserContext } from "context";
+import { useFetchUser, useLogout } from "hooks";
 
 interface NavBarProps {
   sideBarWidth: string;
@@ -22,6 +24,9 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
+  const { userDetails } = useUserContext();
+  const { logout } = useLogout();
+
   return (
     <>
       <header
@@ -39,10 +44,12 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
         <div className="flex items-center gap-2 ml-auto">
           <UserAvatar />
           <div className="mr-1 text-left">
-            <p className="font-workSans font-bold mb-[2px] text-sm leading-4">First name</p>
-            <p className="text-[11px] text-vobb-neutral-60 leading-3">Role</p>
+            <p className="font-workSans font-bold mb-[2px] text-sm leading-4">
+              {userDetails?.firstName}
+            </p>
+            <p className="text-[11px] text-vobb-neutral-60 leading-3">{userDetails?.role}</p>
           </div>
-          <Menu />
+          <Menu logout={logout} />
         </div>
       </header>
     </>
@@ -50,20 +57,25 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
 };
 
 const UserAvatar = () => {
+  const { userDetails } = useUserContext();
   return (
     <Avatar className="w-8 h-8">
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage src={userDetails?.avatar} alt="profile picture" />
+      <AvatarFallback>
+        {userDetails?.firstName.charAt(0)}
+        {userDetails?.lastName.charAt(0)}
+      </AvatarFallback>
     </Avatar>
   );
 };
 
-const Menu = () => {
+const Menu = ({ logout }) => {
   const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="p-1">
+          <span className="sr-only">Open menu</span>
           <DotsVerticalIcon />
         </Button>
       </DropdownMenuTrigger>
@@ -71,7 +83,9 @@ const Menu = () => {
         <DropdownMenuLabel>Profile</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Organization Settings</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate(Routes.organization)}>
+            Organization Settings
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate(Routes.profile)}>
             Account Settings
             {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
@@ -93,7 +107,7 @@ const Menu = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>Support</DropdownMenuItem>
         {/* <DropdownMenuSeparator /> */}
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

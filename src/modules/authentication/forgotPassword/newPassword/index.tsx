@@ -25,9 +25,12 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, loading }) => {
       .required("Required")
       .min(8, "Password should be at least 8 characters long")
       .matches(/[A-Z]/, "Password should contain an uppercase character")
-      .matches(/[a-z]/, "Password should contain an lowercase character")
+      .matches(/[a-z]/, "Password should contain a lowercase character")
       .matches(/[0-9]/, "Password should contain at least one number")
-      .matches(/@|#|&|\$]/, "Password should contain at least special character (e.g. @, #, &, $)"),
+      .matches(
+        /[@#&$]/,
+        "Password should contain at least one special character (e.g. @, #, &, $)"
+      ),
     confirmPassword: yup
       .string()
       .required("Required")

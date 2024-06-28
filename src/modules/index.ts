@@ -4,3 +4,4 @@ export * from "./onboarding";
 export * from "./onboarding/completedOnboarding";
 export * from "./overview";
 export * from "./account";
+export * from "./organization"

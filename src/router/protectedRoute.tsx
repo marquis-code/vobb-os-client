@@ -1,4 +1,6 @@
-import React from "react";
+import { useFetchUser, useLogout } from "hooks";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * PROTECTED ROUTE COMPONENT
@@ -11,25 +13,27 @@ import React from "react";
  */
 
 const ProtectedRoute: React.FC<{ children: any }> = ({ children }) => {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const accessToken = localStorage.getItem("vobbOSAccess");
+  const { fetchUserDetails } = useFetchUser();
+  const navigate = useNavigate();
+  const { logout } = useLogout();
 
-  // const checkUser = () => {
-  //   if (!accessToken || accessToken === "undefined") {
-  //     setIsLoggedIn(false);
-  //     localStorage.clear();
-  //     return navigate(Routes.login);
-  //   }
-  //   setIsLoggedIn(true);
-  //   // Fetch user profile
-  // };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const accessToken = localStorage.getItem("vobbOSAccess");
 
-  // useEffect(() => {
-  //   checkUser();
-  // }, [isLoggedIn]);
+  const checkUser = () => {
+    if (!accessToken || accessToken === "undefined") {
+      setIsLoggedIn(false);
+      logout();
+    }
+    setIsLoggedIn(true);
+    fetchUserDetails();
+  };
 
-  // return <>{isLoggedIn ? children : null}</>;
-  return <>{children}</>;
+  useEffect(() => {
+    checkUser();
+  }, [isLoggedIn]);
+
+  return <>{isLoggedIn ? children : null}</>;
 };
 
 export { ProtectedRoute };

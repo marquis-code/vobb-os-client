@@ -3,19 +3,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { timeZoneOptions, initOptionType } from "lib/constants";
+import { timeZoneOptions, initOptionType } from "lib";
+import { useUserContext } from "context";
+import { useEffect } from "react";
 
-interface TimeZoneProps {
-  submit: () => void;
+export interface TimeZoneProps {
+  submit: (formData: FormData) => void;
+  loadingTimezone: boolean;
 }
 interface TimeZoneData {
   timeZone: optionType;
 }
-const initSysLang: TimeZoneData = {
-  timeZone: initOptionType
-};
 
-const TimeZone: React.FC<TimeZoneProps> = ({ submit }) => {
+const TimeZone: React.FC<TimeZoneProps> = ({ submit, loadingTimezone }) => {
+  const { userDetails } = useUserContext();
+
   const schema = yup.object().shape({
     timeZone: yup.object({
       label: yup.string().required("Required"),
@@ -24,12 +26,24 @@ const TimeZone: React.FC<TimeZoneProps> = ({ submit }) => {
   });
 
   const { handleSubmit, reset, watch, setValue } = useForm<TimeZoneData>({
-    resolver: yupResolver(schema),
-    defaultValues: initSysLang
+    resolver: yupResolver(schema)
   });
 
+  useEffect(() => {
+    if (userDetails) {
+      const timeZone = userDetails?.timezone
+        ? timeZoneOptions.find((item) => item.value === userDetails.timezone) || initOptionType
+        : initOptionType;
+      setValue("timeZone", timeZone);
+    }
+  }, [userDetails]);
+
   const onSubmit: SubmitHandler<TimeZoneData> = (data) => {
-    submit();
+    const formData = new FormData();
+    if (data.timeZone) {
+      formData.append("timezone", data.timeZone.value);
+    }
+    submit(formData);
   };
 
   const handleReset = (e) => {
@@ -47,7 +61,7 @@ const TimeZone: React.FC<TimeZoneProps> = ({ submit }) => {
         <form>
           <SelectInput
             options={timeZoneOptions}
-            value={watch("timeZone").value === "" ? null : watch("timeZone")}
+            value={watch("timeZone")?.value === "" ? null : watch("timeZone")}
             onChange={(val) => val && setValue("timeZone", val)}
             placeholder="Select a time zone"
           />
@@ -55,7 +69,11 @@ const TimeZone: React.FC<TimeZoneProps> = ({ submit }) => {
             <Button onClick={handleReset} variant={"outline"}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} variant={"fill"}>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              variant={"fill"}
+              loading={loadingTimezone}
+              disabled={loadingTimezone}>
               Save
             </Button>
           </div>

@@ -24,7 +24,7 @@ interface LoginData {
   recaptcha: string;
 }
 
-const initLogin: LoginData = {
+export const initLogin: LoginData = {
   email: "",
   password: "",
   rememberMe: false,

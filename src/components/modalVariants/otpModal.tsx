@@ -27,6 +27,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, l
         <form className="mb-16 flex justify-center align-center">
           <CustomInputOTP value={otp} onChange={setOTP} />
         </form>
+
         <div className="flex justify-end gap-2">
           <Button className="text-error-10" size={"default"} variant={"outline"}>
             Cancel
@@ -36,7 +37,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, l
             disabled={otp.length !== 6 || loading}
             size={"default"}
             variant={"fill"}
-            onClick={() => submit?.({ otp })}>
+            onClick={() => submit({ otp })}>
             Continue
           </Button>
         </div>

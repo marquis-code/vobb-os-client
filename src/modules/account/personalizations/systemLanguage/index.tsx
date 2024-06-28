@@ -3,19 +3,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { initOptionType, sysLangOptions } from "lib/constants";
+import { initOptionType, languagesOptions, sysLangOptions } from "lib";
+import { useUserContext } from "context";
+import { useEffect } from "react";
 
-interface SystemLanguageProps {
-  submit: () => void;
+export interface SystemLanguageProps {
+  submit: (formData: FormData) => void;
+  loadingSytemLang: boolean;
 }
 interface SystemLanguageData {
   language: optionType;
 }
-const initSysLang: SystemLanguageData = {
-  language: initOptionType
-};
 
-const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit }) => {
+const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLang }) => {
+  const { userDetails } = useUserContext();
   const schema = yup.object().shape({
     language: yup.object({
       label: yup.string().required("Required"),
@@ -24,12 +25,24 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit }) => {
   });
 
   const { handleSubmit, reset, watch, setValue } = useForm<SystemLanguageData>({
-    resolver: yupResolver(schema),
-    defaultValues: initSysLang
+    resolver: yupResolver(schema)
   });
 
+  useEffect(() => {
+    if (userDetails) {
+      const language = userDetails?.language
+        ? sysLangOptions.find((item) => item.value === userDetails.language) || initOptionType
+        : initOptionType;
+      setValue("language", language);
+    }
+  }, [userDetails]);
+
   const onSubmit: SubmitHandler<SystemLanguageData> = (data) => {
-    submit();
+    const formData = new FormData();
+    if (data.language) {
+      formData.append("language", data.language.value);
+    }
+    submit(formData);
   };
 
   const handleReset = (e) => {
@@ -46,16 +59,20 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit }) => {
         </div>
         <form>
           <SelectInput
-            options={sysLangOptions}
-            value={watch("language").value === "" ? null : watch("language")}
+            options={languagesOptions}
+            value={watch("language")?.value === "" ? null : watch("language")}
             onChange={(val) => val && setValue("language", val)}
             placeholder="Select a language"
           />
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
-            <Button onClick={handleReset} variant={"outline"}>
+            <Button onClick={handleReset} variant={"outline"} disabled={loadingSytemLang}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} variant={"fill"}>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              variant={"fill"}
+              disabled={loadingSytemLang}
+              loading={loadingSytemLang}>
               Save
             </Button>
           </div>

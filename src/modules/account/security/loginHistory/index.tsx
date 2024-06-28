@@ -1,32 +1,54 @@
 import { Button, Pagination } from "components";
+import { useUserContext } from "context";
 import { cn } from "lib";
-import { loginHistoryMock } from "lib/mockData";
+import { LoginHistoryDataProps, LoginHistoryDeviceProps } from "pages";
+import { BlacklistProps } from "types";
 
-interface LoginHistoryProps {}
+interface LoginHistoryProps {
+  loginHistoryData: LoginHistoryDataProps;
+  handleFetchLoginHistory: (page: number) => void;
+  handleBlacklist: (data: BlacklistProps) => void;
+}
 
-const LoginHistory: React.FC<LoginHistoryProps> = ({}) => {
+const LoginHistory: React.FC<LoginHistoryProps> = ({
+  loginHistoryData,
+  handleFetchLoginHistory,
+  handleBlacklist
+}) => {
+  const { loginHistory, historyMetaData } = loginHistoryData;
+  const { currentPage, totalCount, totalPages } = historyMetaData;
+  const handleChangePage = (page: number) => {
+    handleFetchLoginHistory(page);
+  };
+  const { userDetails } = useUserContext();
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 mb-12 max-w-[800px]">
         <div>
           <h2 className="text-[16px] font-semibold mb-2">Who logged in?</h2>
           <p className="text-xs">
-            We’ll alert you via <b>account@gmail.com</b> if there is any unusual activity on your
+            We’ll alert you via <b>{userDetails?.email}</b> if there is any unusual activity on your
             account
           </p>
         </div>
         <div className="">
-          {loginHistoryMock.map((item, index) => (
-            <Device key={index} device={item} myIP="192.168.0.180" />
-          ))}
+          {loginHistory &&
+            loginHistory?.map((item, index) => (
+              <Device
+                key={index}
+                device={item}
+                myIP={loginHistory[0]?.ipAddress}
+                handleBlacklist={handleBlacklist}
+              />
+            ))}
           <Pagination
             hidePageLimit
-            handleChange={console.log}
+            handleChange={handleChangePage}
             handlePageLimit={console.log}
-            totalCount={3}
-            pageLimit={3}
-            totalPages={1}
-            currentPage={1}
+            totalCount={totalCount}
+            pageLimit={8}
+            totalPages={totalPages}
+            currentPage={currentPage}
             className="mt-8"
           />
         </div>
@@ -35,21 +57,14 @@ const LoginHistory: React.FC<LoginHistoryProps> = ({}) => {
   );
 };
 
-export interface DeviceData {
-  location: string;
-  date: string;
-  time: string;
-  isActive: boolean;
-  ipAddress: string;
-}
-
 interface DeviceProps {
-  device: DeviceData;
+  device: LoginHistoryDeviceProps;
   myIP: string;
+  handleBlacklist: (data: BlacklistProps) => void;
 }
 
-const Device: React.FC<DeviceProps> = ({ device, myIP }) => {
-  const { time, location, isActive, date, ipAddress } = device;
+const Device: React.FC<DeviceProps> = ({ device, myIP, handleBlacklist }) => {
+  const { location, ipAddress, time, isBlacklisted } = device;
   return (
     <div className="flex items-center justify-between mb-4 pb-4 border-b border-vobb-neutral-20 text-sm">
       <div>
@@ -58,21 +73,21 @@ const Device: React.FC<DeviceProps> = ({ device, myIP }) => {
           <span
             className={cn(
               "text-xs px-2 py-1 rounded-full",
-              isActive ? "text-success-20 bg-success-0" : "text-error-20 bg-error-0"
+              !isBlacklisted ? "text-success-20 bg-success-0" : "text-error-20 bg-error-0"
             )}>
-            {isActive ? "Active" : "Blacklisted"}
+            {!isBlacklisted ? "Active" : "Blacklisted"}
           </span>
         </p>
         <p className="text-xs text-vobb-neutral-70">
-          {location} | {date} at {time}
+          {location} | {time}
         </p>
       </div>
       {myIP !== ipAddress ? (
         <Button
-          className={isActive ? "text-error-20" : "text-vobb-primary-70"}
+          className={!isBlacklisted ? "text-error-20" : "text-vobb-primary-70"}
           variant="ghost"
-          onClick={console.log}>
-          {isActive ? "Blacklist" : "Whitelist"}
+          onClick={() => handleBlacklist({ ipAddress, status: !isBlacklisted })}>
+          {!isBlacklisted ? "Blacklist" : "Whitelist"}
         </Button>
       ) : (
         ""

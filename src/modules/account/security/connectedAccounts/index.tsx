@@ -1,22 +1,20 @@
 import { GoogleLogoIcon } from "assets";
 import { Button, LearnMoreModal } from "components";
 import { Switch } from "components/ui/switch";
+import { useUserContext } from "context";
 import { useState } from "react";
 
 export interface ConnectedAccountsProps {
   handleGoogleAuth: (enable: boolean) => void;
-  enableGoogle: boolean;
 }
 
-const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({
-  handleGoogleAuth,
-  enableGoogle
-}) => {
+const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({ handleGoogleAuth }) => {
+  const { userDetails } = useUserContext();
   const [learn, setLearn] = useState(false);
 
   const learnMoreText1 = `By connecting your Google account, you'll enjoy a secure and hassle-free login process. No need to remember yet another username and password.`;
   const learnMoreText2 = `With Google's robust security measures, you can trust that your sensitive business data will be protected.`;
-
+  const enableGoogle = userDetails?.googleStatus;
   return (
     <>
       <LearnMoreModal

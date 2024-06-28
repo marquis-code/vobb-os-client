@@ -3,3 +3,4 @@ export * from "./errors";
 export * from "./onboarding";
 export * from "./overview";
 export * from "./account";
+export * from "./organization";
