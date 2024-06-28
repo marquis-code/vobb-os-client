@@ -7,6 +7,10 @@ import { useApiRequest } from "hooks";
 import { useCountriesContext, useUserContext } from "context";
 import { BranchesDataProps, OrganisationBranchesData } from "types";
 import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
+import { PreventDeleteBranch } from "./preventDeleteBranch";
+import { DeleteBranch } from "./deleteBranch";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 const initBranchData = {
   id: "",
   name: "",
@@ -41,13 +45,20 @@ const OrgBranches = () => {
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
+  const navigate = useNavigate();
+
+  const [deleteBranch, setDeleteBranch] = useState({ show: false, id: "", name: "" });
 
   const handleEditBranch = (branchData: OrganisationBranchesData) => {
     setEditBranch({ show: true, branchData });
   };
 
-  const handleDeleteBranch = (id: string) => {
+  const handleDeleteBranch = () => {
     setConfirm(true);
+  };
+
+  const handleInitiateDeleteBranch = (id: string, name: string) => {
+    setDeleteBranch({ id, name, show: true });
   };
 
   const handlePrimaryBranch = useCallback((id: string) => {
@@ -113,14 +124,17 @@ const OrgBranches = () => {
   useEffect(() => {
     fetchOrgBranches({ page, limit });
   }, [page, limit]);
+  const handleViewBranch = (id: string) => {
+    navigate(Routes.branch(id));
+  };
+
   return (
     <>
-      <ConfirmationModal
-        text={"Are you sure you want to delete xxx branch?"}
-        handleContinue={console.log}
-        close={handleCloseConfirmation}
-        show={confirm}
-        isDestructive
+      <PreventDeleteBranch
+        {...deleteBranch}
+        handleDeleteBranch={handleDeleteBranch}
+        close={() => setDeleteBranch((prev) => ({ ...prev, show: false }))}
+        handleOpen={() => setDeleteBranch((prev) => ({ ...prev, show: true }))}
       />
       <AddBranch
         show={addBranch}
@@ -132,16 +146,19 @@ const OrgBranches = () => {
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
         fetchOrgBranches={fetchOrgBranches}
       />
+      <DeleteBranch {...deleteBranch} close={handleCloseConfirmation} show={confirm} />
       <OrgBranchesUI
         handleAddBranch={handleAddBranch}
         handleEditBranch={handleEditBranch}
-        handleDeleteBranch={handleDeleteBranch}
+        handleDeleteBranch={handleInitiateDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
         setPage={setPage}
         setLimit={setLimit}
+        handleViewBranch={handleViewBranch}
       />
     </>
   );
 };
 
 export { OrgBranches };
+export * from "./branch";

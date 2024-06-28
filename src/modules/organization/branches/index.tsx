@@ -22,11 +22,18 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   handlePrimaryBranch,
   handleAddBranch,
   setPage,
-  setLimit
+  setLimit,
+  handleViewBranch
 }) => {
   const columns = useMemo(
-    () => getBranchTableColumns({ handleEditBranch, handleDeleteBranch, handlePrimaryBranch }),
-    [handleEditBranch, handleDeleteBranch, handlePrimaryBranch]
+    () =>
+      getBranchTableColumns({
+        handleEditBranch,
+        handleDeleteBranch,
+        handlePrimaryBranch,
+        handleViewBranch
+      }),
+    [handleEditBranch, handleDeleteBranch, handlePrimaryBranch, handleViewBranch]
   );
 
   const { orgBranches } = useUserContext();
@@ -69,3 +76,4 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
 };
 
 export { OrgBranchesUI };
+export * from "./branch";

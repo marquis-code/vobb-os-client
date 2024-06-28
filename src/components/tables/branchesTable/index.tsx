@@ -1,6 +1,5 @@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "components/ui/table";
-import { BranchTableActions } from "./columns";
 
 interface BranchesTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

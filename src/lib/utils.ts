@@ -21,3 +21,7 @@ export const arraysHaveSameElements = (arr1: string[], arr2: string[]): boolean 
 
   return true;
 };
+
+export const getOptionTypeValidationMsg = (error) => {
+  return error?.message ?? error?.value?.message?.toString() ?? error?.label?.message?.toString();
+};

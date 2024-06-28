@@ -8,21 +8,29 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { TrashIcon, Pencil1Icon, StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { OrganisationBranchesData } from "types";
+import {
+  TrashIcon,
+  Pencil1Icon,
+  StarIcon,
+  StarFilledIcon,
+  EyeOpenIcon
+} from "@radix-ui/react-icons";
 
 // This type is used to define the shape of our data.
 
 export interface BranchTableActions {
   handleEditBranch: (data: OrganisationBranchesData) => void;
-  handleDeleteBranch: (id: string) => void;
   handlePrimaryBranch: (id: string) => void;
+  handleDeleteBranch: (id: string, name: string) => void;
+  handleViewBranch: (id: string) => void;
 }
 
 export const getBranchTableColumns = ({
   handleDeleteBranch,
   handleEditBranch,
-  handlePrimaryBranch
+  handlePrimaryBranch,
+  handleViewBranch
 }: BranchTableActions): ColumnDef<OrganisationBranchesData>[] => [
   {
     accessorKey: "name",
@@ -62,10 +70,13 @@ export const getBranchTableColumns = ({
         handleEditBranch(branchData);
       };
       const deleteBranch = () => {
-        handleDeleteBranch(branchId);
+        handleDeleteBranch(branchId, name);
       };
       const primaryBranch = () => {
         handlePrimaryBranch(branchId);
+      };
+      const viewBranch = () => {
+        handleViewBranch(branchId);
       };
 
       return (
@@ -74,13 +85,14 @@ export const getBranchTableColumns = ({
           primaryBranch={primaryBranch}
           editBranch={editBranch}
           deleteBranch={deleteBranch}
+          viewBranch={viewBranch}
         />
       );
     }
   }
 ];
 
-const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch }) => {
+const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch, viewBranch }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -98,12 +110,19 @@ const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch }) =>
         ) : (
           ""
         )}
+        <DropdownMenuItem onClick={viewBranch} className="gap-2 cursor-pointer">
+          <EyeOpenIcon /> View branch
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={editBranch} className="gap-2 cursor-pointer">
           <Pencil1Icon /> Edit branch
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={deleteBranch} className="gap-2 cursor-pointer">
-          <TrashIcon /> Delete branch
-        </DropdownMenuItem>
+        {!isPrimary ? (
+          <DropdownMenuItem onClick={deleteBranch} className="gap-2 cursor-pointer">
+            <TrashIcon /> Delete branch
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
