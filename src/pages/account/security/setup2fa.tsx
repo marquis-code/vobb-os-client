@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { ModalProps } from "types/interfaces";
 
 const Setup2FA: React.FC<ModalProps> = ({ show, close }) => {
-  const { run, data: response, error } = useApiRequest({});
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const { fetchUserDetails } = useFetchUser();
   const { userDetails } = useUserContext();
 
@@ -36,6 +36,7 @@ const Setup2FA: React.FC<ModalProps> = ({ show, close }) => {
         show={show}
         close={close}
         submit={handleSubmit}
+        loading={requestStatus.isPending}
       />
     </>
   );

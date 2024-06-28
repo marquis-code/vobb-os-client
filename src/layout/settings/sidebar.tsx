@@ -1,4 +1,3 @@
-import logo from "../../assets/vectors/illustrations/logoIcon.svg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +8,7 @@ import {
 } from "components/ui/dropdown-menu";
 import {
   AllSidesIcon,
-  ArrowLeftIcon,
   BackpackIcon,
-  BadgeIcon,
   BellIcon,
   CardStackIcon,
   ChevronDownIcon,
@@ -20,7 +17,6 @@ import {
   FileTextIcon,
   GridIcon,
   HomeIcon,
-  IdCardIcon,
   LockClosedIcon,
   MagicWandIcon,
   MoveIcon,
@@ -29,8 +25,6 @@ import {
   PlusCircledIcon,
   TimerIcon
 } from "@radix-ui/react-icons";
-import { useState } from "react";
-import { ChevronLeftDoubleIcon, MailIcon } from "assets";
 import { Button } from "components";
 import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "router";

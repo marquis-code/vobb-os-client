@@ -5,9 +5,12 @@ SETTINGS SERVICES
 */
 
 import {
+  addNewOrgBranchURL,
   blacklistIpAddressURL,
   changePasswordProfileURL,
   fetchLoginHistoryURL,
+  fetchOrgBranchesURL,
+  fetchOrgDetailsURL,
   getRequest,
   patchRequest,
   personalAccountDetailsURL,
@@ -16,9 +19,18 @@ import {
   personalEmailUpdateURL,
   personalEmailUpdateVerifyURL,
   postRequest,
+  putRequest,
+  resendCodeOrgEmailsURL,
   send2faCodeURL,
   toggle2faStatusURL,
-  toggleGoogleAuthURL
+  toggleGoogleAuthURL,
+  updateOrgBranchURL,
+  updateOrgBrandingURL,
+  updateOrgEmailsURL,
+  updateOrgNumbersURL,
+  updateOrgProfileURL,
+  updateOrgSusNotifyURL,
+  verifyOrgEmailsURL
 } from "api";
 
 interface changePasswordRequestBody {
@@ -31,6 +43,41 @@ interface blacklistRequestBody {
   ip: string;
   blacklist_status: boolean;
 }
+
+interface updateOrgEmailsRequestBody {
+  email: string;
+  action: "primary" | "support";
+}
+
+interface verifyOrgEmailsRequestBody {
+  token: string;
+  action: "primary" | "support";
+}
+
+interface updateOrgNumbersRequestBody {
+  number: string;
+  action: "primary" | "support";
+}
+
+interface updateBrandingRequestBody {
+  primary_color: string;
+  secondary_color: string;
+}
+
+export interface organisationBranchRequestBody {
+  name: string;
+  country: string;
+  zip_code: string;
+  state: string;
+  address_line_1: string;
+  address_line_2?: string;
+  city: string;
+  timezone: string;
+}
+interface addNewBranchRequestBody {
+  branches: [organisationBranchRequestBody];
+}
+
 /*
 PERSONAL PROFILE SERVICES
 */
@@ -87,7 +134,7 @@ export const personalEmailResendVerifyService = () => {
 export const personalEmailUpdateVerifyService = (data: { otp: string }) => {
   return patchRequest({
     url: personalEmailUpdateVerifyURL(),
-    data: data
+    data
   });
 };
 
@@ -103,7 +150,7 @@ SECURITY SERVICES
 export const changePasswordProfileService = (data: changePasswordRequestBody) => {
   return patchRequest({
     url: changePasswordProfileURL(),
-    data: data
+    data
   });
 };
 
@@ -115,7 +162,7 @@ export const changePasswordProfileService = (data: changePasswordRequestBody) =>
 export const send2faCodeService = (data: { enable2FA: Boolean }) => {
   return postRequest({
     url: send2faCodeURL(),
-    data: data
+    data
   });
 };
 
@@ -127,7 +174,7 @@ export const send2faCodeService = (data: { enable2FA: Boolean }) => {
 export const toggle2faStusService = (data: { otp: string }) => {
   return patchRequest({
     url: toggle2faStatusURL(),
-    data: data
+    data
   });
 };
 
@@ -151,7 +198,7 @@ export const fetchLoginHistoryService = ({ page, limit }) => {
 export const toggleGoogleAuthService = (data: { login_with_google: Boolean }) => {
   return patchRequest({
     url: toggleGoogleAuthURL(),
-    data: data
+    data
   });
 };
 
@@ -163,6 +210,158 @@ export const toggleGoogleAuthService = (data: { login_with_google: Boolean }) =>
 export const blacklistIpAddressService = (data: blacklistRequestBody) => {
   return patchRequest({
     url: blacklistIpAddressURL(),
-    data: data
+    data
+  });
+};
+
+/*
+ORGANIZATION SERVICES
+*/
+
+/**
+ * Fetch org details service
+ * @returns axios promise
+ */
+export const fetchOrgDetailsService = () => {
+  return getRequest({
+    url: fetchOrgDetailsURL()
+  });
+};
+
+/**
+ * Update organization profile service
+ * @param formData containing update info
+ * @returns axios promise
+ */
+export const updateOrgProfileService = (data: FormData) => {
+  return putRequest({
+    url: updateOrgProfileURL(),
+    data
+  });
+};
+
+/**
+ * Update org emails service
+ * @param data containing email update, string and action indicating primary or support
+ * @returns axios promise
+ */
+export const updateOrgEmailsService = (data: updateOrgEmailsRequestBody) => {
+  return patchRequest({
+    url: updateOrgEmailsURL(),
+    data
+  });
+};
+
+/**
+ * REsend verification code for org emails service
+ * @returns axios promise
+ */
+export const resendCodeOrgEmailsService = (data: { action: "primary" | "support" }) => {
+  return patchRequest({
+    url: resendCodeOrgEmailsURL(),
+    data
+  });
+};
+
+/**
+ * Verify org emails service
+ * @returns axios promise
+ */
+export const verifyOrgEmailsService = (data: verifyOrgEmailsRequestBody) => {
+  return patchRequest({
+    url: verifyOrgEmailsURL(),
+    data
+  });
+};
+
+/**
+ * Update org numbers service
+ * @returns axios promise
+ */
+export const updateOrgNumbersService = (data: updateOrgNumbersRequestBody) => {
+  return patchRequest({
+    url: updateOrgNumbersURL(),
+    data
+  });
+};
+
+/**
+ * Update org branding service
+ * @returns axios promise
+ */
+export const updateOrgBrandingService = (data: updateBrandingRequestBody) => {
+  return patchRequest({
+    url: updateOrgBrandingURL(),
+    data
+  });
+};
+
+/**
+ * Update temporary suspension service
+ * @returns axios promise
+ */
+export const updateTempSusNotifyService = (data: { temporary_suspension_notify: boolean }) => {
+  return patchRequest({
+    url: updateOrgSusNotifyURL(),
+    data
+  });
+};
+
+/**
+ * Update indefinite suspension service
+ * @returns axios promise
+ */
+export const updateIndefSusNotifyService = (data: { indefinite_suspension_notify: boolean }) => {
+  return patchRequest({
+    url: updateOrgSusNotifyURL(),
+    data
+  });
+};
+
+/**
+ * Fetch organisation's branches service
+ * @param page showing page number requested,
+ * @param limit showing number of items per page
+ * @returns axios promise
+ */
+export const fetchOrgBranchesService = ({ page, limit }) => {
+  return getRequest({
+    url: fetchOrgBranchesURL({ page, limit })
+  });
+};
+
+/**
+ * Add a new organisation's branch service
+ * @param branches array of properties for the branch
+ * @returns axios promise
+ */
+export const addNewOrgBranchService = (data: addNewBranchRequestBody) => {
+  return postRequest({
+    url: addNewOrgBranchURL(),
+    data
+  });
+};
+
+/**
+ * Update an organisation's branch service
+ * @param id of organisation's branch
+ * @param updateData branch's details to be changed.
+ * @returns axios promise
+ */
+export const updateOrgBranchService = (id: string, updateData: organisationBranchRequestBody) => {
+  return putRequest({
+    url: updateOrgBranchURL(id),
+    data: updateData
+  });
+};
+
+/**
+ * Mark branch as primary service
+ * @param id of organisation's branch
+ * @returns axios promise
+ */
+export const markBranchAsPrimaryService = (id: string) => {
+  return patchRequest({
+    url: updateOrgBranchURL(id)
   });
 };

@@ -1,26 +1,58 @@
 import { Button, SettingsPageTitle } from "components";
 import { Switch } from "components/ui/switch";
-import { useState } from "react";
+import { useUserContext } from "context";
+import { ReactNode, useState } from "react";
+import { TemporarySuspensionPreview } from "./previews/TemporarySuspensionPreview";
+import { IndefiniteSuspensionPreview } from "./previews/IndefiniteSuspensionPreview";
 
 interface NoticeData {
   title: string;
   isEnabled: boolean;
   key: string;
+  preview: ReactNode;
+  loading: boolean;
+  onCheckedChange: () => void;
 }
 
-const OrgCommunicationUI = () => {
+interface OrgCommProps {
+  submitTempSuspend: {
+    loadingTemp: boolean;
+    handleTempSuspend: ({ suspend }) => void;
+  };
+  submitIndefiniteSuspend: {
+    loadingIndef: boolean;
+    handleIndefSuspend: ({ suspend }) => void;
+  };
+}
+
+const OrgCommunicationUI: React.FC<OrgCommProps> = ({
+  submitTempSuspend,
+  submitIndefiniteSuspend
+}) => {
+  const { loadingTemp, handleTempSuspend } = submitTempSuspend;
+  const { loadingIndef, handleIndefSuspend } = submitIndefiniteSuspend;
+
+  const { orgDetails } = useUserContext();
   const [preview, setPreview] = useState<string | undefined>();
 
   const notices: NoticeData[] = [
     {
       title: "Temporary suspension notice",
-      isEnabled: true,
-      key: "temporary-suspension"
+      isEnabled: orgDetails?.tempSuspensionNotice ?? false,
+      key: "temporary-suspension",
+      preview: <TemporarySuspensionPreview />,
+      loading: loadingTemp,
+      onCheckedChange: () => handleTempSuspend({ suspend: !orgDetails?.tempSuspensionNotice })
     },
     {
       title: "Deactivation notice",
-      isEnabled: false,
-      key: "deactivation"
+      isEnabled: orgDetails?.indefiniteSuspensionNotice ?? false,
+      key: "deactivation",
+      preview: <IndefiniteSuspensionPreview />,
+      loading: loadingIndef,
+
+      onCheckedChange: () =>
+        handleIndefSuspend({ suspend: !orgDetails?.indefiniteSuspensionNotice })
     }
   ];
 
@@ -33,7 +65,7 @@ const OrgCommunicationUI = () => {
       />
       <section className="grid grid-cols-[1.5fr,2fr] gap-8 pt-4">
         <div className="flex flex-col gap-3 items-start ">
-          {notices.map(({ title, isEnabled, key }) => (
+          {notices.map(({ title, isEnabled, onCheckedChange, key, loading }) => (
             <div key={key} className="flex items-center justify-between gap-4 w-full">
               <p>{title}</p>
               <span className="flex items-center gap-4">
@@ -44,15 +76,14 @@ const OrgCommunicationUI = () => {
                   onClick={() => setPreview(key)}>
                   Preview mail
                 </Button>
-                <Switch checked={isEnabled} onCheckedChange={console.log} />
+                <Switch checked={isEnabled} onCheckedChange={onCheckedChange} disabled={loading} />
               </span>
             </div>
           ))}
         </div>
-        <div
-          //   style={{ background: "#fff", border: "4px solid", borderColor: "#000" }}
-          className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20">
-          {preview ?? "No notice selected for preview"}
+        <div className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20">
+          {notices.find((notice) => notice.key === preview)?.preview ||
+            "No notice selected for preview"}
         </div>
       </section>
     </>

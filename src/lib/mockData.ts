@@ -1,9 +1,5 @@
-import {
-  AttributeTableData,
-  BranchMemberTableData,
-  BranchTableData,
-  BranchTeamTableData
-} from "components";
+import { optionType, formFieldData } from "types";
+import { AttributeTableData, BranchMemberTableData, BranchTeamTableData } from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
 
 export const loginHistoryMock = [
@@ -30,7 +26,7 @@ export const loginHistoryMock = [
   }
 ];
 
-export const BranchTableMock: BranchTableData[] = [
+export const BranchTableMock = [
   {
     id: "728ed52f",
     name: "Headquarters",
@@ -48,6 +44,87 @@ export const BranchTableMock: BranchTableData[] = [
     city: "Toronto",
     timeZone: "GMT -6",
     isPrimary: false
+  }
+];
+const mockOptions: optionType[] = [
+  { value: "option1", label: "Option 1" },
+  { value: "option2", label: "Option 2" }
+];
+
+export const MockDynamicData: formFieldData[] = [
+  {
+    shortText: {
+      value: "John Doe",
+      type: "short_text"
+    }
+  },
+  {
+    longText: {
+      value: "This is a long text field example.",
+      word_limit: 100,
+      type: "long_text"
+    }
+  },
+  {
+    number: {
+      value: 30,
+      type: "number"
+    }
+  },
+  {
+    email: {
+      value: "johndoe@example.com",
+      type: "email"
+    }
+  },
+  {
+    phoneNumber: {
+      value: "+2347045678906",
+      type: "phone_number"
+    }
+  },
+  {
+    country: {
+      value: mockOptions[0],
+      options: mockOptions,
+      type: "country"
+    }
+  },
+  {
+    multipleChoice: {
+      value: [mockOptions[0]],
+      options: mockOptions,
+      type: "multiple_choice"
+    }
+  },
+  {
+    checkbox: {
+      value: [mockOptions[0]],
+      options: mockOptions,
+      type: "checkbox"
+    }
+  },
+  {
+    dropdown: {
+      value: mockOptions[0],
+      options: mockOptions,
+      type: "dropdown"
+    }
+  },
+  {
+    file: {
+      value: new File([""], "example.png"),
+      fileType: ["image", "pdf"],
+      maxSize: 5 * 1024 * 1024,
+      type: "file"
+    }
+  },
+  {
+    date: {
+      value: new Date(),
+      dateFormat: "DD/MM/YYYY",
+      type: "date"
+    }
   }
 ];
 
