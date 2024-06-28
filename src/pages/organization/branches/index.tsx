@@ -29,7 +29,8 @@ const defaultBranchesData: BranchesDataProps = {
   branchesMetaData: {
     currentPage: 1,
     totalCount: 0,
-    totalPages: 0
+    totalPages: 0,
+    pageLimit: 0
   }
 };
 const OrgBranches = () => {
@@ -112,7 +113,8 @@ const OrgBranches = () => {
       const branchesMetaData = {
         currentPage: fetchResponse?.data?.data?.page ?? 1,
         totalPages: fetchResponse?.data?.data?.total_pages,
-        totalCount: fetchResponse?.data?.data?.total_count
+        totalCount: fetchResponse?.data?.data?.total_count,
+        pageLimit: limit
       };
       handleUpdateBranches({ branchesArray, branchesMetaData });
       return { branchesArray, branchesMetaData };
@@ -152,6 +154,7 @@ const OrgBranches = () => {
         handleEditBranch={handleEditBranch}
         handleDeleteBranch={handleInitiateDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
+        limit={limit}
         setPage={setPage}
         setLimit={setLimit}
         handleViewBranch={handleViewBranch}

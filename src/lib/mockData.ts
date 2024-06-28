@@ -1,10 +1,5 @@
 import { optionType, formFieldData } from "types";
-import {
-  AttributeTableData,
-  BranchMemberTableData,
-  BranchTableData,
-  BranchTeamTableData
-} from "components";
+import { AttributeTableData, BranchMemberTableData, BranchTeamTableData } from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
 
 export const loginHistoryMock = [

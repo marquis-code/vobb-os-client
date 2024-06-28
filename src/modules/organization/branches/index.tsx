@@ -14,6 +14,7 @@ interface OrgBranchesUIProps extends BranchTableActions {
   handleAddBranch: () => void;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
+  limit: number;
 }
 
 const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
@@ -23,6 +24,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   handleAddBranch,
   setPage,
   setLimit,
+  limit,
   handleViewBranch
 }) => {
   const columns = useMemo(
@@ -65,7 +67,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
           handleChange={handleChangePage}
           handlePageLimit={handlePageLimit}
           totalCount={totalCount}
-          pageLimit={totalCount}
+          pageLimit={limit}
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-4"

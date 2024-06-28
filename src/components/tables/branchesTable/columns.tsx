@@ -70,7 +70,7 @@ export const getBranchTableColumns = ({
         handleEditBranch(branchData);
       };
       const deleteBranch = () => {
-        handleDeleteBranch(branchId, name);
+        handleDeleteBranch(branchId, row.original.name);
       };
       const primaryBranch = () => {
         handlePrimaryBranch(branchId);

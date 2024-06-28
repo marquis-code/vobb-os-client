@@ -13,10 +13,11 @@ interface Props extends ModalProps {
 const EditBranch: React.FC<Props> = ({ show, close, branchData, fetchOrgBranches }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
   const { orgBranches } = useUserContext();
-  const { currentPage, totalCount } = orgBranches?.branchesMetaData || {
+  const { currentPage, pageLimit } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
-    totalPages: 0
+    totalPages: 0,
+    pageLimit: 0
   };
 
   const submit = (data: organisationBranchRequestBody) => {
@@ -29,7 +30,7 @@ const EditBranch: React.FC<Props> = ({ show, close, branchData, fetchOrgBranches
         description: response?.data?.message
       });
       close();
-      fetchOrgBranches({ page: currentPage, limit: totalCount });
+      fetchOrgBranches({ page: currentPage, limit: pageLimit });
     } else if (error) {
       toast({
         variant: "destructive",

@@ -68,10 +68,17 @@ export const dynamicValidationSchema = (field: formFieldData) => {
         value: isRequired.concat(yup.string())
       });
     case "checkbox":
-      return yup
-        .array()
-        .of(isRequired.concat(yup.string()))
-        .min(1, "At least one option is required");
+      return yup.object().shape({
+        checkboxField: yup
+          .array()
+          .of(yup.string())
+          .when("$isRequired", {
+            //@ts-ignore
+            is: true,
+            then: yup.array().min(1, "At least one option is required"),
+            otherwise: yup.array()
+          })
+      });
     case "dropdown":
       return isRequired.concat(yup.string());
     case "file":

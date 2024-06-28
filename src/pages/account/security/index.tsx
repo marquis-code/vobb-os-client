@@ -31,7 +31,8 @@ const defaultLoginHistoryData: LoginHistoryDataProps = {
   metaData: {
     currentPage: 1,
     totalCount: 0,
-    totalPages: 0
+    totalPages: 0,
+    pageLimit: 0
   }
 };
 
@@ -66,6 +67,7 @@ const AccountSecurity = () => {
   } = useApiRequest({});
 
   const { run: runBlacklist, data: blacklistResponse, error: blacklistError } = useApiRequest({});
+  const [limit, setLimit] = useState(8);
 
   const handlePasswordChange = (data: ChangePasswordData) => {
     runPassword(
@@ -133,7 +135,8 @@ const AccountSecurity = () => {
       const metaData = {
         currentPage: historyResponse?.data?.data?.page ?? 1,
         totalPages: historyResponse?.data?.data?.total_pages,
-        totalCount: historyResponse?.data?.data?.total_count
+        totalCount: historyResponse?.data?.data?.total_count,
+        pageLimit: limit
       };
       return { loginHistory, metaData };
     }
