@@ -26,7 +26,8 @@ import {
   MoveIcon,
   PaperPlaneIcon,
   PersonIcon,
-  PlusCircledIcon
+  PlusCircledIcon,
+  TimerIcon
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { ChevronLeftDoubleIcon, MailIcon } from "assets";
@@ -67,6 +68,12 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       icon: <BellIcon width={14} height={14} color="#101323" />,
       path: Routes.profile,
       value: "notifications"
+    },
+    {
+      title: "Account Activity",
+      icon: <TimerIcon width={14} height={14} color="#101323" />,
+      path: Routes.account_activity,
+      value: "Account activity"
     }
   ];
 
@@ -110,8 +117,8 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Attributes",
       icon: <MagicWandIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "notifications"
+      path: Routes.attributes,
+      value: "attributes"
     },
     {
       title: "Integrations",
@@ -124,6 +131,12 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       icon: <AllSidesIcon width={14} height={14} color="#101323" />,
       path: Routes.profile,
       value: "migration"
+    },
+    {
+      title: "Organization Activity",
+      icon: <TimerIcon width={14} height={14} color="#101323" />,
+      path: Routes.organization_activity,
+      value: "organization activity"
     }
   ];
 

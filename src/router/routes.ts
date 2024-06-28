@@ -31,8 +31,10 @@ export const Routes = {
   security: "/settings/security",
   personalizations: "/settings/personalizations",
   notifications: "/settings/notifications",
+  account_activity: "/settings/account-activity",
   organization: "/settings/organisation",
   branches: "/settings/branches",
+  branch: (id = ":id") => `/settings/branch/${id}`,
   bank_accounts: "/settings/bank-accounts",
   branding: "/settings/branding",
   communication: "/settings/communication",
@@ -42,4 +44,8 @@ export const Routes = {
   migration: "/settings/migration",
   reports: "/settings/reports",
   workflows: "/settings/workflows",
+  organization_activity: "/settings/organization-activity",
+
+  // Team
+  team: (id = ":id") => `/teams/${id}`
 };
