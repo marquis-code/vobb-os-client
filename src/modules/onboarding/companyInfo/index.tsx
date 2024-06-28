@@ -54,7 +54,7 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Company information
           </h1>
-          <p data-cy="subtitle">Neque porro quisquam est, qui dolorem ipsu.</p>
+          <p data-cy="subtitle">Enter your company details.</p>
         </div>
       </div>
       <div>

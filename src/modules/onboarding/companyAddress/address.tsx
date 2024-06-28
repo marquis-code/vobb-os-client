@@ -34,7 +34,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="addressLine1"
         register={register}
         validatorMessage={errors.addressLine1?.message}
-        data-cy="address-input"
+        data-cy="address-input1"
       />
       <CustomInput
         type="text"
@@ -42,7 +42,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="addressLine2"
         register={register}
         validatorMessage={errors.addressLine2?.message}
-        data-cy="address-input"
+        data-cy="address-input2"
       />
       <CustomInput
         type="text"
@@ -50,7 +50,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="city"
         register={register}
         validatorMessage={errors.city?.message}
-        data-cy="address-input"
+        data-cy="address-input3"
       />
       <Button
         onClick={handleSubmit(onSubmit)}

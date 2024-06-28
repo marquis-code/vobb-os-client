@@ -49,14 +49,14 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Company Website
           </h1>
-          <p data-cy="subtitle">Neque porro quisquam est, qui dolorem ipsu.</p>
+          <p data-cy="subtitle">Enter the website url of your organisation</p>
         </div>
       </div>
       <form>
         <CustomInput
           type="text"
           name="website"
-          placeholder="travelspace.ng"
+          placeholder="https://travelspace.ng"
           register={register}
           validatorMessage={errors.website?.message}
           data-cy="website-input"

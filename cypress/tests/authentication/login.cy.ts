@@ -1,3 +1,4 @@
+//@ts-nocheck
 describe("Login page", () => {
   beforeEach(() => {
     cy.visit("/login");

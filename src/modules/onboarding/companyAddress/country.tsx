@@ -47,7 +47,6 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
     <form>
       <SelectInput
         name="country"
-        label="Select Country"
         placeholder="Select country"
         options={newCountryArray}
         onChange={(value) => value && setValue("country", value)}
@@ -57,6 +56,7 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
           errors.country?.value?.message ??
           errors.country?.label?.message
         }
+        data-cy="country"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
