@@ -71,8 +71,22 @@ export interface OrganisationBranchesData {
   city: string;
   timeZone: string;
 }
-
+export interface OrganisationAttributesData {
+  id: string;
+  title: string;
+  type: string;
+  required: boolean;
+  isSystem: boolean;
+  isActive: boolean;
+  description?: string;
+  metaData?: string[];
+}
 export interface BranchesDataProps {
   branchesArray: OrganisationBranchesData[];
   branchesMetaData: MetaDataProps;
+}
+
+export interface AttributesDataProps {
+  attributesArray: OrganisationAttributesData[];
+  attributesMetaData: MetaDataProps;
 }

@@ -426,47 +426,47 @@ export const AttributesTableMock: AttributeTableData[] = [
     required: true,
     isSystem: true,
     isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Date of birth",
-    type: "date",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "City",
-    type: "dropdown",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Language",
-    type: "multiple-choice",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Remote",
-    type: "checkbox",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Start date",
-    type: "date",
-    required: true,
-    isSystem: false,
-    isActive: false
   }
+  // {
+  //   id: "728ed52f",
+  //   title: "Date of birth",
+  //   type: "date",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "City",
+  //   type: "dropdown",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "Language",
+  //   type: "multiple-choice",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "Remote",
+  //   type: "checkbox",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "Start date",
+  //   type: "date",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: false
+  // }
 ];
 
 export const BranchMemberTableMock: BranchMemberTableData[] = [

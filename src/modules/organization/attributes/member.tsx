@@ -6,11 +6,14 @@ import {
   getAttributeTableColumns,
   Pagination
 } from "components";
-import { AttributesTableMock } from "lib";
+import { useUserContext } from "context";
 import { useMemo } from "react";
 
 interface MemberAttributesProps extends AttributeTableActions {
   handleAddAttribute: () => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
+  limit: number;
 }
 
 const MemberAttributes: React.FC<MemberAttributesProps> = ({
@@ -18,7 +21,10 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
   handleEditAttribute,
   handleDuplicateAttribute,
   handleRestoreAttribute,
-  handleArchiveAttribute
+  handleArchiveAttribute,
+  limit,
+  setLimit,
+  setPage
 }) => {
   const columns = useMemo(
     () =>
@@ -30,6 +36,14 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
       }),
     [handleEditAttribute, handleDuplicateAttribute, handleRestoreAttribute, handleArchiveAttribute]
   );
+  const { orgAttributes } = useUserContext();
+  const tableData = orgAttributes?.attributesArray || [];
+  const metaData = orgAttributes?.attributesMetaData || {
+    currentPage: 1,
+    pageLimit: 0,
+    totalCount: 0,
+    totalPages: 0
+  };
   return (
     <>
       <section className="pb-8 mb-12 max-w-[800px]">
@@ -39,14 +53,14 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
           variant={"fill"}>
           <MixIcon /> New member attribute
         </Button>
-        <AttributesTable columns={columns} data={AttributesTableMock} />
+        <AttributesTable columns={columns} data={tableData} />
         <Pagination
-          handleChange={console.log}
-          handlePageLimit={console.log}
-          totalCount={3}
-          pageLimit={3}
-          totalPages={1}
-          currentPage={1}
+          handleChange={setPage}
+          handlePageLimit={setLimit}
+          totalCount={metaData.totalCount}
+          pageLimit={limit}
+          totalPages={metaData.totalPages}
+          currentPage={metaData.currentPage}
           className="mt-4"
         />
       </section>

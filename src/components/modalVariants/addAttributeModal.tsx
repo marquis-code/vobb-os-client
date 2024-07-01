@@ -11,7 +11,7 @@ import { Switch } from "components/ui/switch";
 import { getOptionTypeValidationMsg } from "lib";
 import { useState } from "react";
 
-interface AddBranchData {
+export interface AddAttributesData {
   title: string;
   type: optionType;
   description?: string;
@@ -76,6 +76,7 @@ const schema = yup.object({
 
 interface AddAttributeModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
 }
 
 const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, submit }) => {
@@ -86,11 +87,11 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
     formState: { errors },
     watch,
     setValue
-  } = useForm<AddBranchData>({
+  } = useForm<AddAttributesData>({
     resolver: yupResolver(schema)
   });
 
-  const onSubmit: SubmitHandler<AddBranchData> = (data) => {
+  const onSubmit: SubmitHandler<AddAttributesData> = (data) => {
     submit(data);
   };
 

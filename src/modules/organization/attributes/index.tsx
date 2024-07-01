@@ -5,8 +5,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
+  limit: number;
 }
-const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }) => {
+const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
+  handleAddMemberAttr,
+  setPage,
+  setLimit,
+  limit
+}) => {
   return (
     <>
       <SettingsPageTitle
@@ -34,6 +42,9 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }
             handleDuplicateAttribute={console.log}
             handleRestoreAttribute={console.log}
             handleArchiveAttribute={console.log}
+            limit={limit}
+            setPage={setPage}
+            setLimit={setLimit}
           />
         </TabsContent>
         <TabsContent value="client">

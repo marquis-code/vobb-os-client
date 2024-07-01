@@ -34,8 +34,11 @@ const defaultBranchesData: BranchesDataProps = {
   }
 };
 const OrgBranches = () => {
+  const navigate = useNavigate();
   const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
-  const { orgBranches } = useUserContext();
+  const { run: runFetchBranches, data: fetchResponse, error: fetchError } = useApiRequest({});
+  const { countries } = useCountriesContext();
+  const { orgBranches, handleUpdateBranches } = useUserContext();
   const { currentPage } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
@@ -46,7 +49,6 @@ const OrgBranches = () => {
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
-  const navigate = useNavigate();
 
   const [deleteBranch, setDeleteBranch] = useState({ show: false, id: "", name: "" });
 
@@ -88,10 +90,6 @@ const OrgBranches = () => {
     }
   }, [primaryResponse, primaryError]);
 
-  const { run: runFetchBranches, data: fetchResponse, error: fetchError } = useApiRequest({});
-  const { countries } = useCountriesContext();
-  const { handleUpdateBranches } = useUserContext();
-
   const fetchOrgBranches = ({ page, limit }) =>
     runFetchBranches(fetchOrgBranchesService({ page, limit }));
 
@@ -126,6 +124,7 @@ const OrgBranches = () => {
   useEffect(() => {
     fetchOrgBranches({ page, limit });
   }, [page, limit]);
+
   const handleViewBranch = (id: string) => {
     navigate(Routes.branch(id));
   };
