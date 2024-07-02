@@ -101,8 +101,6 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
     attrType?.value === "checkbox" ||
     attrType?.value === "dropdown";
 
-  console.log(watch());
-
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>

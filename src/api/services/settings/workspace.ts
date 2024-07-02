@@ -68,7 +68,7 @@ export interface createAttributeRequestBody {
   label: string;
   is_required: boolean;
   description?: string;
-  meta?: any[];
+  meta?: any;
 }
 
 interface queryParamsProps {

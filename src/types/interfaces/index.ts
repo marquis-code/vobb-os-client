@@ -79,7 +79,7 @@ export interface OrganisationAttributesData {
   isSystem: boolean;
   isActive: boolean;
   description?: string;
-  metaData?: string[];
+  metaData?: any;
 }
 export interface BranchesDataProps {
   branchesArray: OrganisationBranchesData[];

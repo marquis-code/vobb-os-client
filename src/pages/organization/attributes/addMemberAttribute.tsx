@@ -16,29 +16,19 @@ const AddMemberAttribute = ({ show, close, fetchAttributes }: CreateAttributesPr
     pageLimit: 0
   };
   const submit = (data: AddAttributesData) => {
-    let metaData: any = [];
-
-    if (data.options) {
-      metaData.push({ options: data.options });
-    }
-    if (data.fileType) {
-      metaData.push({ fileType: data.fileType });
-    }
-    if (data.wordLimit) {
-      metaData.push({ wordLimit: data.wordLimit });
-    }
-
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
       label: data.title,
-      is_required: data.required ?? false,
-      meta: metaData
+      is_required: data.required ?? false
     };
     if (data.description) {
       requestBody.description = data.description;
     }
-    if (metaData.length) {
-      requestBody.meta = metaData;
+    if (data.wordLimit) {
+      requestBody.meta = +data.wordLimit;
+    }
+    if (data.options) {
+      requestBody.meta = data.options;
     }
     run(createOrgAttributeService(requestBody));
   };

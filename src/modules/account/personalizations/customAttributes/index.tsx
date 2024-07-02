@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Button } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useWatch } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { MockDynamicData, dynamicValidationSchema, renderFormFields } from "lib";
-import { CustomAttributesFormData } from "types";
-import { useCountriesContext } from "context";
+import { dynamicValidationSchema, renderFormFields } from "lib";
+import { useCountriesContext, useUserContext } from "context";
 
 interface CustomAttributesProps {
   submit: () => void;
@@ -14,25 +13,26 @@ interface CustomAttributesProps {
 
 const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
   const { countries } = useCountriesContext();
+  const { orgAttributes } = useUserContext();
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
   const [selectedCheckboxValues, setSelectedCheckboxValues] = useState<optionType[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState<optionType>();
 
-  const handleCheckboxChange = (newValues: optionType[]) => {
+  const handleCheckboxChange = (newValues: optionType[], id: string) => {
     setSelectedCheckboxValues(newValues);
     const selectedValues = newValues.map((option) => option.value);
-    setValue("checkbox", selectedValues);
+    setValue(`checkbox_${id}`, selectedValues);
   };
 
-  const handleRadioChange = (newValue: optionType | undefined) => {
+  const handleRadioChange = (newValue: optionType | undefined, id: string) => {
     setSelectedRadioValue(newValue);
-    setValue("multipleChoice", selectedRadioValue);
+    setValue(`multiple-choice_${id}`, selectedRadioValue);
   };
+  const orgProperties = orgAttributes?.attributesArray;
 
-  const schemaFields = MockDynamicData.reduce((acc, field) => {
-    const fieldName = Object.keys(field)[0];
-    acc[fieldName] = dynamicValidationSchema(field);
+  const schemaFields = orgProperties?.reduce((acc, field) => {
+    acc[`${field.type}_${field.id}`] = dynamicValidationSchema(field);
     return acc;
   }, {} as any);
 
@@ -44,20 +44,30 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
     register,
     formState: { errors },
     setValue,
-    watch
-  } = useForm<CustomAttributesFormData>({
+    control
+  } = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: {}
   });
 
-  const longText = watch("longText") || "";
-  const longTextCount = longText.trim().split(/\s+/).length;
+  const longTextValues = useWatch({ control });
 
-  const onSubmit: SubmitHandler<CustomAttributesFormData> = (data) => {
+  const calculateTotalWordCount = () => {
+    let wordCountObj = {};
+
+    Object.keys(longTextValues).forEach((fieldName) => {
+      if (fieldName.startsWith("long-text")) {
+        wordCountObj[fieldName] = longTextValues[fieldName].trim().split(/\s+/).length;
+      }
+    });
+
+    return wordCountObj;
+  };
+
+  const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data);
     submit();
   };
-
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -68,17 +78,14 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
           </p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {MockDynamicData.map((field, index) => {
-            const fieldName = Object.keys(field)[0];
-            const fieldData = field[fieldName];
-
+          {orgProperties?.map((fieldData) => {
             return renderFormFields({
               fieldData,
-              index,
+              id: fieldData.id,
               register,
               errors,
               setValue,
-              longTextCount,
+              longTextCount: calculateTotalWordCount()[`long-text_${fieldData.id}`] ?? 0,
               countries,
               radio: {
                 value: selectedRadioValue,
