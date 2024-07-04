@@ -138,7 +138,18 @@ export const renderFormFields = ({
   watch
 }: DynamicFormProps) => {
   const fieldName = `${fieldData.type}_${id}`;
+  const fieldValue = watch(fieldName);
 
+  const getFieldValue = (value) => {
+    if (!value) return null;
+    if (Array.isArray(value)) {
+      return value.map((option) => ({ label: option, value: option }));
+    }
+    if (typeof value === "string") {
+      return { label: value, value: value };
+    }
+    return value;
+  };
   switch (fieldData.type) {
     case "short-text":
       return (
@@ -206,7 +217,11 @@ export const renderFormFields = ({
         <SelectInput
           key={id}
           label={fieldData.title}
-          options={countries}
+          value={getFieldValue(fieldValue)}
+          options={countries?.map((country) => ({
+            label: country.label,
+            value: country.value
+          }))}
           onChange={(val) => val && setValue(fieldName, val)}
           validatorMessage={getErrorMessage(errors[fieldName])}
         />
@@ -216,8 +231,8 @@ export const renderFormFields = ({
         <CustomRadioGroup
           key={id}
           label={fieldData.title}
+          value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
           options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
-          value={radio?.value}
           onChange={(newValue) =>
             radio?.handleChange ? radio.handleChange(newValue, id) : () => {}
           }
@@ -229,7 +244,7 @@ export const renderFormFields = ({
         <CustomCheckboxGroup
           key={id}
           label={fieldData.title}
-          value={watch(fieldName)?.map((option) => ({ label: option, value: option }))}
+          value={fieldValue?.map((option) => ({ label: option, value: option }))}
           options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
           onChange={(newValue) =>
             checkbox?.handleChange ? checkbox.handleChange(newValue, id) : () => {}
@@ -242,6 +257,7 @@ export const renderFormFields = ({
         <SelectInput
           key={id}
           label={fieldData.title}
+          value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
           options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
           onChange={(val) => val && setValue(fieldName, val.value)}
           validatorMessage={getErrorMessage(errors[fieldName])}

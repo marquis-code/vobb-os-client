@@ -11,7 +11,7 @@ import { useUserContext } from "context";
 import { useApiRequest, useFetchUser } from "hooks";
 import { AccountPersonalizationsUI } from "modules";
 import { useEffect, useMemo } from "react";
-import { MemberPropertiesData, OrganisationAttributesData } from "types";
+import { MemberPropertiesData, OrganisationAttributesData, optionType } from "types";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
@@ -205,22 +205,31 @@ const AccountPersonalizations = () => {
     return [];
   }, [memberPropsResponse]);
 
-  const handleMemberProperties = (data: { name: string; value: string }) => {
-    console.log(data);
-    return;
-    const { name, value } = data;
+  const handleMemberProperties = (data: {
+    name: string;
+    value: optionType | string;
+    attrIdExists: boolean;
+  }) => {
+    const { name, value, attrIdExists } = data;
     const type = name.split("_")[0];
     const attribute = name.split("_")[1];
-    const body = [value];
+
+    const body =
+      type === "phone-number"
+        ? [(value as string).replace(/\D/g, "")]
+        : type === "country"
+        ? [(value as optionType).value]
+        : type === "multiple-choice"
+        ? [(value as optionType).value]
+        : [value as string];
+
     const requestBody: updatePropertiesRequestBody = {
       attribute,
       type,
       data: body
     };
 
-    const willUpdate = memberProperties.find((prop) => prop.id === attribute);
-
-    willUpdate
+    attrIdExists
       ? runUpdateProperties(updateOrgPropertiesService(attribute, requestBody))
       : runCreateProperties(createOrgPropertiesService(requestBody));
   };

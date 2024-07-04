@@ -18,7 +18,6 @@ interface RadioGroupProps {
 const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
   const { required, label, options, value, onChange, parentClassName, validatorMessage, hint } =
     props;
-
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>

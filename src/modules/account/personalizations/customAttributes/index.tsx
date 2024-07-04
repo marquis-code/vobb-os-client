@@ -8,7 +8,7 @@ import { dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
 
 export interface CustomAttributesProps {
-  submit: (data: { name: string; value: string }) => void;
+  submit: (data: { name: string; value: string | optionType; attrIdExists: boolean }) => void;
   orgProperties: OrganisationAttributesData[];
   memberProperties: MemberPropertiesData[];
 }
@@ -56,21 +56,19 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     handleSubmit,
     reset,
     register,
-    formState: { errors, dirtyFields },
+    formState: { errors },
     setValue,
     control,
-    watch
+    watch,
+    getValues
   } = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: {}
   });
 
-  const trackFields = {
-    ...dirtyFields
-  };
+  const hasOptions = ["multiple-choice"];
 
-  const hasOptions = ["multiple-choice", "checkbox", "dropdown", "country"];
-
+  //set initial value
   useEffect(() => {
     if (memberProperties.length > 0) {
       const resetValues = {};
@@ -78,7 +76,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
       memberProperties.forEach((memberProp) => {
         const fieldName = `${memberProp.type}_${memberProp.id}`;
         const resetValue = hasOptions.includes(memberProp.type)
-          ? memberProp.values
+          ? memberProp.values[0]
           : memberProp.values[0];
 
         resetValues[fieldName] = resetValue;
@@ -102,19 +100,22 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     return wordCountObj;
   };
 
-  const debouncedSubmit = debounce((name, value) => {
-    submit({ name, value });
+  const debouncedSubmit = debounce((name, value, attrIdExists) => {
+    const values = getValues();
+    submit({ name, value: values[name], attrIdExists });
   }, 1000);
 
   useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
+    const subscription = watch((value, { name }) => {
       if (!name) return;
-      if (type === "change" && trackFields[name]) {
-        debouncedSubmit(name, value[name]);
+      const createId = name.split("_")[1];
+      const attrIdExists = !!memberProperties.find((prop) => prop.id !== createId);
+      if (getValues()[name]) {
+        debouncedSubmit(name, value[name], attrIdExists);
       }
     });
     return () => subscription.unsubscribe();
-  }, [trackFields, watch]);
+  }, [watch, getValues, memberProperties]);
 
   const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data);
@@ -138,7 +139,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
               register,
               errors,
               setValue,
-              longTextCount: calculateTotalWordCount()[`long-text_${fieldData.id}`] ?? 0,
+              longTextCount: calculateTotalWordCount()[`long-text_${id}`] ?? 0,
               countries,
               radio: {
                 value: selectedRadioValue,
