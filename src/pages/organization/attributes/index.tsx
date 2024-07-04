@@ -2,9 +2,15 @@ import { OrgAttributesUI } from "modules";
 import { AddMemberAttribute } from "./addMemberAttribute";
 import { useEffect, useMemo, useState } from "react";
 import { useApiRequest } from "hooks";
-import { fetchOrgAttributesService } from "api";
-import { AttributesDataProps } from "types";
+import {
+  archiveOrgAttributeService,
+  fetchOrgAttributesService,
+  restoreOrgAttributeService
+} from "api";
+import { AttributesDataProps, OrganisationAttributesData } from "types";
 import { useUserContext } from "context";
+import { EditMemberAttribute } from "./editMemberAttribute";
+import { toast } from "components";
 
 const defaultAttributesData: AttributesDataProps = {
   attributesArray: [],
@@ -21,18 +27,64 @@ const OrgAttributes = () => {
     currentPage: 1
   };
   const [addMemberAttr, setAddMemberAttr] = useState(false);
+  const [editMemberAttr, setEditMemberAttr] = useState(false);
+  const [defaultAttr, setDefaultAttr] = useState<OrganisationAttributesData>({
+    id: "",
+    title: "",
+    type: "",
+    required: false,
+    isSystem: false,
+    isActive: true
+  });
+
   const [page, setPage] = useState(currentPage);
   const [limit, setLimit] = useState(20);
-  const {
-    run: runFetchAttr,
-    data: fetchResponse,
-    error: fetchError,
-    requestStatus: fetchStatus
-  } = useApiRequest({});
+
+  const handleSetDefaultAttribute = (attr: OrganisationAttributesData) => {
+    setDefaultAttr(attr);
+  };
+  const { run: runFetchAttr, data: fetchResponse } = useApiRequest({});
+  const { run: runArchive, data: archiveResponse, error: archiveError } = useApiRequest({});
+  const { run: runRestore, data: restoreResponse, error: restoreError } = useApiRequest({});
 
   const fetchAttributes = () => {
     runFetchAttr(fetchOrgAttributesService({ page, limit }));
   };
+
+  const archiveAttribute = (id: string) => {
+    runArchive(archiveOrgAttributeService({ id }));
+  };
+  const restoreAttribute = (id: string) => {
+    runRestore(restoreOrgAttributeService({ id }));
+  };
+
+  useMemo(() => {
+    if (archiveResponse?.status === 200) {
+      toast({
+        description: archiveResponse?.data?.message
+      });
+      fetchAttributes();
+    } else if (archiveError) {
+      toast({
+        variant: "destructive",
+        description: archiveError?.response?.data?.error
+      });
+    }
+  }, [archiveResponse, archiveError]);
+
+  useMemo(() => {
+    if (restoreResponse?.status === 200) {
+      toast({
+        description: restoreResponse?.data?.message
+      });
+      fetchAttributes();
+    } else if (restoreError) {
+      toast({
+        variant: "destructive",
+        description: restoreError?.response?.data?.error
+      });
+    }
+  }, [restoreResponse, restoreError]);
 
   useMemo<AttributesDataProps>(() => {
     if (fetchResponse?.status === 200) {
@@ -69,9 +121,28 @@ const OrgAttributes = () => {
         close={() => setAddMemberAttr(false)}
         show={addMemberAttr}
         fetchAttributes={fetchAttributes}
+        prefilledAttribute={defaultAttr}
+      />
+      <EditMemberAttribute
+        close={() => setEditMemberAttr(false)}
+        show={editMemberAttr}
+        prefilledAttribute={defaultAttr}
+        fetchAttributes={fetchAttributes}
       />
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}
+        handleEditMemberAttr={{
+          setEditAttr: () => setEditMemberAttr(true),
+          handleSetDefaultAttribute: (attr: OrganisationAttributesData) =>
+            handleSetDefaultAttribute(attr)
+        }}
+        handleDuplicateMemberAttr={{
+          setDuplicateAttr: () => setAddMemberAttr(true),
+          handleSetDefaultDuplicate: (attr: OrganisationAttributesData) =>
+            handleSetDefaultAttribute(attr)
+        }}
+        handleArchiveAttr={archiveAttribute}
+        handleRestoreAttr={restoreAttribute}
         limit={limit}
         setPage={setPage}
         setLimit={setLimit}

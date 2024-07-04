@@ -2,15 +2,30 @@ import { SettingsPageTitle } from "components";
 import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { OrganisationAttributesData } from "types";
 
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
+  handleEditMemberAttr: {
+    setEditAttr: () => void;
+    handleSetDefaultAttribute: (attr: OrganisationAttributesData) => void;
+  };
+  handleDuplicateMemberAttr: {
+    setDuplicateAttr: () => void;
+    handleSetDefaultDuplicate: (attr: OrganisationAttributesData) => void;
+  };
+  handleArchiveAttr: (id: string) => void;
+  handleRestoreAttr: (id: string) => void;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   limit: number;
 }
 const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleAddMemberAttr,
+  handleEditMemberAttr,
+  handleDuplicateMemberAttr,
+  handleArchiveAttr,
+  handleRestoreAttr,
   setPage,
   setLimit,
   limit
@@ -38,10 +53,10 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         <TabsContent value="member">
           <MemberAttributes
             handleAddAttribute={handleAddMemberAttr}
-            handleEditAttribute={console.log}
-            handleDuplicateAttribute={console.log}
-            handleRestoreAttribute={console.log}
-            handleArchiveAttribute={console.log}
+            handleEditAttribute={handleEditMemberAttr}
+            handleDuplicateAttribute={handleDuplicateMemberAttr}
+            handleRestoreAttribute={handleRestoreAttr}
+            handleArchiveAttribute={handleArchiveAttr}
             limit={limit}
             setPage={setPage}
             setLimit={setLimit}
@@ -50,8 +65,8 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         <TabsContent value="client">
           <ClientAttributes
             handleAddAttribute={console.log}
-            handleEditAttribute={console.log}
-            handleDuplicateAttribute={console.log}
+            handleEditAttribute={handleEditMemberAttr}
+            handleDuplicateAttribute={handleDuplicateMemberAttr}
             handleRestoreAttribute={console.log}
             handleArchiveAttribute={console.log}
           />

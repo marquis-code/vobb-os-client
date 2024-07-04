@@ -90,3 +90,11 @@ export interface AttributesDataProps {
   attributesArray: OrganisationAttributesData[];
   attributesMetaData: MetaDataProps;
 }
+
+export interface MemberPropertiesData {
+  id: string;
+  attribute: string;
+  values: string[];
+  label: string;
+  type: string;
+}

@@ -1,6 +1,5 @@
-import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "components/ui/table";
-import { AttributeTableData } from "./columns";
 import { CSSProperties } from "react";
 
 interface AttributesTableProps<TData, TValue> {

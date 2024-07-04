@@ -1,5 +1,9 @@
-import { createAttributeRequestBody, createOrgAttributeService } from "api";
-import { AddAttributeModal, AddAttributesData, toast } from "components";
+import { createAttributeRequestBody, updateOrgAttributeService } from "api";
+import { toast } from "components";
+import {
+  EditAttributeModal,
+  EditAttributesData
+} from "components/modalVariants/editAttributeModal";
 import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
@@ -10,7 +14,7 @@ interface CreateAttributesProps extends ModalProps {
   prefilledAttribute: OrganisationAttributesData;
 }
 
-const AddMemberAttribute = ({
+const EditMemberAttribute = ({
   show,
   close,
   fetchAttributes,
@@ -21,7 +25,9 @@ const AddMemberAttribute = ({
   const { pageLimit } = orgAttributes?.attributesMetaData || {
     pageLimit: 0
   };
-  const submit = (data: AddAttributesData) => {
+  const { id } = prefilledAttribute;
+
+  const submit = (data: EditAttributesData) => {
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
       label: data.title,
@@ -36,16 +42,16 @@ const AddMemberAttribute = ({
     if (data.options?.length) {
       requestBody.meta = data.options;
     }
-
-    run(createOrgAttributeService(requestBody));
+    run(updateOrgAttributeService(id, requestBody));
   };
 
   useMemo(() => {
-    if (response?.status === 201) {
+    if (response?.status === 200) {
       toast({
         description: response?.data?.message
       });
       fetchAttributes({ page: 1, limit: pageLimit });
+      close();
     } else if (error) {
       toast({
         variant: "destructive",
@@ -56,7 +62,7 @@ const AddMemberAttribute = ({
 
   return (
     <>
-      <AddAttributeModal
+      <EditAttributeModal
         submit={submit}
         close={close}
         show={show}
@@ -67,4 +73,4 @@ const AddMemberAttribute = ({
   );
 };
 
-export { AddMemberAttribute };
+export { EditMemberAttribute };

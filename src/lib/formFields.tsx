@@ -16,7 +16,8 @@ import {
   FieldErrorsImpl,
   Merge,
   UseFormRegister,
-  UseFormSetValue
+  UseFormSetValue,
+  UseFormWatch
 } from "react-hook-form";
 import { OrganisationAttributesData, optionType } from "types";
 import * as yup from "yup";
@@ -27,6 +28,7 @@ interface DynamicFormProps {
   register: UseFormRegister<any>;
   errors: FieldErrors<any>;
   setValue: UseFormSetValue<any>;
+  watch: UseFormWatch<any>;
   longTextCount?: number;
   countries?: optionType[];
   radio?: {
@@ -132,7 +134,8 @@ export const renderFormFields = ({
   radio,
   checkbox,
   date,
-  file
+  file,
+  watch
 }: DynamicFormProps) => {
   const fieldName = `${fieldData.type}_${id}`;
 
@@ -191,6 +194,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           name={fieldName}
+          value={watch(fieldName)}
           validatorMessage={getErrorMessage(errors[fieldName])}
           handleChange={(val) => {
             setValue(fieldName, val);
@@ -225,8 +229,8 @@ export const renderFormFields = ({
         <CustomCheckboxGroup
           key={id}
           label={fieldData.title}
+          value={watch(fieldName)?.map((option) => ({ label: option, value: option }))}
           options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
-          value={checkbox?.value ?? [{ label: "", value: "" }]}
           onChange={(newValue) =>
             checkbox?.handleChange ? checkbox.handleChange(newValue, id) : () => {}
           }

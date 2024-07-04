@@ -104,3 +104,24 @@ export const fetchOrgAttributesURL = ({ page, limit }) =>
  *
  */
 export const createOrgAttributeURL = () => `${prefixOrg}/attribute`;
+
+/**
+ * Update organisation's attribute URL
+ * @returns url string
+ *
+ */
+export const updateOrgAttributeURL = ({ id }) => `${prefixOrg}/attribute/${id}`;
+
+/**
+ * Archive organisation's attribute URL
+ * @returns url string
+ *
+ */
+export const archiveOrgAttributeURL = ({ id }) => `${prefixOrg}/archive-attribute/${id}`;
+
+/**
+ * Restore organisation's attribute URL
+ * @returns url string
+ *
+ */
+export const restoreOrgAttributeURL = ({ id }) => `${prefixOrg}/restore-attribute/${id}`;

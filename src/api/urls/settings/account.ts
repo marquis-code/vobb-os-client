@@ -97,3 +97,33 @@ export const toggleGoogleAuthURL = () => `${prefixAcc}/google-auth`;
  *
  */
 export const blacklistIpAddressURL = () => `${prefixAcc}/blacklist-ip`;
+
+/**
+ * Fetch member's set properties for the account URL
+ * @returns url string
+ *
+ */
+export const fetchMemberPropertiesURL = () => `${prefixAcc}/attribute`;
+
+/**
+ * Fetch organisation's properties URL
+ * @returns url string
+ *
+ */
+export const fetchOrgPropertiessURL = ({ page, limit }) =>
+  `${prefixAcc}/org-attribute?page=${page}&limit=${limit}`;
+
+/**
+ * Create organisation's properties URL
+ * @returns url string
+ *
+ */
+export const createOrgPropertiesURL = () => `${prefixAcc}/attribute/`;
+
+/**
+ * Update organisation's properties URL
+ * @returns url string
+ *
+ */
+
+export const updateOrgPropertiesURL = ({ id }) => `${prefixAcc}/attribute/${id}`;

@@ -1,23 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler, useWatch } from "react-hook-form";
-import { optionType } from "types/interfaces";
+import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types/interfaces";
 import { dynamicValidationSchema, renderFormFields } from "lib";
-import { useCountriesContext, useUserContext } from "context";
+import { useCountriesContext } from "context";
 
-interface CustomAttributesProps {
-  submit: () => void;
+export interface CustomAttributesProps {
+  submit: (data: { name: string; value: string }) => void;
+  orgProperties: OrganisationAttributesData[];
+  memberProperties: MemberPropertiesData[];
 }
 
-const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
+const CustomAttributes: React.FC<CustomAttributesProps> = ({
+  submit,
+  orgProperties,
+  memberProperties
+}) => {
   const { countries } = useCountriesContext();
-  const { orgAttributes } = useUserContext();
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
   const [selectedCheckboxValues, setSelectedCheckboxValues] = useState<optionType[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState<optionType>();
+
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
 
   const handleCheckboxChange = (newValues: optionType[], id: string) => {
     setSelectedCheckboxValues(newValues);
@@ -27,9 +42,8 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
 
   const handleRadioChange = (newValue: optionType | undefined, id: string) => {
     setSelectedRadioValue(newValue);
-    setValue(`multiple-choice_${id}`, selectedRadioValue);
+    setValue(`multiple-choice_${id}`, newValue);
   };
-  const orgProperties = orgAttributes?.attributesArray;
 
   const schemaFields = orgProperties?.reduce((acc, field) => {
     acc[`${field.type}_${field.id}`] = dynamicValidationSchema(field);
@@ -42,13 +56,38 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
     handleSubmit,
     reset,
     register,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     setValue,
-    control
+    control,
+    watch,
+    getValues
   } = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: {}
   });
+
+  const trackFields = {
+    ...dirtyFields
+  };
+
+  const hasOptions = ["multiple-choice", "checkbox", "dropdown", "country"];
+
+  useEffect(() => {
+    if (memberProperties.length > 0) {
+      const resetValues = {};
+
+      memberProperties.forEach((memberProp) => {
+        const fieldName = `${memberProp.type}_${memberProp.id}`;
+        const resetValue = hasOptions.includes(memberProp.type)
+          ? memberProp.values
+          : memberProp.values[0];
+
+        resetValues[fieldName] = resetValue;
+      });
+
+      reset(resetValues);
+    }
+  }, [memberProperties, reset]);
 
   const longTextValues = useWatch({ control });
 
@@ -64,10 +103,24 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
     return wordCountObj;
   };
 
+  const debouncedSubmit = debounce((name, value) => {
+    submit({ name, value });
+  }, 1000);
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (!name) return;
+      if (type === "change" && trackFields[name]) {
+        debouncedSubmit(name, value[name]);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [trackFields, watch]);
+
   const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data);
-    submit();
   };
+  console.log(getValues());
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -79,9 +132,11 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           {orgProperties?.map((fieldData) => {
+            const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
+            const id = memberProp ? memberProp.id : fieldData.id;
             return renderFormFields({
               fieldData,
-              id: fieldData.id,
+              id,
               register,
               errors,
               setValue,
@@ -102,7 +157,8 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
               file: {
                 value: file,
                 handleChange: setFile
-              }
+              },
+              watch
             });
           })}
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">

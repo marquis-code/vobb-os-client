@@ -6,6 +6,7 @@ SETTINGS SERVICES
 
 import {
   addNewOrgBranchURL,
+  archiveOrgAttributeURL,
   createOrgAttributeURL,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
@@ -15,6 +16,8 @@ import {
   postRequest,
   putRequest,
   resendCodeOrgEmailsURL,
+  restoreOrgAttributeURL,
+  updateOrgAttributeURL,
   updateOrgBranchURL,
   updateOrgBrandingURL,
   updateOrgEmailsURL,
@@ -238,12 +241,46 @@ export const fetchOrgAttributesService = ({ page, limit }: queryParamsProps) => 
 
 /**
  * Create an organisation's attribute service
- * @param branches array of properties for the branch
+ * @param data request body
  * @returns axios promise
  */
 export const createOrgAttributeService = (data: createAttributeRequestBody) => {
   return postRequest({
     url: createOrgAttributeURL(),
     data
+  });
+};
+
+/**
+ * Update an organisation's attribute service
+ * @param id of attribute
+ * @returns axios promise
+ */
+export const updateOrgAttributeService = (id: string, data: createAttributeRequestBody) => {
+  return putRequest({
+    url: updateOrgAttributeURL({ id }),
+    data
+  });
+};
+
+/**
+ * Archive an organisation's attribute service
+ * @param id of attribute
+ * @returns axios promise
+ */
+export const archiveOrgAttributeService = ({ id }) => {
+  return patchRequest({
+    url: archiveOrgAttributeURL({ id })
+  });
+};
+
+/**
+ * Restore an organisation's attribute service
+ * @param id of attribute
+ * @returns axios promise
+ */
+export const restoreOrgAttributeService = ({ id }) => {
+  return patchRequest({
+    url: restoreOrgAttributeURL({ id })
   });
 };

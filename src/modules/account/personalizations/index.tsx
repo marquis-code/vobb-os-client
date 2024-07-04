@@ -1,5 +1,5 @@
 import { SettingsPageTitle } from "components";
-import { CustomAttributes } from "./customAttributes";
+import { CustomAttributes, CustomAttributesProps } from "./customAttributes";
 import { DateFormat, DateFormatProps } from "./dateFormat";
 import { SystemLanguage, SystemLanguageProps } from "./systemLanguage";
 import { TimeZone, TimeZoneProps } from "./timeZone";
@@ -10,12 +10,14 @@ interface PersonalizationsProps {
   yourLanguages: YourLanguagesProps;
   dateFormat: DateFormatProps;
   timeZone: TimeZoneProps;
+  orgProperties: CustomAttributesProps;
 }
 const AccountPersonalizationsUI: React.FC<PersonalizationsProps> = ({
   systemLanguage,
   yourLanguages,
   dateFormat,
-  timeZone
+  timeZone,
+  orgProperties
 }) => {
   return (
     <>
@@ -26,7 +28,7 @@ const AccountPersonalizationsUI: React.FC<PersonalizationsProps> = ({
       <YourLanguages {...yourLanguages} />
       <DateFormat {...dateFormat} />
       <TimeZone {...timeZone} />
-      <CustomAttributes submit={console.log} />
+      <CustomAttributes {...orgProperties} />
     </>
   );
 };

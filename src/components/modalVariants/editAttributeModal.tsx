@@ -11,7 +11,7 @@ import { Switch } from "components/ui/switch";
 import { getOptionTypeValidationMsg } from "lib";
 import { useEffect, useState } from "react";
 
-export interface AddAttributesData {
+export interface EditAttributesData {
   title: string;
   type: optionType;
   description?: string;
@@ -74,18 +74,18 @@ const schema = yup.object({
     })
 });
 
-interface AddAttributeModalProps extends ModalProps {
-  submit: (data) => void;
+interface EditAttributeModalProps extends ModalProps {
+  submit: (data: EditAttributesData) => void;
   loading: boolean;
-  initData?: OrganisationAttributesData;
+  initData: OrganisationAttributesData;
 }
 
-const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
+const EditAttributeModal: React.FC<EditAttributeModalProps> = ({
   show,
   close,
   submit,
-  loading,
-  initData
+  initData,
+  loading
 }) => {
   const [createNew, setCreateNew] = useState(false);
   const {
@@ -95,13 +95,12 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
     watch,
     setValue,
     reset
-  } = useForm<AddAttributesData>({
+  } = useForm<EditAttributesData>({
     resolver: yupResolver(schema)
   });
 
-  const onSubmit: SubmitHandler<AddAttributesData> = (data) => {
+  const onSubmit: SubmitHandler<EditAttributesData> = (data) => {
     submit(data);
-    if (!createNew) close();
   };
 
   const attrType = watch("type");
@@ -113,6 +112,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
   useEffect(() => {
     if (initData) {
       reset({
+        title: initData?.title,
         type: attributeTypeOptions.find((item) => item.value === initData?.type) ?? undefined,
         description: initData?.description ?? "",
         wordLimit: Array.isArray(initData?.metaData) ? "" : initData?.metaData,
@@ -125,7 +125,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Create Attribute</h2>
+          <h2 className="text-lg font-bold">Edit Attribute</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"}>
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
@@ -135,6 +135,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
             label="Title"
             type="text"
             name="title"
+            defaultValue={initData?.title}
             register={register}
             validatorMessage={errors.title?.message}
           />
@@ -216,7 +217,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
             variant={"fill"}
             loading={loading}
             disabled={loading}>
-            Create
+            Save
           </Button>
         </div>
       </Modal>
@@ -224,4 +225,4 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
   );
 };
 
-export { AddAttributeModal };
+export { EditAttributeModal };

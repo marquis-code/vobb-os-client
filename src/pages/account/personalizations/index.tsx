@@ -1,11 +1,25 @@
-import { personalAccountUpdateService } from "api";
+import {
+  createOrgPropertiesService,
+  fetchMemberPropertiesService,
+  fetchOrgPropertiesService,
+  personalAccountUpdateService,
+  updateOrgPropertiesService,
+  updatePropertiesRequestBody
+} from "api";
 import { toast } from "components";
+import { useUserContext } from "context";
 import { useApiRequest, useFetchUser } from "hooks";
 import { AccountPersonalizationsUI } from "modules";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { MemberPropertiesData, OrganisationAttributesData } from "types";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
+  const { orgAttributes } = useUserContext();
+  const { currentPage, pageLimit } = orgAttributes?.attributesMetaData || {
+    currentPage: 1,
+    pageLimit: 20
+  };
 
   const {
     run: runSystemLanguage,
@@ -35,6 +49,20 @@ const AccountPersonalizations = () => {
     requestStatus: timezoneStatus
   } = useApiRequest({});
 
+  const { run: runFetchAttr, data: fetchResponse } = useApiRequest({});
+  const { run: runFetchMemberProps, data: memberPropsResponse } = useApiRequest({});
+
+  const {
+    run: runCreateProperties,
+    data: createPropertiesResponse,
+    error: createPropertiesError
+  } = useApiRequest({});
+  const {
+    run: runUpdateProperties,
+    data: updatePropertiesResponse,
+    error: updatePropertiesError
+  } = useApiRequest({});
+
   const handleChangeSystemLanguage = (formData: FormData) => {
     runSystemLanguage(personalAccountUpdateService(formData));
   };
@@ -50,6 +78,14 @@ const AccountPersonalizations = () => {
   const handleSetTimezone = (formData: FormData) => {
     runTimezone(personalAccountUpdateService(formData));
   };
+
+  const fetchProperties = () => {
+    runFetchAttr(fetchOrgPropertiesService({ page: currentPage, limit: pageLimit }));
+  };
+  const fetchMemberProperties = () => {
+    runFetchMemberProps(fetchMemberPropertiesService());
+  };
+
   useMemo(() => {
     if (systemLangResponse?.status === 200) {
       toast({
@@ -106,6 +142,94 @@ const AccountPersonalizations = () => {
     }
   }, [timezoneResponse, timezoneError]);
 
+  useMemo(() => {
+    if (createPropertiesResponse?.status === 201) {
+      toast({
+        description: createPropertiesResponse?.data?.message
+      });
+      fetchMemberProperties();
+    } else if (createPropertiesError) {
+      toast({
+        variant: "destructive",
+        description: createPropertiesError?.response?.data?.error
+      });
+    }
+  }, [createPropertiesResponse, createPropertiesError]);
+
+  useMemo(() => {
+    if (updatePropertiesResponse?.status === 201) {
+      toast({
+        description: updatePropertiesResponse?.data?.message
+      });
+      fetchMemberProperties();
+    } else if (updatePropertiesError) {
+      toast({
+        variant: "destructive",
+        description: updatePropertiesError?.response?.data?.error
+      });
+    }
+  }, [updatePropertiesResponse, updatePropertiesError]);
+
+  const orgProperties = useMemo<OrganisationAttributesData[]>(() => {
+    if (fetchResponse?.status === 200) {
+      const propertiesArray = fetchResponse?.data?.data?.attributes.map((item) => ({
+        id: item._id,
+        title: item.label,
+        type: item.type,
+        required: item.is_required,
+        isSystem: item.is_system_prop,
+        isActive: item.is_active,
+        description: item.description,
+        metaData: item.meta
+      }));
+
+      return propertiesArray;
+    }
+
+    return [];
+  }, [fetchResponse, pageLimit]);
+
+  const memberProperties = useMemo<MemberPropertiesData[]>(() => {
+    if (memberPropsResponse?.status === 200) {
+      const propertiesArray = memberPropsResponse?.data?.data?.attributes.map((item) => ({
+        id: item._id,
+        attribute: item.attribute,
+        values: item.data,
+        title: item.label,
+        type: item.type
+      }));
+
+      return propertiesArray;
+    }
+
+    return [];
+  }, [memberPropsResponse]);
+
+  const handleMemberProperties = (data: { name: string; value: string }) => {
+    console.log(data);
+    return;
+    const { name, value } = data;
+    const type = name.split("_")[0];
+    const attribute = name.split("_")[1];
+    const body = [value];
+    const requestBody: updatePropertiesRequestBody = {
+      attribute,
+      type,
+      data: body
+    };
+
+    const willUpdate = memberProperties.find((prop) => prop.id === attribute);
+
+    willUpdate
+      ? runUpdateProperties(updateOrgPropertiesService(attribute, requestBody))
+      : runCreateProperties(createOrgPropertiesService(requestBody));
+  };
+
+  useEffect(() => {
+    fetchProperties();
+    fetchMemberProperties();
+  }, [currentPage, pageLimit]);
+
   return (
     <>
       <AccountPersonalizationsUI
@@ -124,6 +248,11 @@ const AccountPersonalizations = () => {
         timeZone={{
           submit: handleSetTimezone,
           loadingTimezone: timezoneStatus.isPending
+        }}
+        orgProperties={{
+          orgProperties,
+          memberProperties,
+          submit: handleMemberProperties
         }}
       />
     </>
