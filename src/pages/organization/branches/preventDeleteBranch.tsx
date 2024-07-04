@@ -1,7 +1,7 @@
 import { PreventDeleteBranchModal } from "components";
 import { ModalProps } from "types";
 import { TransferMember } from "./transferMember";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props extends ModalProps {
   id: string;

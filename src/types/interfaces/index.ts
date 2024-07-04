@@ -70,6 +70,7 @@ export interface OrganisationBranchesData {
   addressLine2: string;
   city: string;
   timeZone: string;
+  hasMembers: boolean;
 }
 export interface OrganisationAttributesData {
   id: string;

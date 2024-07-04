@@ -1,12 +1,42 @@
-import { ConfirmationModal } from "components";
+import { deleteOrgBranchService } from "api";
+import { ConfirmationModal, toast } from "components";
+import { useUserContext } from "context";
+import { useApiRequest } from "hooks";
+import { useMemo } from "react";
 import { ModalProps } from "types";
 
 interface Props extends ModalProps {
   id: string;
   name: string;
+  fetchOrgBranches: ({ page, limit }) => void;
 }
 
-const DeleteBranch: React.FC<Props> = ({ show, close, id, name }) => {
+const DeleteBranch: React.FC<Props> = ({ show, close, id, name, fetchOrgBranches }) => {
+  const { run, data: response, error, requestStatus } = useApiRequest({});
+  const { orgBranches } = useUserContext();
+  const { pageLimit } = orgBranches?.branchesMetaData || {
+    pageLimit: 0
+  };
+
+  const submit = () => {
+    run(deleteOrgBranchService({ id }));
+    console.log(id);
+  };
+
+  useMemo(() => {
+    if (response?.status === 202) {
+      toast({
+        description: response?.data?.message
+      });
+      fetchOrgBranches({ page: 1, limit: pageLimit });
+      close();
+    } else if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
+    }
+  }, [response, error]);
   return (
     <>
       <ConfirmationModal
@@ -16,10 +46,11 @@ const DeleteBranch: React.FC<Props> = ({ show, close, id, name }) => {
             <b className="text-vobb-neutral-100">{name}</b> branch?
           </>
         }
-        handleContinue={console.log}
+        handleContinue={submit}
         close={close}
         show={show}
         isDestructive
+        loading={requestStatus.isPending}
       />
     </>
   );

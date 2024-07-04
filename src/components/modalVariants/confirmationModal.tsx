@@ -8,6 +8,7 @@ interface ConfirmationModalProps extends ModalProps {
   text: ReactNode | string;
   handleContinue: () => void;
   isDestructive?: boolean;
+  loading: boolean;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -15,7 +16,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   close,
   text,
   handleContinue,
-  isDestructive
+  isDestructive,
+  loading
 }) => {
   return (
     <>
@@ -32,14 +34,17 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             onClick={close}
             className={isDestructive ? "" : "text-error-10"}
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
           <Button
             className={isDestructive ? "bg-error-10 border-error-10" : ""}
             size={"default"}
             variant={"fill"}
-            onClick={handleContinue}>
+            onClick={handleContinue}
+            loading={loading}
+            disabled={loading}>
             Continue
           </Button>
         </div>

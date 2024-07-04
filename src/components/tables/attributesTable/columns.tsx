@@ -43,7 +43,6 @@ export interface AttributeTableActions {
 }
 
 export const getAttributeTableColumns = ({
-  handleEditAttribute,
   handleDuplicateAttribute: { setDuplicateAttr, handleSetDefaultDuplicate },
   handleRestoreAttribute,
   handleArchiveAttribute,

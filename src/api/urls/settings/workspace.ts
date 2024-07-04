@@ -125,3 +125,10 @@ export const archiveOrgAttributeURL = ({ id }) => `${prefixOrg}/archive-attribut
  *
  */
 export const restoreOrgAttributeURL = ({ id }) => `${prefixOrg}/restore-attribute/${id}`;
+
+/**
+ * Delete organisation's branch URL
+ * @returns url string
+ *
+ */
+export const deleteOrgBranchURL = ({ id }) => `${prefixOrg}/branch?branch=${id}`;

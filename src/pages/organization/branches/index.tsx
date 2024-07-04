@@ -2,7 +2,7 @@ import { OrgBranchesUI } from "modules";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
-import { ConfirmationModal, toast } from "components";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
 import { useCountriesContext, useUserContext } from "context";
 import { BranchesDataProps, OrganisationBranchesData } from "types";
@@ -21,7 +21,8 @@ const initBranchData = {
   zipCode: "",
   addressLine1: "",
   addressLine2: "",
-  isPrimary: false
+  isPrimary: false,
+  hasMembers: false
 };
 
 const defaultBranchesData: BranchesDataProps = {
@@ -47,10 +48,15 @@ const OrgBranches = () => {
   const [page, setPage] = useState(currentPage);
   const [limit, setLimit] = useState(8);
   const [confirm, setConfirm] = useState(false);
+  const [preventDelete, setPreventDelete] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
 
-  const [deleteBranch, setDeleteBranch] = useState({ show: false, id: "", name: "" });
+  const [deleteBranch, setDeleteBranch] = useState({
+    id: "",
+    name: "",
+    hasMembers: false
+  });
 
   const handleEditBranch = (branchData: OrganisationBranchesData) => {
     setEditBranch({ show: true, branchData });
@@ -60,8 +66,13 @@ const OrgBranches = () => {
     setConfirm(true);
   };
 
-  const handleInitiateDeleteBranch = (id: string, name: string) => {
-    setDeleteBranch({ id, name, show: true });
+  const handlePreventDelete = () => {
+    setPreventDelete(true);
+  };
+
+  const handleInitiateDeleteBranch = (id: string, name: string, hasMembers: boolean) => {
+    setDeleteBranch({ id, name, hasMembers });
+    hasMembers ? handlePreventDelete() : handleDeleteBranch();
   };
 
   const handlePrimaryBranch = useCallback((id: string) => {
@@ -105,7 +116,8 @@ const OrgBranches = () => {
         addressLine1: item.address_line_1,
         addressLine2: item.address_line_2 ?? "",
         city: item.city,
-        timeZone: item.timezone ?? ""
+        timeZone: item.timezone ?? "",
+        hasMembers: item.has_members ?? false
       }));
       const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
       const branchesMetaData = {
@@ -134,8 +146,9 @@ const OrgBranches = () => {
       <PreventDeleteBranch
         {...deleteBranch}
         handleDeleteBranch={handleDeleteBranch}
-        close={() => setDeleteBranch((prev) => ({ ...prev, show: false }))}
-        handleOpen={() => setDeleteBranch((prev) => ({ ...prev, show: true }))}
+        show={preventDelete}
+        close={() => setPreventDelete(false)}
+        handleOpen={() => setPreventDelete(true)}
       />
       <AddBranch
         show={addBranch}
@@ -147,7 +160,12 @@ const OrgBranches = () => {
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
         fetchOrgBranches={fetchOrgBranches}
       />
-      <DeleteBranch {...deleteBranch} close={handleCloseConfirmation} show={confirm} />
+      <DeleteBranch
+        {...deleteBranch}
+        close={handleCloseConfirmation}
+        show={confirm}
+        fetchOrgBranches={fetchOrgBranches}
+      />
       <OrgBranchesUI
         handleAddBranch={handleAddBranch}
         handleEditBranch={handleEditBranch}

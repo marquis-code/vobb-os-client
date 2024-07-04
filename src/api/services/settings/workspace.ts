@@ -8,6 +8,8 @@ import {
   addNewOrgBranchURL,
   archiveOrgAttributeURL,
   createOrgAttributeURL,
+  deleteOrgBranchURL,
+  deleteRequest,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
   fetchOrgDetailsURL,
@@ -282,5 +284,16 @@ export const archiveOrgAttributeService = ({ id }) => {
 export const restoreOrgAttributeService = ({ id }) => {
   return patchRequest({
     url: restoreOrgAttributeURL({ id })
+  });
+};
+
+/**
+ * Delete an organisation's branch service
+ * @param id of branch
+ * @returns axios promise
+ */
+export const deleteOrgBranchService = ({ id }) => {
+  return deleteRequest({
+    url: deleteOrgBranchURL({ id })
   });
 };
