@@ -1,7 +1,7 @@
 import { PreventDeleteBranchModal } from "components";
 import { ModalProps } from "types";
 import { TransferMember } from "./transferMember";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Props extends ModalProps {
   id: string;
@@ -18,6 +18,7 @@ const PreventDeleteBranch: React.FC<Props> = ({
   handleOpen,
   handleDeleteBranch
 }) => {
+  //todo-fetch members , transfer members to another branch
   const [transfer, setTransfer] = useState<{ show: boolean; memberIds?: string[] }>({
     show: false
   });

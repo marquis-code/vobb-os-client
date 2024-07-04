@@ -117,7 +117,7 @@ const OrgBranches = () => {
         addressLine2: item.address_line_2 ?? "",
         city: item.city,
         timeZone: item.timezone ?? "",
-        hasMembers: item.has_members ?? false
+        hasMembers: item.has_members ?? true
       }));
       const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
       const branchesMetaData = {

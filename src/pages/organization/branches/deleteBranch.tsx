@@ -20,7 +20,6 @@ const DeleteBranch: React.FC<Props> = ({ show, close, id, name, fetchOrgBranches
 
   const submit = () => {
     run(deleteOrgBranchService({ id }));
-    console.log(id);
   };
 
   useMemo(() => {
