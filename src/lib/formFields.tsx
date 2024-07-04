@@ -140,13 +140,19 @@ export const renderFormFields = ({
   const fieldName = `${fieldData.type}_${id}`;
   const fieldValue = watch(fieldName);
 
-  const getFieldValue = (value) => {
+  const getCountryValue = (value) => {
     if (!value) return null;
     if (Array.isArray(value)) {
-      return value.map((option) => ({ label: option, value: option }));
+      return value.map((option) => ({
+        label: countries?.find((country) => country.value === option)?.label || option,
+        value: option
+      }));
     }
     if (typeof value === "string") {
-      return { label: value, value: value };
+      return {
+        label: countries?.find((country) => country.value === value)?.label || value,
+        value: value
+      };
     }
     return value;
   };
@@ -217,7 +223,7 @@ export const renderFormFields = ({
         <SelectInput
           key={id}
           label={fieldData.title}
-          value={getFieldValue(fieldValue)}
+          value={getCountryValue(fieldValue)}
           options={countries?.map((country) => ({
             label: country.label,
             value: country.value

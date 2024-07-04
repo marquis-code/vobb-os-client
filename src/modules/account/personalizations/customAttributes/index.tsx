@@ -8,7 +8,7 @@ import { dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
 
 export interface CustomAttributesProps {
-  submit: (data: { name: string; value: string | optionType; attrIdExists: boolean }) => void;
+  submit: (data: { name: string; value: string | optionType; orgRefId: string }) => void;
   orgProperties: OrganisationAttributesData[];
   memberProperties: MemberPropertiesData[];
 }
@@ -66,8 +66,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     defaultValues: {}
   });
 
-  const hasOptions = ["multiple-choice"];
-
   //set initial value
   useEffect(() => {
     if (memberProperties.length > 0) {
@@ -75,9 +73,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
 
       memberProperties.forEach((memberProp) => {
         const fieldName = `${memberProp.type}_${memberProp.id}`;
-        const resetValue = hasOptions.includes(memberProp.type)
-          ? memberProp.values[0]
-          : memberProp.values[0];
+        const resetValue = memberProp.values[0];
 
         resetValues[fieldName] = resetValue;
       });
@@ -86,32 +82,31 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     }
   }, [memberProperties, reset]);
 
+  //long text word length
   const longTextValues = useWatch({ control });
-
   const calculateTotalWordCount = () => {
     let wordCountObj = {};
-
     Object.keys(longTextValues).forEach((fieldName) => {
       if (fieldName.startsWith("long-text")) {
         wordCountObj[fieldName] = longTextValues[fieldName].trim().split(/\s+/).length;
       }
     });
-
     return wordCountObj;
   };
 
-  const debouncedSubmit = debounce((name, value, attrIdExists) => {
+  const debouncedSubmit = debounce((name: string, orgRefId: string) => {
     const values = getValues();
-    submit({ name, value: values[name], attrIdExists });
+    submit({ name, value: values[name], orgRefId });
   }, 1000);
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (!name) return;
-      const createId = name.split("_")[1];
-      const attrIdExists = !!memberProperties.find((prop) => prop.id !== createId);
+      const createdAttrId = name.split("_")[1];
+      const orgRefId =
+        memberProperties.filter((prop) => prop.id === createdAttrId)[0]?.attribute ?? undefined;
       if (getValues()[name]) {
-        debouncedSubmit(name, value[name], attrIdExists);
+        debouncedSubmit(name, orgRefId);
       }
     });
     return () => subscription.unsubscribe();

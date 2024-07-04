@@ -157,7 +157,7 @@ const AccountPersonalizations = () => {
   }, [createPropertiesResponse, createPropertiesError]);
 
   useMemo(() => {
-    if (updatePropertiesResponse?.status === 201) {
+    if (updatePropertiesResponse?.status === 200) {
       toast({
         description: updatePropertiesResponse?.data?.message
       });
@@ -208,9 +208,9 @@ const AccountPersonalizations = () => {
   const handleMemberProperties = (data: {
     name: string;
     value: optionType | string;
-    attrIdExists: boolean;
+    orgRefId: string;
   }) => {
-    const { name, value, attrIdExists } = data;
+    const { name, value, orgRefId } = data;
     const type = name.split("_")[0];
     const attribute = name.split("_")[1];
 
@@ -224,12 +224,12 @@ const AccountPersonalizations = () => {
         : [value as string];
 
     const requestBody: updatePropertiesRequestBody = {
-      attribute,
+      attribute: orgRefId ?? attribute,
       type,
       data: body
     };
 
-    attrIdExists
+    orgRefId
       ? runUpdateProperties(updateOrgPropertiesService(attribute, requestBody))
       : runCreateProperties(createOrgPropertiesService(requestBody));
   };
