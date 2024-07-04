@@ -59,8 +59,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     formState: { errors, dirtyFields },
     setValue,
     control,
-    watch,
-    getValues
+    watch
   } = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: {}
@@ -120,7 +119,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
   const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data);
   };
-  console.log(getValues());
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
