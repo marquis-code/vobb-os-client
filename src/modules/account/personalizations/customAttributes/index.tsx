@@ -3,7 +3,7 @@ import { Button } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler, useWatch } from "react-hook-form";
-import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types/interfaces";
+import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
 import { dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
 

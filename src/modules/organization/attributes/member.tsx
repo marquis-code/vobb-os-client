@@ -44,6 +44,7 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
     totalCount: 0,
     totalPages: 0
   };
+
   return (
     <>
       <section className="pb-8 mb-12 max-w-[800px]">

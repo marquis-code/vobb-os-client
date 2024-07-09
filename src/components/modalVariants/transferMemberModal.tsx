@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { useUserContext } from "context";
+import { Label } from "@radix-ui/react-dropdown-menu";
 
 interface TransferMemberData {
   branch: optionType;
@@ -21,14 +23,25 @@ const schema = yup.object({
 interface TransferMemberModalProps extends ModalProps {
   submit: (data) => void;
   multiple: boolean;
+  branchId: string;
+  loading: boolean;
 }
 
 const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   show,
   close,
   submit,
-  multiple
+  multiple,
+  branchId,
+  loading
 }) => {
+  const { orgBranches } = useUserContext();
+  const branchesArray = orgBranches?.branchesArray;
+  const branchesOptions =
+    branchesArray
+      ?.filter((branch) => branch.id !== branchId)
+      .map((branch) => ({ label: branch.name, value: branch.id })) || [];
+
   const {
     handleSubmit,
     formState: { errors },
@@ -40,7 +53,7 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   });
 
   const onSubmit: SubmitHandler<TransferMemberData> = (data) => {
-    submit(data);
+    submit(data.branch);
   };
 
   return (
@@ -58,7 +71,7 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
 
         <SelectInput
           label="Select branch"
-          options={[{ label: "Test", value: "Test" }]}
+          options={branchesOptions}
           value={watch("branch")?.value === "" ? null : watch("branch")}
           onChange={(val) => val && setValue("branch", val)}
           placeholder="Select a branch"
@@ -75,7 +88,11 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
             variant={"outline"}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            loading={loading}>
             Transfer
           </Button>
         </div>

@@ -82,6 +82,7 @@ const AccountPersonalizations = () => {
   const fetchProperties = () => {
     runFetchAttr(fetchOrgPropertiesService({ page: currentPage, limit: pageLimit }));
   };
+
   const fetchMemberProperties = () => {
     runFetchMemberProps(fetchMemberPropertiesService());
   };
@@ -170,6 +171,7 @@ const AccountPersonalizations = () => {
     }
   }, [updatePropertiesResponse, updatePropertiesError]);
 
+  //organisation's properties
   const orgProperties = useMemo<OrganisationAttributesData[]>(() => {
     if (fetchResponse?.status === 200) {
       const propertiesArray = fetchResponse?.data?.data?.attributes.map((item) => ({
@@ -189,6 +191,7 @@ const AccountPersonalizations = () => {
     return [];
   }, [fetchResponse, pageLimit]);
 
+  //already set member's properties.(used to determine update or create)
   const memberProperties = useMemo<MemberPropertiesData[]>(() => {
     if (memberPropsResponse?.status === 200) {
       const propertiesArray = memberPropsResponse?.data?.data?.attributes.map((item) => ({
@@ -205,6 +208,7 @@ const AccountPersonalizations = () => {
     return [];
   }, [memberPropsResponse]);
 
+  //Create or update the account's (member's) property.
   const handleMemberProperties = (data: {
     name: string;
     value: optionType | string;

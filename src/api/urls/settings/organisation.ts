@@ -6,6 +6,23 @@ SETTINGS URLS
 
 const prefixOrg = "/settings/org";
 
+type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
+
+interface filterParamsStructure {
+  value: string;
+  cond: conditions;
+}
+
+export interface queryParamsProps {
+  page?: number;
+  limit?: number;
+  name?: filterParamsStructure[];
+  team?: filterParamsStructure[];
+  role?: filterParamsStructure[];
+  email?: filterParamsStructure[];
+  operation?: string;
+}
+
 /**
  * FEtch org details URL
  * @returns url string
@@ -132,3 +149,46 @@ export const restoreOrgAttributeURL = ({ id }) => `${prefixOrg}/restore-attribut
  *
  */
 export const deleteOrgBranchURL = ({ id }) => `${prefixOrg}/branch?branch=${id}`;
+
+/**
+ * Fetch organisation's branch members
+ * @params must include id of branch, optional query parameters that will not be included if not called for.
+ * @returns url string
+ *
+ */
+export const fetchOrgBranchMembersURL = ({
+  id,
+  queryParams = {}
+}: {
+  id: string;
+  queryParams?: queryParamsProps;
+}) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== null)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefixOrg}/members/${id}${queryString ? `?${queryString}` : ""}`;
+};
+
+/**
+ * TRansfers organisation's branch's one or more members to another branch.
+ * @returns url string
+ *
+ */
+export const transferMultipleMembersToBranchURL = () => `${prefixOrg}/transfer/members`;
+
+/**
+ * TRansfers all of an organisation's branch's members to another branch.
+ * @returns url string
+ *
+ */
+export const transferAllMembersToBranchURL = () => `${prefixOrg}/transfer/members/all`;
+
+/**
+ * Fetch teams per branch URL
+ * @returns url string
+ *
+ */
+export const fetchTeamsPerBranchURL = ({ id, page, limit }) =>
+  `${prefixOrg}/teams/${id}?page=${page}&limit=${limit}`;

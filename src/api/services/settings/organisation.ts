@@ -12,13 +12,18 @@ import {
   deleteRequest,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
+  fetchOrgBranchMembersURL,
   fetchOrgDetailsURL,
+  fetchTeamsPerBranchURL,
   getRequest,
   patchRequest,
   postRequest,
   putRequest,
+  queryParamsProps,
   resendCodeOrgEmailsURL,
   restoreOrgAttributeURL,
+  transferAllMembersToBranchURL,
+  transferMultipleMembersToBranchURL,
   updateOrgAttributeURL,
   updateOrgBranchURL,
   updateOrgBrandingURL,
@@ -76,9 +81,10 @@ export interface createAttributeRequestBody {
   meta?: any;
 }
 
-interface queryParamsProps {
-  page?: number;
-  limit?: number;
+interface transferMembersRequestBody {
+  oldBranch: string;
+  newBranch: string;
+  members?: string[];
 }
 
 /**
@@ -295,5 +301,50 @@ export const restoreOrgAttributeService = ({ id }) => {
 export const deleteOrgBranchService = ({ id }) => {
   return deleteRequest({
     url: deleteOrgBranchURL({ id })
+  });
+};
+
+/**
+ * Fetch organisation's branch's members service
+ * @params must include id of branch, optional query parameters that will not be included if not called for.
+ * @returns axios promise
+ */
+export const fetchOrgBranchMembersService = (id: string, queryParams: queryParamsProps = {}) => {
+  return getRequest({
+    url: fetchOrgBranchMembersURL({ id, queryParams })
+  });
+};
+
+/**
+ * TRansfers organisation's branch's one or more members to another branch.
+ * @param data request body
+ * @returns axios promise
+ */
+export const transferMultipleMembersToBranchService = (data: transferMembersRequestBody) => {
+  return postRequest({
+    url: transferMultipleMembersToBranchURL(),
+    data
+  });
+};
+
+/*TRansfers all of an organisation's branch's members to another branch.
+ * @param data request body
+ * @returns axios promise
+ */
+export const transferAllMembersToBranchService = (data: transferMembersRequestBody) => {
+  return postRequest({
+    url: transferAllMembersToBranchURL(),
+    data
+  });
+};
+
+/**
+ * Fetch teams per branch service
+ * @param id of branch
+ * @returns axios promise
+ */
+export const fetchTeamsPerBranchService = ({ id, page, limit }) => {
+  return getRequest({
+    url: fetchTeamsPerBranchURL({ id, page, limit })
   });
 };

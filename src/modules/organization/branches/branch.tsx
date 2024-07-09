@@ -13,10 +13,10 @@ import {
   getBranchMemberTableColumns,
   BranchMemberTable
 } from "components/tables/branchMemberTable";
-import { BranchMemberTableMock, BranchTeamTableMock } from "lib";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { useUserContext } from "context";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -42,27 +42,53 @@ const attributes: attributeType[] = [
   }
 ];
 
-interface OrgBranchUIProps extends BranchMemberTableActions {}
+interface OrgBranchUIProps extends BranchMemberTableActions {
+  handleUpdateMembersParams: (param: string, value: string | number) => void;
+  handleUpdateTeamsParams: (param: string, value: number) => void;
+}
 
-const OrgBranchUI: React.FC<OrgBranchUIProps> = ({ handleTransferMember, handleViewMember }) => {
+const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
+  handleTransferMember,
+  handleViewMember,
+  handleUpdateMembersParams,
+  handleUpdateTeamsParams
+}) => {
   const memberColumns = useMemo(
     () => getBranchMemberTableColumns({ handleTransferMember, handleViewMember }),
     [handleTransferMember, handleViewMember]
   );
+  const [memberFilters, setMemberFilter] = useState<FilterData[]>([]);
+
+  const { orgBranches, branchMembers, branchTeams } = useUserContext();
+  const membersData = branchMembers?.membersArray || [];
+  const membersMetaData = branchMembers?.membersMetaData || {
+    currentPage: 1,
+    pageLimit: 0,
+    totalCount: 0,
+    totalPages: 0
+  };
+
+  const teamsData = branchTeams?.teamsArray || [];
+  const teamsMetaData = branchTeams?.teamsMetaData || {
+    currentPage: 1,
+    pageLimit: 0,
+    totalCount: 0,
+    totalPages: 0
+  };
+
+  const branchPath = window.location.pathname.split("/");
+  const branchId = branchPath[branchPath.length - 1];
+  const branchInfo = orgBranches?.branchesArray.find((branch) => branch.id === branchId);
 
   const teamColumns = useMemo(() => getBranchTeamTableColumns(), []);
-  const [memberFilters, setMemberFilter] = useState<FilterData[]>([]);
 
   return (
     <>
       <SettingsPageTitle
-        title="Headquarters (GMT +1)"
-        description={"5 Ade Ajayi Street, Ikoyi, Lagos, Nigeria, 100214"} //address line 1, city, state, country, postal code
+        title={`${branchInfo?.name}, ${branchInfo?.timeZone}`}
+        description={`${branchInfo?.addressLine1}, ${branchInfo?.city}, ${branchInfo?.province}, ${branchInfo?.country}, ${branchInfo?.zipCode}`}
         className="max-w-none"
       />
-      {/* Edit branch */}
-      {/* Mark as primary */}
-      {/* Delete */}
       <Tabs defaultValue="member">
         <TabsList className="mb-2">
           <TabsTrigger
@@ -90,15 +116,15 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({ handleTransferMember, handleV
               <PlusCircledIcon /> Add member
             </Button>
           </div>
-          <BranchMemberTable columns={memberColumns} data={BranchMemberTableMock} />
+          <BranchMemberTable columns={memberColumns} data={membersData} />
           <Pagination
             // hidePageLimit
-            handleChange={console.log}
-            handlePageLimit={console.log}
-            totalCount={3}
-            pageLimit={3}
-            totalPages={1}
-            currentPage={1}
+            handleChange={(val) => handleUpdateMembersParams("page", val)}
+            handlePageLimit={(val) => handleUpdateMembersParams("limit", val)}
+            totalCount={membersMetaData.totalCount}
+            pageLimit={membersMetaData.pageLimit}
+            totalPages={membersMetaData.totalPages}
+            currentPage={membersMetaData.currentPage}
             className="mt-4"
           />
         </TabsContent>
@@ -108,15 +134,15 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({ handleTransferMember, handleV
           <Button onClick={console.log} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
             <PlusCircledIcon /> New team
           </Button>
-          <BranchTeamTable columns={teamColumns} data={BranchTeamTableMock} />
+          <BranchTeamTable columns={teamColumns} data={teamsData} />
           <Pagination
             // hidePageLimit
-            handleChange={console.log}
-            handlePageLimit={console.log}
-            totalCount={3}
-            pageLimit={3}
-            totalPages={1}
-            currentPage={1}
+            handleChange={(val) => handleUpdateTeamsParams("page", val)}
+            handlePageLimit={(val) => handleUpdateTeamsParams("limit", val)}
+            totalCount={teamsMetaData.totalCount}
+            pageLimit={teamsMetaData.pageLimit}
+            totalPages={teamsMetaData.totalPages}
+            currentPage={teamsMetaData.currentPage}
             className="mt-4"
           />
         </TabsContent>

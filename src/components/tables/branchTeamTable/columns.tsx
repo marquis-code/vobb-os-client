@@ -1,15 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-
-// This type is used to define the shape of our data.
-export type BranchTeamTableData = {
-  id: string;
-  icon: string;
-  name: string;
-  teamLeads: string[];
-  teamManagers: string[];
-  date: string;
-  numberOfMembers: number;
-};
+import { BranchTeamTableData } from "types";
 
 export const getBranchTeamTableColumns = (): ColumnDef<BranchTeamTableData>[] => [
   {

@@ -1,2 +1,2 @@
 export * from "./account";
-export * from "./workspace";
+export * from "./organisation";

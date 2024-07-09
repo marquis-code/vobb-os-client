@@ -2,7 +2,7 @@ import { ModalProps } from "types/interfaces";
 import { Modal } from "../modal";
 import { Button, Checkbox } from "../ui";
 import { Cross1Icon, ThickArrowRightIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface BranchMemberData {
   name: string;
@@ -13,43 +13,19 @@ interface BranchMemberData {
 interface PreventDeleteBranchModalProps extends ModalProps {
   handleContinue: (teamId?: string, memberIds?: string[]) => void;
   name: string;
+  branchMembers: BranchMemberData[];
+  handleSetIds: (ids: string[]) => void;
 }
 
 const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
   show,
   close,
   handleContinue,
-  name
+  name,
+  branchMembers,
+  handleSetIds
 }) => {
   const [selected, setSelected] = useState<BranchMemberData[]>([]);
-
-  const branchMembers: BranchMemberData[] = [
-    {
-      name: "John Doe",
-      id: "1234",
-      teams: ["Finance", "Operations"]
-    },
-    {
-      name: "Jason Doe",
-      id: "12345",
-      teams: ["Support", "Engineering"]
-    },
-    {
-      name: "John Derulo",
-      id: "12364",
-      teams: ["Sales"]
-    },
-    {
-      name: "John Tunmise",
-      id: "12347",
-      teams: ["Marketing"]
-    },
-    {
-      name: "Ayodele Tunmide",
-      id: "12348",
-      teams: ["Marketing"]
-    }
-  ];
 
   const handleSelectMember = (member: BranchMemberData) => {
     // check if member is seleted
@@ -69,6 +45,11 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
       setSelected(branchMembers);
     }
   };
+
+  useEffect(() => {
+    handleSetIds(selected.map((member) => member.id));
+  }, [selected]);
+
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -114,14 +95,21 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
           </div>
         </section>
         <section className="flex justify-end gap-2">
-          <Button onClick={close} size={"default"} variant={"outline"}>
+          <Button
+            onClick={() => {
+              close();
+              setSelected([]);
+            }}
+            size={"default"}
+            variant={"outline"}>
             Cancel
           </Button>
           <Button
             className="gap-1"
             size={"default"}
             variant={"fill"}
-            onClick={() => handleContinue()}>
+            onClick={() => handleContinue()}
+            disabled={!selected.length}>
             Transfer{" "}
             {selected.length > 0 && selected.length !== branchMembers.length ? "selected" : "all"}{" "}
             <ThickArrowRightIcon />
