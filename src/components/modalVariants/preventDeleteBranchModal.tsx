@@ -2,7 +2,6 @@ import { ModalProps } from "types/interfaces";
 import { Modal } from "../modal";
 import { Button, Checkbox } from "../ui";
 import { Cross1Icon, ThickArrowRightIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
 
 interface BranchMemberData {
   name: string;
@@ -11,10 +10,14 @@ interface BranchMemberData {
 }
 
 interface PreventDeleteBranchModalProps extends ModalProps {
-  handleContinue: (teamId?: string, memberIds?: string[]) => void;
+  handleContinue: (team: string, memberIds: string[]) => void;
   name: string;
   branchMembers: BranchMemberData[];
-  handleSetIds: (ids: string[]) => void;
+  handleSetIds: {
+    selected: string[];
+    handleSelectMember: (member: BranchMemberData) => void;
+    handleSelectAll: () => void;
+  };
 }
 
 const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
@@ -23,33 +26,8 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
   handleContinue,
   name,
   branchMembers,
-  handleSetIds
+  handleSetIds: { selected, handleSelectMember, handleSelectAll }
 }) => {
-  const [selected, setSelected] = useState<BranchMemberData[]>([]);
-
-  const handleSelectMember = (member: BranchMemberData) => {
-    // check if member is seleted
-    if (selected.find((item) => item.id === member.id)) {
-      // remove
-      setSelected((prev) => prev.filter((item) => item.id !== member.id));
-    } else {
-      // add
-      setSelected((prev) => [...prev, member]);
-    }
-  };
-
-  const handleSelectAll = () => {
-    if (selected.length === branchMembers.length) {
-      setSelected([]);
-    } else {
-      setSelected(branchMembers);
-    }
-  };
-
-  useEffect(() => {
-    handleSetIds(selected.map((member) => member.id));
-  }, [selected]);
-
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -81,7 +59,7 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
                 return (
                   <li className="flex items-center gap-2 ">
                     <Checkbox
-                      checked={selected.find((item) => item.id === id) ? true : false}
+                      checked={selected.find((selectedId) => selectedId === id) ? true : false}
                       onCheckedChange={() => handleSelectMember(member)}
                     />
                     <span>{name}</span>
@@ -95,20 +73,14 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
           </div>
         </section>
         <section className="flex justify-end gap-2">
-          <Button
-            onClick={() => {
-              close();
-              setSelected([]);
-            }}
-            size={"default"}
-            variant={"outline"}>
+          <Button onClick={close} size={"default"} variant={"outline"}>
             Cancel
           </Button>
           <Button
             className="gap-1"
             size={"default"}
             variant={"fill"}
-            onClick={() => handleContinue()}
+            onClick={() => handleContinue(name, selected)}
             disabled={!selected.length}>
             Transfer{" "}
             {selected.length > 0 && selected.length !== branchMembers.length ? "selected" : "all"}{" "}

@@ -4,6 +4,7 @@ import {
   BranchTableActions,
   Button,
   getBranchTableColumns,
+  LoadingSpinner,
   Pagination,
   SettingsPageTitle
 } from "components";
@@ -15,6 +16,7 @@ interface OrgBranchesUIProps extends BranchTableActions {
   setPage: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   limit: number;
+  loading: boolean;
 }
 
 const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
@@ -25,7 +27,8 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   setPage,
   setLimit,
   limit,
-  handleViewBranch
+  handleViewBranch,
+  loading
 }) => {
   const columns = useMemo(
     () =>
@@ -57,22 +60,29 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   return (
     <>
       <SettingsPageTitle title="Branches" />
-      <section className="pb-8 mb-12 max-w-[800px]">
-        <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
-          <PlusCircledIcon /> New branch
-        </Button>
-        <BranchesTable columns={columns} data={tableData} />
-        <Pagination
-          // hidePageLimit
-          handleChange={handleChangePage}
-          handlePageLimit={handlePageLimit}
-          totalCount={totalCount}
-          pageLimit={limit}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          className="mt-4"
-        />
-      </section>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <section className="pb-8 mb-12 max-w-[800px]">
+          <Button
+            onClick={handleAddBranch}
+            className="flex mt-8 mb-6 gap-2 ml-auto"
+            variant={"fill"}>
+            <PlusCircledIcon /> New branch
+          </Button>
+          <BranchesTable columns={columns} data={tableData} />
+          <Pagination
+            // hidePageLimit
+            handleChange={handleChangePage}
+            handlePageLimit={handlePageLimit}
+            totalCount={totalCount}
+            pageLimit={limit}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            className="mt-4"
+          />
+        </section>
+      )}
     </>
   );
 };

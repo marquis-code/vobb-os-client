@@ -37,7 +37,12 @@ const defaultBranchesData: BranchesDataProps = {
 const OrgBranches = () => {
   const navigate = useNavigate();
   const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
-  const { run: runFetchBranches, data: fetchResponse, error: fetchError } = useApiRequest({});
+  const {
+    run: runFetchBranches,
+    data: fetchResponse,
+    requestStatus: fetchBranchStatus,
+    error: fetchError
+  } = useApiRequest({});
   const { countries } = useCountriesContext();
   const { orgBranches, handleUpdateBranches } = useUserContext();
   const { currentPage } = orgBranches?.branchesMetaData || {
@@ -117,7 +122,7 @@ const OrgBranches = () => {
         addressLine2: item.address_line_2 ?? "",
         city: item.city,
         timeZone: item.timezone ?? "",
-        hasMembers: item.has_members ?? true
+        hasMembers: item.member_exists
       }));
       const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
       const branchesMetaData = {
@@ -149,6 +154,7 @@ const OrgBranches = () => {
         show={preventDelete}
         close={() => setPreventDelete(false)}
         handleOpen={() => setPreventDelete(true)}
+        fetchOrgBranches={fetchOrgBranches}
       />
       <AddBranch
         show={addBranch}
@@ -174,6 +180,7 @@ const OrgBranches = () => {
         limit={limit}
         setPage={setPage}
         setLimit={setLimit}
+        loading={fetchBranchStatus.isPending}
         handleViewBranch={handleViewBranch}
       />
     </>

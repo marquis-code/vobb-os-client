@@ -4,12 +4,14 @@ import { TransferMember } from "./transferMember";
 import { useEffect, useMemo, useState } from "react";
 import { useApiRequest } from "hooks";
 import { fetchOrgBranchMembersService } from "api";
+import { useUserContext } from "context";
 
 interface Props extends ModalProps {
   id: string;
   name: string;
   handleDeleteBranch: () => void;
   handleOpen: () => void;
+  fetchOrgBranches: ({ page, limit }) => void;
 }
 
 export interface BranchMemberData {
@@ -24,22 +26,37 @@ const PreventDeleteBranch: React.FC<Props> = ({
   id,
   name,
   handleOpen,
-  handleDeleteBranch
+  handleDeleteBranch,
+  fetchOrgBranches
 }) => {
-  const [transfer, setTransfer] = useState<{ show: boolean; memberIds?: string[] }>({
-    show: false
+  const [transfer, setTransfer] = useState<{ show: boolean; memberIds: string[] }>({
+    show: false,
+    memberIds: []
   });
 
-  const handleSetIds = (selectedIds: string[]) => {
-    setTransfer((prev) => ({ ...prev, memberIds: selectedIds }));
+  const handleSelectMember = (member: BranchMemberData) => {
+    setTransfer((prev) => {
+      const memberIds = prev.memberIds ?? [];
+      if (memberIds.includes(member.id)) {
+        return { ...prev, memberIds: memberIds.filter((id) => id !== member.id) };
+      } else {
+        return { ...prev, memberIds: [...memberIds, member.id] };
+      }
+    });
   };
 
-  const handleTransfer = () => {
-    transfer.memberIds ? handleOpen() : handleDeleteBranch();
-    setTransfer({ show: false });
+  const handleSelectAll = () => {
+    setTransfer((prev) => {
+      const memberIds = prev.memberIds ?? [];
+      if (memberIds.length === branchMembers.length) {
+        return { ...prev, memberIds: [] };
+      } else {
+        return { ...prev, memberIds: branchMembers.map((member) => member.id) };
+      }
+    });
   };
+
   const { run: runFetch, data: fetchResponse } = useApiRequest({});
-
   const fetchBranchMembers = () => {
     runFetch(fetchOrgBranchMembersService(id, { page: 1, limit: 10 }));
   };
@@ -66,23 +83,29 @@ const PreventDeleteBranch: React.FC<Props> = ({
     <>
       <PreventDeleteBranchModal
         show={show}
-        close={close}
+        close={() => {
+          close();
+          setTransfer((prev) => ({ ...prev, memberIds: [] }));
+        }}
         handleContinue={(_, memberIds) => {
-          setTransfer((prev) => ({ ...prev, show: true }));
+          setTransfer({ show: true, memberIds });
           close();
         }}
         name={name}
         branchMembers={branchMembers}
-        handleSetIds={handleSetIds}
+        handleSetIds={{
+          selected: transfer.memberIds,
+          handleSelectMember: handleSelectMember,
+          handleSelectAll: handleSelectAll
+        }}
       />
       <TransferMember
         id={id}
         transferIds={transfer.memberIds}
-        handleTransfer={handleTransfer}
+        fetchOrgBranches={fetchOrgBranches}
         fetchBranchMembers={fetchBranchMembers}
         close={() => {
-          setTransfer((prev) => ({ ...prev, show: false }));
-          handleOpen();
+          setTransfer({ memberIds: [], show: false });
         }}
         show={transfer.show}
         type={transfer.memberIds ? "member" : "branch"}

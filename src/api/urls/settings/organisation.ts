@@ -16,6 +16,7 @@ interface filterParamsStructure {
 export interface queryParamsProps {
   page?: number;
   limit?: number;
+  type?: string;
   name?: filterParamsStructure[];
   team?: filterParamsStructure[];
   role?: filterParamsStructure[];
@@ -112,8 +113,8 @@ ATTRIBUTES
  * @returns url string
  *
  */
-export const fetchOrgAttributesURL = ({ page, limit }) =>
-  `${prefixOrg}/attribute?page=${page}&limit=${limit}`;
+export const fetchOrgAttributesURL = ({ page, limit, type }) =>
+  `${prefixOrg}/attribute?page=${page}&limit=${limit}&type=${type}`;
 
 /**
  * Create organisation's attribute URL

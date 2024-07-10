@@ -1,5 +1,6 @@
 import { transferMultipleMembersToBranchService } from "api";
 import { toast, TransferMemberModal } from "components";
+import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps, optionType } from "types";
@@ -7,12 +8,25 @@ import { ModalProps, optionType } from "types";
 interface Props extends ModalProps {
   id: string;
   transferIds: string[] | undefined;
-  handleTransfer: () => void;
+  fetchOrgBranches?: ({ page, limit }) => void;
+
   fetchBranchMembers: () => void;
   type: "member" | "branch";
 }
 
-const TransferMember: React.FC<Props> = ({ show, close, id, transferIds, fetchBranchMembers }) => {
+const TransferMember: React.FC<Props> = ({
+  show,
+  close,
+  id,
+  transferIds,
+  fetchBranchMembers,
+  fetchOrgBranches
+}) => {
+  const { orgBranches } = useUserContext();
+  const { pageLimit } = orgBranches?.branchesMetaData || {
+    pageLimit: 0
+  };
+
   const { run, data: response, requestStatus, error } = useApiRequest({});
 
   const submit = (data: optionType) => {
@@ -30,7 +44,9 @@ const TransferMember: React.FC<Props> = ({ show, close, id, transferIds, fetchBr
       toast({
         description: response?.data?.message
       });
+      fetchOrgBranches?.({ page: 1, limit: pageLimit });
       fetchBranchMembers();
+      close();
     } else if (error) {
       toast({
         variant: "destructive",

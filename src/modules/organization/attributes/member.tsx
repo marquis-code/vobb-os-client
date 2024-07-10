@@ -11,9 +11,7 @@ import { useMemo } from "react";
 
 interface MemberAttributesProps extends AttributeTableActions {
   handleAddAttribute: () => void;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  setLimit: React.Dispatch<React.SetStateAction<number>>;
-  limit: number;
+  handlePagination: (param: string, value: number) => void;
 }
 
 const MemberAttributes: React.FC<MemberAttributesProps> = ({
@@ -22,9 +20,7 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
   handleDuplicateAttribute,
   handleRestoreAttribute,
   handleArchiveAttribute,
-  limit,
-  setLimit,
-  setPage
+  handlePagination
 }) => {
   const columns = useMemo(
     () =>
@@ -56,10 +52,10 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
         </Button>
         <AttributesTable columns={columns} data={tableData} />
         <Pagination
-          handleChange={setPage}
-          handlePageLimit={setLimit}
+          handleChange={(val) => handlePagination("page", val)}
+          handlePageLimit={(val) => handlePagination("limit", val)}
           totalCount={metaData.totalCount}
-          pageLimit={limit}
+          pageLimit={metaData.pageLimit}
           totalPages={metaData.totalPages}
           currentPage={metaData.currentPage}
           className="mt-4"

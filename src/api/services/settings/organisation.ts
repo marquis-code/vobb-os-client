@@ -241,9 +241,9 @@ export const markBranchAsPrimaryService = (id: string) => {
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgAttributesService = ({ page, limit }: queryParamsProps) => {
+export const fetchOrgAttributesService = ({ page, limit, type }: queryParamsProps) => {
   return getRequest({
-    url: fetchOrgAttributesURL({ page, limit })
+    url: fetchOrgAttributesURL({ page, limit, type })
   });
 };
 

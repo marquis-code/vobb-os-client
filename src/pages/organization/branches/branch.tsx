@@ -59,7 +59,11 @@ const OrgBranch = () => {
   };
 
   const { run: runTeams, data: teamsResponse } = useApiRequest({});
-  const { run: runMembers, data: membersResponse } = useApiRequest({});
+  const {
+    run: runMembers,
+    data: membersResponse,
+    requestStatus: membersStatus
+  } = useApiRequest({});
 
   const fetchBranchMembers = () => {
     runMembers(
@@ -158,7 +162,6 @@ const OrgBranch = () => {
         id={branchId}
         type="member"
         transferIds={[transfer.id]}
-        handleTransfer={console.log}
         fetchBranchMembers={fetchBranchMembers}
         close={() => setTransfer({ show: false, id: "" })}
       />
@@ -167,6 +170,7 @@ const OrgBranch = () => {
         handleTransferMember={handleTransferMember}
         handleUpdateMembersParams={handleUpdateMembersParams}
         handleUpdateTeamsParams={handleUpdateTeamsParams}
+        loadingMembers={membersStatus.isPending}
       />
     </>
   );

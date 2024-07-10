@@ -6,6 +6,7 @@ import {
   Filter,
   FilterData,
   getBranchTeamTableColumns,
+  LoadingSpinner,
   Pagination,
   SettingsPageTitle
 } from "components";
@@ -45,13 +46,15 @@ const attributes: attributeType[] = [
 interface OrgBranchUIProps extends BranchMemberTableActions {
   handleUpdateMembersParams: (param: string, value: string | number) => void;
   handleUpdateTeamsParams: (param: string, value: number) => void;
+  loadingMembers: boolean;
 }
 
 const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   handleTransferMember,
   handleViewMember,
   handleUpdateMembersParams,
-  handleUpdateTeamsParams
+  handleUpdateTeamsParams,
+  loadingMembers
 }) => {
   const memberColumns = useMemo(
     () => getBranchMemberTableColumns({ handleTransferMember, handleViewMember }),
@@ -81,72 +84,77 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   const branchInfo = orgBranches?.branchesArray.find((branch) => branch.id === branchId);
 
   const teamColumns = useMemo(() => getBranchTeamTableColumns(), []);
-
   return (
     <>
-      <SettingsPageTitle
-        title={`${branchInfo?.name}, ${branchInfo?.timeZone}`}
-        description={`${branchInfo?.addressLine1}, ${branchInfo?.city}, ${branchInfo?.province}, ${branchInfo?.country}, ${branchInfo?.zipCode}`}
-        className="max-w-none"
-      />
-      <Tabs defaultValue="member">
-        <TabsList className="mb-2">
-          <TabsTrigger
-            className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-            value="member">
-            Members
-          </TabsTrigger>
-          <TabsTrigger
-            className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-            value="client">
-            Teams
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent className="pb-8 mb-12" value="member">
-          {/* Add member */}
-          {/* Search, sort, filter by  role */}
-          <div className="mb-6 flex justify-between gap-4 items-center">
-            <Filter
-              className="mb-0"
-              filters={memberFilters}
-              setFilter={setMemberFilter}
-              attributes={attributes}
-            />
-            <Button onClick={console.log} className="flex gap-2 ml-auto" variant={"fill"}>
-              <PlusCircledIcon /> Add member
-            </Button>
-          </div>
-          <BranchMemberTable columns={memberColumns} data={membersData} />
-          <Pagination
-            // hidePageLimit
-            handleChange={(val) => handleUpdateMembersParams("page", val)}
-            handlePageLimit={(val) => handleUpdateMembersParams("limit", val)}
-            totalCount={membersMetaData.totalCount}
-            pageLimit={membersMetaData.pageLimit}
-            totalPages={membersMetaData.totalPages}
-            currentPage={membersMetaData.currentPage}
-            className="mt-4"
+      {loadingMembers ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <SettingsPageTitle
+            title={`${branchInfo?.name}, ${branchInfo?.timeZone}`}
+            description={`${branchInfo?.addressLine1}, ${branchInfo?.city}, ${branchInfo?.province}, ${branchInfo?.country}, ${branchInfo?.zipCode}`}
+            className="max-w-none"
           />
-        </TabsContent>
-        <TabsContent className="pb-8 mb-12" value="client">
-          {/* Add team */}
-          {/* Search, sort, filter by teams */}
-          <Button onClick={console.log} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
-            <PlusCircledIcon /> New team
-          </Button>
-          <BranchTeamTable columns={teamColumns} data={teamsData} />
-          <Pagination
-            // hidePageLimit
-            handleChange={(val) => handleUpdateTeamsParams("page", val)}
-            handlePageLimit={(val) => handleUpdateTeamsParams("limit", val)}
-            totalCount={teamsMetaData.totalCount}
-            pageLimit={teamsMetaData.pageLimit}
-            totalPages={teamsMetaData.totalPages}
-            currentPage={teamsMetaData.currentPage}
-            className="mt-4"
-          />
-        </TabsContent>
-      </Tabs>
+          <Tabs defaultValue="member">
+            <TabsList className="mb-2">
+              <TabsTrigger
+                className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
+                value="member">
+                Members
+              </TabsTrigger>
+              <TabsTrigger
+                className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
+                value="client">
+                Teams
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent className="pb-8 mb-12" value="member">
+              {/* Add member */}
+              {/* Search, sort, filter by  role */}
+              <div className="mb-6 flex justify-between gap-4 items-center">
+                <Filter
+                  className="mb-0"
+                  filters={memberFilters}
+                  setFilter={setMemberFilter}
+                  attributes={attributes}
+                />
+                <Button onClick={console.log} className="flex gap-2 ml-auto" variant={"fill"}>
+                  <PlusCircledIcon /> Add member
+                </Button>
+              </div>
+              <BranchMemberTable columns={memberColumns} data={membersData} />
+              <Pagination
+                // hidePageLimit
+                handleChange={(val) => handleUpdateMembersParams("page", val)}
+                handlePageLimit={(val) => handleUpdateMembersParams("limit", val)}
+                totalCount={membersMetaData.totalCount}
+                pageLimit={membersMetaData.pageLimit}
+                totalPages={membersMetaData.totalPages}
+                currentPage={membersMetaData.currentPage}
+                className="mt-4"
+              />
+            </TabsContent>
+            <TabsContent className="pb-8 mb-12" value="client">
+              {/* Add team */}
+              {/* Search, sort, filter by teams */}
+              <Button onClick={console.log} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
+                <PlusCircledIcon /> New team
+              </Button>
+              <BranchTeamTable columns={teamColumns} data={teamsData} />
+              <Pagination
+                // hidePageLimit
+                handleChange={(val) => handleUpdateTeamsParams("page", val)}
+                handlePageLimit={(val) => handleUpdateTeamsParams("limit", val)}
+                totalCount={teamsMetaData.totalCount}
+                pageLimit={teamsMetaData.pageLimit}
+                totalPages={teamsMetaData.totalPages}
+                currentPage={teamsMetaData.currentPage}
+                className="mt-4"
+              />
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
     </>
   );
 };

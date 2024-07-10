@@ -23,7 +23,7 @@ const defaultAttributesData: AttributesDataProps = {
 };
 const OrgAttributes = () => {
   const { orgAttributes, handleUpdateAttributes } = useUserContext();
-  const { currentPage } = orgAttributes?.attributesMetaData || {
+  const { currentPage: memberPage } = orgAttributes?.attributesMetaData || {
     currentPage: 1
   };
   const [addMemberAttr, setAddMemberAttr] = useState(false);
@@ -37,18 +37,32 @@ const OrgAttributes = () => {
     isActive: true
   });
 
-  const [page, setPage] = useState(currentPage);
-  const [limit, setLimit] = useState(20);
-
-  const handleSetDefaultAttribute = (attr: OrganisationAttributesData) => {
+  const handleSetDefaultMemberAttribute = (attr: OrganisationAttributesData) => {
     setDefaultAttr(attr);
   };
-  const { run: runFetchAttr, data: fetchResponse } = useApiRequest({});
+
+  //paginations
+  const [memberQueryParams, setMemberQueryParams] = useState({
+    page: memberPage,
+    limit: 20
+  });
+
+  const handleMemberPagination = (param: string, value: number) => {
+    setMemberQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
+
+  const {
+    run: runFetchMember,
+    data: memberResponse,
+    requestStatus: memberStatus
+  } = useApiRequest({});
   const { run: runArchive, data: archiveResponse, error: archiveError } = useApiRequest({});
   const { run: runRestore, data: restoreResponse, error: restoreError } = useApiRequest({});
 
-  const fetchAttributes = () => {
-    runFetchAttr(fetchOrgAttributesService({ page, limit }));
+  const fetchMemberAttributes = () => {
+    runFetchMember(
+      fetchOrgAttributesService({ page: memberQueryParams.page, limit: memberQueryParams.limit })
+    );
   };
 
   const archiveAttribute = (id: string) => {
@@ -63,7 +77,7 @@ const OrgAttributes = () => {
       toast({
         description: archiveResponse?.data?.message
       });
-      fetchAttributes();
+      fetchMemberAttributes();
     } else if (archiveError) {
       toast({
         variant: "destructive",
@@ -77,7 +91,7 @@ const OrgAttributes = () => {
       toast({
         description: restoreResponse?.data?.message
       });
-      fetchAttributes();
+      fetchMemberAttributes();
     } else if (restoreError) {
       toast({
         variant: "destructive",
@@ -87,8 +101,8 @@ const OrgAttributes = () => {
   }, [restoreResponse, restoreError]);
 
   useMemo<AttributesDataProps>(() => {
-    if (fetchResponse?.status === 200) {
-      const attributesArray = fetchResponse?.data?.data?.attributes.map((item) => ({
+    if (memberResponse?.status === 200) {
+      const attributesArray = memberResponse?.data?.data?.attributes.map((item) => ({
         id: item._id,
         title: item.label,
         type: item.type,
@@ -99,53 +113,54 @@ const OrgAttributes = () => {
         metaData: item.meta
       }));
       const attributesMetaData = {
-        currentPage: fetchResponse?.data?.data?.page ?? 1,
-        totalPages: fetchResponse?.data?.data?.total_pages,
-        totalCount: fetchResponse?.data?.data?.total_count,
-        pageLimit: limit
+        currentPage: memberResponse?.data?.data?.page ?? 1,
+        totalPages: memberResponse?.data?.data?.total_pages,
+        totalCount: memberResponse?.data?.data?.total_count,
+        pageLimit: memberQueryParams.limit
       };
       handleUpdateAttributes({ attributesArray, attributesMetaData });
       return { attributesArray, attributesMetaData };
     }
 
     return defaultAttributesData;
-  }, [fetchResponse, limit]);
+  }, [memberResponse]);
 
   useEffect(() => {
-    fetchAttributes();
-  }, [page, limit]);
+    fetchMemberAttributes();
+  }, [memberQueryParams]);
 
   return (
     <>
       <AddMemberAttribute
         close={() => setAddMemberAttr(false)}
         show={addMemberAttr}
-        fetchAttributes={fetchAttributes}
+        fetchAttributes={fetchMemberAttributes}
         prefilledAttribute={defaultAttr}
       />
       <EditMemberAttribute
         close={() => setEditMemberAttr(false)}
         show={editMemberAttr}
         prefilledAttribute={defaultAttr}
-        fetchAttributes={fetchAttributes}
+        fetchAttributes={fetchMemberAttributes}
       />
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}
         handleEditMemberAttr={{
           setEditAttr: () => setEditMemberAttr(true),
           handleSetDefaultAttribute: (attr: OrganisationAttributesData) =>
-            handleSetDefaultAttribute(attr)
+            handleSetDefaultMemberAttribute(attr)
         }}
         handleDuplicateMemberAttr={{
           setDuplicateAttr: () => setAddMemberAttr(true),
           handleSetDefaultDuplicate: (attr: OrganisationAttributesData) =>
-            handleSetDefaultAttribute(attr)
+            handleSetDefaultMemberAttribute(attr)
         }}
         handleArchiveAttr={archiveAttribute}
         handleRestoreAttr={restoreAttribute}
-        limit={limit}
-        setPage={setPage}
-        setLimit={setLimit}
+        handleMemberAction={{
+          loading: memberStatus.isPending,
+          handlePagination: handleMemberPagination
+        }}
       />
     </>
   );
