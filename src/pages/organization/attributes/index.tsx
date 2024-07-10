@@ -56,13 +56,26 @@ const OrgAttributes = () => {
     data: memberResponse,
     requestStatus: memberStatus
   } = useApiRequest({});
+  const {
+    run: runFetchClient,
+    data: clientResponse,
+    requestStatus: clientStatus
+  } = useApiRequest({});
   const { run: runArchive, data: archiveResponse, error: archiveError } = useApiRequest({});
   const { run: runRestore, data: restoreResponse, error: restoreError } = useApiRequest({});
 
   const fetchMemberAttributes = () => {
     runFetchMember(
-      fetchOrgAttributesService({ page: memberQueryParams.page, limit: memberQueryParams.limit })
+      fetchOrgAttributesService({
+        page: memberQueryParams.page,
+        limit: memberQueryParams.limit,
+        type: "member"
+      })
     );
+  };
+
+  const fetchClientAttributes = () => {
+    runFetchClient(fetchOrgAttributesService({ page: 1, limit: 20, type: "client" }));
   };
 
   const archiveAttribute = (id: string) => {
@@ -129,6 +142,9 @@ const OrgAttributes = () => {
     fetchMemberAttributes();
   }, [memberQueryParams]);
 
+  useEffect(() => {
+    fetchClientAttributes();
+  }, []);
   return (
     <>
       <AddMemberAttribute
