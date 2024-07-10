@@ -1,7 +1,8 @@
 import { ModalProps } from "types/interfaces";
 import { Modal } from "../modal";
-import { Button, Checkbox } from "../ui";
+import { Button, Checkbox, LoadingSpinner } from "../ui";
 import { Cross1Icon, ThickArrowRightIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 
 interface BranchMemberData {
   name: string;
@@ -10,14 +11,10 @@ interface BranchMemberData {
 }
 
 interface PreventDeleteBranchModalProps extends ModalProps {
-  handleContinue: (team: string, memberIds: string[]) => void;
+  handleContinue: (teamId?: string, memberIds?: string[]) => void;
   name: string;
   branchMembers: BranchMemberData[];
-  handleSetIds: {
-    selected: string[];
-    handleSelectMember: (member: BranchMemberData) => void;
-    handleSelectAll: () => void;
-  };
+  loading: boolean;
 }
 
 const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
@@ -26,8 +23,29 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
   handleContinue,
   name,
   branchMembers,
-  handleSetIds: { selected, handleSelectMember, handleSelectAll }
+  loading
 }) => {
+  const [selected, setSelected] = useState<BranchMemberData[]>([]);
+
+  const handleSelectMember = (member: BranchMemberData) => {
+    // check if member is seleted
+    if (selected.find((item) => item.id === member.id)) {
+      // remove
+      setSelected((prev) => prev.filter((item) => item.id !== member.id));
+    } else {
+      // add
+      setSelected((prev) => [...prev, member]);
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selected.length === branchMembers.length) {
+      setSelected([]);
+    } else {
+      setSelected(branchMembers);
+    }
+  };
+
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -42,35 +60,39 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
             You cannot delete a non-empty branch. Please transfer the users under this branch to a
             different branch or remove all team members.
           </p>
-          <div className="">
-            <Button
-              onClick={handleSelectAll}
-              variant={"link"}
-              className="text-vobb-primary-70 p-0 items-center gap-2">
-              <Checkbox
-                checked={selected.length === branchMembers.length}
-                onCheckedChange={() => handleSelectAll()}
-              />
-              {selected.length === branchMembers.length ? "Unselect" : "Select"} all
-            </Button>
-            <ul className="max-h-[calc(100vh-300px)] overflow-scroll leading-7 text-vobb-neutral-70">
-              {branchMembers.map((member) => {
-                const { id, name, teams } = member;
-                return (
-                  <li className="flex items-center gap-2 ">
-                    <Checkbox
-                      checked={selected.find((selectedId) => selectedId === id) ? true : false}
-                      onCheckedChange={() => handleSelectMember(member)}
-                    />
-                    <span>{name}</span>
-                    <span className="font-semibold ml-auto mr-2 text-vobb-neutral-100 text-xs">
-                      {teams.join(", ")}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <div className="">
+              <Button
+                onClick={handleSelectAll}
+                variant={"link"}
+                className="text-vobb-primary-70 p-0 items-center gap-2">
+                <Checkbox
+                  checked={selected.length === branchMembers.length}
+                  onCheckedChange={() => handleSelectAll()}
+                />
+                {selected.length === branchMembers.length ? "Unselect" : "Select"} all
+              </Button>
+              <ul className="max-h-[calc(100vh-300px)] overflow-scroll leading-7 text-vobb-neutral-70">
+                {branchMembers.map((member) => {
+                  const { id, name, teams } = member;
+                  return (
+                    <li className="flex items-center gap-2 ">
+                      <Checkbox
+                        checked={selected.find((item) => item.id === id) ? true : false}
+                        onCheckedChange={() => handleSelectMember(member)}
+                      />
+                      <span>{name}</span>
+                      <span className="font-semibold ml-auto mr-2 text-vobb-neutral-100 text-xs">
+                        {teams.join(", ")}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </section>
         <section className="flex justify-end gap-2">
           <Button onClick={close} size={"default"} variant={"outline"}>
@@ -80,8 +102,12 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
             className="gap-1"
             size={"default"}
             variant={"fill"}
-            onClick={() => handleContinue(name, selected)}
-            disabled={!selected.length}>
+            onClick={() =>
+              handleContinue(
+                name,
+                selected.map((member) => member.id)
+              )
+            }>
             Transfer{" "}
             {selected.length > 0 && selected.length !== branchMembers.length ? "selected" : "all"}{" "}
             <ThickArrowRightIcon />

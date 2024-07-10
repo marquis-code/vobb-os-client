@@ -54,6 +54,7 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
 
   const onSubmit: SubmitHandler<TransferMemberData> = (data) => {
     submit(data.branch);
+    reset();
   };
 
   return (

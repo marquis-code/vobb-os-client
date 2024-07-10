@@ -4,7 +4,6 @@ import { TransferMember } from "./transferMember";
 import { useEffect, useMemo, useState } from "react";
 import { useApiRequest } from "hooks";
 import { fetchOrgBranchMembersService } from "api";
-import { useUserContext } from "context";
 
 interface Props extends ModalProps {
   id: string;
@@ -29,36 +28,20 @@ const PreventDeleteBranch: React.FC<Props> = ({
   handleDeleteBranch,
   fetchOrgBranches
 }) => {
-  const [transfer, setTransfer] = useState<{ show: boolean; memberIds: string[] }>({
-    show: false,
-    memberIds: []
+  const { run: runFetch, data: fetchResponse, requestStatus } = useApiRequest({});
+  const [transfer, setTransfer] = useState<{ show: boolean; memberIds?: string[] }>({
+    show: false
   });
 
-  const handleSelectMember = (member: BranchMemberData) => {
-    setTransfer((prev) => {
-      const memberIds = prev.memberIds ?? [];
-      if (memberIds.includes(member.id)) {
-        return { ...prev, memberIds: memberIds.filter((id) => id !== member.id) };
-      } else {
-        return { ...prev, memberIds: [...memberIds, member.id] };
-      }
-    });
+  const handleTransfer = () => {
+    if (!requestStatus.isPending) {
+      handleDeleteBranch();
+      setTransfer({ show: false });
+    }
   };
 
-  const handleSelectAll = () => {
-    setTransfer((prev) => {
-      const memberIds = prev.memberIds ?? [];
-      if (memberIds.length === branchMembers.length) {
-        return { ...prev, memberIds: [] };
-      } else {
-        return { ...prev, memberIds: branchMembers.map((member) => member.id) };
-      }
-    });
-  };
-
-  const { run: runFetch, data: fetchResponse } = useApiRequest({});
   const fetchBranchMembers = () => {
-    runFetch(fetchOrgBranchMembersService(id, { page: 1, limit: 10 }));
+    runFetch(fetchOrgBranchMembersService(id));
   };
 
   const branchMembers = useMemo<BranchMemberData[]>(() => {
@@ -93,16 +76,13 @@ const PreventDeleteBranch: React.FC<Props> = ({
         }}
         name={name}
         branchMembers={branchMembers}
-        handleSetIds={{
-          selected: transfer.memberIds,
-          handleSelectMember: handleSelectMember,
-          handleSelectAll: handleSelectAll
-        }}
+        loading={requestStatus.isPending}
       />
       <TransferMember
         id={id}
         transferIds={transfer.memberIds}
         fetchOrgBranches={fetchOrgBranches}
+        handleTransfer={handleTransfer}
         fetchBranchMembers={fetchBranchMembers}
         close={() => {
           setTransfer({ memberIds: [], show: false });

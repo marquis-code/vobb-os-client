@@ -8,8 +8,8 @@ import { ModalProps, optionType } from "types";
 interface Props extends ModalProps {
   id: string;
   transferIds: string[] | undefined;
+  handleTransfer?: () => void;
   fetchOrgBranches?: ({ page, limit }) => void;
-
   fetchBranchMembers: () => void;
   type: "member" | "branch";
 }
@@ -20,13 +20,13 @@ const TransferMember: React.FC<Props> = ({
   id,
   transferIds,
   fetchBranchMembers,
-  fetchOrgBranches
+  fetchOrgBranches,
+  handleTransfer
 }) => {
   const { orgBranches } = useUserContext();
   const { pageLimit } = orgBranches?.branchesMetaData || {
     pageLimit: 0
   };
-
   const { run, data: response, requestStatus, error } = useApiRequest({});
 
   const submit = (data: optionType) => {
@@ -44,8 +44,9 @@ const TransferMember: React.FC<Props> = ({
       toast({
         description: response?.data?.message
       });
-      fetchOrgBranches?.({ page: 1, limit: pageLimit });
       fetchBranchMembers();
+      fetchOrgBranches?.({ page: 1, limit: pageLimit });
+      handleTransfer?.();
       close();
     } else if (error) {
       toast({
