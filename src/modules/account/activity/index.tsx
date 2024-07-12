@@ -7,7 +7,6 @@ import {
   DateFilter,
   LoadingSpinner
 } from "components";
-import { format, parse } from "date-fns";
 import { QueryParamProps } from "pages";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -83,7 +82,7 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
             <DateFilter
               showPreset
               value={date}
-              handleChange={(val: DateRange | undefined) => {
+              handleChange={(val) => {
                 setDate(val);
                 if (val) {
                   handleFilter(
@@ -236,10 +235,3 @@ const getMessage = ({
 };
 
 export { AccountActivityUI };
-
-const getParsedDate = (dateString) => {
-  const parsedDate = parse(dateString, "EEE MMM dd yyyy HH:mm:ss 'GMT'xxx '('zzzz')'", new Date());
-  const formattedDate = format(parsedDate, "yyyy-MM-dd");
-
-  return formattedDate;
-};

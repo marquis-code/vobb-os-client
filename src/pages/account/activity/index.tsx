@@ -46,6 +46,10 @@ const AccountActivity = () => {
   });
   const { page, limit, order, startDate, endDate } = queryParams;
 
+  const handleUpdateQuery = (param: string, value: Date | string | number) => {
+    setQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
+
   const fetchUserActivities = () => {
     run(
       fetchUserActivitiesService({
@@ -56,10 +60,6 @@ const AccountActivity = () => {
         endDate
       })
     );
-  };
-
-  const handleUpdateQuery = (param: string, value: Date | string | number) => {
-    setQueryParams((prev) => ({ ...prev, [param]: value }));
   };
 
   const userActivities = useMemo<AccountActivityResponse>(() => {
@@ -86,7 +86,7 @@ const AccountActivity = () => {
     }
 
     return initData;
-  }, [response]);
+  }, [response, queryParams.limit]);
 
   useEffect(() => {
     fetchUserActivities();
