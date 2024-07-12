@@ -70,6 +70,7 @@ export interface createAttributeRequestBody {
   type: string;
   label: string;
   is_required: boolean;
+  is_client_prop?: boolean;
   description?: string;
   meta?: any;
 }
@@ -239,12 +240,9 @@ export const fetchOrgAttributesService = ({ page, limit, type }) => {
  * @param data request body
  * @returns axios promise
  */
-export const createOrgAttributeService = (
-  data: createAttributeRequestBody,
-  type: "client" | "member"
-) => {
+export const createOrgAttributeService = (data: createAttributeRequestBody) => {
   return postRequest({
-    url: createOrgAttributeURL(type),
+    url: createOrgAttributeURL(),
     data
   });
 };

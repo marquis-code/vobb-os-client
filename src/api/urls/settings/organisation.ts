@@ -103,8 +103,7 @@ export const fetchOrgAttributesURL = ({ page, limit, type }) =>
  * @returns url string
  *
  */
-export const createOrgAttributeURL = (type: "member" | "client") =>
-  `${prefixOrg}/attribute?type=${type}`;
+export const createOrgAttributeURL = () => `${prefixOrg}/attribute`;
 
 /**
  * Update organisation's attribute URL

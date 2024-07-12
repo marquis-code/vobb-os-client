@@ -1,4 +1,4 @@
-import { SettingsPageTitle } from "components";
+import { LoadingSpinner, SettingsPageTitle } from "components";
 import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
@@ -31,6 +31,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleRestoreAttr,
   handleClientAttrAction
 }) => {
+  const { loading: clientLoading, handlePagination } = handleClientAttrAction;
   return (
     <>
       <SettingsPageTitle
@@ -64,14 +65,18 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
           />
         </TabsContent>
         <TabsContent value="client">
-          <ClientAttributes
-            handleAddAttribute={handleAddClientAttr}
-            handleEditAttribute={handleEditAttr}
-            handleDuplicateAttribute={handleDuplicateClientAttr}
-            handleRestoreAttribute={handleRestoreAttr}
-            handleArchiveAttribute={handleArchiveAttr}
-            handlePagination={handleClientAttrAction.handlePagination}
-          />
+          {clientLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <ClientAttributes
+              handleAddAttribute={handleAddClientAttr}
+              handleEditAttribute={handleEditAttr}
+              handleDuplicateAttribute={handleDuplicateClientAttr}
+              handleRestoreAttribute={handleRestoreAttr}
+              handleArchiveAttribute={handleArchiveAttr}
+              handlePagination={handlePagination}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </>

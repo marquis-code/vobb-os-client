@@ -25,7 +25,8 @@ const AddClientAttribute = ({
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
       label: data.title,
-      is_required: data.required ?? false
+      is_required: data.required ?? false,
+      is_client_prop: true
     };
     if (data.description) {
       requestBody.description = data.description;
@@ -37,7 +38,7 @@ const AddClientAttribute = ({
       requestBody.meta = data.options;
     }
 
-    run(createOrgAttributeService(requestBody, "client"));
+    run(createOrgAttributeService(requestBody));
   };
 
   useMemo(() => {
