@@ -127,3 +127,11 @@ export const createOrgPropertiesURL = () => `${prefixAcc}/attribute/`;
  */
 
 export const updateOrgPropertiesURL = ({ id }) => `${prefixAcc}/attribute/${id}`;
+
+/**
+ * Fetch user's activities URL
+ * @returns url string
+ *
+ */
+export const fetchUserActivitiesURL = ({ page, limit, order, startDate, endDate }) =>
+  `${prefixAcc}/activity?page=${page}&limit=${limit}&sort=${order}&start=${startDate}&end=${endDate}`;

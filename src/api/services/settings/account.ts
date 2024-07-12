@@ -11,6 +11,7 @@ import {
   fetchLoginHistoryURL,
   fetchMemberPropertiesURL,
   fetchOrgPropertiessURL,
+  fetchUserActivitiesURL,
   getRequest,
   patchRequest,
   personalAccountDetailsURL,
@@ -227,5 +228,15 @@ export const updateOrgPropertiesService = (id: string, data: updatePropertiesReq
   return putRequest({
     url: updateOrgPropertiesURL({ id }),
     data
+  });
+};
+
+/**
+ * Fetch user's activity service
+ * @returns axios promise
+ */
+export const fetchUserActivitiesService = ({ page, limit, order, startDate, endDate }) => {
+  return getRequest({
+    url: fetchUserActivitiesURL({ page, limit, order, startDate, endDate })
   });
 };
