@@ -2,11 +2,35 @@ import { SettingsPageTitle } from "components";
 import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { OrganisationAttributesData } from "types";
 
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
+  handleAddClientAttr: () => void;
+  handleEditAttr: {
+    setEditAttr: () => void;
+    handleSetDefaultAttribute: (attr: OrganisationAttributesData) => void;
+  };
+  handleDuplicateClientAttr: {
+    setDuplicateAttr: () => void;
+    handleSetDefaultDuplicate: (attr: OrganisationAttributesData) => void;
+  };
+  handleArchiveAttr: (id: string) => void;
+  handleRestoreAttr: (id: string) => void;
+  handleClientAttrAction: {
+    loading: boolean;
+    handlePagination: (param: string, value: number) => void;
+  };
 }
-const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }) => {
+const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
+  handleAddMemberAttr,
+  handleAddClientAttr,
+  handleEditAttr,
+  handleDuplicateClientAttr,
+  handleArchiveAttr,
+  handleRestoreAttr,
+  handleClientAttrAction
+}) => {
   return (
     <>
       <SettingsPageTitle
@@ -30,19 +54,23 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }
         <TabsContent value="member">
           <MemberAttributes
             handleAddAttribute={handleAddMemberAttr}
-            handleEditAttribute={console.log}
-            handleDuplicateAttribute={console.log}
+            handleEditAttribute={{ setEditAttr: () => {}, handleSetDefaultAttribute: () => {} }}
+            handleDuplicateAttribute={{
+              setDuplicateAttr: () => {},
+              handleSetDefaultDuplicate: () => {}
+            }}
             handleRestoreAttribute={console.log}
             handleArchiveAttribute={console.log}
           />
         </TabsContent>
         <TabsContent value="client">
           <ClientAttributes
-            handleAddAttribute={console.log}
-            handleEditAttribute={console.log}
-            handleDuplicateAttribute={console.log}
-            handleRestoreAttribute={console.log}
-            handleArchiveAttribute={console.log}
+            handleAddAttribute={handleAddClientAttr}
+            handleEditAttribute={handleEditAttr}
+            handleDuplicateAttribute={handleDuplicateClientAttr}
+            handleRestoreAttribute={handleRestoreAttr}
+            handleArchiveAttribute={handleArchiveAttr}
+            handlePagination={handleClientAttrAction.handlePagination}
           />
         </TabsContent>
       </Tabs>

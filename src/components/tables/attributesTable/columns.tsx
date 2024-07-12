@@ -29,15 +29,21 @@ export type AttributeTableData = {
 };
 
 export interface AttributeTableActions {
-  handleEditAttribute: (id: string) => void;
-  handleDuplicateAttribute: (id: string) => void;
+  handleEditAttribute: {
+    setEditAttr: () => void;
+    handleSetDefaultAttribute: (row: AttributeTableData) => void;
+  };
+  handleDuplicateAttribute: {
+    setDuplicateAttr: () => void;
+    handleSetDefaultDuplicate: (row: AttributeTableData) => void;
+  };
   handleRestoreAttribute: (id: string) => void;
   handleArchiveAttribute: (id: string) => void;
 }
 
 export const getAttributeTableColumns = ({
-  handleEditAttribute,
-  handleDuplicateAttribute,
+  handleEditAttribute: { setEditAttr, handleSetDefaultAttribute },
+  handleDuplicateAttribute: { setDuplicateAttr, handleSetDefaultDuplicate },
   handleRestoreAttribute,
   handleArchiveAttribute
 }: AttributeTableActions): ColumnDef<AttributeTableData>[] => [
@@ -93,10 +99,12 @@ export const getAttributeTableColumns = ({
       const { isActive, isSystem, id: attrId } = row.original;
 
       const editAttribute = () => {
-        handleEditAttribute(attrId);
+        setEditAttr();
+        handleSetDefaultAttribute(row.original);
       };
       const duplicateAttribute = () => {
-        handleDuplicateAttribute(attrId);
+        setDuplicateAttr();
+        handleSetDefaultDuplicate(row.original);
       };
       const restoreAttribute = () => {
         handleRestoreAttribute(attrId);
