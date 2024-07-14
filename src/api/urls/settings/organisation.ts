@@ -193,3 +193,11 @@ export const transferAllMembersToBranchURL = () => `${prefixOrg}/transfer/member
  */
 export const fetchTeamsPerBranchURL = ({ id, page, limit }) =>
   `${prefixOrg}/teams/${id}?page=${page}&limit=${limit}`;
+
+/**
+ * Fetch org's activities URL
+ * @returns url string
+ *
+ */
+export const fetchOrgActivitiesURL = ({ page, limit, order, startDate, endDate }) =>
+  `${prefixOrg}/activity?page=${page}&limit=${limit}&sort=${order}&start_date=${startDate}&end_date=${endDate}`;

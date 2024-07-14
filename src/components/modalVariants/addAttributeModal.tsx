@@ -101,7 +101,6 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
 
   const onSubmit: SubmitHandler<AddAttributesData> = (data) => {
     submit(data);
-    if (!createNew) close();
   };
 
   const attrType = watch("type");

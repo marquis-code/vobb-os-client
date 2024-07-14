@@ -61,52 +61,57 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
         title="Account Activity"
         description={"Monitor your account activities over time"}
       />
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <section className="grid gap-4 max-w-[800px]">
-          <div className="flex gap-2">
-            <SortBy
-              isClearable
-              sort={{
-                active: sortBy,
-                items: sortOptions,
-                handleChange: setSortBy
-              }}
-              order={{
-                show: true,
-                active: sortOrder,
-                handleChange: (val) => handleFilter("order", val as string)
-              }}
-            />
-            <DateFilter
-              showPreset
-              value={date}
-              handleChange={(val) => {
-                setDate(val);
-                if (val) {
-                  handleFilter(
-                    "startDate",
-                    val.from ? val.from.toISOString().slice(0, 10) : startDate
-                  );
-                  handleFilter("endDate", val.to ? val.to.toISOString().slice(0, 10) : endDate);
-                }
-              }}
-            />
-          </div>
-          {activityList.map((item, index) => (
-            <ActivityCard {...item} key={`${index}_${item.date}`} />
-          ))}
-          <Pagination
-            handleChange={(val) => handleFilter("page", val)}
-            handlePageLimit={(val) => handleFilter("limit", val)}
-            totalCount={totalCount}
-            pageLimit={pageLimit}
-            totalPages={totalPages}
-            currentPage={currentPage}
+
+      <section className="grid gap-4 max-w-[800px]">
+        <div className="flex gap-2">
+          <SortBy
+            isClearable
+            sort={{
+              active: sortBy,
+              items: sortOptions,
+              handleChange: setSortBy
+            }}
+            order={{
+              show: true,
+              active: sortOrder,
+              handleChange: (val) => handleFilter("order", val as string)
+            }}
           />
-        </section>
-      )}
+          <DateFilter
+            showPreset
+            value={date}
+            handleChange={(val) => {
+              setDate(val);
+              if (val) {
+                handleFilter(
+                  "startDate",
+                  val.from ? val.from.toISOString().slice(0, 10) : startDate
+                );
+                handleFilter("endDate", val.to ? val.to.toISOString().slice(0, 10) : endDate);
+              }
+            }}
+          />
+        </div>
+        {loading ? (
+          <LoadingSpinner />
+        ) : !activityList.length ? (
+          <p>No Account activities for this time.</p>
+        ) : (
+          <>
+            {activityList.map((item, index) => (
+              <ActivityCard {...item} key={`${index}_${item.date}`} />
+            ))}
+            <Pagination
+              handleChange={(val) => handleFilter("page", val)}
+              handlePageLimit={(val) => handleFilter("limit", val)}
+              totalCount={totalCount}
+              pageLimit={pageLimit}
+              totalPages={totalPages}
+              currentPage={currentPage}
+            />
+          </>
+        )}
+      </section>
     </>
   );
 };
@@ -121,8 +126,8 @@ type accountActions =
   | "changed_password"
   | "added_google_auth"
   | "removed_google_auth"
-  | "added_2fa"
-  | "removed_2fa"
+  | "enabled_2fa"
+  | "disabled_2fa"
   | "assigned_role"
   | "updated_role";
 
@@ -205,10 +210,10 @@ const getMessage = ({
     case "removed_google_auth":
       message = <>You disconnected google authentication</>;
       break;
-    case "added_2fa":
+    case "enabled_2fa":
       message = <>You added two-factor authentication</>;
       break;
-    case "removed_2fa":
+    case "disabled_2fa":
       message = <>You disabled two-factor authentication</>;
       break;
     case "assigned_role":

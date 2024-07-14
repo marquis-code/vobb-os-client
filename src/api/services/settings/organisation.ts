@@ -10,6 +10,7 @@ import {
   createOrgAttributeURL,
   deleteOrgBranchURL,
   deleteRequest,
+  fetchOrgActivitiesURL,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
   fetchOrgBranchMembersURL,
@@ -346,5 +347,15 @@ export const transferAllMembersToBranchService = (data: transferMembersRequestBo
 export const fetchTeamsPerBranchService = ({ id, page, limit }) => {
   return getRequest({
     url: fetchTeamsPerBranchURL({ id, page, limit })
+  });
+};
+
+/**
+ * Fetch org's activity service
+ * @returns axios promise
+ */
+export const fetchOrgActivitiesService = ({ page, limit, order, startDate, endDate }) => {
+  return getRequest({
+    url: fetchOrgActivitiesURL({ page, limit, order, startDate, endDate })
   });
 };

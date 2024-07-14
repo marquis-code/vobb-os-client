@@ -1,6 +1,5 @@
 import { optionType, formFieldData, BranchMemberTableData, BranchTeamTableData } from "types";
 import { AttributeTableData } from "components";
-import { AccountActivityData, OrgActivityData } from "modules";
 
 export const loginHistoryMock = [
   {
@@ -128,7 +127,7 @@ export const MockDynamicData: formFieldData[] = [
   }
 ];
 
-export const accountActivityMockData: AccountActivityData[] = [
+export const accountActivityMockData = [
   {
     action: "updated_role",
     date: "05/05/2024",
@@ -249,7 +248,7 @@ export const accountActivityMockData: AccountActivityData[] = [
   }
 ];
 
-export const orgActivityMockData: OrgActivityData[] = [
+export const orgActivityMockData = [
   {
     action: "updated_branding",
     date: "05/05/2024",
