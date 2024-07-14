@@ -8,3 +8,4 @@ export * from "./preventDeleteBranchModal";
 export * from "./transferMemberModal";
 export * from "./addAttributeModal";
 export * from "./addTeamModal";
+export * from "./teamPermissionsModal";

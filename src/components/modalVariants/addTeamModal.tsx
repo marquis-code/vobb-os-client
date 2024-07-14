@@ -32,7 +32,7 @@ const AddTeamModal: React.FC<AddTeamModalProps> = ({ show, close, submit }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     watch,
     setValue
   } = useForm<AddTeamData>({
@@ -43,7 +43,7 @@ const AddTeamModal: React.FC<AddTeamModalProps> = ({ show, close, submit }) => {
   const onSubmit: SubmitHandler<AddTeamData> = (data) => {
     submit(data);
   };
-  console.log(watch());
+
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -183,11 +183,7 @@ const AddTeamModal: React.FC<AddTeamModalProps> = ({ show, close, submit }) => {
             variant={"outline"}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty}
-            size={"default"}
-            variant={"fill"}>
+          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
             Create
           </Button>
         </div>
