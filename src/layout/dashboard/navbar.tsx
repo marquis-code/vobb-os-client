@@ -86,8 +86,10 @@ const Menu = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Teams</DropdownMenuItem>
-          <DropdownMenuItem>Invite member</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate(Routes.teams)}>Teams</DropdownMenuItem>
+          <DropdownMenuItem>
+            Invite member
+          </DropdownMenuItem>
           <DropdownMenuItem>
             New Team
             <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>

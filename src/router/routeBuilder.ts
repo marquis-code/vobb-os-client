@@ -28,7 +28,9 @@ import {
   OrgAttributes,
   AccountActivity,
   OrgActivity,
-  OrgBranch
+  OrgBranch,
+  Teams,
+  Members
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -242,6 +244,26 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Organization Activity",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.teams,
+    Element: Teams,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Teams",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.members,
+    Element: Members,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Members",
       parent: "Workspace"
     }
   },

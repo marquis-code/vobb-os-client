@@ -13,8 +13,12 @@ import { ReactComponent as HashIcon } from "./hashIcon.svg";
 import { ReactComponent as PhoneIcon } from "./phoneIcon.svg";
 import { ReactComponent as CheckDoneIcon } from "./checkDoneIcon.svg";
 import { ReactComponent as FlagIcon } from "./flagIcon.svg";
+import { ReactComponent as UsersIcon } from "./usersIcon.svg";
+import { ReactComponent as UsersRightIcon } from "./usersRight.svg";
 
 export {
+  UsersRightIcon,
+  UsersIcon,
   FlagIcon,
   CheckDoneIcon,
   PhoneIcon,

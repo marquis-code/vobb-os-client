@@ -2,7 +2,8 @@ import {
   AttributeTableData,
   BranchMemberTableData,
   BranchTableData,
-  BranchTeamTableData
+  BranchTeamTableData,
+  TeamTableData
 } from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
 import { DeviceData } from "modules/account/security/loginHistory";
@@ -432,7 +433,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Finance",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -441,7 +442,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Engineering",
-    icon: "tool",
+    icon: "BsTools",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -450,7 +451,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Support",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -459,10 +460,53 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Sales",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
     numberOfMembers: 12
+  }
+];
+
+export const TeamTableMock: TeamTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Finance",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Engineering",
+    icon: "BsTools",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Support",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Sales",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
   }
 ];
