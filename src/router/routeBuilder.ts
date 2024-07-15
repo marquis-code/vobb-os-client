@@ -28,9 +28,12 @@ import {
   OrgAttributes,
   AccountActivity,
   OrgActivity,
-  OrgBranch
+  OrgBranch,
+  Teams,
+  Members,
+  Team
 } from "pages";
-import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
+import { DashboardLayout, OnboardingLayout, SettingsLayout, SettingsLayoutProps } from "layout";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -125,6 +128,8 @@ export const RouteBuilder: RouteBuilderItem[] = [
       title: "Overview"
     }
   },
+
+  // Settings
   {
     path: Routes.profile,
     Element: AccountProfile,
@@ -132,7 +137,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Profile",
-      parent: "Account Settings"
+      items: [
+        { title: "Account" },
+        {
+          title: "Profile"
+        }
+      ]
     }
   },
   {
@@ -142,7 +152,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Security",
-      parent: "Account Settings"
+      items: [
+        { title: "Account" },
+        {
+          title: "Security"
+        }
+      ]
     }
   },
   {
@@ -152,7 +167,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Personalizations",
-      parent: "Account Settings"
+      items: [
+        { title: "Account" },
+        {
+          title: "Personalizations"
+        }
+      ]
     }
   },
   {
@@ -162,7 +182,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Organization",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Organization"
+        }
+      ]
     }
   },
   {
@@ -172,7 +197,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Branches",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Branches"
+        }
+      ]
     }
   },
   {
@@ -182,7 +212,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Branches",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Branches",
+          path: Routes.branches
+        },
+        {
+          title: "Branch"
+        }
+      ]
     }
   },
   {
@@ -192,7 +231,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Branding",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Branding"
+        }
+      ]
     }
   },
   {
@@ -202,7 +246,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Communication",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Communication"
+        }
+      ]
     }
   },
   {
@@ -212,7 +261,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Bank Accounts",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Bank Accounts"
+        }
+      ]
     }
   },
   {
@@ -222,7 +276,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Attributes",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Attributes"
+        }
+      ]
     }
   },
   {
@@ -232,7 +291,12 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Account Activity",
-      parent: "Account"
+      items: [
+        { title: "Account" },
+        {
+          title: "Activity"
+        }
+      ]
     }
   },
   {
@@ -242,7 +306,61 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Organization Activity",
-      parent: "Workspace"
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Activity"
+        }
+      ]
+    }
+  },
+  {
+    path: Routes.teams,
+    Element: Teams,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Teams",
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Teams"
+        }
+      ]
+    }
+  },
+  {
+    path: Routes.team(":id"),
+    Element: Team,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Teams",
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Teams",
+          path: Routes.teams
+        },
+        {
+          title: "Team"
+        }
+      ]
+    }
+  },
+  {
+    path: Routes.members,
+    Element: Members,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Members",
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Members"
+        }
+      ]
     }
   },
 

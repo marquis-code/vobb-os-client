@@ -1,5 +1,12 @@
+import {
+  AttributeTableData,
+  BranchMemberTableData,
+  BranchTableData,
+  BranchTeamTableData,
+  TeamMemberTableData,
+  TeamTableData
+} from "components";
 import { optionType, formFieldData } from "types";
-import { AttributeTableData, BranchMemberTableData, BranchTeamTableData } from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
 
 export const loginHistoryMock = [
@@ -508,7 +515,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Finance",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -517,7 +524,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Engineering",
-    icon: "tool",
+    icon: "BsTools",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -526,7 +533,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Support",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -535,10 +542,84 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Sales",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
     numberOfMembers: 12
+  }
+];
+
+export const TeamTableMock: TeamTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Finance",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Engineering",
+    icon: "BsTools",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Support",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Sales",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  }
+];
+
+export const TeamMemberTableMock: TeamMemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Member",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Team lead",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Branch manager",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derulo",
+    email: "jason@gmail.com",
+    role: "Team manager",
+    date: "12/12/2023"
   }
 ];
