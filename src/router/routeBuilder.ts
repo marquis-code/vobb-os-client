@@ -141,8 +141,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Account" },
         {
           title: "Profile"
-        },
-        ,
+        }
       ]
     }
   },
@@ -157,8 +156,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Account" },
         {
           title: "Security"
-        },
-        ,
+        }
       ]
     }
   },
@@ -173,8 +171,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Account" },
         {
           title: "Personalizations"
-        },
-        ,
+        }
       ]
     }
   },
@@ -189,8 +186,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Organization"
-        },
-        ,
+        }
       ]
     }
   },
@@ -205,8 +201,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Branches"
-        },
-        ,
+        }
       ]
     }
   },
@@ -225,8 +220,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         },
         {
           title: "Branch"
-        },
-        ,
+        }
       ]
     }
   },
@@ -241,8 +235,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Branding"
-        },
-        ,
+        }
       ]
     }
   },
@@ -257,8 +250,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Communication"
-        },
-        ,
+        }
       ]
     }
   },
@@ -273,8 +265,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Bank Accounts"
-        },
-        ,
+        }
       ]
     }
   },
@@ -289,8 +280,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Attributes"
-        },
-        ,
+        }
       ]
     }
   },
@@ -305,8 +295,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Account" },
         {
           title: "Activity"
-        },
-        ,
+        }
       ]
     }
   },
@@ -321,8 +310,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Activity"
-        },
-        ,
+        }
       ]
     }
   },
@@ -337,8 +325,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Teams"
-        },
-        ,
+        }
       ]
     }
   },
@@ -357,8 +344,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
         },
         {
           title: "Team"
-        },
-        ,
+        }
       ]
     }
   },
