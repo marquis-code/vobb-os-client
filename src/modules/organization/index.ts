@@ -2,3 +2,6 @@ export * from "./organization";
 export * from "./branches";
 export * from "./branding";
 export * from "./communication";
+export * from "./bankAccounts";
+export * from "./attributes";
+export * from "./activity";

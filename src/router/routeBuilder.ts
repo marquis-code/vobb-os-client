@@ -23,7 +23,12 @@ import {
   OrgProfile,
   OrgBranches,
   OrgBranding,
-  OrgCommunication
+  OrgCommunication,
+  OrgBankAccounts,
+  OrgAttributes,
+  AccountActivity,
+  OrgActivity,
+  OrgBranch
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -171,6 +176,16 @@ export const RouteBuilder: RouteBuilderItem[] = [
     }
   },
   {
+    path: Routes.branch(":id"),
+    Element: OrgBranch,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Branches",
+      parent: "Workspace"
+    }
+  },
+  {
     path: Routes.branding,
     Element: OrgBranding,
     isProtected: true,
@@ -187,6 +202,46 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: SettingsLayout,
     props: {
       title: "Communication",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.bank_accounts,
+    Element: OrgBankAccounts,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Bank Accounts",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.attributes,
+    Element: OrgAttributes,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Attributes",
+      parent: "Workspace"
+    }
+  },
+  {
+    path: Routes.account_activity,
+    Element: AccountActivity,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Account Activity",
+      parent: "Account"
+    }
+  },
+  {
+    path: Routes.organization_activity,
+    Element: OrgActivity,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Organization Activity",
       parent: "Workspace"
     }
   },

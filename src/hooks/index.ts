@@ -6,3 +6,4 @@ export * from "./useFetchCountries";
 export * from "./useGoogleSignin";
 export * from "./useFetchUser";
 export * from "./useLogout";
+export * from "./useFetchOrganisation";

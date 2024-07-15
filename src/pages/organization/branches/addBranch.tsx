@@ -1,14 +1,59 @@
-import { AddBranchModal } from "components";
+import { addNewOrgBranchService, organisationBranchRequestBody } from "api";
+import { AddBranchData, AddBranchModal, toast } from "components";
+import { useUserContext } from "context";
+import { useApiRequest } from "hooks";
+import { useMemo } from "react";
 import { ModalProps } from "types";
 
-const AddBranch: React.FC<ModalProps> = ({ show, close }) => {
+interface AddBranchProps extends ModalProps {
+  fetchOrgBranches: ({ page, limit }) => void;
+}
+
+const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches }) => {
+  const { run, data: response, requestStatus, error } = useApiRequest({});
+  const { orgBranches } = useUserContext();
+  const { pageLimit } = orgBranches?.branchesMetaData || {
+    pageLimit: 0
+  };
+
+  const submit = (data: AddBranchData) => {
+    const requestBody: organisationBranchRequestBody = {
+      name: data.name,
+      country: data.country.value,
+      zip_code: data.postalCode,
+      state: data.state,
+      address_line_1: data.addressLine1,
+      city: data.city,
+      timezone: data.timeZone.value
+    };
+    if (data.addressLine2 && data.addressLine2.trim() !== "") {
+      requestBody.address_line_2 = data.addressLine2;
+    }
+    run(
+      addNewOrgBranchService({
+        branches: [requestBody]
+      })
+    );
+  };
+
+  useMemo(() => {
+    if (response?.status === 201) {
+      toast({
+        description: response?.data?.message
+      });
+      fetchOrgBranches({ page: 1, limit: pageLimit });
+      close();
+    } else if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
+    }
+  }, [response, error]);
+
   return (
     <>
-      <AddBranchModal
-        show={show}
-        close={close}
-        submit={console.log}
-      />
+      <AddBranchModal show={show} close={close} submit={submit} loading={requestStatus.isPending} />
     </>
   );
 };

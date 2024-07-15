@@ -1,11 +1,7 @@
 import { Button } from "components";
 import { Check } from "assets";
-import { useNavigate } from "react-router-dom";
-import { Routes } from "router";
 
-const CompletedOnboardingUI = () => {
-  const navigate = useNavigate();
-
+const CompletedOnboardingUI = ({ submit }) => {
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
@@ -17,12 +13,7 @@ const CompletedOnboardingUI = () => {
           You've officially set sail with us.
         </p>
 
-        <Button
-          onClick={() => navigate(Routes.login)}
-          className="w-full mt-6"
-          size={"default"}
-          variant="fill"
-          data-cy="continue-btn">
+        <Button onClick={submit} className="w-full mt-6" size={"default"} variant="fill">
           Continue
         </Button>
       </section>

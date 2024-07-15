@@ -9,8 +9,16 @@ import { ReactComponent as MailIcon } from "./mail.svg";
 import { ReactComponent as Arrow } from "./arrow.svg";
 import { ReactComponent as Check } from "./checkCircle.svg";
 import { ReactComponent as ChevronLeftDoubleIcon } from "./chevronLeftDoubleIcon.svg";
+import { ReactComponent as HashIcon } from "./hashIcon.svg";
+import { ReactComponent as PhoneIcon } from "./phoneIcon.svg";
+import { ReactComponent as CheckDoneIcon } from "./checkDoneIcon.svg";
+import { ReactComponent as FlagIcon } from "./flagIcon.svg";
 
 export {
+  FlagIcon,
+  CheckDoneIcon,
+  PhoneIcon,
+  HashIcon,
   ChevronLeftDoubleIcon,
   GoogleLogoIcon,
   KeyIcon,

@@ -29,7 +29,7 @@ const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
         )}
         <RadioGroup
           onValueChange={(val) => onChange(options.find((item) => val === item.value))}
-        //   defaultValue={value?.value}
+          //   defaultValue={value?.value}
           value={value?.value}>
           {options.map(({ label, value }) => (
             <div className="flex items-center space-x-2">

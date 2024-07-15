@@ -5,4 +5,6 @@ export * from "./modal";
 export * from "./modalVariants";
 export * from "./pagination";
 export * from "./tables";
-export * from "./settingsPageTitle"
+export * from "./settingsPageTitle";
+export * from "./activityCard";
+export * from "./filter";

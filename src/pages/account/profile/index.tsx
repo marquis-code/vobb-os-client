@@ -1,9 +1,9 @@
 import { AccountProfileUI } from "modules";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChangeEmail } from "./change-email";
 import { VerifyEmail } from "./verify-email";
 import { useApiRequest, useFetchUser } from "hooks";
-import { LoadingSpinner, toast } from "components";
+import { toast } from "components";
 import { personalAccountUpdateService, personalEmailResendVerifyService } from "api";
 
 const AccountProfile = () => {
@@ -53,6 +53,7 @@ const AccountProfile = () => {
       });
     }
   }, [resendResponse, resendError]);
+
   return (
     <>
       <ChangeEmail
