@@ -72,3 +72,4 @@ const TeamsUI = ({
 };
 
 export { TeamsUI };
+export * from "./team";

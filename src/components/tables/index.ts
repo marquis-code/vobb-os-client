@@ -3,3 +3,4 @@ export * from "./attributesTable";
 export * from "./branchMemberTable";
 export * from "./branchTeamTable";
 export * from "./teamTable";
+export * from "./teamMemberTable";

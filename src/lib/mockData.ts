@@ -3,6 +3,7 @@ import {
   BranchMemberTableData,
   BranchTableData,
   BranchTeamTableData,
+  TeamMemberTableData,
   TeamTableData
 } from "components";
 import { AccountActivityData, OrgActivityData } from "modules";
@@ -508,5 +509,36 @@ export const TeamTableMock: TeamTableData[] = [
     date: "12/12/2023",
     numberOfMembers: 12,
     numberOfBranches: 15
+  }
+];
+
+export const TeamMemberTableMock: TeamMemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Member",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Team lead",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Branch manager",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derulo",
+    email: "jason@gmail.com",
+    role: "Team manager",
+    date: "12/12/2023"
   }
 ];
