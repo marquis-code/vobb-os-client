@@ -27,17 +27,27 @@ describe("Onboarding - Company address flow", () => {
   });
 
   it("back arrow goes back to company website page", () => {
+    cy.get('[data-cy="country-state"]').click();
     cy.get('[data-cy="arrow-icon"]').click();
-    cy.url().should("include", "/onboarding/company_website");
+    cy.url({ timeout: 10000 }).should("include", "/onboarding/company_website");
   });
 
   it("displays country input", () => {
     cy.get('[data-cy="country-state"]').click();
-    // cy.get("div#react-select-5-placeholder").should("be.visible").and("contain", "Select country");
     cy.get('input[type="hidden"][name="country"]').should("exist");
     cy.get('input[role="combobox"]').should("be.visible").and("be.enabled");
     cy.get("svg.css-tj5bde-Svg").should("be.visible");
     cy.contains("button", "Continue").should("be.visible").and("be.enabled");
+  });
+
+  it("selects country and submits successfully", () => {
+    cy.get('[data-cy="country-state"]').click();
+    cy.get("svg.css-tj5bde-Svg").should("be.visible").click();
+    cy.get("div.css-1nmdiq5-menu").should("be.visible");
+    cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
+    cy.get("div#react-select-5-option-6").should("be.visible").click();
+    cy.get('[data-cy="continue-btn"]').click();
+    cy.checkAndCloseToastNotification("Company country saved sucessfully");
   });
 
   it("displays and validates zipcode input", () => {
@@ -48,7 +58,8 @@ describe("Onboarding - Company address flow", () => {
   });
 
   it("submits organisation zipcode successfully", () => {
-    cy.get('input[name="zipCode"]').clear().type("123456");
+    cy.get('[data-cy="zipcode-state"]').click();
+    cy.get('input[name="zipCode"]').clear().type("12345");
     cy.get('[data-cy="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Company Zip code saved sucessfully");
   });
@@ -61,6 +72,7 @@ describe("Onboarding - Company address flow", () => {
   });
 
   it("submits organisation province successfully", () => {
+    cy.get('[data-cy="province-state"]').click();
     cy.get('input[name="state"]').clear().type("Lagos");
     cy.get('[data-cy="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Company state saved sucessfully");
@@ -77,8 +89,10 @@ describe("Onboarding - Company address flow", () => {
   });
 
   it("submits organisation province successfully", () => {
+    cy.get('[data-cy="city-state"]').click();
+
     cy.get('input[name="addressLine1"]').clear().type("97 Lagos road");
-    cy.get('input[name="addressLine3"]').clear().type("Mainland Ojota");
+    cy.get('input[name="city"]').clear().type("Mainland Ojota");
 
     cy.get('[data-cy="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Login successful");
