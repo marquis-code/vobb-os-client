@@ -13,16 +13,8 @@ describe("Signup page", () => {
     cy.get('[data-cy="subtitle"]').should("exist");
     cy.contains("span", "Didn't receive the code?").should("exist");
     cy.get('[data-cy="resend-btn"]').should("be.visible").and("be.disabled");
-    cy.wait(30000);
-    cy.contains("button", "Click to resend").should("be.visible").and("be.enabled");
-
     cy.get('[data-cy="back-btn"]').should("be.visible").and("be.enabled");
     cy.get("[data-cy='arrow-icon']").should("exist");
-  });
-
-  it("should successfully go back to sign up page", () => {
-    cy.get('[data-cy="back-btn"]').click();
-    cy.url().should("include", "/");
   });
 
   it("should find OTP container with specific conditions", () => {
@@ -35,27 +27,25 @@ describe("Signup page", () => {
     cy.get("svg").should("exist");
   });
 
-  it("should enable submit button when all OTP inputs have numbers", () => {
-    cy.get('div[data-input-otp-container="true"]').as("otpInputs"); // Alias for easier reference
-
+  it("should check that submit button is disabled when OTP is empty", () => {
+    cy.get('input[data-input-otp="true"]').should("exist").and("be.enabled");
+    cy.get('input[data-input-otp="true"]').clear();
     cy.contains("button", "Continue").should("be.visible").and("be.disabled");
+  });
 
-    // // Type numbers into each OTP input div
-    // cy.get("@otpInputs").each(($otpInput, index) => {
-    //   const number = index + 1;
-    //   // Temporarily convert div to input for typing
-    //   cy.wrap($otpInput)
-    //     .invoke("text")
-    //     .then((text) => {
-    //       if (text.trim() === "") {
-    //         // Create an input element with the same text content
-    //         const $input = Cypress.$("<input>", { type: "text", value: text.trim() });
-    //         $otpInput.empty().append($input);
-    //       }
-    //     })
-    //     .type(`${number}`); // Type number into the input
-    // });
+  it("should enable submit button when all OTP inputs have numbers", () => {
+    cy.get('input[data-input-otp="true"]').should("exist").and("be.enabled");
+    cy.get('input[data-input-otp="true"]').type("123456");
+    cy.contains("button", "Continue").should("be.visible").and("not.be.disabled");
+  });
 
-    // cy.contains("button", "Continue").should("be.visible").and("be.enabled");
+  it("should successfully go back to sign up page", () => {
+    cy.get('[data-cy="back-btn"]').click();
+    cy.url().should("include", "/");
+  });
+
+  it("should show resend code button after 30 seconds", () => {
+    cy.wait(30000);
+    cy.contains("button", "Click to resend").should("be.visible").and("be.enabled");
   });
 });

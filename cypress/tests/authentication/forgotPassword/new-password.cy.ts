@@ -1,4 +1,4 @@
-describe("Signup page", () => {
+describe("New password page", () => {
   beforeEach(() => {
     cy.visit("/new-password");
     cy.on("uncaught:exception", (err, runnable) => {

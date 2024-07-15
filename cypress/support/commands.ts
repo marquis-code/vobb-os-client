@@ -73,7 +73,18 @@ Cypress.Commands.add("loginUserWithEmail", (email, password) => {
   cy.get('[data-cy="email"]').type(email);
   cy.get('[data-cy="password"]').type(password);
   cy.solveGoogleReCAPTCHA();
-  cy.get('[data-cy="signin-btn"]').click().wait(500);
+  cy.get('[data-cy="signin-btn"]').click();
+
+  cy.url({ timeout: 10000 }).should("not.include", "/login");
+  // Wait additional time if necessary
+  cy.wait(2000);
+
+  cy.window().then((window) => {
+    const vobbOSAccess = window.localStorage.getItem("vobbOSAccess");
+    const vobbOSRefresh = window.localStorage.getItem("vobbOSRefresh");
+    cy.wrap(vobbOSAccess).as("vobbOSAccess");
+    cy.wrap(vobbOSRefresh).as("vobbOSRefresh");
+  });
 });
 
 Cypress.Commands.add("checkAndCloseToastNotification", (message) => {
