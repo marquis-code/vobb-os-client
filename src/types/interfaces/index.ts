@@ -34,7 +34,7 @@ export interface MetaDataProps {
   currentPage: number;
   totalCount: number;
   totalPages: number;
-  pageLimit: number;
+  pageLimit?: number;
 }
 
 export interface BlacklistProps {

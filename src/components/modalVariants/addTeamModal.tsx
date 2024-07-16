@@ -8,7 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import IconPicker from "react-icons-picker";
 
-interface AddTeamData {
+export interface AddTeamData {
   name: string;
   description?: string;
   icon: string;
@@ -26,9 +26,10 @@ const schema = yup.object({
 
 interface AddTeamModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
 }
 
-const AddTeamModal: React.FC<AddTeamModalProps> = ({ show, close, submit }) => {
+const AddTeamModal: React.FC<AddTeamModalProps> = ({ show, close, submit, loading }) => {
   const {
     register,
     handleSubmit,
@@ -180,10 +181,16 @@ const AddTeamModal: React.FC<AddTeamModalProps> = ({ show, close, submit }) => {
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            loading={loading}
+            disabled={loading}>
             Create
           </Button>
         </div>

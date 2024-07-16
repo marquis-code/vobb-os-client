@@ -1,7 +1,6 @@
 import {
   AttributeTableData,
   BranchMemberTableData,
-  BranchTableData,
   BranchTeamTableData,
   TeamMemberTableData,
   TeamTableData

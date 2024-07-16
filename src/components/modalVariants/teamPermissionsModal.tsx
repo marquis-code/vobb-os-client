@@ -6,11 +6,12 @@ import { ModalProps } from "types";
 
 interface TeamPermissionsModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
 }
 
-const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
+const TeamPermissionsModal = ({ show, close, submit }: TeamPermissionsModalProps) => {
   // This list is from the backend
-  const permissionList: PermissionItem[] = [
+  const permissionList: PermissionItemTypes[] = [
     {
       title: "Create client",
       id: "123",
@@ -29,7 +30,9 @@ const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
   ];
 
   const [permissions, setPermissions] = useState(permissionList);
-
+  const handleSubmit = () => {
+    submit(permissions);
+  };
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -59,7 +62,7 @@ const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
             variant={"outline"}>
             Skip
           </Button>
-          <Button onClick={console.log} size={"default"} variant={"fill"}>
+          <Button onClick={handleSubmit} size={"default"} variant={"fill"}>
             Save
           </Button>
         </div>
@@ -70,13 +73,13 @@ const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
 
 type role = "lead" | "manager" | "member";
 
-interface PermissionItem {
+interface PermissionItemTypes {
   title: string;
   id: string;
   members: role[];
 }
 
-interface PermissionProps extends PermissionItem {
+interface PermissionProps extends PermissionItemTypes {
   handleMembers: ({ id, members }: { id: string; members: role[] }) => void;
 }
 

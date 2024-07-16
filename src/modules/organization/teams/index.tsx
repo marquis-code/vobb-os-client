@@ -8,9 +8,10 @@ import {
   attributeType,
   getTeamTableColumns,
   TeamTableActions,
-  TeamTable
+  TeamTable,
+  LoadingSpinner
 } from "components";
-import { TeamTableMock } from "lib";
+import { teamsDataProps } from "pages";
 import { useMemo, useState } from "react";
 
 const attributes: attributeType[] = [
@@ -28,6 +29,11 @@ const attributes: attributeType[] = [
 
 interface TeamsUIProps extends TeamTableActions {
   handleAddTeam: () => void;
+  teams: {
+    teamsData: teamsDataProps;
+    handlePagination: (param: string, value: number) => void;
+    loading: boolean;
+  };
 }
 
 const TeamsUI = ({
@@ -35,7 +41,8 @@ const TeamsUI = ({
   handleViewBranches,
   handleTeamHistory,
   handleViewTeam,
-  handleAddTeam
+  handleAddTeam,
+  teams: { teamsData, handlePagination, loading }
 }: TeamsUIProps) => {
   const teamColumns = useMemo(
     () =>
@@ -48,6 +55,8 @@ const TeamsUI = ({
     [handleEditTeam, handleViewBranches, handleTeamHistory, handleViewTeam]
   );
   const [filters, setFilters] = useState<FilterData[]>([]);
+  const { teamsData: tableData, metaData } = teamsData;
+  const { currentPage, pageLimit, totalCount, totalPages } = metaData;
   return (
     <>
       <SettingsPageTitle title="Teams" className="max-w-none" />
@@ -57,15 +66,15 @@ const TeamsUI = ({
           <PlusCircledIcon /> New team
         </Button>
       </section>
-      <TeamTable columns={teamColumns} data={TeamTableMock} />
+      {loading ? <LoadingSpinner /> : <TeamTable columns={teamColumns} data={tableData} />}
       <Pagination
-        handleChange={console.log}
-        handlePageLimit={console.log}
-        totalCount={3}
-        pageLimit={3}
-        totalPages={1}
-        currentPage={1}
-        className="mt-4"
+        handleChange={(val) => handlePagination("page", val)}
+        handlePageLimit={(val) => handlePagination("limit", val)}
+        totalCount={totalCount}
+        pageLimit={pageLimit ?? 20}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        className="mt-4 mb-28"
       />
     </>
   );
