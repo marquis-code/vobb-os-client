@@ -3,6 +3,8 @@ import {
   BranchMemberTableData,
   BranchTableData,
   BranchTeamTableData,
+  // memberStatuses,
+  MemberTableData,
   TeamMemberTableData,
   TeamTableData
 } from "components";
@@ -540,5 +542,92 @@ export const TeamMemberTableMock: TeamMemberTableData[] = [
     email: "jason@gmail.com",
     role: "Team manager",
     date: "12/12/2023"
+  }
+];
+enum memberStatuses {
+  invited = "Invited",
+  expired = "Invitation expired",
+  active = "Active",
+  suspended = "Suspended"
+}
+
+export const MemberTableMock: MemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jasonjasonjasonjason@gmail.com",
+    teams: ["Finance", "Operations","Finance", "Operations","Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: memberStatuses.invited,
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: memberStatuses.expired,
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: memberStatuses.active,
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: memberStatuses.suspended,
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: memberStatuses.invited,
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: memberStatuses.invited,
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
   }
 ];
