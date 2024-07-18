@@ -8,7 +8,7 @@ import {
   TeamMemberTableData,
   TeamTableData
 } from "components";
-import { AccountActivityData, OrgActivityData } from "modules";
+import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
 import { DeviceData } from "modules/account/security/loginHistory";
 
 export const loginHistoryMock: DeviceData[] = [
@@ -623,5 +623,40 @@ export const MemberTableMock: MemberTableData[] = [
     branch: "Headquarters",
     avatar: "",
     initial: "JD"
+  }
+];
+
+export const teamActivityMockData: TeamActivityData[] = [
+  {
+    action: "new_member",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "James Arukpo", id: "james" },
+    metadata: undefined
+  },
+  {
+    action: "edited",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      fields: "Name, Icon, Permissions"
+    }
+  },
+  {
+    action: "new_invitation",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      memberName: "Tolulope Adeniji"
+    }
+  },
+  {
+    action: "created",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: undefined
   }
 ];

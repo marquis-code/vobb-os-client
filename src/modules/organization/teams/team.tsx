@@ -16,6 +16,7 @@ import { TeamMemberTableMock } from "lib";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { TeamPermissionsUI } from "./teamPermissions";
+import { TeamActivity } from "./teamActivity";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -129,7 +130,7 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
           <TeamPermissionsUI />
         </TabsContent>
         <TabsContent className="pb-8 mb-12" value="history">
-          History
+          <TeamActivity />
         </TabsContent>
       </Tabs>
     </>
