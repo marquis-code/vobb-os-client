@@ -5,3 +5,5 @@ export * from "./communication";
 export * from "./bankAccounts";
 export * from "./attributes";
 export * from "./activity";
+export * from "./teams";
+export * from "./members";
