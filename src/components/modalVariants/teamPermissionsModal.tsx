@@ -31,7 +31,7 @@ const TeamPermissionsModal = ({ show, close, submit }: TeamPermissionsModalProps
 
   const [permissions, setPermissions] = useState(permissionList);
   const handleSubmit = () => {
-    submit(permissions);
+    console.log(permissions);
   };
   return (
     <>

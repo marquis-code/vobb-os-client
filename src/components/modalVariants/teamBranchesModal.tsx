@@ -34,6 +34,8 @@ const TeamBranchesModal = ({
         <section className="max-h-[calc(100vh-220px)] overflow-auto -mr-4 pr-4">
           {loading ? (
             <LoadingSpinner />
+          ) : !teamBranchData.length ? (
+            <p>No activated branches.</p>
           ) : (
             teamBranchData?.map((branch) => (
               <p className="border-b pb-1 mb-2 flex items-center gap-1" key={branch.id}>

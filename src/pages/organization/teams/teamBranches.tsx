@@ -1,4 +1,4 @@
-import { fetchATeamService } from "api";
+import { fetchATeamBranchesService } from "api";
 import { TeamBranchesModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import React, { useEffect, useMemo, useState } from "react";
@@ -31,11 +31,11 @@ const initTeamsBranchData = {
 
 const TeamBranches: React.FC<TeamBranchesProps> = (props) => {
   const { teamId: id } = props;
-  const { run, data: response, requestStatus } = useApiRequest({});
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const [page, setPage] = useState(1);
   const handlePagination = (val: number) => setPage(val);
-  const fetchTeam = () => {
-    run(fetchATeamService({ id, page }));
+  const fetchTeamBranches = () => {
+    run(fetchATeamBranchesService({ id, page }));
   };
 
   const teamBranches = useMemo<teamBranchDataProps>(() => {
@@ -47,7 +47,7 @@ const TeamBranches: React.FC<TeamBranchesProps> = (props) => {
         zipcode: item.zip_code,
         state: item.state,
         country: item.country,
-        date: item.createdAt ? item.createdAt.slice(0, 10) : "15/07/2024"
+        date: item.date_added.slice(0, 10)
       }));
       const metaData = {
         currentPage: response?.data?.data?.page ?? page,
@@ -56,11 +56,17 @@ const TeamBranches: React.FC<TeamBranchesProps> = (props) => {
       };
       return { teamBranchData, metaData };
     }
+    if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
+    }
     return initTeamsBranchData;
   }, [response, page]);
 
   useEffect(() => {
-    if (id) fetchTeam();
+    if (id) fetchTeamBranches();
   }, [page, id]);
 
   return (

@@ -4,10 +4,12 @@ TEAMS SERVICES
 =================================
 */
 
-import { getRequest, postRequest } from "api/requestProcessor";
+import { getRequest, patchRequest, postRequest } from "api/requestProcessor";
 import {
   createTeamURL,
   editATeamURL,
+  fetchATeamBranchesURL,
+  fetchATeamsMembersURL,
   fetchATeamURL,
   fetchTeamsURL,
   setTeamPermissionsURL
@@ -74,9 +76,9 @@ export const fetchTeamsService = ({ page, limit }) => {
  * @param id of team
  * @returns axios promise
  */
-export const fetchATeamService = ({ id, page }) => {
+export const fetchATeamService = (id: string) => {
   return getRequest({
-    url: fetchATeamURL({ id, page })
+    url: fetchATeamURL({ id })
   });
 };
 
@@ -85,8 +87,34 @@ export const fetchATeamService = ({ id, page }) => {
  * @param id of team
  * @returns axios promise
  */
-export const editATeamService = (id: string) => {
+export const editATeamService = (id: string, data: createTeamRequestBody) => {
+  return patchRequest({
+    url: editATeamURL({ id }),
+    data
+  });
+};
+
+/**
+ * Fetch a team branches service
+ * @param id of team
+ * @param page page query
+ * @returns axios promise
+ */
+export const fetchATeamBranchesService = ({ id, page }) => {
   return getRequest({
-    url: editATeamURL({ id })
+    url: fetchATeamBranchesURL({ id, page })
+  });
+};
+
+/**
+ * Fetch a team's members service
+ * @param id of team
+ * @param page page query
+ * @param limit number per page
+ * @returns axios promise
+ */
+export const fetchATeamsMembersService = ({ id, page, limit }) => {
+  return getRequest({
+    url: fetchATeamsMembersURL({ id, page, limit })
   });
 };

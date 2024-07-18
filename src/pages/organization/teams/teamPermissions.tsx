@@ -1,7 +1,7 @@
 import { setTeamPermissionsService } from "api";
 import { TeamPermissionsModal, toast } from "components";
 import { useApiRequest } from "hooks";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { ModalProps } from "types";
 
 interface TeamPermissionsProps extends ModalProps {
@@ -9,13 +9,33 @@ interface TeamPermissionsProps extends ModalProps {
 }
 
 const TeamPermissions: React.FC<TeamPermissionsProps> = (props) => {
-  const { teamId } = props;
+  const { teamId, close } = props;
   const { run, data: response, error, requestStatus } = useApiRequest({});
-  const submit = (data) => {
-    console.log(data);
-    // run(setTeamPermissionsService(teamId, {
-
-    // }))
+  const submit = () => {
+    //placeholder permissions to enable team creation to be completed
+    const requestBody = {
+      create: {
+        manager: true,
+        lead: true,
+        member: true
+      },
+      view: {
+        manager: true,
+        lead: true,
+        member: true
+      },
+      modify: {
+        manager: true,
+        lead: true,
+        member: true
+      },
+      delete: {
+        manager: true,
+        lead: true,
+        member: true
+      }
+    };
+    run(setTeamPermissionsService(teamId, requestBody));
   };
 
   useMemo(() => {
@@ -23,6 +43,7 @@ const TeamPermissions: React.FC<TeamPermissionsProps> = (props) => {
       toast({
         description: response?.data?.message
       });
+      close();
     } else if (error) {
       toast({
         variant: "destructive",
@@ -31,6 +52,9 @@ const TeamPermissions: React.FC<TeamPermissionsProps> = (props) => {
     }
   }, [response, error]);
 
+  useEffect(() => {
+    if (teamId) submit();
+  }, []);
   return (
     <>
       <TeamPermissionsModal submit={submit} loading={requestStatus.isPending} {...props} />

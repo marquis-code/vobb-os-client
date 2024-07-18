@@ -8,11 +8,12 @@ import {
   attributeType,
   getTeamMemberTableColumns,
   TeamMemberTable,
-  TeamMemberTableActions
+  TeamMemberTableActions,
+  LoadingSpinner
 } from "components";
-import { TeamMemberTableMock } from "lib";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { TeamMembersDataProps } from "pages";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -35,9 +36,20 @@ const attributes: attributeType[] = [
 
 interface TeamUIProps extends TeamMemberTableActions {
   handleAddMember: () => void;
+  // loading: boolean;
+  // teamsMembersData:
+  memberData: {
+    loading: boolean;
+    teamsMembersData: TeamMembersDataProps;
+    handlePagination: (param: string, value: number) => void;
+  };
 }
 
-const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
+const TeamUI = ({
+  handleViewMember,
+  handleAddMember,
+  memberData: { loading, teamsMembersData, handlePagination }
+}: TeamUIProps) => {
   const teamColumns = useMemo(
     () =>
       getTeamMemberTableColumns({
@@ -46,7 +58,8 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
     [handleViewMember]
   );
   const [filters, setFilters] = useState<FilterData[]>([]);
-
+  const { membersArray, metaData } = teamsMembersData;
+  const { currentPage, totalCount, totalPages, pageLimit } = metaData;
   return (
     <>
       <SettingsPageTitle title="Team Name" />
@@ -82,14 +95,18 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
               <PlusCircledIcon /> Add member
             </Button>
           </section>
-          <TeamMemberTable columns={teamColumns} data={TeamMemberTableMock} />
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <TeamMemberTable columns={teamColumns} data={membersArray} />
+          )}
           <Pagination
-            handleChange={console.log}
-            handlePageLimit={console.log}
-            totalCount={3}
-            pageLimit={3}
-            totalPages={1}
-            currentPage={1}
+            handleChange={(val) => handlePagination("page", val)}
+            handlePageLimit={(val) => handlePagination("limit", val)}
+            totalCount={totalCount}
+            pageLimit={pageLimit ?? 20}
+            totalPages={totalPages}
+            currentPage={currentPage}
             className="mt-4"
           />
         </TabsContent>

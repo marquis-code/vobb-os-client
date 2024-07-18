@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { TeamBranches } from "./teamBranches";
 import { useApiRequest } from "hooks";
-import { fetchTeamsService } from "api";
+import { fetchATeamService, fetchTeamsService } from "api";
 import { MetaDataProps } from "types";
 import { TeamTableData } from "components";
 
@@ -14,7 +14,12 @@ export interface teamsDataProps {
   teamsData: TeamTableData[];
   metaData: MetaDataProps;
 }
-
+export interface TeamDataProps {
+  id: string;
+  icon: string;
+  name: string;
+  description: string;
+}
 const initTeamsData = {
   teamsData: [],
   metaData: {
@@ -28,15 +33,18 @@ const initTeamsData = {
 const Teams = () => {
   const navigate = useNavigate();
   const { run: runFetchTeams, data: teamsResponse, requestStatus: teamsStatus } = useApiRequest({});
+  const { run: runFetchATeam, data: teamResponse, requestStatus: teamStatus } = useApiRequest({});
+
   const [addTeam, setAddTeam] = useState(false);
   const [permissions, setPermissions] = useState(false);
   const [branches, setBranches] = useState(false);
   const [teamId, setTeamId] = useState("");
+  const [teamData, setTeamData] = useState<TeamDataProps | null>(null);
   const [teamsQueryParams, setTeamsQueryParams] = useState({
     page: 1,
     limit: 20
   });
-
+  const { page, limit } = teamsQueryParams;
   const handlePagination = (param: string, value: number) => {
     setTeamsQueryParams((prev) => ({ ...prev, [param]: value }));
   };
@@ -44,24 +52,32 @@ const Teams = () => {
     setAddTeam(false);
     handleShowPermissions();
   };
+
   const handleAddTeam = () => setAddTeam(true);
   const handleShowPermissions = () => setPermissions(true);
   const handleClosePermissions = () => setPermissions(false);
-  const handleViewTeam = (id) => navigate(Routes.team(id));
+  const handleViewTeam = (id: string) => navigate(Routes.team(id));
   const handleSetTeamId = (id: string) => {
     setTeamId(id);
   };
+  const handleEditTeam = (id: string) => {
+    setAddTeam(true);
+    handleSetTeamId(id);
+    fetchATeam(id);
+  };
 
-  const handleShowBranches = (id) => {
+  const handleShowBranches = (id: string) => {
     setBranches(true);
     setTeamId(id);
   };
   const handleCloseBranches = () => setBranches(false);
 
   const fetchAllTeams = () => {
-    runFetchTeams(
-      fetchTeamsService({ page: teamsQueryParams.page, limit: teamsQueryParams.limit })
-    );
+    runFetchTeams(fetchTeamsService({ page, limit }));
+  };
+
+  const fetchATeam = (id: string) => {
+    runFetchATeam(fetchATeamService(id));
   };
 
   const teamsData = useMemo<teamsDataProps>(() => {
@@ -93,6 +109,21 @@ const Teams = () => {
     return initTeamsData;
   }, [teamsResponse, teamsQueryParams]);
 
+  useMemo<TeamDataProps | null>(() => {
+    if (teamResponse?.status === 200) {
+      const item = teamResponse?.data?.data;
+      const propertyArray = {
+        id: item._id,
+        icon: item.icon,
+        name: item.name,
+        description: item.description
+      };
+
+      setTeamData(propertyArray);
+    }
+    return null;
+  }, [teamResponse]);
+
   useEffect(() => {
     fetchAllTeams();
   }, [teamsQueryParams]);
@@ -102,9 +133,15 @@ const Teams = () => {
       <AddTeam
         callback={handlCloseAddTeam}
         show={addTeam}
-        close={handlCloseAddTeam}
+        close={() => {
+          setAddTeam(false);
+          handleSetTeamId("");
+          setTeamData(null);
+        }}
+        teamData={teamData}
         handleSetTeamId={handleSetTeamId}
         fetchAllTeams={fetchAllTeams}
+        loadingTeam={teamStatus.isPending}
       />
       <TeamPermissions show={permissions} close={handleClosePermissions} teamId={teamId} />
       <TeamBranches show={branches} close={handleCloseBranches} teamId={teamId} />
@@ -114,7 +151,7 @@ const Teams = () => {
           handlePagination,
           loading: teamsStatus.isPending
         }}
-        handleEditTeam={console.log}
+        handleEditTeam={handleEditTeam}
         handleViewBranches={handleShowBranches}
         handleTeamHistory={console.log}
         handleViewTeam={handleViewTeam}

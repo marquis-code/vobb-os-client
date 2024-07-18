@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { IconPickerItem } from 'react-icons-picker'
+import { IconPickerItem } from "react-icons-picker";
 
 // This type is used to define the shape of our data.
 export type TeamTableData = {
