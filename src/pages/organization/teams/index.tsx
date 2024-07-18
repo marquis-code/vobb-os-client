@@ -17,7 +17,6 @@ const Teams = () => {
   const handleAddTeam = () => setAddTeam(true);
   const handlCloseAddTeam = () => {
     setAddTeam(false);
-    handleShowPermissions();
   };
   const handleShowPermissions = () => setPermissions(true);
   const handleClosePermissions = () => setPermissions(false);
@@ -33,7 +32,6 @@ const Teams = () => {
     <>
       <AddTeam callback={handlCloseAddTeam} show={addTeam} close={handlCloseAddTeam} />
       <EditTeam callback={handlCloseAddTeam} {...editTeam} close={handlCloseEditTeam} />
-      <TeamPermissions show={permissions} close={handleClosePermissions} />
       <TeamBranches show={branches} close={handleCloseBranches} />
       <TeamsUI
         handleEditTeam={handleEditTeam}

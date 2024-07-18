@@ -1,14 +1,9 @@
-import { TeamPermissionsModal } from "components";
-import { ModalProps } from "types";
+import { TeamPermissionsUI } from "modules";
 
-interface Props extends ModalProps {
-  hideSkip?: boolean;
-}
-
-const TeamPermissions = (props: Props) => {
+const TeamPermissions = () => {
   return (
     <>
-      <TeamPermissionsModal submit={console.log} {...props} />
+      <TeamPermissionsUI />
     </>
   );
 };

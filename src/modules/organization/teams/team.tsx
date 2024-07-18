@@ -15,6 +15,7 @@ import {
 import { TeamMemberTableMock } from "lib";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { TeamPermissionsUI } from "./teamPermissions";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -56,10 +57,9 @@ const permissions: PermissionItem[] = [
 
 interface TeamUIProps extends TeamMemberTableActions {
   handleAddMember: () => void;
-  handlePermissions: () => void;
 }
 
-const TeamUI = ({ handleViewMember, handleAddMember, handlePermissions }: TeamUIProps) => {
+const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
   const teamColumns = useMemo(
     () =>
       getTeamMemberTableColumns({
@@ -78,12 +78,12 @@ const TeamUI = ({ handleViewMember, handleAddMember, handlePermissions }: TeamUI
         type={"warning"}
         badge={"trailing"}
         size={"md"}
-        action={handlePermissions}
+        action={console.log}
         className="max-w-[800px]"
       />
       <SettingsPageTitle title="Team Name" />
       <Tabs className="max-w-[800px]" defaultValue="member">
-        <TabsList className="mb-2">
+        <TabsList defaultValue={"permissions"} className="mb-2">
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
             value="member">
@@ -126,46 +126,7 @@ const TeamUI = ({ handleViewMember, handleAddMember, handlePermissions }: TeamUI
           />
         </TabsContent>
         <TabsContent className="pb-8 mb-12" value="permissions">
-          {permissions.length > 0 ? (
-            <div>
-              <Button
-                onClick={handlePermissions}
-                className="flex gap-2 ml-auto mb-6"
-                variant={"fill"}>
-                <Pencil1Icon /> Edit permissions
-              </Button>
-              <div className="grid grid-cols-[2fr,1fr,1fr,1fr] gap-2 text-center mb-2 font-medium">
-                <span className="text-left">Permission</span>
-                <span>Team lead</span>
-                <span>Team manager</span>
-                <span>Team member</span>
-              </div>
-              {permissions.map((permission) => (
-                <div className="grid grid-cols-[2fr,1fr,1fr,1fr] gap-2 text-center mb-2">
-                  <span className="text-left font-medium">{permission.title}</span>
-                  <span className="flex justify-center">
-                    <CheckIcon width={18} height={18} color="var(--success-30)" />
-                  </span>
-                  <span className="flex justify-center">
-                    <Cross2Icon width={18} height={18} color="var(--error-30)" />
-                  </span>
-                  <span className="flex justify-center">
-                    <Cross2Icon width={18} height={18} color="var(--error-30)" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-4 justify-center mt-16 p-4">
-              <p>Nothing to show here, you haven't created your team permissions</p>
-              <Button
-                onClick={handlePermissions}
-                // className="flex mb-6 gap-2 ml-auto"
-                variant={"fill"}>
-                Set permissions
-              </Button>
-            </div>
-          )}
+          <TeamPermissionsUI />
         </TabsContent>
         <TabsContent className="pb-8 mb-12" value="history">
           History
