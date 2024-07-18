@@ -13,7 +13,12 @@ const CompletedOnboardingUI = ({ submit }) => {
           You've officially set sail with us.
         </p>
 
-        <Button onClick={submit} className="w-full mt-6" size={"default"} variant="fill">
+        <Button
+          onClick={submit}
+          className="w-full mt-6"
+          size={"default"}
+          variant="fill"
+          data-cy="continue-btn">
           Continue
         </Button>
       </section>

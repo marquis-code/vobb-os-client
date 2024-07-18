@@ -50,7 +50,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="city"
         register={register}
         validatorMessage={errors.city?.message}
-        data-cy="address-input3"
+        data-cy="city"
       />
       <Button
         onClick={handleSubmit(onSubmit)}

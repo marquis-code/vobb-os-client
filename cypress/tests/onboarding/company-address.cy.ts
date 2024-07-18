@@ -82,10 +82,10 @@ describe("Onboarding - Company address flow", () => {
     cy.get('[data-cy="city-state"]').click();
     cy.get('input[name="addressLine1"]').should("be.visible").and("be.enabled");
     cy.get('input[name="addressLine2"]').should("be.visible").and("be.enabled");
-    cy.get('input[name="addressLine3"]').should("be.visible").and("be.enabled");
+    cy.get('input[name="city"]').should("be.visible").and("be.enabled");
     cy.contains("button", "Continue").should("be.visible").and("be.enabled");
     cy.checkRequiredFieldError("address-input1", "continue-btn");
-    cy.checkRequiredFieldError("address-input3", "continue-btn");
+    cy.checkRequiredFieldError("city", "continue-btn");
   });
 
   it("submits organisation province successfully", () => {

@@ -26,6 +26,7 @@ describe("Onboarding - Company info flow", () => {
   });
 
   it("back arrow goes back to user details page", () => {
+    cy.get('[data-cy="organisation-name-state"]').click();
     cy.get('[data-cy="arrow-icon"]').click();
     cy.url().should("include", "/onboarding/user_details");
   });
@@ -37,6 +38,7 @@ describe("Onboarding - Company info flow", () => {
   });
 
   it("submits organisation name successfully", () => {
+    cy.get('[data-cy="organisation-name-state"]').click();
     cy.get('input[name="organisation"]').clear().type("Turound");
     cy.get('[data-cy="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Company name saved sucessfully");
@@ -44,23 +46,37 @@ describe("Onboarding - Company info flow", () => {
 
   it("displays team size input", () => {
     cy.get('[data-cy="teamsize-state"]').click();
-    // cy.get("div#react-select-3-placeholder")
-    // .should("be.visible")
-    // .and("contain", "What is the size of your team?");
     cy.get('input[type="hidden"][name="size"]').should("exist");
     cy.get('input[role="combobox"]').should("be.visible").and("be.enabled");
     cy.get("svg.css-tj5bde-Svg").should("be.visible");
     cy.contains("button", "Continue").should("be.visible").and("be.enabled");
   });
 
+  it("selects team size and submits successfully", () => {
+    cy.get('[data-cy="teamsize-state"]').click();
+    cy.get("svg.css-tj5bde-Svg").should("be.visible").click();
+    cy.get("div.css-1nmdiq5-menu").should("be.visible");
+    cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
+    cy.get("div#react-select-3-option-3").should("be.visible").click();
+    cy.get('[data-cy="continue-btn"]').click();
+    cy.checkAndCloseToastNotification("Company team size saved sucessfully");
+  });
+
   it("displays sector input", () => {
     cy.get('[data-cy="sector-state"]').click();
-    // cy.get("div#react-select-5-placeholder")
-    //   .should("be.visible")
-    //   .and("contain", "Select travel industry");
     cy.get('input[type="hidden"][name="sector"]').should("exist");
     cy.get('input[role="combobox"]').should("be.visible").and("be.enabled");
     cy.get("svg.css-tj5bde-Svg").should("be.visible");
     cy.contains("button", "Submit").should("be.visible").and("be.enabled");
+  });
+
+  it("selects sector and submits successfully", () => {
+    cy.get('[data-cy="sector-state"]').click();
+    cy.get("svg.css-tj5bde-Svg").should("be.visible").click();
+    cy.get("div.css-1nmdiq5-menu").should("be.visible");
+    cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
+    cy.get("div#react-select-3-option-2").should("be.visible").click();
+    cy.get('[data-cy="continue-btn"]').click();
+    cy.checkAndCloseToastNotification("Company sector saved sucessfully");
   });
 });
