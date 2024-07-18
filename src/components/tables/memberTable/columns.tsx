@@ -8,7 +8,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { EyeOpenIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
+import {
+  CircleBackslashIcon,
+  EyeOpenIcon,
+  PaperPlaneIcon,
+  ResetIcon,
+  ThickArrowRightIcon,
+  UpdateIcon
+} from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { cn } from "lib";
 
@@ -31,17 +38,23 @@ export type MemberTableData = {
   date: string;
   lastActive: string;
   initial: string;
-  status: memberStatuses;
+  status: "invited" | "expired" | "active" | "suspended";
 };
 
 export interface MemberTableActions {
   handleViewMember: (id: string) => void;
-  handleSuspendMember: (id: string) => void;
+  handleSuspension: ({ id, suspend, name }: { id: string; suspend: boolean; name: string }) => void;
+  handleCancelInvitation: ({ id, email }: { id: string; email: string }) => void;
+  handleChangeRole: ({ id, name }: { id: string; name: string }) => void;
+  handleResendInvitation: ({ id, email }: { id: string; email: string }) => void;
 }
 
 export const getMemberTableColumns = ({
   handleViewMember,
-  handleSuspendMember
+  handleSuspension,
+  handleCancelInvitation,
+  handleChangeRole,
+  handleResendInvitation
 }: MemberTableActions): ColumnDef<MemberTableData>[] => [
   {
     accessorKey: "name",
@@ -83,7 +96,7 @@ export const getMemberTableColumns = ({
             <span className="text-vobb-neutral-50 block text-xs">+{teams.length - 2}</span>
           ) : (
             ""
-          )}{" "}
+          )}
         </div>
       );
     }
@@ -102,7 +115,6 @@ export const getMemberTableColumns = ({
   },
   {
     accessorKey: "lastActive",
-    // header: "Last Active"
     header: () => <span className="text-right w-full inline-block">Last Active</span>,
     cell: ({ row }) => {
       const { lastActive } = row.original;
@@ -118,17 +130,17 @@ export const getMemberTableColumns = ({
         <div
           className={cn(
             "font-medium w-fit py-1 px-2 rounded-2xl text-xs",
-            status === memberStatuses.invited
+            status === "invited"
               ? "text-info-30 bg-info-0"
-              : status === memberStatuses.expired
+              : status === "expired"
               ? "text-warning-30 bg-warning-0"
-              : status === memberStatuses.active
+              : status === "active"
               ? "text-success-30 bg-success-0"
-              : status === memberStatuses.suspended
+              : status === "suspended"
               ? "text-error-30 bg-error-0"
               : ""
           )}>
-          {status}
+          {memberStatuses[status]}
         </div>
       );
     }
@@ -136,21 +148,49 @@ export const getMemberTableColumns = ({
   {
     id: "actions",
     cell: ({ row }) => {
-      const { id } = row.original;
+      const { id, status, name, email } = row.original;
 
       const viewMember = () => {
         handleViewMember(id);
       };
-      const suspendMember = () => {
-        handleSuspendMember(id);
+      const suspension = () => {
+        handleSuspension({ id, suspend: status === "active" ? true : true, name });
       };
 
-      return <ActionColumn viewMember={viewMember} suspendMember={suspendMember} />;
+      const resendInvitation = () => {
+        handleResendInvitation({ id, email });
+      };
+
+      const cancelInvitation = () => {
+        handleCancelInvitation({ id, email });
+      };
+
+      const changeRole = () => {
+        handleChangeRole({ id, name });
+      };
+
+      return (
+        <ActionColumn
+          changeRole={changeRole}
+          resendInvitation={resendInvitation}
+          cancelInvitation={cancelInvitation}
+          status={status}
+          viewMember={viewMember}
+          suspension={suspension}
+        />
+      );
     }
   }
 ];
 
-const ActionColumn = ({ viewMember, suspendMember }) => {
+const ActionColumn = ({
+  status,
+  changeRole,
+  viewMember,
+  suspension,
+  cancelInvitation,
+  resendInvitation
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -161,12 +201,42 @@ const ActionColumn = ({ viewMember, suspendMember }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={viewMember} className="gap-2 cursor-pointer">
-          <EyeOpenIcon /> View member
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={suspendMember} className="gap-2 cursor-pointer">
-          <ThickArrowRightIcon /> Suspend member
-        </DropdownMenuItem>
+        {status === "active" || status === "suspended" ? (
+          <DropdownMenuItem onClick={viewMember} className="gap-2 cursor-pointer">
+            <EyeOpenIcon /> View member
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
+        {status === "active" ? (
+          <DropdownMenuItem onClick={changeRole} className="gap-2 cursor-pointer">
+            <UpdateIcon /> Change role
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
+        {status === "invited" || status === "expired" ? (
+          <DropdownMenuItem onClick={resendInvitation} className="gap-2 cursor-pointer">
+            <PaperPlaneIcon /> Resend invitation
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
+        {status === "invited" ? (
+          <DropdownMenuItem onClick={cancelInvitation} className="gap-2 cursor-pointer">
+            <CircleBackslashIcon /> Cancel invitation
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
+        {status === "active" || status === "suspended" ? (
+          <DropdownMenuItem onClick={suspension} className="gap-2 cursor-pointer">
+            {status === "active" ? <CircleBackslashIcon /> : <ResetIcon />}{" "}
+            {status === "active" ? "Suspend member" : "Undo suspension"}
+          </DropdownMenuItem>
+        ) : (
+          ""
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

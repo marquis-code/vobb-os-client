@@ -46,7 +46,7 @@ const attributes: attributeType[] = [
     value: "branch",
     label: "Branch",
     type: "select"
-  },
+  }
 ];
 
 interface MembersUIProps extends MemberTableActions {
@@ -55,13 +55,29 @@ interface MembersUIProps extends MemberTableActions {
 const MembersUI: React.FC<MembersUIProps> = ({
   handleInviteMember,
   handleViewMember,
-  handleSuspendMember
+  handleSuspension,
+  handleCancelInvitation,
+  handleChangeRole,
+  handleResendInvitation
 }) => {
   const [filters, setFilters] = useState<FilterData[]>([]);
 
   const memberColumns = useMemo(
-    () => getMemberTableColumns({ handleSuspendMember, handleViewMember }),
-    [handleSuspendMember, handleViewMember]
+    () =>
+      getMemberTableColumns({
+        handleSuspension,
+        handleCancelInvitation,
+        handleChangeRole,
+        handleResendInvitation,
+        handleViewMember
+      }),
+    [
+      handleSuspension,
+      handleCancelInvitation,
+      handleChangeRole,
+      handleResendInvitation,
+      handleViewMember
+    ]
   );
 
   return (

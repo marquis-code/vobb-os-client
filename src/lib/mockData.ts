@@ -544,23 +544,17 @@ export const TeamMemberTableMock: TeamMemberTableData[] = [
     date: "12/12/2023"
   }
 ];
-enum memberStatuses {
-  invited = "Invited",
-  expired = "Invitation expired",
-  active = "Active",
-  suspended = "Suspended"
-}
 
 export const MemberTableMock: MemberTableData[] = [
   {
     id: "728ed52f",
     name: "Jason Derule",
     email: "jasonjasonjasonjason@gmail.com",
-    teams: ["Finance", "Operations","Finance", "Operations","Finance", "Operations"],
+    teams: ["Finance", "Operations", "Finance", "Operations", "Finance", "Operations"],
     role: "Member",
-    date: "12/12/2023",
-    lastActive: "07/07/2024",
-    status: memberStatuses.invited,
+    date: "---",
+    lastActive: "---",
+    status: "invited",
     branch: "Headquarters",
     avatar: "",
     initial: "JD"
@@ -573,7 +567,7 @@ export const MemberTableMock: MemberTableData[] = [
     role: "Member",
     date: "12/12/2023",
     lastActive: "07/07/2024",
-    status: memberStatuses.expired,
+    status: "expired",
     branch: "Headquarters",
     avatar: "",
     initial: "JD"
@@ -586,7 +580,7 @@ export const MemberTableMock: MemberTableData[] = [
     role: "Member",
     date: "12/12/2023",
     lastActive: "07/07/2024",
-    status: memberStatuses.active,
+    status: "active",
     branch: "Headquarters",
     avatar: "",
     initial: "JD"
@@ -599,7 +593,7 @@ export const MemberTableMock: MemberTableData[] = [
     role: "Member",
     date: "12/12/2023",
     lastActive: "07/07/2024",
-    status: memberStatuses.suspended,
+    status: "suspended",
     branch: "Headquarters",
     avatar: "",
     initial: "JD"
@@ -610,9 +604,9 @@ export const MemberTableMock: MemberTableData[] = [
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",
-    date: "12/12/2023",
-    lastActive: "07/07/2024",
-    status: memberStatuses.invited,
+    date: "---",
+    lastActive: "---",
+    status: "invited",
     branch: "Headquarters",
     avatar: "",
     initial: "JD"
@@ -623,9 +617,9 @@ export const MemberTableMock: MemberTableData[] = [
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",
-    date: "12/12/2023",
-    lastActive: "07/07/2024",
-    status: memberStatuses.invited,
+    date: "---",
+    lastActive: "---",
+    status: "invited",
     branch: "Headquarters",
     avatar: "",
     initial: "JD"

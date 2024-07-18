@@ -118,7 +118,7 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ submit, close, sh
             validatorMessage={errors.jobTitle?.message}
           />
         </form>
-        <div className="flex justify-end gap-2 items-center">
+        <div className="flex justify-end gap-2 items-center mt-12">
           <CheckboxWithText
             label={"Invite another member"}
             handleChecked={setInviteNew}
