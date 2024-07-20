@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { IconPickerItem } from "react-icons-picker";
 
 // This type is used to define the shape of our data.
 export type BranchTeamTableData = {
@@ -19,7 +20,7 @@ export const getBranchTeamTableColumns = (): ColumnDef<BranchTeamTableData>[] =>
       const { name, icon } = row.original;
       return (
         <div className="flex gap-2 items-center text-right font-medium">
-          {icon} {name}
+          <IconPickerItem value={icon} size={20} color="#101323" /> {name}
         </div>
       );
     }

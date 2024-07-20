@@ -25,6 +25,7 @@ import {
   PlusCircledIcon,
   TimerIcon
 } from "@radix-ui/react-icons";
+import { UsersIcon, UsersRightIcon } from "assets";
 import { Button } from "components";
 import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "router";
@@ -83,6 +84,18 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       icon: <HomeIcon width={14} height={14} color="#101323" />,
       path: Routes.branches,
       value: "branches"
+    },
+    {
+      title: "Members",
+      icon: <UsersRightIcon width={14} height={14} color="#101323" />,
+      path: Routes.members,
+      value: "members"
+    },
+    {
+      title: "Teams",
+      icon: <UsersIcon width={14} height={14} color="#101323" />,
+      path: Routes.teams,
+      value: "teams"
     },
     {
       title: "Bank Accounts",
