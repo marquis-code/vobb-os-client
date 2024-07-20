@@ -173,7 +173,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
             name="description"
             register={register}
             validatorMessage={errors.description?.message}
-            placeholder="Describe your attribute's use case..."
+            placeholder="Describe your attribute, use case, ..."
           />
           {hasOptions ? (
             <CreateOptions

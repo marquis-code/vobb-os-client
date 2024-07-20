@@ -174,13 +174,13 @@ const OrgAttributes = () => {
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}
         handleAddClientAttr={() => setAddClientAttr(true)}
-        handleEditAttr={{
-          setEditAttr: () => setEditAttr(true),
-          handleSetDefaultAttribute: (attr: OrganisationAttributesData) => setInitAttr(attr)
+        setEditAttr={(attr: OrganisationAttributesData) => {
+          setEditAttr(true);
+          setInitAttr(attr);
         }}
-        handleDuplicateClientAttr={{
-          setDuplicateAttr: () => setAddClientAttr(true),
-          handleSetDefaultDuplicate: (attr: OrganisationAttributesData) => setInitAttr(attr)
+        setDuplicateAttr={(attr: OrganisationAttributesData) => {
+          setAddClientAttr(true);
+          setInitAttr(attr);
         }}
         handleArchiveAttr={archiveAttribute}
         handleRestoreAttr={restoreAttribute}

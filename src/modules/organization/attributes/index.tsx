@@ -7,14 +7,8 @@ import { OrganisationAttributesData } from "types";
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
   handleAddClientAttr: () => void;
-  handleEditAttr: {
-    setEditAttr: () => void;
-    handleSetDefaultAttribute: (attr: OrganisationAttributesData) => void;
-  };
-  handleDuplicateClientAttr: {
-    setDuplicateAttr: () => void;
-    handleSetDefaultDuplicate: (attr: OrganisationAttributesData) => void;
-  };
+  setEditAttr: (attr: OrganisationAttributesData) => void;
+  setDuplicateAttr: (attr: OrganisationAttributesData) => void;
   handleArchiveAttr: (id: string) => void;
   handleRestoreAttr: (id: string) => void;
   handleClientAttrAction: {
@@ -25,8 +19,8 @@ interface OrgAttributesUIProps {
 const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleAddMemberAttr,
   handleAddClientAttr,
-  handleEditAttr,
-  handleDuplicateClientAttr,
+  setEditAttr,
+  setDuplicateAttr,
   handleArchiveAttr,
   handleRestoreAttr,
   handleClientAttrAction
@@ -55,11 +49,8 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         <TabsContent value="member">
           <MemberAttributes
             handleAddAttribute={handleAddMemberAttr}
-            handleEditAttribute={{ setEditAttr: () => {}, handleSetDefaultAttribute: () => {} }}
-            handleDuplicateAttribute={{
-              setDuplicateAttr: () => {},
-              handleSetDefaultDuplicate: () => {}
-            }}
+            handleEditAttribute={setEditAttr}
+            handleDuplicateAttribute={setDuplicateAttr}
             handleRestoreAttribute={console.log}
             handleArchiveAttribute={console.log}
           />
@@ -70,8 +61,8 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
           ) : (
             <ClientAttributes
               handleAddAttribute={handleAddClientAttr}
-              handleEditAttribute={handleEditAttr}
-              handleDuplicateAttribute={handleDuplicateClientAttr}
+              handleEditAttribute={setEditAttr}
+              handleDuplicateAttribute={setDuplicateAttr}
               handleRestoreAttribute={handleRestoreAttr}
               handleArchiveAttribute={handleArchiveAttr}
               handlePagination={handlePagination}
