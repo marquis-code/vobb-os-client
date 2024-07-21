@@ -217,7 +217,7 @@ const FilterValue = ({ value, setValue, className, variant, type, options }: Fil
     }
   };
 
-  const isText = type === "text" && typeof value === "string";
+  const isText = type === "text" && (typeof value === "string" || typeof value === "undefined");
   const isSelect = type === "select" && typeof value !== "string";
 
   return (
@@ -232,11 +232,11 @@ const FilterValue = ({ value, setValue, className, variant, type, options }: Fil
             noValue ? "text-vobb-neutral-50 font-normal" : ""
           )}
           size={"sm"}>
-          {type === "text" && typeof value === "string"
+          {isText
             ? !noValue
               ? value
               : "enter text..."
-            : type === "select" && typeof value !== "string"
+            : isSelect
             ? !noValue
               ? value.label
               : "select option..."

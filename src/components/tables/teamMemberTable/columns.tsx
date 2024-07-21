@@ -9,17 +9,23 @@ import {
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 import { EyeOpenIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
-import { BranchMemberTableData } from "types";
 
-export interface BranchMemberTableActions {
+// This type is used to define the shape of our data.
+export type TeamMemberTableData = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  date: string;
+};
+
+export interface TeamMemberTableActions {
   handleViewMember: (id: string) => void;
-  handleTransferMember: (id: string) => void;
 }
 
-export const getBranchMemberTableColumns = ({
-  handleViewMember,
-  handleTransferMember
-}: BranchMemberTableActions): ColumnDef<BranchMemberTableData>[] => [
+export const getTeamMemberTableColumns = ({
+  handleViewMember
+}: TeamMemberTableActions): ColumnDef<TeamMemberTableData>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -37,14 +43,6 @@ export const getBranchMemberTableColumns = ({
     header: "Role"
   },
   {
-    accessorKey: "teams",
-    header: "Teams",
-    cell: ({ row }) => {
-      const { teams } = row.original;
-      return <div className="flex gap-2 text-left font-medium">{teams.join(", ")}</div>;
-    }
-  },
-  {
     accessorKey: "date",
     header: () => <span className="text-right w-full inline-block">Date added</span>,
     cell: ({ row }) => {
@@ -60,18 +58,13 @@ export const getBranchMemberTableColumns = ({
       const viewMember = () => {
         handleViewMember(branchId);
       };
-      const transferMemberToBranch = () => {
-        handleTransferMember(branchId);
-      };
 
-      return (
-        <ActionColumn viewMember={viewMember} transferMemberToBranch={transferMemberToBranch} />
-      );
+      return <ActionColumn viewMember={viewMember} />;
     }
   }
 ];
 
-const ActionColumn = ({ viewMember, transferMemberToBranch }) => {
+const ActionColumn = ({ viewMember }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -84,9 +77,6 @@ const ActionColumn = ({ viewMember, transferMemberToBranch }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem onClick={viewMember} className="gap-2 cursor-pointer">
           <EyeOpenIcon /> View member
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={transferMemberToBranch} className="gap-2 cursor-pointer">
-          <ThickArrowRightIcon /> Transfer to new branch
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

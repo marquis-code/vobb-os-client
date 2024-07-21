@@ -47,5 +47,8 @@ export const Routes = {
   organization_activity: "/settings/organization-activity",
 
   // Team
-  team: (id = ":id") => `/teams/${id}`
+  teams: "/settings/teams",
+  team: (id = ":id") => `/teams/${id}`,
+  members: "/settings/members",
+  member: (id = ":id") => `/members/${id}`
 };

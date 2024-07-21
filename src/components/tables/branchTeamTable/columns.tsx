@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BranchTeamTableData } from "types";
+import { IconPickerItem } from "react-icons-picker";
 
 export const getBranchTeamTableColumns = (): ColumnDef<BranchTeamTableData>[] => [
   {
@@ -9,7 +10,7 @@ export const getBranchTeamTableColumns = (): ColumnDef<BranchTeamTableData>[] =>
       const { name, icon } = row.original;
       return (
         <div className="flex gap-2 items-center text-right font-medium">
-          {icon} {name}
+          <IconPickerItem value={icon} size={20} color="#101323" /> {name}
         </div>
       );
     }
