@@ -53,7 +53,11 @@ const Teams = () => {
     handleShowPermissions();
   };
 
-  const handleAddTeam = () => setAddTeam(true);
+  const handleAddTeam = () => {
+    setAddTeam(true);
+    handleSetTeamId("");
+    setTeamData(null);
+  };
   const handleShowPermissions = () => setPermissions(true);
   const handleClosePermissions = () => setPermissions(false);
   const handleViewTeam = (id: string) => navigate(Routes.team(id));
@@ -84,7 +88,7 @@ const Teams = () => {
     if (teamsResponse?.status === 200) {
       const teamsData = teamsResponse?.data?.data?.teams.map((item) => ({
         id: item._id,
-        icon: "FaUsers",
+        icon: item.icon ?? "FaUsers",
         name: item.name,
         teamLeads:
           Array.isArray(item?.team_leads) && item.team_leads.length > 0

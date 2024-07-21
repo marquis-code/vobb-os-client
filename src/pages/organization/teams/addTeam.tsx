@@ -29,29 +29,26 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
   } = useApiRequest({});
 
   const handleSubmit = (data: AddTeamData) => {
-    let createRequestBody: createTeamRequestBody = {
-      name: data.name,
-      icon: data.icon
-    };
+    let requestBody: createTeamRequestBody = {};
+    if (data.name !== "") {
+      requestBody.name = data.name;
+    }
+    if (data.icon !== "") {
+      requestBody.icon = data.icon;
+    }
     if (data.description !== "") {
-      createRequestBody.description = data.description;
+      requestBody.description = data.description;
     }
     if (data.isGeneral) {
-      createRequestBody.general = data.isGeneral;
+      requestBody.general = data.isGeneral;
     }
     if (data.joinTeam) {
-      createRequestBody.join_team = data.joinTeam;
+      requestBody.join_team = data.joinTeam;
     }
 
-    const editRequestBody = {
-      name: data.name,
-      icon: data.icon,
-      description: data.description
-    };
-
     teamData
-      ? runEdit(editATeamService(teamData.id, editRequestBody))
-      : runAdd(createTeamService(createRequestBody));
+      ? runEdit(editATeamService(teamData.id, requestBody))
+      : runAdd(createTeamService(requestBody));
   };
 
   useMemo(() => {

@@ -22,7 +22,7 @@ type teamPermissionTypes = {
 };
 
 export interface createTeamRequestBody {
-  name: string;
+  name?: string;
   description?: string;
   icon?: string;
   general?: boolean;
