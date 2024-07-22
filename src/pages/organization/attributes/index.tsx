@@ -23,6 +23,14 @@ const defaultAttributesData: AttributesDataProps = {
     pageLimit: 0
   }
 };
+const initAttrFields = {
+  id: "",
+  title: "",
+  type: "",
+  required: false,
+  isSystem: false,
+  isActive: true
+};
 
 const OrgAttributes = () => {
   const {
@@ -45,14 +53,8 @@ const OrgAttributes = () => {
   const [addClientAttr, setAddClientAttr] = useState<boolean>(false);
   const [editClientAttr, setEditClientAttr] = useState<boolean>(false);
 
-  const [initAttr, setInitAttr] = useState<OrganisationAttributesData>({
-    id: "",
-    title: "",
-    type: "",
-    required: false,
-    isSystem: false,
-    isActive: true
-  });
+  const [initAttr, setInitAttr] = useState<OrganisationAttributesData>(initAttrFields);
+  const handleClearAttrFields = () => setInitAttr(initAttrFields);
 
   //paginations
   const [memberQueryParams, setMemberQueryParams] = useState({
@@ -216,13 +218,19 @@ const OrgAttributes = () => {
         prefilledAttribute={initAttr}
       />
       <EditMemberAttribute
-        close={() => setEditMemberAttr(false)}
+        close={() => {
+          setEditMemberAttr(false);
+          handleClearAttrFields();
+        }}
         show={editMemberAttr}
         prefilledAttribute={initAttr}
         fetchAttributes={fetchMemberAttributes}
       />
       <EditClientAttribute
-        close={() => setEditClientAttr(false)}
+        close={() => {
+          setEditClientAttr(false);
+          handleClearAttrFields();
+        }}
         show={editClientAttr}
         prefilledAttribute={initAttr}
         fetchAttributes={fetchClientAttributes}
