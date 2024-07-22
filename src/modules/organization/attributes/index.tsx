@@ -9,7 +9,8 @@ interface OrgAttributesUIProps {
   handleAddClientAttr: () => void;
   setEditMemberAttr: (attr: OrganisationAttributesData) => void;
   setEditClientAttr: (attr: OrganisationAttributesData) => void;
-  setDuplicateAttr: (attr: OrganisationAttributesData) => void;
+  setDuplicateMemberAttr: (attr: OrganisationAttributesData) => void;
+  setDuplicateClientAttr: (attr: OrganisationAttributesData) => void;
   handleArchiveAttr: (id: string) => void;
   handleRestoreAttr: (id: string) => void;
   handleMemberAttrAction: {
@@ -26,7 +27,8 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleAddClientAttr,
   setEditMemberAttr,
   setEditClientAttr,
-  setDuplicateAttr,
+  setDuplicateMemberAttr,
+  setDuplicateClientAttr,
   handleArchiveAttr,
   handleRestoreAttr,
   handleMemberAttrAction,
@@ -63,7 +65,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
             <MemberAttributes
               handleAddAttribute={handleAddMemberAttr}
               handleEditAttribute={setEditMemberAttr}
-              handleDuplicateAttribute={setDuplicateAttr}
+              handleDuplicateAttribute={setDuplicateMemberAttr}
               handleRestoreAttribute={handleRestoreAttr}
               handleArchiveAttribute={handleArchiveAttr}
               handlePagination={handleMemberPagination}
@@ -77,7 +79,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
             <ClientAttributes
               handleAddAttribute={handleAddClientAttr}
               handleEditAttribute={setEditClientAttr}
-              handleDuplicateAttribute={setDuplicateAttr}
+              handleDuplicateAttribute={setDuplicateClientAttr}
               handleRestoreAttribute={handleRestoreAttr}
               handleArchiveAttribute={handleArchiveAttr}
               handlePagination={handleClientPagination}

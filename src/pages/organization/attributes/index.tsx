@@ -206,13 +206,19 @@ const OrgAttributes = () => {
   return (
     <>
       <AddMemberAttribute
-        close={() => setAddMemberAttr(false)}
+        close={() => {
+          setAddMemberAttr(false);
+          handleClearAttrFields();
+        }}
         show={addMemberAttr}
         fetchAttributes={fetchMemberAttributes}
         prefilledAttribute={initAttr}
       />
       <AddClientAttribute
-        close={() => setAddClientAttr(false)}
+        close={() => {
+          setAddClientAttr(false);
+          handleClearAttrFields();
+        }}
         show={addClientAttr}
         fetchAttributes={fetchClientAttributes}
         prefilledAttribute={initAttr}
@@ -246,7 +252,11 @@ const OrgAttributes = () => {
           setEditClientAttr(true);
           setInitAttr(attr);
         }}
-        setDuplicateAttr={(attr: OrganisationAttributesData) => {
+        setDuplicateMemberAttr={(attr: OrganisationAttributesData) => {
+          setAddMemberAttr(true);
+          setInitAttr(attr);
+        }}
+        setDuplicateClientAttr={(attr: OrganisationAttributesData) => {
           setAddClientAttr(true);
           setInitAttr(attr);
         }}
