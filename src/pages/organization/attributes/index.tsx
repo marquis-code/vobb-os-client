@@ -54,7 +54,6 @@ const OrgAttributes = () => {
   const [editClientAttr, setEditClientAttr] = useState<boolean>(false);
 
   const [initAttr, setInitAttr] = useState<OrganisationAttributesData>(initAttrFields);
-  const handleClearAttrFields = () => setInitAttr(initAttrFields);
 
   //paginations
   const [memberQueryParams, setMemberQueryParams] = useState({
@@ -208,7 +207,7 @@ const OrgAttributes = () => {
       <AddMemberAttribute
         close={() => {
           setAddMemberAttr(false);
-          handleClearAttrFields();
+          setInitAttr(initAttrFields);
         }}
         show={addMemberAttr}
         fetchAttributes={fetchMemberAttributes}
@@ -217,7 +216,7 @@ const OrgAttributes = () => {
       <AddClientAttribute
         close={() => {
           setAddClientAttr(false);
-          handleClearAttrFields();
+          setInitAttr(initAttrFields);
         }}
         show={addClientAttr}
         fetchAttributes={fetchClientAttributes}
@@ -226,7 +225,7 @@ const OrgAttributes = () => {
       <EditMemberAttribute
         close={() => {
           setEditMemberAttr(false);
-          handleClearAttrFields();
+          setInitAttr(initAttrFields);
         }}
         show={editMemberAttr}
         prefilledAttribute={initAttr}
@@ -235,7 +234,7 @@ const OrgAttributes = () => {
       <EditClientAttribute
         close={() => {
           setEditClientAttr(false);
-          handleClearAttrFields();
+          setInitAttr(initAttrFields);
         }}
         show={editClientAttr}
         prefilledAttribute={initAttr}
