@@ -15,8 +15,8 @@ import { MemberPropertiesData, OrganisationAttributesData, optionType } from "ty
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
-  const { orgAttributes } = useUserContext();
-  const { currentPage, pageLimit } = orgAttributes?.attributesMetaData || {
+  const { orgMemberAttributes } = useUserContext();
+  const { currentPage, pageLimit } = orgMemberAttributes?.attributesMetaData || {
     currentPage: 1,
     pageLimit: 20
   };

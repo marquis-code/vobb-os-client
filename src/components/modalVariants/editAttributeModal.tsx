@@ -135,7 +135,6 @@ const EditAttributeModal: React.FC<EditAttributeModalProps> = ({
             label="Title"
             type="text"
             name="title"
-            defaultValue={initData?.title}
             register={register}
             validatorMessage={errors.title?.message}
           />

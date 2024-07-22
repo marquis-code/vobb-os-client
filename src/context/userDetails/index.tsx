@@ -12,15 +12,17 @@ interface UserContextProps {
   userDetails: UserProfileProps | null;
   orgDetails: OrganisationProfileProps | null;
   orgBranches: BranchesDataProps | null;
-  orgAttributes: AttributesDataProps | null;
+  orgMemberAttributes: AttributesDataProps | null;
   branchMembers: BranchMembersProps | null;
   branchTeams: BranchTeamsProps | null;
+  clientAttributes: AttributesDataProps | null;
   handleUpdateUser: (userDetails: UserProfileProps | null) => void;
   handleUpdateOrg: (orgDetails: OrganisationProfileProps | null) => void;
   handleUpdateBranches: (orgBranches: BranchesDataProps | null) => void;
-  handleUpdateAttributes: (orgAttributes: AttributesDataProps | null) => void;
+  handleUpdateMemberAttributes: (orgMemberAttributes: AttributesDataProps | null) => void;
   handleUpdateBranchMembers: (branchMembers: BranchMembersProps | null) => void;
   handleUpdateBranchTeams: (branchTeams: BranchTeamsProps | null) => void;
+  handleUpdateClientAttributes: (clientAttributes: AttributesDataProps | null) => void;
 }
 
 const UserDetailsContext = createContext<UserContextProps | undefined>(undefined);
@@ -37,9 +39,10 @@ export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
   const [userDetails, setUserDetails] = useState<UserProfileProps | null>(null);
   const [orgDetails, setOrgDetails] = useState<OrganisationProfileProps | null>(null);
   const [orgBranches, setOrgBranches] = useState<BranchesDataProps | null>(null);
-  const [orgAttributes, setOrgAttributes] = useState<AttributesDataProps | null>(null);
+  const [orgMemberAttributes, setOrgAttributes] = useState<AttributesDataProps | null>(null);
   const [branchMembers, setBranchMembers] = useState<BranchMembersProps | null>(null);
   const [branchTeams, setBranchTeams] = useState<BranchTeamsProps | null>(null);
+  const [clientAttributes, setClientAttributes] = useState<AttributesDataProps | null>(null);
 
   const handleUpdateUser = (userDetails: UserProfileProps | null) => {
     setUserDetails(userDetails);
@@ -53,8 +56,8 @@ export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
     setOrgBranches(orgBranches);
   };
 
-  const handleUpdateAttributes = (orgAttributes: AttributesDataProps | null) => {
-    setOrgAttributes(orgAttributes);
+  const handleUpdateMemberAttributes = (orgMemberAttributes: AttributesDataProps | null) => {
+    setOrgAttributes(orgMemberAttributes);
   };
 
   const handleUpdateBranchMembers = (branchMembers: BranchMembersProps | null) => {
@@ -63,21 +66,27 @@ export const UserDetailsProvider = ({ children }: { children: ReactNode }) => {
   const handleUpdateBranchTeams = (branchTeams: BranchTeamsProps | null) => {
     setBranchTeams(branchTeams);
   };
+  const handleUpdateClientAttributes = (clientAttributes: AttributesDataProps | null) => {
+    setClientAttributes(clientAttributes);
+  };
+
   return (
     <UserDetailsContext.Provider
       value={{
         userDetails,
         orgDetails,
         orgBranches,
-        orgAttributes,
+        orgMemberAttributes,
         branchMembers,
         branchTeams,
+        clientAttributes,
         handleUpdateUser,
         handleUpdateOrg,
         handleUpdateBranches,
-        handleUpdateAttributes,
+        handleUpdateMemberAttributes,
         handleUpdateBranchMembers,
-        handleUpdateBranchTeams
+        handleUpdateBranchTeams,
+        handleUpdateClientAttributes
       }}>
       {children}
     </UserDetailsContext.Provider>

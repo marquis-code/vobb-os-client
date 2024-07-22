@@ -17,8 +17,8 @@ const AddMemberAttribute = ({
   prefilledAttribute
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { orgAttributes } = useUserContext();
-  const { pageLimit } = orgAttributes?.attributesMetaData || {
+  const { orgMemberAttributes } = useUserContext();
+  const { pageLimit } = orgMemberAttributes?.attributesMetaData || {
     pageLimit: 0
   };
   const submit = (data: AddAttributesData) => {

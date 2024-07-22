@@ -29,24 +29,17 @@ export type AttributeTableData = {
 };
 
 export interface AttributeTableActions {
-  // handleEditAttribute: (row: AttributeTableData) => void;
-  handleEditAttribute: {
-    setEditAttr: () => void;
-    handleSetDefaultAttribute: (row: AttributeTableData) => void;
-  };
-  handleDuplicateAttribute: {
-    setDuplicateAttr: () => void;
-    handleSetDefaultDuplicate: (row: AttributeTableData) => void;
-  };
+  handleEditAttribute: (row: AttributeTableData) => void;
+  handleDuplicateAttribute: (row: AttributeTableData) => void;
   handleRestoreAttribute: (id: string) => void;
   handleArchiveAttribute: (id: string) => void;
 }
 
 export const getAttributeTableColumns = ({
-  handleDuplicateAttribute: { setDuplicateAttr, handleSetDefaultDuplicate },
+  handleDuplicateAttribute,
   handleRestoreAttribute,
   handleArchiveAttribute,
-  handleEditAttribute: { setEditAttr, handleSetDefaultAttribute }
+  handleEditAttribute
 }: AttributeTableActions): ColumnDef<AttributeTableData>[] => [
   {
     accessorKey: "title",
@@ -99,14 +92,8 @@ export const getAttributeTableColumns = ({
     cell: ({ row }) => {
       const { isActive, isSystem, id: attrId } = row.original;
 
-      const editAttribute = () => {
-        setEditAttr();
-        handleSetDefaultAttribute(row.original);
-      };
-      const duplicateAttribute = () => {
-        setDuplicateAttr();
-        handleSetDefaultDuplicate(row.original);
-      };
+      const editAttribute = () => handleEditAttribute(row.original);
+      const duplicateAttribute = () => handleDuplicateAttribute(row.original);
       const restoreAttribute = () => {
         handleRestoreAttribute(attrId);
       };

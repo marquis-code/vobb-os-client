@@ -32,9 +32,9 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
       }),
     [handleEditAttribute, handleDuplicateAttribute, handleRestoreAttribute, handleArchiveAttribute]
   );
-  const { orgAttributes } = useUserContext();
-  const tableData = orgAttributes?.attributesArray || [];
-  const metaData = orgAttributes?.attributesMetaData || {
+  const { orgMemberAttributes } = useUserContext();
+  const tableData = orgMemberAttributes?.attributesArray || [];
+  const metaData = orgMemberAttributes?.attributesMetaData || {
     currentPage: 1,
     pageLimit: 0,
     totalCount: 0,

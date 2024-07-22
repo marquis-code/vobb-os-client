@@ -98,7 +98,6 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
   } = useForm<AddAttributesData>({
     resolver: yupResolver(schema)
   });
-
   const onSubmit: SubmitHandler<AddAttributesData> = (data) => {
     submit(data);
   };

@@ -14,15 +14,15 @@ interface CreateAttributesProps extends ModalProps {
   prefilledAttribute: OrganisationAttributesData;
 }
 
-const EditMemberAttribute = ({
+const EditClientAttribute = ({
   show,
   close,
   fetchAttributes,
   prefilledAttribute
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { orgMemberAttributes } = useUserContext();
-  const { pageLimit } = orgMemberAttributes?.attributesMetaData || {
+  const { clientAttributes } = useUserContext();
+  const { pageLimit } = clientAttributes?.attributesMetaData || {
     pageLimit: 0
   };
   const { id } = prefilledAttribute;
@@ -73,4 +73,4 @@ const EditMemberAttribute = ({
   );
 };
 
-export { EditMemberAttribute };
+export { EditClientAttribute };

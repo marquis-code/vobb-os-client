@@ -79,6 +79,7 @@ export interface createAttributeRequestBody {
   label: string;
   is_required: boolean;
   description?: string;
+  is_client_prop?: boolean;
   meta?: any;
 }
 
