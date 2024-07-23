@@ -82,3 +82,5 @@ const TeamsUI = ({
 
 export { TeamsUI };
 export * from "./team";
+export * from "./teamPermissions";
+export * from "./teamActivity"

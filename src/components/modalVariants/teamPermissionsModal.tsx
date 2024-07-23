@@ -6,12 +6,13 @@ import { ModalProps } from "types";
 
 interface TeamPermissionsModalProps extends ModalProps {
   submit: (data) => void;
-  loading: boolean;
+  loading?: boolean;
+  hideSkip?: boolean;
 }
 
-const TeamPermissionsModal = ({ show, close, submit }: TeamPermissionsModalProps) => {
+const TeamPermissionsModal = ({ show, close, hideSkip }: TeamPermissionsModalProps) => {
   // This list is from the backend
-  const permissionList: PermissionItemTypes[] = [
+  const permissionList: PermissionItem[] = [
     {
       title: "Create client",
       id: "123",
@@ -44,7 +45,7 @@ const TeamPermissionsModal = ({ show, close, submit }: TeamPermissionsModalProps
         </div>
         <section className="max-h-[calc(100vh-200px)] overflow-auto -mr-4 pr-4">
           {permissions.map((permission) => (
-            <PermissionItem
+            <PermissionItemComponent
               {...permission}
               handleMembers={({ id, members }) =>
                 setPermissions((prev) =>
@@ -55,13 +56,17 @@ const TeamPermissionsModal = ({ show, close, submit }: TeamPermissionsModalProps
           ))}
         </section>
         <div className="flex justify-end gap-2 mt-4">
-          <Button
-            onClick={() => close()}
-            // className="text-error-10"
-            size={"default"}
-            variant={"outline"}>
-            Skip
-          </Button>
+          {!hideSkip ? (
+            <Button
+              onClick={() => close()}
+              // className="text-error-10"
+              size={"default"}
+              variant={"outline"}>
+              Skip
+            </Button>
+          ) : (
+            ""
+          )}
           <Button onClick={handleSubmit} size={"default"} variant={"fill"}>
             Save
           </Button>
@@ -73,17 +78,22 @@ const TeamPermissionsModal = ({ show, close, submit }: TeamPermissionsModalProps
 
 type role = "lead" | "manager" | "member";
 
-interface PermissionItemTypes {
+export interface PermissionItem {
   title: string;
   id: string;
   members: role[];
 }
 
-interface PermissionProps extends PermissionItemTypes {
+interface PermissionProps extends PermissionItem {
   handleMembers: ({ id, members }: { id: string; members: role[] }) => void;
 }
 
-const PermissionItem: React.FC<PermissionProps> = ({ title, id, members, handleMembers }) => {
+export const PermissionItemComponent: React.FC<PermissionProps> = ({
+  title,
+  id,
+  members,
+  handleMembers
+}) => {
   const [show, setShow] = useState(false);
 
   const handleCheck = (role: role) => {

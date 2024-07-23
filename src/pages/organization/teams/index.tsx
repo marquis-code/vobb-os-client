@@ -9,6 +9,7 @@ import { useApiRequest } from "hooks";
 import { fetchATeamService, fetchTeamsService } from "api";
 import { MetaDataProps } from "types";
 import { TeamTableData } from "components";
+import { EditTeam } from "./editTeam";
 
 export interface teamsDataProps {
   teamsData: TeamTableData[];
@@ -36,6 +37,7 @@ const Teams = () => {
   const { run: runFetchATeam, data: teamResponse, requestStatus: teamStatus } = useApiRequest({});
 
   const [addTeam, setAddTeam] = useState(false);
+  const [editTeam, setEditTeam] = useState({ show: false, id: "" });
   const [permissions, setPermissions] = useState(false);
   const [branches, setBranches] = useState(false);
   const [teamId, setTeamId] = useState("");
@@ -48,9 +50,9 @@ const Teams = () => {
   const handlePagination = (param: string, value: number) => {
     setTeamsQueryParams((prev) => ({ ...prev, [param]: value }));
   };
+
   const handlCloseAddTeam = () => {
     setAddTeam(false);
-    handleShowPermissions();
   };
 
   const handleAddTeam = () => {
@@ -64,11 +66,11 @@ const Teams = () => {
   const handleSetTeamId = (id: string) => {
     setTeamId(id);
   };
-  const handleEditTeam = (id: string) => {
-    setAddTeam(true);
-    handleSetTeamId(id);
-    fetchATeam(id);
-  };
+  // const handleEditTeam = (id: string) => {
+  //   setAddTeam(true);
+  //   handleSetTeamId(id);
+  //   fetchATeam(id);
+  // };
 
   const handleShowBranches = (id: string) => {
     setBranches(true);
@@ -131,6 +133,8 @@ const Teams = () => {
   useEffect(() => {
     fetchAllTeams();
   }, [teamsQueryParams]);
+  const handleEditTeam = (id) => setEditTeam({ show: true, id });
+  const handlCloseEditTeam = () => setEditTeam({ show: false, id: "" });
 
   return (
     <>
@@ -149,6 +153,7 @@ const Teams = () => {
       />
       <TeamPermissions show={permissions} close={handleClosePermissions} teamId={teamId} />
       <TeamBranches show={branches} close={handleCloseBranches} teamId={teamId} />
+      <EditTeam callback={handlCloseAddTeam} {...editTeam} close={handlCloseEditTeam} />
       <TeamsUI
         teams={{
           teamsData,

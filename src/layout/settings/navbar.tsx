@@ -27,7 +27,7 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
                 ) : (
                   <BreadcrumbItem>{item.title}</BreadcrumbItem>
                 )}
-                {index < items.length - 2 ? <BreadcrumbSeparator /> : ""}
+                {index !== items.length - 1 ? <BreadcrumbSeparator /> : ""}
               </>
             ))}
           </BreadcrumbList>

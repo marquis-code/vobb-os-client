@@ -9,11 +9,15 @@ import {
   getTeamMemberTableColumns,
   TeamMemberTable,
   TeamMemberTableActions,
-  LoadingSpinner
+  LoadingSpinner,
+  Badge,
+  PermissionItem
 } from "components";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { TeamMembersDataProps } from "pages";
+import { TeamPermissionsUI } from "./teamPermissions";
+import { TeamActivity } from "./teamActivity";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -31,6 +35,25 @@ const attributes: attributeType[] = [
     value: "role",
     label: "Role",
     type: "select"
+  }
+];
+
+// This list is from the backend
+const permissions: PermissionItem[] = [
+  {
+    title: "Create client",
+    id: "123",
+    members: []
+  },
+  {
+    title: "Edit client",
+    id: "1234",
+    members: []
+  },
+  {
+    title: "Add member to team",
+    id: "1235",
+    members: []
   }
 ];
 
@@ -62,9 +85,19 @@ const TeamUI = ({
   const { currentPage, totalCount, totalPages, pageLimit } = metaData;
   return (
     <>
+      <Badge
+        text={"You haven't created your team permissions"}
+        btnText={"Set permissions"}
+        variant={"light"}
+        type={"warning"}
+        badge={"trailing"}
+        size={"md"}
+        action={console.log}
+        className="max-w-[800px]"
+      />
       <SettingsPageTitle title="Team Name" />
       <Tabs className="max-w-[800px]" defaultValue="member">
-        <TabsList className="mb-2">
+        <TabsList defaultValue={"permissions"} className="mb-2">
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
             value="member">
@@ -110,11 +143,11 @@ const TeamUI = ({
             className="mt-4"
           />
         </TabsContent>
-        <TabsContent className="pb-8 mb-12" value="history">
-          History
-        </TabsContent>
         <TabsContent className="pb-8 mb-12" value="permissions">
-          History
+          <TeamPermissionsUI />
+        </TabsContent>
+        <TabsContent className="pb-8 mb-12" value="history">
+          <TeamActivity />
         </TabsContent>
       </Tabs>
     </>

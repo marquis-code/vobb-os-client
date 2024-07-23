@@ -4,6 +4,8 @@ import { useApiRequest } from "hooks";
 import { TeamUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { MetaDataProps } from "types";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 export interface TeamMembersDataProps {
   membersArray: TeamMemberTableData[];
@@ -20,6 +22,7 @@ const initMemberData = {
   }
 };
 const Team = () => {
+  const navigate = useNavigate();
   const teamPath = window.location.pathname.split("/");
   const id = teamPath[teamPath.length - 1];
   const {
@@ -63,11 +66,16 @@ const Team = () => {
   useEffect(() => {
     if (id) fetchTeamMembers();
   }, [membersQueryParams]);
+
+  const handleViewMember = (id) => {
+    navigate(Routes.member(id));
+  };
+
   return (
     <>
       <TeamUI
         handleAddMember={console.log}
-        handleViewMember={console.log}
+        handleViewMember={handleViewMember}
         memberData={{
           loading: membersStatus.isPending,
           teamsMembersData: teamsMembersData,

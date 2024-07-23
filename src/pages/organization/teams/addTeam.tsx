@@ -1,9 +1,12 @@
-import { createTeamRequestBody, createTeamService, editATeamService } from "api";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
+import { ModalProps } from "types";
+import { TeamDataProps } from ".";
+// import { createTeamRequestBody, createTeamService, editATeamService } from "api";
 import { AddTeamData, AddTeamModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { ModalProps } from "types";
-import { TeamDataProps } from ".";
+import { createTeamRequestBody, createTeamService, editATeamService } from "api";
 
 interface AddTeamProps extends ModalProps {
   callback: () => void;
@@ -50,7 +53,11 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
       ? runEdit(editATeamService(teamData.id, requestBody))
       : runAdd(createTeamService(requestBody));
   };
-
+  const navigate = useNavigate();
+  //  const handleSubmit = (data) => {
+  //    console.log(data);
+  //    navigate(Routes.team("1234"));
+  //  };
   useMemo(() => {
     if (addResponse?.status === 201) {
       toast({
