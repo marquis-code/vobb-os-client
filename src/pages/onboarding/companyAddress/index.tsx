@@ -128,7 +128,8 @@ const CompanyAddress = () => {
 
   useMemo(() => {
     if (cityResponse?.status === 200) {
-      localStorage.removeItem("vobbOSAccess");
+      localStorage.setItem("vobbOSAccess", cityResponse?.data?.data?.access_token);
+      localStorage.setItem("vobbOSRefresh", cityResponse?.data?.data?.refresh_token);
       navigate(Routes.completed_onboarding);
       toast({
         description: cityResponse?.data?.message

@@ -9,7 +9,7 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { useCountriesContext } from "context";
 import { timeZoneOptions } from "lib/constants";
 
-interface AddBranchData {
+export interface AddBranchData {
   name: string;
   country: optionType;
   state: string;
@@ -39,9 +39,10 @@ const schema = yup.object({
 
 interface AddBranchModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
 }
 
-const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit }) => {
+const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, loading }) => {
   const { countries } = useCountriesContext();
   const {
     register,
@@ -139,12 +140,14 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit }) 
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty}
+            disabled={!isDirty || loading}
+            loading={loading}
             size={"default"}
             variant={"fill"}>
             Create

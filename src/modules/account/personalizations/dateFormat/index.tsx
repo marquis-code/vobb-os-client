@@ -3,19 +3,25 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { optionType } from "types/interfaces";
-import { dateFormatOptions, initOptionType, sysLangOptions } from "lib/constants";
+import { dateFormatOptions, initOptionType, sysLangOptions } from "lib";
+import { useUserContext } from "context";
+import { useEffect } from "react";
 
-interface DateFormatProps {
-  submit: () => void;
+export interface DateFormatProps {
+  submit: (formData: FormData) => void;
+  loadingDateFormat: boolean;
 }
 interface DateFormatData {
   dateFormat: optionType;
 }
+
 const initSysLang: DateFormatData = {
   dateFormat: initOptionType
 };
 
-const DateFormat: React.FC<DateFormatProps> = ({ submit }) => {
+const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) => {
+  const { userDetails } = useUserContext();
+
   const schema = yup.object().shape({
     dateFormat: yup.object({
       label: yup.string().required("Required"),
@@ -24,12 +30,22 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit }) => {
   });
 
   const { handleSubmit, reset, watch, setValue } = useForm<DateFormatData>({
-    resolver: yupResolver(schema),
-    defaultValues: initSysLang
+    resolver: yupResolver(schema)
   });
-
+  useEffect(() => {
+    if (userDetails) {
+      const dateFormat = userDetails?.dateFormat
+        ? dateFormatOptions.find((item) => item.value === userDetails.dateFormat) || initOptionType
+        : initOptionType;
+      setValue("dateFormat", dateFormat);
+    }
+  }, [userDetails]);
   const onSubmit: SubmitHandler<DateFormatData> = (data) => {
-    submit();
+    const formData = new FormData();
+    if (data.dateFormat) {
+      formData.append("date_format", data.dateFormat.value);
+    }
+    submit(formData);
   };
 
   const handleReset = (e) => {
@@ -49,7 +65,7 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit }) => {
         <form>
           <SelectInput
             options={dateFormatOptions}
-            value={watch("dateFormat").value === "" ? null : watch("dateFormat")}
+            value={watch("dateFormat")?.value === "" ? null : watch("dateFormat")}
             onChange={(val) => val && setValue("dateFormat", val)}
             placeholder="Select a date format"
           />
@@ -57,7 +73,11 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit }) => {
             <Button onClick={handleReset} variant={"outline"}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} variant={"fill"}>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              variant={"fill"}
+              loading={loadingDateFormat}
+              disabled={loadingDateFormat}>
               Save
             </Button>
           </div>

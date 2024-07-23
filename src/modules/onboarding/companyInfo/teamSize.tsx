@@ -2,7 +2,7 @@ import { Button, SelectInput } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { teamSizeOptions } from "lib/constants";
+import { teamSizeOptions } from "lib";
 import { CompanyFormData, companySizeTypes } from "types";
 
 // TeamSizeForm.tsx

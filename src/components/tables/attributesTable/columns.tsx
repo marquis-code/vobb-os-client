@@ -29,8 +29,8 @@ export type AttributeTableData = {
 };
 
 export interface AttributeTableActions {
-  handleEditAttribute: (id: string) => void;
-  handleDuplicateAttribute: (id: string) => void;
+  handleEditAttribute: (row: AttributeTableData) => void;
+  handleDuplicateAttribute: (row: AttributeTableData) => void;
   handleRestoreAttribute: (id: string) => void;
   handleArchiveAttribute: (id: string) => void;
 }
@@ -92,12 +92,8 @@ export const getAttributeTableColumns = ({
     cell: ({ row }) => {
       const { isActive, isSystem, id: attrId } = row.original;
 
-      const editAttribute = () => {
-        handleEditAttribute(attrId);
-      };
-      const duplicateAttribute = () => {
-        handleDuplicateAttribute(attrId);
-      };
+      const editAttribute = () => handleEditAttribute(row.original);
+      const duplicateAttribute = () => handleDuplicateAttribute(row.original);
       const restoreAttribute = () => {
         handleRestoreAttribute(attrId);
       };
