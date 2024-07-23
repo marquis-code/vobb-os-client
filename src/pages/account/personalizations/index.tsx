@@ -7,19 +7,14 @@ import {
   updatePropertiesRequestBody
 } from "api";
 import { toast } from "components";
-import { useUserContext } from "context";
 import { useApiRequest, useFetchUser } from "hooks";
 import { AccountPersonalizationsUI } from "modules";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MemberPropertiesData, OrganisationAttributesData, optionType } from "types";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
-  const { orgMemberAttributes } = useUserContext();
-  const { currentPage, pageLimit } = orgMemberAttributes?.attributesMetaData || {
-    currentPage: 1,
-    pageLimit: 20
-  };
+  const [orgAttrQueryParams, setOrgAttrQueryParam] = useState({ page: 1, limit: 20 });
 
   const {
     run: runSystemLanguage,
@@ -79,8 +74,10 @@ const AccountPersonalizations = () => {
     runTimezone(personalAccountUpdateService(formData));
   };
 
-  const fetchProperties = () => {
-    runFetchAttr(fetchOrgPropertiesService({ page: currentPage, limit: pageLimit }));
+  const fetchOrgProperties = () => {
+    runFetchAttr(
+      fetchOrgPropertiesService({ page: orgAttrQueryParams.page, limit: orgAttrQueryParams.limit })
+    );
   };
 
   const fetchMemberProperties = () => {
@@ -189,7 +186,7 @@ const AccountPersonalizations = () => {
     }
 
     return [];
-  }, [fetchResponse, pageLimit]);
+  }, [fetchResponse]);
 
   //already set member's properties.(used to determine update or create)
   const memberProperties = useMemo<MemberPropertiesData[]>(() => {
@@ -239,9 +236,12 @@ const AccountPersonalizations = () => {
   };
 
   useEffect(() => {
-    fetchProperties();
+    fetchOrgProperties();
+  }, [orgAttrQueryParams]);
+
+  useEffect(() => {
     fetchMemberProperties();
-  }, [currentPage, pageLimit]);
+  }, []);
 
   return (
     <>

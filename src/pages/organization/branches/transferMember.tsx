@@ -1,9 +1,8 @@
-import { transferMultipleMembersToBranchService } from "api";
+import { transferAllMembersToBranchService, transferMultipleMembersToBranchService } from "api";
 import { toast, TransferMemberModal } from "components";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { ModalProps, optionType } from "types";
+import { BranchesDataProps, ModalProps, optionType } from "types";
 
 interface Props extends ModalProps {
   id: string;
@@ -12,6 +11,7 @@ interface Props extends ModalProps {
   fetchOrgBranches?: ({ page, limit }) => void;
   fetchBranchMembers: () => void;
   type: "member" | "branch";
+  orgBranches?: BranchesDataProps;
 }
 
 const TransferMember: React.FC<Props> = ({
@@ -21,16 +21,25 @@ const TransferMember: React.FC<Props> = ({
   transferIds,
   fetchBranchMembers,
   fetchOrgBranches,
-  handleTransfer
+  handleTransfer,
+  orgBranches
 }) => {
-  const { orgBranches } = useUserContext();
-  const { pageLimit } = orgBranches?.branchesMetaData || {
-    pageLimit: 0
-  };
-  const { run, data: response, requestStatus, error } = useApiRequest({});
+  const {
+    run: runTransferMultiple,
+    data: multipleResponse,
+    requestStatus: multipleStatus,
+    error: multipleError
+  } = useApiRequest({});
 
-  const submit = (data: optionType) => {
-    run(
+  const {
+    run: runTransferAll,
+    data: allResponse,
+    requestStatus: allStatus,
+    error: allError
+  } = useApiRequest({});
+
+  const handleTransferMultiple = (data: optionType) => {
+    runTransferMultiple(
       transferMultipleMembersToBranchService({
         oldBranch: id,
         newBranch: data.value,
@@ -39,32 +48,58 @@ const TransferMember: React.FC<Props> = ({
     );
   };
 
+  const handleTransferAll = (data: optionType) => {
+    runTransferAll(
+      transferAllMembersToBranchService({
+        oldBranch: id,
+        newBranch: data.value
+      })
+    );
+  };
+
   useMemo(() => {
-    if (response?.status === 200) {
+    if (multipleResponse?.status === 200) {
       toast({
-        description: response?.data?.message
+        description: multipleResponse?.data?.message
       });
       fetchBranchMembers();
-      fetchOrgBranches?.({ page: 1, limit: pageLimit });
+      fetchOrgBranches?.({ page: 1, limit: 20 });
       handleTransfer?.();
       close();
-    } else if (error) {
+    } else if (multipleError) {
       toast({
         variant: "destructive",
-        description: error?.response?.data?.error
+        description: multipleError?.response?.data?.error
       });
     }
-  }, [response, error]);
+  }, [multipleResponse, multipleError]);
 
+  useMemo(() => {
+    if (allResponse?.status === 200) {
+      toast({
+        description: allResponse?.data?.message
+      });
+      fetchBranchMembers();
+      fetchOrgBranches?.({ page: 1, limit: 20 });
+      handleTransfer?.();
+      close();
+    } else if (allError) {
+      toast({
+        variant: "destructive",
+        description: allError?.response?.data?.error
+      });
+    }
+  }, [allResponse, allError]);
   return (
     <>
       <TransferMemberModal
         show={show}
         close={close}
-        submit={submit}
+        submit={transferIds?.length ? handleTransferMultiple : handleTransferAll}
         branchId={id}
         multiple={transferIds ? transferIds.length > 1 : false}
-        loading={requestStatus.isPending}
+        loading={multipleStatus.isPending || allStatus.isPending}
+        orgBranches={orgBranches}
       />
     </>
   );

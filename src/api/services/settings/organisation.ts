@@ -10,6 +10,7 @@ import {
   createOrgAttributeURL,
   deleteOrgBranchURL,
   deleteRequest,
+  fetchABranchURL,
   fetchOrgActivitiesURL,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
@@ -20,7 +21,6 @@ import {
   patchRequest,
   postRequest,
   putRequest,
-  queryParamsProps,
   resendCodeOrgEmailsURL,
   restoreOrgAttributeURL,
   transferAllMembersToBranchURL,
@@ -34,6 +34,7 @@ import {
   updateOrgSusNotifyURL,
   verifyOrgEmailsURL
 } from "api";
+import { activityParamsProps, branchQueryParamsProps } from "types";
 
 /*
 ORGANIZATION SERVICES
@@ -202,6 +203,17 @@ export const fetchOrgBranchesService = ({ page, limit }) => {
 };
 
 /**
+ * Fetch a branch's service
+ * @param id of branch requested
+ * @returns axios promise
+ */
+export const fetchABranchService = ({ id }) => {
+  return getRequest({
+    url: fetchABranchURL({ id })
+  });
+};
+
+/**
  * Add a new organisation's branch service
  * @param branches array of properties for the branch
  * @returns axios promise
@@ -243,7 +255,7 @@ export const markBranchAsPrimaryService = (id: string) => {
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgAttributesService = ({ page, limit, type }: queryParamsProps) => {
+export const fetchOrgAttributesService = ({ page, limit, type }: branchQueryParamsProps) => {
   return getRequest({
     url: fetchOrgAttributesURL({ page, limit, type })
   });
@@ -311,7 +323,10 @@ export const deleteOrgBranchService = ({ id }) => {
  * @params must include id of branch, optional query parameters that will not be included if not called for.
  * @returns axios promise
  */
-export const fetchOrgBranchMembersService = (id: string, queryParams: queryParamsProps = {}) => {
+export const fetchOrgBranchMembersService = (
+  id: string,
+  queryParams: branchQueryParamsProps = {}
+) => {
   return getRequest({
     url: fetchOrgBranchMembersURL({ id, queryParams })
   });
@@ -355,8 +370,13 @@ export const fetchTeamsPerBranchService = ({ id, page, limit }) => {
  * Fetch org's activity service
  * @returns axios promise
  */
-export const fetchOrgActivitiesService = ({ page, limit, order, startDate, endDate }) => {
+export const fetchOrgActivitiesService = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
   return getRequest({
-    url: fetchOrgActivitiesURL({ page, limit, order, startDate, endDate })
+    url: fetchOrgActivitiesURL({ page, limit, sort, ...queryParams })
   });
 };

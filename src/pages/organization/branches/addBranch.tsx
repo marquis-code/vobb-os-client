@@ -1,17 +1,16 @@
 import { addNewOrgBranchService, organisationBranchRequestBody } from "api";
 import { AddBranchData, AddBranchModal, toast } from "components";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { ModalProps } from "types";
+import { BranchesDataProps, ModalProps } from "types";
 
 interface AddBranchProps extends ModalProps {
   fetchOrgBranches: ({ page, limit }) => void;
+  orgBranches: BranchesDataProps;
 }
 
-const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches }) => {
+const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches, orgBranches }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { orgBranches } = useUserContext();
   const { pageLimit } = orgBranches?.branchesMetaData || {
     pageLimit: 0
   };

@@ -2,9 +2,10 @@ import { OrgBranchUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { TransferMember } from "./transferMember";
 import { useApiRequest } from "hooks";
-import { fetchOrgBranchMembersService, fetchTeamsPerBranchService } from "api";
-import { BranchMembersProps, BranchTeamsProps } from "types";
-import { useUserContext } from "context";
+import { fetchABranchService, fetchOrgBranchMembersService, fetchTeamsPerBranchService } from "api";
+import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
+import { useCountriesContext } from "context";
+import { initBranchData } from ".";
 
 const initMembersData: BranchMembersProps = {
   membersArray: [],
@@ -27,17 +28,8 @@ const initTeamsData: BranchTeamsProps = {
 };
 
 const OrgBranch = () => {
-  const { branchMembers, branchTeams, handleUpdateBranchMembers, handleUpdateBranchTeams } =
-    useUserContext();
-  const { currentPage: memberPage } = branchMembers?.membersMetaData || {
-    currentPage: 1
-  };
-  const { currentPage: teamPage } = branchTeams?.teamsMetaData || {
-    currentPage: 1
-  };
-
   const [memberQueryParams, setMemberQueryParams] = useState({
-    page: memberPage,
+    page: 1,
     limit: 20,
     name: undefined,
     team: undefined,
@@ -47,10 +39,10 @@ const OrgBranch = () => {
   });
 
   const [teamQueryParams, setTeamsQueryParams] = useState({
-    page: teamPage,
+    page: 1,
     limit: 20
   });
-
+  const { countries } = useCountriesContext();
   const branchPath = window.location.pathname.split("/");
   const branchId = branchPath[branchPath.length - 1];
   const [transfer, setTransfer] = useState({ show: false, id: "" });
@@ -63,6 +55,12 @@ const OrgBranch = () => {
     run: runMembers,
     data: membersResponse,
     requestStatus: membersStatus
+  } = useApiRequest({});
+  const {
+    run: runFetchBranch,
+    data: branchResponse,
+    error: branchError,
+    requestStatus: branchStatus
   } = useApiRequest({});
 
   const fetchBranchMembers = () => {
@@ -88,15 +86,18 @@ const OrgBranch = () => {
       })
     );
   };
+  const fetchBranch = () => {
+    runFetchBranch(fetchABranchService({ id: branchId }));
+  };
 
-  useMemo<BranchMembersProps>(() => {
+  const branchMembers = useMemo<BranchMembersProps>(() => {
     if (membersResponse?.status === 200) {
       const membersArray = membersResponse?.data?.data?.members.map((item) => ({
         name: item.name,
         id: item._id,
         email: item.email,
         role: item.role,
-        date: item.date_added.split(" ")[0],
+        date: item.date_added.slice(0, -8),
         teams: item.teams.map((team) => team.name)
       }));
 
@@ -107,20 +108,19 @@ const OrgBranch = () => {
         pageLimit: memberQueryParams.limit
       };
 
-      handleUpdateBranchMembers({ membersArray, membersMetaData });
       return { membersArray, membersMetaData };
     }
 
     return initMembersData;
   }, [membersResponse]);
 
-  useMemo<BranchTeamsProps>(() => {
+  const branchTeams = useMemo<BranchTeamsProps>(() => {
     if (teamsResponse?.status === 200) {
       const teamsArray = teamsResponse?.data?.data?.teams.map((item) => ({
         name: item.name,
         id: item._id,
         icon: item.icon ?? "",
-        date: item.date_added.split(" ")[0],
+        date: item.date_added.slice(0, -8),
         teamLeads: item.team_leads.map((lead) => lead.name),
         teamManagers: item.team_managers.map((manager) => manager.name),
         numberOfMembers: item.members
@@ -133,14 +133,35 @@ const OrgBranch = () => {
         pageLimit: teamQueryParams.limit
       };
 
-      handleUpdateBranchTeams({ teamsArray, teamsMetaData });
       return { teamsArray, teamsMetaData };
     }
 
     return initTeamsData;
   }, [teamsResponse]);
 
+  const branchInfo = useMemo<OrganisationBranchesData>(() => {
+    if (branchResponse?.status === 200) {
+      const item = branchResponse.data.data;
+      const branch = {
+        id: item._id,
+        name: item.name,
+        country: countries.find((country) => country.value === item.country)?.label || "",
+        zipCode: item.zip_code,
+        province: item.state,
+        isPrimary: item.is_primary,
+        addressLine1: item.address_line_1,
+        addressLine2: item.address_line_2 ?? "",
+        city: item.city,
+        timeZone: item.timezone ?? "",
+        hasMembers: item.member_exists
+      };
+      return branch;
+    }
+    return initBranchData;
+  }, [branchResponse, branchError]);
+
   useEffect(() => {
+    fetchBranch();
     fetchBranchMembers();
   }, [branchId, memberQueryParams]);
 
@@ -170,7 +191,10 @@ const OrgBranch = () => {
         handleTransferMember={handleTransferMember}
         handleUpdateMembersParams={handleUpdateMembersParams}
         handleUpdateTeamsParams={handleUpdateTeamsParams}
-        loadingMembers={membersStatus.isPending}
+        loadingMembers={membersStatus.isPending || branchStatus.isPending}
+        branchInfo={branchInfo}
+        branchMembers={branchMembers}
+        branchTeams={branchTeams}
       />
     </>
   );

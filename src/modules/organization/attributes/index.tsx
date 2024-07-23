@@ -2,7 +2,7 @@ import { LoadingSpinner, SettingsPageTitle } from "components";
 import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { OrganisationAttributesData } from "types";
+import { AttributesDataProps, OrganisationAttributesData } from "types";
 
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
@@ -21,6 +21,8 @@ interface OrgAttributesUIProps {
     loading: boolean;
     handlePagination: (param: string, value: number) => void;
   };
+  clientAttributes: AttributesDataProps;
+  memberAttributes: AttributesDataProps;
 }
 const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleAddMemberAttr,
@@ -32,7 +34,9 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleArchiveAttr,
   handleRestoreAttr,
   handleMemberAttrAction,
-  handleClientAttrAction
+  handleClientAttrAction,
+  memberAttributes,
+  clientAttributes
 }) => {
   const { loading: memberLoading, handlePagination: handleMemberPagination } =
     handleMemberAttrAction;
@@ -69,6 +73,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
               handleRestoreAttribute={handleRestoreAttr}
               handleArchiveAttribute={handleArchiveAttr}
               handlePagination={handleMemberPagination}
+              memberAttributes={memberAttributes}
             />
           )}
         </TabsContent>
@@ -83,6 +88,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
               handleRestoreAttribute={handleRestoreAttr}
               handleArchiveAttribute={handleArchiveAttr}
               handlePagination={handleClientPagination}
+              clientAttributes={clientAttributes}
             />
           )}
         </TabsContent>

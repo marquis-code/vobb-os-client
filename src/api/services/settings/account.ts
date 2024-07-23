@@ -26,6 +26,7 @@ import {
   toggleGoogleAuthURL,
   updateOrgPropertiesURL
 } from "api";
+import { activityParamsProps } from "types";
 
 interface changePasswordRequestBody {
   oldPassword: string;
@@ -235,8 +236,13 @@ export const updateOrgPropertiesService = (id: string, data: updatePropertiesReq
  * Fetch user's activity service
  * @returns axios promise
  */
-export const fetchUserActivitiesService = ({ page, limit, order, startDate, endDate }) => {
+export const fetchUserActivitiesService = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
   return getRequest({
-    url: fetchUserActivitiesURL({ page, limit, order, startDate, endDate })
+    url: fetchUserActivitiesURL({ page, limit, sort, ...queryParams })
   });
 };

@@ -106,3 +106,31 @@ export interface BranchTeamsProps {
   teamsArray: BranchTeamTableData[];
   teamsMetaData: MetaDataProps;
 }
+
+type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
+
+interface filterParamsStructure {
+  value: string;
+  cond: conditions;
+}
+
+export interface branchQueryParamsProps {
+  page?: number;
+  limit?: number;
+  type?: string;
+  name?: filterParamsStructure[];
+  team?: filterParamsStructure[];
+  role?: filterParamsStructure[];
+  email?: filterParamsStructure[];
+  operation?: string;
+}
+
+export interface activityParamsProps {
+  page: number;
+  limit: number;
+  sort: string;
+  start?: string;
+  end?: string;
+  start_date?: string;
+  end_date?: string;
+}

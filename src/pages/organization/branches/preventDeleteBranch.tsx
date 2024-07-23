@@ -1,5 +1,5 @@
 import { PreventDeleteBranchModal } from "components";
-import { ModalProps } from "types";
+import { BranchesDataProps, ModalProps } from "types";
 import { TransferMember } from "./transferMember";
 import { useEffect, useMemo, useState } from "react";
 import { useApiRequest } from "hooks";
@@ -11,6 +11,7 @@ interface Props extends ModalProps {
   handleDeleteBranch: () => void;
   handleOpen: () => void;
   fetchOrgBranches: ({ page, limit }) => void;
+  orgBranches: BranchesDataProps;
 }
 
 export interface BranchMemberData {
@@ -26,7 +27,8 @@ const PreventDeleteBranch: React.FC<Props> = ({
   name,
   handleOpen,
   handleDeleteBranch,
-  fetchOrgBranches
+  fetchOrgBranches,
+  orgBranches
 }) => {
   const { run: runFetch, data: fetchResponse, requestStatus } = useApiRequest({});
   const [transfer, setTransfer] = useState<{ show: boolean; memberIds?: string[] }>({
@@ -89,6 +91,7 @@ const PreventDeleteBranch: React.FC<Props> = ({
         }}
         show={transfer.show}
         type={transfer.memberIds ? "member" : "branch"}
+        orgBranches={orgBranches}
       />
     </>
   );

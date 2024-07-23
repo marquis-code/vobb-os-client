@@ -1,24 +1,24 @@
 import { createAttributeRequestBody, createOrgAttributeService } from "api";
 import { AddAttributeModal, AddAttributesData, toast } from "components";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { ModalProps, OrganisationAttributesData } from "types";
+import { AttributesDataProps, ModalProps, OrganisationAttributesData } from "types";
 
 interface CreateAttributesProps extends ModalProps {
   fetchAttributes: ({ page, limit }) => void;
   prefilledAttribute: OrganisationAttributesData;
+  memberAttributes: AttributesDataProps;
 }
 
 const AddMemberAttribute = ({
   show,
   close,
   fetchAttributes,
-  prefilledAttribute
+  prefilledAttribute,
+  memberAttributes
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { orgMemberAttributes } = useUserContext();
-  const { pageLimit } = orgMemberAttributes?.attributesMetaData || {
+  const { pageLimit } = memberAttributes?.attributesMetaData || {
     pageLimit: 0
   };
   const submit = (data: AddAttributesData) => {

@@ -4,25 +4,25 @@ import {
   EditAttributeModal,
   EditAttributesData
 } from "components/modalVariants/editAttributeModal";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { ModalProps, OrganisationAttributesData } from "types";
+import { AttributesDataProps, ModalProps, OrganisationAttributesData } from "types";
 
 interface CreateAttributesProps extends ModalProps {
   fetchAttributes: ({ page, limit }) => void;
   prefilledAttribute: OrganisationAttributesData;
+  memberAttributes: AttributesDataProps;
 }
 
 const EditMemberAttribute = ({
   show,
   close,
   fetchAttributes,
-  prefilledAttribute
+  prefilledAttribute,
+  memberAttributes
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { orgMemberAttributes } = useUserContext();
-  const { pageLimit } = orgMemberAttributes?.attributesMetaData || {
+  const { pageLimit } = memberAttributes?.attributesMetaData || {
     pageLimit: 0
   };
   const { id } = prefilledAttribute;

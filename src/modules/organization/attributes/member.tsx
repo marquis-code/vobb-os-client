@@ -6,12 +6,13 @@ import {
   getAttributeTableColumns,
   Pagination
 } from "components";
-import { useUserContext } from "context";
 import { useMemo } from "react";
+import { AttributesDataProps } from "types";
 
 interface MemberAttributesProps extends AttributeTableActions {
   handleAddAttribute: () => void;
   handlePagination: (param: string, value: number) => void;
+  memberAttributes: AttributesDataProps;
 }
 
 const MemberAttributes: React.FC<MemberAttributesProps> = ({
@@ -20,7 +21,8 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
   handleDuplicateAttribute,
   handleRestoreAttribute,
   handleArchiveAttribute,
-  handlePagination
+  handlePagination,
+  memberAttributes
 }) => {
   const columns = useMemo(
     () =>
@@ -32,9 +34,8 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
       }),
     [handleEditAttribute, handleDuplicateAttribute, handleRestoreAttribute, handleArchiveAttribute]
   );
-  const { orgMemberAttributes } = useUserContext();
-  const tableData = orgMemberAttributes?.attributesArray || [];
-  const metaData = orgMemberAttributes?.attributesMetaData || {
+  const tableData = memberAttributes?.attributesArray || [];
+  const metaData = memberAttributes?.attributesMetaData || {
     currentPage: 1,
     pageLimit: 0,
     totalCount: 0,

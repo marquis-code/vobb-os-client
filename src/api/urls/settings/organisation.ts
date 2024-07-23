@@ -4,25 +4,9 @@ SETTINGS URLS
 =================================
 */
 
+import { activityParamsProps, branchQueryParamsProps } from "types";
+
 const prefixOrg = "/settings/org";
-
-type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
-
-interface filterParamsStructure {
-  value: string;
-  cond: conditions;
-}
-
-export interface queryParamsProps {
-  page?: number;
-  limit?: number;
-  type?: string;
-  name?: filterParamsStructure[];
-  team?: filterParamsStructure[];
-  role?: filterParamsStructure[];
-  email?: filterParamsStructure[];
-  operation?: string;
-}
 
 /**
  * FEtch org details URL
@@ -87,6 +71,13 @@ export const updateOrgSusNotifyURL = () => `${prefixOrg}/suspension`;
  */
 export const fetchOrgBranchesURL = ({ page, limit }) =>
   `${prefixOrg}/branch?page=${page}&limit=${limit}`;
+
+/**
+ * Fetch a branch URL
+ * @returns url string
+ *
+ */
+export const fetchABranchURL = ({ id }) => `${prefixOrg}/${id}`;
 
 /**
  * Add a new organisation's branch URL
@@ -162,7 +153,7 @@ export const fetchOrgBranchMembersURL = ({
   queryParams = {}
 }: {
   id: string;
-  queryParams?: queryParamsProps;
+  queryParams?: branchQueryParamsProps;
 }) => {
   const queryString = Object.entries(queryParams)
     .filter(([_, value]) => value !== undefined && value !== null)
@@ -199,5 +190,18 @@ export const fetchTeamsPerBranchURL = ({ id, page, limit }) =>
  * @returns url string
  *
  */
-export const fetchOrgActivitiesURL = ({ page, limit, order, startDate, endDate }) =>
-  `${prefixOrg}/activity?page=${page}&limit=${limit}&sort=${order}&start_date=${startDate}&end_date=${endDate}`;
+export const fetchOrgActivitiesURL = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefixOrg}/activity?page=${page}&limit=${limit}&sort=${sort}${
+    queryString ? `&${queryString}` : ""
+  }`;
+};

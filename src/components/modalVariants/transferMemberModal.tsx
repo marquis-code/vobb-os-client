@@ -1,4 +1,4 @@
-import { ModalProps, optionType } from "types";
+import { BranchesDataProps, ModalProps, optionType } from "types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
 import { SelectInput } from "../form";
@@ -6,8 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { useUserContext } from "context";
-import { Label } from "@radix-ui/react-dropdown-menu";
 
 interface TransferMemberData {
   branch: optionType;
@@ -25,6 +23,7 @@ interface TransferMemberModalProps extends ModalProps {
   multiple: boolean;
   branchId: string;
   loading: boolean;
+  orgBranches?: BranchesDataProps;
 }
 
 const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
@@ -33,9 +32,9 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   submit,
   multiple,
   branchId,
-  loading
+  loading,
+  orgBranches
 }) => {
-  const { orgBranches } = useUserContext();
   const branchesArray = orgBranches?.branchesArray;
   const branchesOptions =
     branchesArray

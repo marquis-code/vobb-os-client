@@ -18,6 +18,7 @@ import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { useUserContext } from "context";
+import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -47,6 +48,9 @@ interface OrgBranchUIProps extends BranchMemberTableActions {
   handleUpdateMembersParams: (param: string, value: string | number) => void;
   handleUpdateTeamsParams: (param: string, value: number) => void;
   loadingMembers: boolean;
+  branchInfo: OrganisationBranchesData;
+  branchTeams: BranchTeamsProps;
+  branchMembers: BranchMembersProps;
 }
 
 const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
@@ -54,7 +58,10 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   handleViewMember,
   handleUpdateMembersParams,
   handleUpdateTeamsParams,
-  loadingMembers
+  loadingMembers,
+  branchInfo,
+  branchTeams,
+  branchMembers
 }) => {
   const memberColumns = useMemo(
     () => getBranchMemberTableColumns({ handleTransferMember, handleViewMember }),
@@ -62,7 +69,6 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   );
   const [memberFilters, setMemberFilter] = useState<FilterData[]>([]);
 
-  const { orgBranches, branchMembers, branchTeams } = useUserContext();
   const membersData = branchMembers?.membersArray || [];
   const membersMetaData = branchMembers?.membersMetaData || {
     currentPage: 1,
@@ -79,10 +85,6 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
     totalPages: 0
   };
 
-  const branchPath = window.location.pathname.split("/");
-  const branchId = branchPath[branchPath.length - 1];
-  const branchInfo = orgBranches?.branchesArray.find((branch) => branch.id === branchId);
-
   const teamColumns = useMemo(() => getBranchTeamTableColumns(), []);
   return (
     <>
@@ -91,7 +93,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
       ) : (
         <>
           <SettingsPageTitle
-            title={`${branchInfo?.name}, ${branchInfo?.timeZone}`}
+            title={`${branchInfo?.name} (${branchInfo?.timeZone})`}
             description={`${branchInfo?.addressLine1}, ${branchInfo?.city}, ${branchInfo?.province}, ${branchInfo?.country}, ${branchInfo?.zipCode}`}
             className="max-w-none"
           />

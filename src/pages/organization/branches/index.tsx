@@ -4,14 +4,14 @@ import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { toast } from "components";
 import { useApiRequest } from "hooks";
-import { useCountriesContext, useUserContext } from "context";
+import { useCountriesContext } from "context";
 import { BranchesDataProps, OrganisationBranchesData } from "types";
 import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
 import { PreventDeleteBranch } from "./preventDeleteBranch";
 import { DeleteBranch } from "./deleteBranch";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-const initBranchData = {
+export const initBranchData = {
   id: "",
   name: "",
   country: "",
@@ -44,13 +44,8 @@ const OrgBranches = () => {
     error: fetchError
   } = useApiRequest({});
   const { countries } = useCountriesContext();
-  const { orgBranches, handleUpdateBranches } = useUserContext();
-  const { currentPage } = orgBranches?.branchesMetaData || {
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0
-  };
-  const [page, setPage] = useState(currentPage);
+
+  const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(8);
   const [confirm, setConfirm] = useState(false);
   const [preventDelete, setPreventDelete] = useState(false);
@@ -97,7 +92,7 @@ const OrgBranches = () => {
       toast({
         description: primaryResponse?.data?.message
       });
-      fetchOrgBranches({ page: currentPage, limit });
+      fetchOrgBranches({ page: 1, limit });
     } else if (primaryError) {
       toast({
         variant: "destructive",
@@ -109,7 +104,7 @@ const OrgBranches = () => {
   const fetchOrgBranches = ({ page, limit }) =>
     runFetchBranches(fetchOrgBranchesService({ page, limit }));
 
-  useMemo<BranchesDataProps>(() => {
+  const orgBranches = useMemo<BranchesDataProps>(() => {
     if (fetchResponse?.status === 200) {
       const data = fetchResponse.data.data.branches.map((item) => ({
         id: item._id,
@@ -131,7 +126,6 @@ const OrgBranches = () => {
         totalCount: fetchResponse?.data?.data?.total_count,
         pageLimit: limit
       };
-      handleUpdateBranches({ branchesArray, branchesMetaData });
       return { branchesArray, branchesMetaData };
     }
 
@@ -155,22 +149,26 @@ const OrgBranches = () => {
         close={() => setPreventDelete(false)}
         handleOpen={() => setPreventDelete(true)}
         fetchOrgBranches={fetchOrgBranches}
+        orgBranches={orgBranches}
       />
       <AddBranch
         show={addBranch}
         close={() => setAddBranch(false)}
         fetchOrgBranches={fetchOrgBranches}
+        orgBranches={orgBranches}
       />
       <EditBranch
         {...editBranch}
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
         fetchOrgBranches={fetchOrgBranches}
+        orgBranches={orgBranches}
       />
       <DeleteBranch
         {...deleteBranch}
         close={handleCloseConfirmation}
         show={confirm}
         fetchOrgBranches={fetchOrgBranches}
+        orgBranches={orgBranches}
       />
       <OrgBranchesUI
         handleAddBranch={handleAddBranch}
@@ -182,6 +180,7 @@ const OrgBranches = () => {
         setLimit={setLimit}
         loading={fetchBranchStatus.isPending}
         handleViewBranch={handleViewBranch}
+        orgBranches={orgBranches}
       />
     </>
   );

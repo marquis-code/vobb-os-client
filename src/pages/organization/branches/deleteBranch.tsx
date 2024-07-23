@@ -1,19 +1,25 @@
 import { deleteOrgBranchService } from "api";
 import { ConfirmationModal, toast } from "components";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { ModalProps } from "types";
+import { BranchesDataProps, ModalProps } from "types";
 
 interface Props extends ModalProps {
   id: string;
   name: string;
   fetchOrgBranches: ({ page, limit }) => void;
+  orgBranches: BranchesDataProps;
 }
 
-const DeleteBranch: React.FC<Props> = ({ show, close, id, name, fetchOrgBranches }) => {
+const DeleteBranch: React.FC<Props> = ({
+  show,
+  close,
+  id,
+  name,
+  fetchOrgBranches,
+  orgBranches
+}) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
-  const { orgBranches } = useUserContext();
   const { pageLimit } = orgBranches?.branchesMetaData || {
     pageLimit: 0
   };

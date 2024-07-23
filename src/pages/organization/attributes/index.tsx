@@ -9,7 +9,6 @@ import {
   restoreOrgAttributeService
 } from "api";
 import { AttributesDataProps, OrganisationAttributesData } from "types";
-import { useUserContext } from "context";
 import { EditMemberAttribute } from "./editMemberAttribute";
 import { toast } from "components";
 import { EditClientAttribute } from "./editClientAttribute";
@@ -33,20 +32,6 @@ const initAttrFields = {
 };
 
 const OrgAttributes = () => {
-  const {
-    orgMemberAttributes,
-    handleUpdateMemberAttributes,
-    clientAttributes,
-    handleUpdateClientAttributes
-  } = useUserContext();
-
-  const { currentPage: memberPage } = orgMemberAttributes?.attributesMetaData || {
-    currentPage: 1
-  };
-  const { currentPage: clientPage } = clientAttributes?.attributesMetaData || {
-    currentPage: 1
-  };
-
   const [addMemberAttr, setAddMemberAttr] = useState(false);
   const [editMemberAttr, setEditMemberAttr] = useState(false);
 
@@ -57,11 +42,11 @@ const OrgAttributes = () => {
 
   //paginations
   const [memberQueryParams, setMemberQueryParams] = useState({
-    page: memberPage,
+    page: 1,
     limit: 20
   });
   const [clientQueryParams, setClientQueryParams] = useState({
-    page: clientPage,
+    page: 1,
     limit: 20
   });
 
@@ -144,7 +129,7 @@ const OrgAttributes = () => {
     }
   }, [restoreResponse, restoreError]);
 
-  useMemo<AttributesDataProps>(() => {
+  const memberAttributes = useMemo<AttributesDataProps>(() => {
     if (memberResponse?.status === 200) {
       const attributesArray = memberResponse?.data?.data?.attributes.map((item) => ({
         id: item._id,
@@ -162,14 +147,13 @@ const OrgAttributes = () => {
         totalCount: memberResponse?.data?.data?.total_count,
         pageLimit: memberQueryParams.limit
       };
-      handleUpdateMemberAttributes({ attributesArray, attributesMetaData });
       return { attributesArray, attributesMetaData };
     }
 
     return defaultAttributesData;
   }, [memberResponse]);
 
-  useMemo<AttributesDataProps>(() => {
+  const clientAttributes = useMemo<AttributesDataProps>(() => {
     if (clientResponse?.status === 200) {
       const attributesArray = clientResponse?.data?.data?.attributes.map((item) => ({
         id: item._id,
@@ -187,7 +171,6 @@ const OrgAttributes = () => {
         totalCount: clientResponse?.data?.data?.total_count,
         pageLimit: clientQueryParams.limit
       };
-      handleUpdateClientAttributes({ attributesArray, attributesMetaData });
       return { attributesArray, attributesMetaData };
     }
 
@@ -212,6 +195,7 @@ const OrgAttributes = () => {
         show={addMemberAttr}
         fetchAttributes={fetchMemberAttributes}
         prefilledAttribute={initAttr}
+        memberAttributes={memberAttributes}
       />
       <AddClientAttribute
         close={() => {
@@ -221,6 +205,7 @@ const OrgAttributes = () => {
         show={addClientAttr}
         fetchAttributes={fetchClientAttributes}
         prefilledAttribute={initAttr}
+        clientAttributes={clientAttributes}
       />
       <EditMemberAttribute
         close={() => {
@@ -230,6 +215,7 @@ const OrgAttributes = () => {
         show={editMemberAttr}
         prefilledAttribute={initAttr}
         fetchAttributes={fetchMemberAttributes}
+        memberAttributes={memberAttributes}
       />
       <EditClientAttribute
         close={() => {
@@ -239,6 +225,7 @@ const OrgAttributes = () => {
         show={editClientAttr}
         prefilledAttribute={initAttr}
         fetchAttributes={fetchClientAttributes}
+        clientAttributes={clientAttributes}
       />
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}
@@ -269,6 +256,8 @@ const OrgAttributes = () => {
           loading: clientStatus.isPending,
           handlePagination: handleClientPagination
         }}
+        memberAttributes={memberAttributes}
+        clientAttributes={clientAttributes}
       />
     </>
   );

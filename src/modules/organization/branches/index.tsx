@@ -8,8 +8,8 @@ import {
   Pagination,
   SettingsPageTitle
 } from "components";
-import { useUserContext } from "context";
 import { useMemo } from "react";
+import { BranchesDataProps, OrganisationBranchesData } from "types";
 
 interface OrgBranchesUIProps extends BranchTableActions {
   handleAddBranch: () => void;
@@ -17,6 +17,7 @@ interface OrgBranchesUIProps extends BranchTableActions {
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   limit: number;
   loading: boolean;
+  orgBranches: BranchesDataProps;
 }
 
 const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
@@ -28,7 +29,8 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   setLimit,
   limit,
   handleViewBranch,
-  loading
+  loading,
+  orgBranches
 }) => {
   const columns = useMemo(
     () =>
@@ -41,7 +43,6 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch, handleViewBranch]
   );
 
-  const { orgBranches } = useUserContext();
   const { currentPage, totalCount, totalPages } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,

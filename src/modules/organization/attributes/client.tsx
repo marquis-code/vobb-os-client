@@ -6,12 +6,13 @@ import {
   getAttributeTableColumns,
   Pagination
 } from "components";
-import { useUserContext } from "context";
 import { useMemo } from "react";
+import { AttributesDataProps } from "types";
 
 interface ClientAttributesProps extends AttributeTableActions {
   handleAddAttribute: () => void;
   handlePagination: (param: string, value: number) => void;
+  clientAttributes: AttributesDataProps;
 }
 
 const ClientAttributes: React.FC<ClientAttributesProps> = ({
@@ -20,7 +21,8 @@ const ClientAttributes: React.FC<ClientAttributesProps> = ({
   handleDuplicateAttribute,
   handleRestoreAttribute,
   handleArchiveAttribute,
-  handlePagination
+  handlePagination,
+  clientAttributes
 }) => {
   const columns = useMemo(
     () =>
@@ -33,7 +35,6 @@ const ClientAttributes: React.FC<ClientAttributesProps> = ({
     [handleEditAttribute, handleDuplicateAttribute, handleRestoreAttribute, handleArchiveAttribute]
   );
 
-  const { clientAttributes } = useUserContext();
   const tableData = clientAttributes?.attributesArray || [];
   const metaData = clientAttributes?.attributesMetaData || {
     currentPage: 1,

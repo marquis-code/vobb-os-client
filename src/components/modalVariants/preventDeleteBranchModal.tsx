@@ -46,6 +46,10 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
     }
   };
 
+  const idsToTransfer =
+    selected.length > 0 && selected.length !== branchMembers.length
+      ? selected.map((member) => member.id)
+      : [];
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -102,12 +106,7 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
             className="gap-1"
             size={"default"}
             variant={"fill"}
-            onClick={() =>
-              handleContinue(
-                name,
-                selected.map((member) => member.id)
-              )
-            }>
+            onClick={() => handleContinue(name, idsToTransfer)}>
             Transfer{" "}
             {selected.length > 0 && selected.length !== branchMembers.length ? "selected" : "all"}{" "}
             <ThickArrowRightIcon />

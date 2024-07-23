@@ -21,21 +21,14 @@ const initData = {
   }
 };
 
-const today = new Date();
-const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, "0");
-const day = String(today.getDate()).padStart(2, "0");
-
-const todayDate = `${year}-${month}-${day}`;
-
 const OrgActivity = () => {
   const { run, data: response, requestStatus } = useApiRequest({});
   const [queryParams, setQueryParams] = useState<QueryParamProps>({
     page: 1,
     limit: 20,
     order: "desc",
-    startDate: "2024-01-01",
-    endDate: todayDate
+    startDate: "",
+    endDate: ""
   });
   const { page, limit, order, startDate, endDate } = queryParams;
 
@@ -48,9 +41,9 @@ const OrgActivity = () => {
       fetchOrgActivitiesService({
         page,
         limit,
-        order,
-        startDate,
-        endDate
+        sort: order,
+        start_date: startDate,
+        end_date: endDate
       })
     );
   };
@@ -59,7 +52,7 @@ const OrgActivity = () => {
     if (response?.status === 200) {
       const activityArray = response?.data?.data?.activities.map((item) => ({
         action: item.action.split("-").join("_"),
-        date: item.date.slice(0, 10),
+        date: item.date.slice(0, -8),
         time: format(parseISO(item.time), "h:mma"),
         initiator: item.meta?.user?._id
           ? { name: item.initiator.full_name, id: item.initiator._id }
