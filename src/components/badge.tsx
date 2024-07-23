@@ -71,7 +71,7 @@ const Badge = (props: BadgeProps) => {
     }
   };
 
-  const fontSize = size === "md" ? "text-xs" : "text-normal";
+  const fontSize = size === "md" ? "text-xs" : "text-md";
   const direction = badge === "leading" ? "flex-row-reverse gap-2" : "flex-row";
 
   return (

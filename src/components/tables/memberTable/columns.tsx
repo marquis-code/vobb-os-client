@@ -26,6 +26,8 @@ export enum memberStatuses {
   suspended = "Suspended"
 }
 
+type statuses = "invited" | "expired" | "active" | "suspended";
+
 // This type is used to define the shape of our data.
 export type MemberTableData = {
   id: string;
@@ -38,7 +40,7 @@ export type MemberTableData = {
   date: string;
   lastActive: string;
   initial: string;
-  status: "invited" | "expired" | "active" | "suspended";
+  status: statuses;
 };
 
 export interface MemberTableActions {
@@ -128,18 +130,7 @@ export const getMemberTableColumns = ({
       const { status } = row.original;
       return (
         <div
-          className={cn(
-            "font-medium w-fit py-1 px-2 rounded-2xl text-xs",
-            status === "invited"
-              ? "text-info-30 bg-info-0"
-              : status === "expired"
-              ? "text-warning-30 bg-warning-0"
-              : status === "active"
-              ? "text-success-30 bg-success-0"
-              : status === "suspended"
-              ? "text-error-30 bg-error-0"
-              : ""
-          )}>
+          className={cn("font-medium w-fit py-1 px-2 rounded-2xl text-xs", getMemberStatusStyle(status))}>
           {memberStatuses[status]}
         </div>
       );
@@ -182,6 +173,17 @@ export const getMemberTableColumns = ({
     }
   }
 ];
+
+export const getMemberStatusStyle = (status: statuses) =>
+  status === "invited"
+    ? "text-info-30 bg-info-0"
+    : status === "expired"
+    ? "text-warning-30 bg-warning-0"
+    : status === "active"
+    ? "text-success-30 bg-success-0"
+    : status === "suspended"
+    ? "text-error-30 bg-error-0"
+    : "";
 
 const ActionColumn = ({
   status,

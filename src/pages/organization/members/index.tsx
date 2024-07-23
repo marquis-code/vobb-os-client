@@ -4,8 +4,11 @@ import { useState } from "react";
 import { CancelInvitation } from "./cancelInvitation";
 import { ResendInvitation } from "./resendInvitation";
 import { SuspendMember } from "./suspendMember";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 const Members = () => {
+  const navigate = useNavigate();
   const [inviteMember, setInviteMember] = useState(false);
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
   const [resendInvite, setResendInvite] = useState({ show: false, id: "", email: "" });
@@ -55,6 +58,10 @@ const Members = () => {
     setSuspension({ show: false, id: "", name: "", suspend: false });
   };
 
+  const handleViewMember = (id) => {
+    navigate(Routes.member(id, "activity"));
+  };
+
   return (
     <>
       <SuspendMember
@@ -70,7 +77,7 @@ const Members = () => {
         handleChangeRole={console.log}
         handleResendInvitation={handleResendInvite}
         handleSuspension={handleSuspension}
-        handleViewMember={console.log}
+        handleViewMember={handleViewMember}
         handleInviteMember={handleInviteMember}
       />
     </>
@@ -78,3 +85,4 @@ const Members = () => {
 };
 
 export { Members };
+export * from "./member";

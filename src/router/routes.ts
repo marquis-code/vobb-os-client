@@ -50,5 +50,5 @@ export const Routes = {
   teams: "/settings/teams",
   team: (id = ":id") => `/teams/${id}`,
   members: "/settings/members",
-  member: (id = ":id") => `/members/${id}`
+  member: (id = ":id", tab = ":route") => `/members/${id}/${tab}`
 };
