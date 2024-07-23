@@ -9,4 +9,7 @@ export * from "./transferMemberModal";
 export * from "./addAttributeModal";
 export * from "./addTeamModal";
 export * from "./teamPermissionsModal";
-export * from "./teamBranchesModal"
+export * from "./teamBranchesModal";
+export * from "./editTeamModal";
+export * from "./inviteMemberModal";
+export * from "./suspendMemberModal";

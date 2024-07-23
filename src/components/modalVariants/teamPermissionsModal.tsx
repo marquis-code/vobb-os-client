@@ -6,9 +6,10 @@ import { ModalProps } from "types";
 
 interface TeamPermissionsModalProps extends ModalProps {
   submit: (data) => void;
+  hideSkip?: boolean;
 }
 
-const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
+const TeamPermissionsModal = ({ show, close, hideSkip }: TeamPermissionsModalProps) => {
   // This list is from the backend
   const permissionList: PermissionItem[] = [
     {
@@ -52,13 +53,17 @@ const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
           ))}
         </section>
         <div className="flex justify-end gap-2 mt-4">
-          <Button
-            onClick={() => close()}
-            // className="text-error-10"
-            size={"default"}
-            variant={"outline"}>
-            Skip
-          </Button>
+          {!hideSkip ? (
+            <Button
+              onClick={() => close()}
+              // className="text-error-10"
+              size={"default"}
+              variant={"outline"}>
+              Skip
+            </Button>
+          ) : (
+            ""
+          )}
           <Button onClick={console.log} size={"default"} variant={"fill"}>
             Save
           </Button>
@@ -70,7 +75,7 @@ const TeamPermissionsModal = ({ show, close }: TeamPermissionsModalProps) => {
 
 type role = "lead" | "manager" | "member";
 
-interface PermissionItem {
+export interface PermissionItem {
   title: string;
   id: string;
   members: role[];
@@ -80,7 +85,7 @@ interface PermissionProps extends PermissionItem {
   handleMembers: ({ id, members }: { id: string; members: role[] }) => void;
 }
 
-const PermissionItem: React.FC<PermissionProps> = ({ title, id, members, handleMembers }) => {
+export const PermissionItem: React.FC<PermissionProps> = ({ title, id, members, handleMembers }) => {
   const [show, setShow] = useState(false);
 
   const handleCheck = (role: role) => {
