@@ -7,11 +7,8 @@ import {
   TeamMemberTableData,
   TeamTableData
 } from "components";
-import { AccountActivityData, OrgActivityData,  } from "modules";
 import { optionType, formFieldData } from "types";
-import { DeviceData } from "modules/account/security/loginHistory";
 import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
-
 
 export const loginHistoryMock = [
   {

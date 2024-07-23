@@ -56,7 +56,7 @@ const ClientAttributes: React.FC<ClientAttributesProps> = ({
           handleChange={(val) => handlePagination("page", val)}
           handlePageLimit={(val) => handlePagination("limit", val)}
           totalCount={metaData.totalCount}
-          pageLimit={metaData.pageLimit}
+          pageLimit={metaData.pageLimit ?? 20}
           totalPages={metaData.totalPages}
           currentPage={metaData.currentPage}
           className="mt-4"
