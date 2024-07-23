@@ -31,7 +31,8 @@ import {
   OrgBranch,
   Teams,
   Members,
-  Team
+  Team,
+  Member
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout, SettingsLayoutProps } from "layout";
 
@@ -359,6 +360,25 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Workspace" },
         {
           title: "Members"
+        }
+      ]
+    }
+  },
+  {
+    path: Routes.member(":id", ":route"),
+    Element: Member,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Members",
+      items: [
+        { title: "Workspace" },
+        {
+          title: "Members",
+          path: Routes.members
+        },
+        {
+          title: "Member"
         }
       ]
     }
