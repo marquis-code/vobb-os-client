@@ -12,3 +12,4 @@ export * from "./teamPermissionsModal";
 export * from "./teamBranchesModal";
 export * from "./editTeamModal";
 export * from "./inviteMemberModal";
+export * from "./suspendMemberModal";

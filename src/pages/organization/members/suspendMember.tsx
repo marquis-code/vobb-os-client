@@ -1,4 +1,4 @@
-import { ConfirmationModal } from "components";
+import { SuspendMemberModal } from "components";
 import { ModalProps } from "types";
 
 interface SuspendMemberProps extends ModalProps {
@@ -13,12 +13,7 @@ const SuspendMember = ({ show, close, id, name }: SuspendMemberProps) => {
 
   return (
     <>
-      <ConfirmationModal
-        text={<>Are you sure you want to suspend <b>{name}</b>?</>}
-        handleContinue={handleContinue}
-        close={close}
-        show={show}
-      />
+      <SuspendMemberModal submit={handleContinue} close={close} show={show} />
     </>
   );
 };
