@@ -22,6 +22,7 @@ const ResendInvitation = ({ show, close, id, email }: ResendInvitationProps) => 
         handleContinue={handleContinue}
         close={close}
         show={show}
+        loading={false}
       />
     </>
   );

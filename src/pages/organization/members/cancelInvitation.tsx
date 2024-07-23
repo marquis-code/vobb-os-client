@@ -14,10 +14,15 @@ const CancelInvitation = ({ show, close, id, email }: CancelInvitationProps) => 
   return (
     <>
       <ConfirmationModal
-        text={<>Are you sure you want to cancel the invitation to <b>{email}</b>?</>}
+        text={
+          <>
+            Are you sure you want to cancel the invitation to <b>{email}</b>?
+          </>
+        }
         handleContinue={handleContinue}
         close={close}
         show={show}
+        loading={false}
       />
     </>
   );

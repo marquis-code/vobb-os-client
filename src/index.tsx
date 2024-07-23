@@ -7,26 +7,19 @@ import App from "./App";
 import { Toaster } from "components";
 import { CountriesProvider, MemberProfileProvider, UserDetailsProvider } from "context";
 
-
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-
     <MemberProfileProvider>
-
-    <UserDetailsProvider>
-
-      <CountriesProvider>
-        <BrowserRouter>
-          <App />
-          <Toaster />
-        </BrowserRouter>
-      </CountriesProvider>
-
+      <UserDetailsProvider>
+        <CountriesProvider>
+          <BrowserRouter>
+            <App />
+            <Toaster />
+          </BrowserRouter>
+        </CountriesProvider>
+      </UserDetailsProvider>
     </MemberProfileProvider>
-
-    </UserDetailsProvider>
-
   </React.StrictMode>
 );
 
