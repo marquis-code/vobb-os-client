@@ -4,7 +4,7 @@ import { Routes } from "router";
 
 const CompletedOnboarding = () => {
   const navigate = useNavigate();
-  const submit = () => navigate(Routes.login);
+  const submit = () => navigate(Routes.overview);
   return (
     <>
       <CompletedOnboardingUI submit={submit} />

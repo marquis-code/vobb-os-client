@@ -1,4 +1,4 @@
-describe("Signup page", () => {
+describe("Verify Email page", () => {
   beforeEach(() => {
     cy.visit("/verify-email");
     cy.on("uncaught:exception", (err, runnable) => {
