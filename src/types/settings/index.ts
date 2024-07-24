@@ -106,3 +106,12 @@ export interface BranchTeamsProps {
   teamsArray: BranchTeamTableData[];
   teamsMetaData: MetaDataProps;
 }
+
+export interface fetchMemberQueryParams {
+  search?: string;
+  page?: number;
+  limit?: number;
+  status?: string;
+  sort_order?: "asc" | "desc";
+  sort_property?: string;
+}

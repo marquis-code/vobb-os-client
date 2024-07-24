@@ -1,26 +1,87 @@
-import { EditTeamModal } from "components";
+import { AddTeamData, EditTeamModal, toast } from "components";
 import { ModalProps } from "types";
+import { editATeamService, fetchATeamService } from "api";
+import { useApiRequest } from "hooks";
+import { TeamDataProps } from ".";
+import { useEffect, useMemo } from "react";
 
 interface EditTeamProps extends ModalProps {
-  callback: () => void;
+  show: boolean;
+  id: string;
+  fetchAllTeams: () => void;
 }
 
 const EditTeam = (props: EditTeamProps) => {
-  const handleSubmit = (data) => {
-    console.log(data);
-    props.callback();
+  const { id, close, fetchAllTeams } = props;
+  const { run: runFetchATeam, data: teamResponse, requestStatus: teamStatus } = useApiRequest({});
+  const {
+    run: runEditTeam,
+    data: editResponse,
+    error: editError,
+    requestStatus: editStatus
+  } = useApiRequest({});
+
+  const fetchATeam = () => {
+    runFetchATeam(fetchATeamService(id));
   };
+
+  const handleSubmit = (data: AddTeamData) => {
+    runEditTeam(editATeamService(id, data));
+  };
+
+  const teamData = useMemo<TeamDataProps>(() => {
+    if (teamResponse?.status === 200) {
+      const item = teamResponse?.data?.data;
+      const propertyArray = {
+        id: item._id,
+        icon: item.icon,
+        name: item.name,
+        description: item.description,
+        isGeneral: item.general
+      };
+
+      return propertyArray;
+    }
+    return {
+      id: "",
+      icon: "",
+      name: "",
+      description: "",
+      isGeneral: true
+    };
+  }, [teamResponse]);
+
+  useMemo(() => {
+    if (editResponse?.status === 200) {
+      toast({
+        description: editResponse?.data?.message
+      });
+      fetchAllTeams();
+      close();
+    } else if (editError) {
+      toast({
+        variant: "destructive",
+        description: editError?.response?.data?.error
+      });
+    }
+  }, [editResponse, editError]);
+
+  useEffect(() => {
+    if (id) fetchATeam();
+  }, [id]);
   return (
     <>
       <EditTeamModal
         initData={{
-          name: "Finance",
-          description: "Manage money and financial records",
-          icon: "",
-          isGeneral: true,
+          name: teamData.name,
+          description: teamData.description,
+          icon: teamData.icon,
+          isGeneral: teamData.isGeneral
         }}
         submit={handleSubmit}
         {...props}
+        loading={teamStatus.isPending}
+        loadingEdit={editStatus.isPending}
       />
     </>
   );

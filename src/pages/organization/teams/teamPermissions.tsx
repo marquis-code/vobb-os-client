@@ -1,7 +1,7 @@
 import { setTeamPermissionsService } from "api";
 import { TeamPermissionsModal, toast } from "components";
 import { useApiRequest } from "hooks";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { ModalProps } from "types";
 
 interface TeamPermissionsProps extends ModalProps {
@@ -52,9 +52,6 @@ const TeamPermissions: React.FC<TeamPermissionsProps> = (props) => {
     }
   }, [response, error]);
 
-  useEffect(() => {
-    if (teamId) submit();
-  }, []);
   return (
     <>
       <TeamPermissionsModal submit={submit} loading={requestStatus.isPending} {...props} />

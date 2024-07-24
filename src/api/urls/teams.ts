@@ -1,3 +1,5 @@
+import { fetchMemberQueryParams } from "types";
+
 /*
 =================================
 TEAMS URLS
@@ -65,3 +67,60 @@ export const fetchATeamBranchesURL = ({ id, page }) => `${prefixTeam}/branch/${i
  */
 export const fetchATeamsMembersURL = ({ id, page, limit }) =>
   `${prefixTeam}/members/${id}?page=${page}&limit=${limit}`;
+
+/**
+ * Fetch orgnasiation's accepted members URL
+ * @returns url string
+ *
+ */
+export const fetchAcceptedMembersURL = (queryParams: fetchMemberQueryParams) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `/org/accepted-members${queryString ? `&${queryString}` : ""}`;
+};
+
+/**
+ * Fetch orgnasiation's pending members URL
+ * @returns url string
+ *
+ */
+export const fetchPendingMembersURL = (queryParams: fetchMemberQueryParams) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `/org/pending-members${queryString ? `&${queryString}` : ""}`;
+};
+
+/**
+ * Invite a member to organisation URL
+ * @returns url string
+ *
+ */
+export const inviteMemberURL = () => `${prefixTeam}/invite/member`;
+
+/**
+ * Resend/Cancel invite to a member to organisation URL
+ * @param id of number to resend/cancel invite to.
+ * @returns url string
+ *
+ */
+export const resendOrCancelInviteToMemberURL = ({ id }) => `${prefixTeam}/invite/${id}`;
+
+/**
+ * Suspend Member URL
+ * @returns url string
+ *
+ */
+export const suspendMemberURL = () => `/user/suspend`;
+
+/**
+ * Unsuspend Member URL
+ * @returns url string
+ *
+ */
+export const unsuspendMemberURL = () => `/user/unsuspend`;

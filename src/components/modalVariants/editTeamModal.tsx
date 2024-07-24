@@ -1,6 +1,6 @@
 import { ModalProps } from "types";
 import { Modal } from "../modal";
-import { Button } from "../ui";
+import { Button, LoadingSpinner } from "../ui";
 import { CheckboxWithText, CustomInput, CustomTextarea } from "../form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -26,26 +26,48 @@ const schema = yup.object({
 interface EditTeamModalProps extends ModalProps {
   submit: (data) => void;
   initData: EditTeamData;
+  loading: boolean;
+  loadingEdit: boolean;
 }
 
-const EditTeamModal: React.FC<EditTeamModalProps> = ({ show, close, submit, initData }) => {
+const EditTeamModal: React.FC<EditTeamModalProps> = ({
+  show,
+  close,
+  submit,
+  initData,
+  loading,
+  loadingEdit
+}) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     watch,
     setValue,
-    reset
+    reset,
+    getValues
   } = useForm<EditTeamData>({
     resolver: yupResolver(schema)
   });
 
   useEffect(() => {
-    reset(initData);
-  }, [initData]);
+    if (initData) {
+      reset(initData);
+    }
+  }, [initData, reset]);
+  const iconChanged = getValues().icon !== initData?.icon;
+  const generalChanged = getValues().isGeneral !== initData?.isGeneral;
 
   const onSubmit: SubmitHandler<EditTeamData> = (data) => {
-    submit(data);
+    const { name, icon, description, isGeneral } = data;
+    const changedFields = {
+      ...(dirtyFields.name && { name }),
+      ...(iconChanged && { icon }),
+      ...(dirtyFields.description && { description }),
+      ...(generalChanged && { general: isGeneral })
+    };
+
+    submit(changedFields);
   };
 
   return (
@@ -57,131 +79,143 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({ show, close, submit, init
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
-        <form className="mb-8">
-          <div className="mb-4">
-            <IconPicker
-              defaultValue="fas fa-camera"
-              value={watch("icon")}
-              onChange={(v) => setValue("icon", v)}
-              modalFadeStyle={{
-                position: "absolute",
-                zIndex: "1"
-              }}
-              modalWrapperStyle={{
-                borderRadius: "12px",
-                width: "100vw",
-                maxHeight: "400px",
-                minHeight: "300px",
-                minWidth: "250px",
-                background: "white",
-                boxShadow: "0px 0px 4px 1px rgb(0, 0, 0, 5%)",
-                fontFamily: "Inter",
-                maxWidth: "500px"
-              }}
-              searchBarStyle={{
-                padding: "1rem",
-                borderBottom: "1px solid hsl(var(--input))",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                fontSize: "14px",
-                color: " rgba(0, 0, 0, 0.7)",
-                fontFamily: "Inter",
-                gap: "0.8rem"
-              }}
-              searchInputStyle={{
-                fontFamily: "Inter",
-                border: "1px solid",
-                borderColor: "hsl(var(--input))",
-                height: "32px",
-                paddingLeft: "8px",
-                borderRadius: "4px",
-                fontSize: "12px",
-                width: "100%"
-              }}
-              modalEmptyWrapperStyle={{
-                textAlign: "center",
-                fontSize: "12px",
-                fontFamily: "Inter",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                color: "var(--neutral-40)",
-                padding: "20px 0"
-              }}
-              pickButtonStyle={{
-                display: "inline-block",
-                border: "1px solid rgba(0, 0, 0, 0.2)",
-                borderRadius: "4px",
-                cursor: "pointer",
-                transition: "all 0.3s ease 0s",
-                boxShadow: "unset",
-                padding: "8px",
-                borderColor: "hsl(var(--input))",
-                fontSize: "20px"
-              }}
-              modalIconNameStyle={{
-                display: "none"
-              }}
-              modalIconsWrapperStyle={{
-                display: "flex",
-                flexWrap: "wrap",
-                padding: "15px",
-                gap: "10px",
-                overflowY: "scroll",
-                boxSizing: "border-box",
-                maxHeight: "100%",
-                background: "#fff"
-              }}
-              modalContentWrapperStyle={{
-                padding: "0px",
-                height: "235px"
-              }}
-              modalIconsStyle={{
-                border: "1px solid var(--input)",
-                background: "white",
-                transition: "all 0.3s ease 0s",
-                cursor: "pointer",
-                padding: "8px",
-                borderRadius: "4px",
-                fontSize: "20px"
-              }}
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <form className="mb-8">
+            <div className="mb-4">
+              <IconPicker
+                defaultValue="fas fa-camera"
+                value={watch("icon")}
+                onChange={(v) => setValue("icon", v)}
+                modalFadeStyle={{
+                  position: "absolute",
+                  zIndex: "1"
+                }}
+                modalWrapperStyle={{
+                  borderRadius: "12px",
+                  width: "100vw",
+                  maxHeight: "400px",
+                  minHeight: "300px",
+                  minWidth: "250px",
+                  background: "white",
+                  boxShadow: "0px 0px 4px 1px rgb(0, 0, 0, 5%)",
+                  fontFamily: "Inter",
+                  maxWidth: "500px"
+                }}
+                searchBarStyle={{
+                  padding: "1rem",
+                  borderBottom: "1px solid hsl(var(--input))",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  fontSize: "14px",
+                  color: " rgba(0, 0, 0, 0.7)",
+                  fontFamily: "Inter",
+                  gap: "0.8rem"
+                }}
+                searchInputStyle={{
+                  fontFamily: "Inter",
+                  border: "1px solid",
+                  borderColor: "hsl(var(--input))",
+                  height: "32px",
+                  paddingLeft: "8px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  width: "100%"
+                }}
+                modalEmptyWrapperStyle={{
+                  textAlign: "center",
+                  fontSize: "12px",
+                  fontFamily: "Inter",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  color: "var(--neutral-40)",
+                  padding: "20px 0"
+                }}
+                pickButtonStyle={{
+                  display: "inline-block",
+                  border: "1px solid rgba(0, 0, 0, 0.2)",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease 0s",
+                  boxShadow: "unset",
+                  padding: "8px",
+                  borderColor: "hsl(var(--input))",
+                  fontSize: "20px"
+                }}
+                modalIconNameStyle={{
+                  display: "none"
+                }}
+                modalIconsWrapperStyle={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  padding: "15px",
+                  gap: "10px",
+                  overflowY: "scroll",
+                  boxSizing: "border-box",
+                  maxHeight: "100%",
+                  background: "#fff"
+                }}
+                modalContentWrapperStyle={{
+                  padding: "0px",
+                  height: "235px"
+                }}
+                modalIconsStyle={{
+                  border: "1px solid var(--input)",
+                  background: "white",
+                  transition: "all 0.3s ease 0s",
+                  cursor: "pointer",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  fontSize: "20px"
+                }}
+              />
+              {errors.icon && (
+                <small className="block text-[11px] mt-1 text-error-10">
+                  {errors.icon?.message}
+                </small>
+              )}
+            </div>
+            <CustomInput
+              label="Team Name"
+              type="text"
+              name="name"
+              register={register}
+              validatorMessage={errors.name?.message}
             />
-            {errors.icon && (
-              <small className="block text-[11px] mt-1 text-error-10">{errors.icon?.message}</small>
-            )}
-          </div>
-          <CustomInput
-            label="Team Name"
-            type="text"
-            name="name"
-            register={register}
-            validatorMessage={errors.name?.message}
-          />
-          <CustomTextarea
-            label="Description (optional)"
-            name="description"
-            register={register}
-            validatorMessage={errors.description?.message}
-            placeholder="Describe your team"
-          />
-          <CheckboxWithText
-            label={"Automatically add the team to every branch"}
-            handleChecked={(val) => setValue("isGeneral", val)}
-            checked={watch("isGeneral") ?? false}
-            className="mb-4"
-          />
-        </form>
+            <CustomTextarea
+              label="Description (optional)"
+              name="description"
+              register={register}
+              validatorMessage={errors.description?.message}
+              placeholder="Describe your team"
+            />
+            <CheckboxWithText
+              label={"Automatically add the team to every branch"}
+              handleChecked={(val) => setValue("isGeneral", val)}
+              checked={watch("isGeneral") ?? false}
+              className="mb-4"
+            />
+          </form>
+        )}
         <div className="flex justify-end gap-2">
           <Button
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loadingEdit}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            loading={loadingEdit}
+            disabled={loadingEdit}>
             Save
           </Button>
         </div>
