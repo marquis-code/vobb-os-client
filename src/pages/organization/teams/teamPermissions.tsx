@@ -1,10 +1,9 @@
-import { TeamPermissionsModal } from "components";
-import { ModalProps } from "types";
+import { TeamPermissionsUI } from "modules";
 
-const TeamPermissions = (props: ModalProps) => {
+const TeamPermissions = () => {
   return (
     <>
-      <TeamPermissionsModal submit={console.log} {...props} />
+      <TeamPermissionsUI />
     </>
   );
 };

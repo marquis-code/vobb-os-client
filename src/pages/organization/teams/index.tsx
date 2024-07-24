@@ -5,18 +5,19 @@ import { TeamPermissions } from "./teamPermissions";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { TeamBranches } from "./teamBranches";
+import { EditTeam } from "./editTeam";
 
 const Teams = () => {
   const navigate = useNavigate();
   const [addTeam, setAddTeam] = useState(false);
+  const [editTeam, setEditTeam] = useState({ show: false, id: "" });
   const [permissions, setPermissions] = useState(false);
   const [branches, setBranches] = useState(false);
 
+  const handleAddTeam = () => setAddTeam(true);
   const handlCloseAddTeam = () => {
     setAddTeam(false);
-    handleShowPermissions();
   };
-  const handleAddTeam = () => setAddTeam(true);
   const handleShowPermissions = () => setPermissions(true);
   const handleClosePermissions = () => setPermissions(false);
   const handleViewTeam = (id) => navigate(Routes.team(id));
@@ -24,13 +25,16 @@ const Teams = () => {
   const handleShowBranches = (id) => setBranches(true);
   const handleCloseBranches = () => setBranches(false);
 
+  const handleEditTeam = (id) => setEditTeam({ show: true, id });
+  const handlCloseEditTeam = () => setEditTeam({ show: false, id: "" });
+
   return (
     <>
       <AddTeam callback={handlCloseAddTeam} show={addTeam} close={handlCloseAddTeam} />
-      <TeamPermissions show={permissions} close={handleClosePermissions} />
+      <EditTeam callback={handlCloseAddTeam} {...editTeam} close={handlCloseEditTeam} />
       <TeamBranches show={branches} close={handleCloseBranches} />
       <TeamsUI
-        handleEditTeam={console.log}
+        handleEditTeam={handleEditTeam}
         handleViewBranches={handleShowBranches}
         handleTeamHistory={console.log}
         handleViewTeam={handleViewTeam}

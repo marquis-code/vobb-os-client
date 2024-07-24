@@ -1,13 +1,17 @@
 import {
   AttributeTableData,
   BranchMemberTableData,
-  BranchTableData,
   BranchTeamTableData,
+  // memberStatuses,
+  MemberTableData,
   TeamMemberTableData,
   TeamTableData
 } from "components";
+import { AccountActivityData, OrgActivityData,  } from "modules";
 import { optionType, formFieldData } from "types";
-import { AccountActivityData, OrgActivityData } from "modules";
+import { DeviceData } from "modules/account/security/loginHistory";
+import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
+
 
 export const loginHistoryMock = [
   {
@@ -621,5 +625,121 @@ export const TeamMemberTableMock: TeamMemberTableData[] = [
     email: "jason@gmail.com",
     role: "Team manager",
     date: "12/12/2023"
+  }
+];
+
+export const MemberTableMock: MemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jasonjasonjasonjason@gmail.com",
+    teams: ["Finance", "Operations", "Finance", "Operations", "Finance", "Operations"],
+    role: "Member",
+    date: "---",
+    lastActive: "---",
+    status: "invited",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: "expired",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: "active",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: "suspended",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "---",
+    lastActive: "---",
+    status: "invited",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "---",
+    lastActive: "---",
+    status: "invited",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  }
+];
+
+export const teamActivityMockData: TeamActivityData[] = [
+  {
+    action: "new_member",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "James Arukpo", id: "james" },
+    metadata: undefined
+  },
+  {
+    action: "edited",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      fields: "Name, Icon, Permissions"
+    }
+  },
+  {
+    action: "new_invitation",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      memberName: "Tolulope Adeniji"
+    }
+  },
+  {
+    action: "created",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: undefined
   }
 ];

@@ -8,7 +8,6 @@ SETTINGS URLS
 PERSONAL PROFILE URLS
 */
 const prefixAcc = "/settings/acc";
-const prefixOrg = "/settings/org";
 
 /**
  * Personal account details URL
@@ -99,84 +98,40 @@ export const toggleGoogleAuthURL = () => `${prefixAcc}/google-auth`;
  */
 export const blacklistIpAddressURL = () => `${prefixAcc}/blacklist-ip`;
 
-/* 
-ORGANIZATION URLS
-*/
-
 /**
- * FEtch org details URL
+ * Fetch member's set properties for the account URL
  * @returns url string
  *
  */
-export const fetchOrgDetailsURL = () => `${prefixOrg}/details`;
+export const fetchMemberPropertiesURL = () => `${prefixAcc}/attribute`;
 
 /**
- * Update organization profile URL
+ * Fetch organisation's properties URL
  * @returns url string
  *
  */
-export const updateOrgProfileURL = () => `${prefixOrg}/profile`;
+export const fetchOrgPropertiessURL = ({ page, limit }) =>
+  `${prefixAcc}/org-attribute?page=${page}&limit=${limit}`;
 
 /**
- * Update org emails URL
+ * Create organisation's properties URL
  * @returns url string
  *
  */
-export const updateOrgEmailsURL = () => `${prefixOrg}/email`;
+export const createOrgPropertiesURL = () => `${prefixAcc}/attribute/`;
 
 /**
- * REsend verification code for org emails URL
+ * Update organisation's properties URL
  * @returns url string
  *
  */
-export const resendCodeOrgEmailsURL = () => `${prefixOrg}/email/resend`;
+
+export const updateOrgPropertiesURL = ({ id }) => `${prefixAcc}/attribute/${id}`;
 
 /**
- *  Verify org emails URL
+ * Fetch user's activities URL
  * @returns url string
  *
  */
-export const verifyOrgEmailsURL = () => `${prefixOrg}/email/verify`;
-
-/**
- *  Update org numbers URL
- * @returns url string
- *
- */
-export const updateOrgNumbersURL = () => `${prefixOrg}/number`;
-
-/**
- *  Update org branding URL
- * @returns url string
- *
- */
-export const updateOrgBrandingURL = () => `${prefixOrg}/branding`;
-
-/**
- *  Update suspension notify URL
- * @returns url string
- *
- */
-export const updateOrgSusNotifyURL = () => `${prefixOrg}/suspension`;
-
-/**
- * Fetch organisation's branches URL
- * @returns url string
- *
- */
-export const fetchOrgBranchesURL = ({ page, limit }) =>
-  `${prefixOrg}/branch?page=${page}&limit=${limit}`;
-
-/**
- * Add a new organisation's branch URL
- * @returns url string
- *
- */
-export const addNewOrgBranchURL = () => `${prefixOrg}/branch`;
-
-/**
- * Update an organisation's branch URL
- * @returns url string
- *
- */
-export const updateOrgBranchURL = (id: string) => `${prefixOrg}/branch/${id}`;
+export const fetchUserActivitiesURL = ({ page, limit, order, startDate, endDate }) =>
+  `${prefixAcc}/activity?page=${page}&limit=${limit}&sort=${order}&start=${startDate}&end=${endDate}`;

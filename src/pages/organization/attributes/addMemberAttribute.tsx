@@ -4,7 +4,7 @@ import { ModalProps } from "types";
 const AddMemberAttribute = ({ show, close }: ModalProps) => {
   return (
     <>
-      <AddAttributeModal submit={console.log} close={close} show={show} />
+      <AddAttributeModal submit={console.log} close={close} show={show} loading={false} />
     </>
   );
 };

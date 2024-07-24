@@ -1,4 +1,4 @@
-import { ModalProps, optionType } from "types";
+import { ModalProps, OrganisationAttributesData, optionType } from "types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
 import { CheckboxWithText, CreateOptions, CustomInput, CustomTextarea, SelectInput } from "../form";
@@ -9,9 +9,9 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { attributeTypeIcons, attributeTypeOptions, fileTypeOptions } from "lib/constants";
 import { Switch } from "components/ui/switch";
 import { getOptionTypeValidationMsg } from "lib";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-interface AddBranchData {
+export interface AddAttributesData {
   title: string;
   type: optionType;
   description?: string;
@@ -76,21 +76,29 @@ const schema = yup.object({
 
 interface AddAttributeModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
+  initData?: OrganisationAttributesData;
 }
 
-const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, submit }) => {
+const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
+  show,
+  close,
+  submit,
+  loading,
+  initData
+}) => {
   const [createNew, setCreateNew] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-    setValue
-  } = useForm<AddBranchData>({
+    setValue,
+    reset
+  } = useForm<AddAttributesData>({
     resolver: yupResolver(schema)
   });
-
-  const onSubmit: SubmitHandler<AddBranchData> = (data) => {
+  const onSubmit: SubmitHandler<AddAttributesData> = (data) => {
     submit(data);
   };
 
@@ -100,7 +108,17 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
     attrType?.value === "checkbox" ||
     attrType?.value === "dropdown";
 
-  console.log(watch());
+  useEffect(() => {
+    if (initData) {
+      reset({
+        type: attributeTypeOptions.find((item) => item.value === initData?.type) ?? undefined,
+        description: initData?.description ?? "",
+        wordLimit: Array.isArray(initData?.metaData) ? "" : initData?.metaData,
+        required: initData?.required,
+        options: Array.isArray(initData?.metaData) ? initData?.metaData : []
+      });
+    }
+  }, [initData, reset]);
 
   return (
     <>
@@ -187,10 +205,16 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({ show, close, subm
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            loading={loading}
+            disabled={loading}>
             Create
           </Button>
         </div>
