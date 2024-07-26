@@ -148,7 +148,7 @@ export const getMemberTableColumns = ({
         handleViewMember(id);
       };
       const suspension = () => {
-        handleSuspension({ id, suspend: status === "active" ? true : true, name });
+        handleSuspension({ id, suspend: status === "active" ? true : false, name });
       };
 
       const resendInvitation = () => {

@@ -7,6 +7,7 @@ import { SuspendMember } from "./suspendMember";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { ChangeRole } from "./changeRole";
+import { UndoSuspension } from "./undoSuspension";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -79,12 +80,11 @@ const Members = () => {
         show={suspension.show && suspension.suspend}
         close={handleCloseSuspend}
       />
-      {/* <UndoSuspension
-        id={params.id ?? ""}
-        name="Jason Doe"
-        show={suspension}
-        close={handleCloseSuspension}
-      /> */}
+      <UndoSuspension
+       {...suspension}
+       show={suspension.show && !suspension.suspend}
+       close={handleCloseSuspend}
+      />
       <ChangeRole {...changeRole} close={handleCloseChangeRole} />
       <CancelInvitation {...cancelInvite} close={handleCloseCancellation} />
       <ResendInvitation {...resendInvite} close={handleCloseResend} />

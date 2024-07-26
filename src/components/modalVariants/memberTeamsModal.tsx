@@ -47,7 +47,7 @@ const MemberTeamsModal = ({
             </div>
             <Cross1Icon
               role="button"
-              onClick={() => handleRemoveTeam({ id: "123", name: "Branch Two" })}
+              onClick={() => handleRemoveTeam({ id: "123", name: "Finance" })}
               stroke="var(--error-20)"
               strokeWidth={1}
             />
