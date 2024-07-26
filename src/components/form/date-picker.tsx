@@ -9,16 +9,18 @@ import { Calendar } from "components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
-interface DatePickerProps {
+export interface DatePickerProps {
   value: Date | undefined;
   handleChange: (val: Date | undefined) => void;
-  label?: string;
+  label?: string | React.ReactNode;
   validatorMessage?: string;
   hint?: string;
   parentClassName?: string;
   className?: string;
   placeholder?: string;
   required?: boolean;
+  labelClassName?: string;
+  hideFieldIcon?: boolean;
 }
 
 const DatePicker: React.FC<DatePickerProps> = (props) => {
@@ -31,13 +33,15 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
     className,
     validatorMessage,
     hint,
-    placeholder
+    placeholder,
+    labelClassName,
+    hideFieldIcon
   } = props;
 
   return (
     <div className={cn("mb-4", parentClassName)}>
       {label && (
-        <label className={"block font-inter text-xs mb-1"}>
+        <label className={cn("block font-inter text-xs mb-1", labelClassName)}>
           {label}
           {required ? <span className={"text-error-50"}>*</span> : ""}
         </label>
@@ -51,7 +55,7 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
               !value && "text-muted-foreground",
               className
             )}>
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            {!hideFieldIcon ? <CalendarIcon className="mr-2 h-4 w-4" /> : ""}
             {value ? format(value, "PPP") : <span>{placeholder ?? "Pick a date"}</span>}
           </Button>
         </PopoverTrigger>
