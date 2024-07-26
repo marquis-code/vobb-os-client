@@ -9,7 +9,6 @@ import { getOptionTypeValidationMsg } from "lib";
 
 interface ChangeBranchData {
   branch: { label?: string | undefined; value?: string | undefined };
-  team: { label?: string | undefined; value?: string | undefined };
 }
 
 const optionTypeSchema = yup.object({
@@ -18,8 +17,7 @@ const optionTypeSchema = yup.object({
 });
 
 const schema = yup.object({
-  branch: optionTypeSchema,
-  team: optionTypeSchema
+  branch: optionTypeSchema
 });
 
 interface ChangeBranchModalProps extends ModalProps {
@@ -45,11 +43,6 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
     value: watch("branch")?.value ?? ""
   };
 
-  const team: optionType = {
-    label: watch("team")?.label ?? "",
-    value: watch("team")?.value ?? ""
-  };
-
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
@@ -60,22 +53,20 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
           </Button>
         </div>
         <p className="text-vobb-neutral-70 mb-4">
-          Add <strong>{name}</strong> to a new branch and select the appropriate team
+          Add <strong>{name}</strong> to a branch they are eligible to join. A member is eligible to
+          join a branch if their current team(s) exist in the new branch.
         </p>
         <form>
           <SelectInput
             label="Branch"
-            options={[]}
+            options={[
+              { label: "Test", value: "test" },
+              { label: "Two (Not eligible to join)", value: "two", isDisabled: true },
+              { label: "Three", value: "three" }
+            ]}
             value={watch("branch")?.value === "" ? null : branch}
             onChange={(val) => val && setValue("branch", val)}
             validatorMessage={getOptionTypeValidationMsg(errors.branch)}
-          />
-          <SelectInput
-            label="Team"
-            options={[]}
-            value={watch("team")?.value === "" ? null : team}
-            onChange={(val) => val && setValue("team", val)}
-            validatorMessage={getOptionTypeValidationMsg(errors.team)}
           />
         </form>
         <p className="text-xs text-vobb-neutral-70 mt-6">
