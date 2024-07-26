@@ -105,11 +105,14 @@ const MembersUI: React.FC<MembersUIProps> = ({
 };
 
 export { MembersUI };
-export * from "./memberActivity"
-export * from "./memberClients"
-export * from "./memberComments"
-export * from "./memberDetails"
-export * from "./memberEmails"
-export * from "./memberFiles"
-export * from "./memberNotes"
-export * from "./memberTasks"
+export * from "./memberActivity";
+export * from "./memberClients";
+export * from "./memberComments";
+export * from "./memberDetails";
+export * from "./memberEmails";
+export * from "./memberFiles";
+export * from "./memberNotes";
+export * from "./memberTasks";
+export * from "./acceptInvite";
+export * from "./invitationSuccessful";
+export * from "./invitationFailed";

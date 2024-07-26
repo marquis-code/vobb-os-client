@@ -25,6 +25,11 @@ export const Routes = {
   completed_email_verify: "/verify-email/completed",
   recaptcha: "/recaptcha",
 
+  // Public
+  accept_invite: "/invitation",
+  invitation_success: "/invitation/success",
+  invitation_failed: "/invitation/failed",
+
   // Dashboard
   overview: "/overview",
   profile: "/settings/profile",
