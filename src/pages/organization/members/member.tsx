@@ -19,6 +19,8 @@ import { ChangeBranch } from "./changeBranch";
 import { ChangeTeam } from "./changeTeam";
 import { SuspendMember } from "./suspendMember";
 import { UndoSuspension } from "./undoSuspension";
+import { MemberBranches } from "./memberBranches";
+import { MemberTeams } from "./memberTeams";
 
 const Member = () => {
   const params = useParams();
@@ -28,6 +30,8 @@ const Member = () => {
   const [changeBranch, setChangeBranch] = useState(false);
   const [changeTeam, setChangeTeam] = useState(false);
   const [suspension, setSuspension] = useState(false);
+  const [showBranches, setShowBranches] = useState(false);
+  const [showTeams, setShowTeams] = useState(false);
 
   const handleMainTabChange = (route) => {
     navigate(Routes.member(params.id, route));
@@ -45,6 +49,7 @@ const Member = () => {
 
   const handleChangeBranch = () => {
     setChangeBranch(true);
+    handleCloseBranches();
   };
 
   const handleCloseChangeBranch = () => {
@@ -53,6 +58,7 @@ const Member = () => {
 
   const handleChangeTeam = () => {
     setChangeTeam(true);
+    handleCloseTeams();
   };
 
   const handleCloseChangeTeam = () => {
@@ -65,6 +71,22 @@ const Member = () => {
 
   const handleCloseSuspension = () => {
     setSuspension(false);
+  };
+
+  const handleBranches = () => {
+    setShowBranches(true);
+  };
+
+  const handleCloseBranches = () => {
+    setShowBranches(false);
+  };
+
+  const handleTeams = () => {
+    setShowTeams(true);
+  };
+
+  const handleCloseTeams = () => {
+    setShowTeams(false);
   };
 
   return (
@@ -100,14 +122,27 @@ const Member = () => {
         show={suspension}
         close={handleCloseSuspension}
       /> */}
+      <MemberBranches
+        handleAddBranch={handleChangeBranch}
+        close={handleCloseBranches}
+        name="Jason Doe"
+        show={showBranches}
+      />
+      <MemberTeams
+        handleAddTeam={handleChangeTeam}
+        close={handleCloseTeams}
+        name="Jason Doe"
+        show={showTeams}
+      />
       <MemberProfileHeader
         handleChangeRole={handleChangeRole}
-        handleChangeBranch={handleChangeBranch}
-        handleChangeTeam={handleChangeTeam}
+        handleChangeBranch={handleBranches}
+        handleChangeTeam={handleTeams}
         handleSuspension={handleSuspension}
         handleComposeEmail={function (): void {
           throw new Error("Function not implemented.");
         }}
+        isSuspended
       />
       <MemberProfileTabs
         handleMainTabChange={handleMainTabChange}

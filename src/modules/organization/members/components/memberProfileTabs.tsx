@@ -68,6 +68,16 @@ const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
       title: "Comments",
       key: "comments",
       icon: <MessageChatSquareIcon width={16} height={16} />
+    },
+    {
+      title: "Branches",
+      key: "details",
+      icon: <UserCircleIcon width={16} height={16} />
+    },
+    {
+      title: "Teams",
+      key: "comments",
+      icon: <MessageChatSquareIcon width={16} height={16} />
     }
   ];
   

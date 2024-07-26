@@ -82,7 +82,7 @@ interface MenuProps {
   handleChangeTeam: () => void;
   handleSuspension: () => void;
   handleComposeEmail: () => void;
-  isSuspended?: boolean;
+  isSuspended: boolean;
 }
 
 const Menu = ({

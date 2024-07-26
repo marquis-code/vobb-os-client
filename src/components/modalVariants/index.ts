@@ -16,3 +16,5 @@ export * from "./suspendMemberModal";
 export * from "./changeRoleModal";
 export * from "./changeBranchModal";
 export * from "./changeTeamModal";
+export * from "./memberBranchesModal";
+export * from "./memberTeamsModal";
