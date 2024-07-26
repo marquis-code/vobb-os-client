@@ -7,3 +7,16 @@ export interface ModalProps {
   close: () => void;
   show: boolean;
 }
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface MetaDataProps {
+  currentPage: number;
+  totalCount: number;
+  totalPages: number;
+  pageLimit: number;
+}

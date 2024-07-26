@@ -1,12 +1,31 @@
-import { SettingsPageTitle } from "components";
+import { LoadingSpinner, SettingsPageTitle } from "components";
 import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { OrganisationAttributesData } from "types";
 
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
+  handleAddClientAttr: () => void;
+  setEditAttr: (attr: OrganisationAttributesData) => void;
+  setDuplicateAttr: (attr: OrganisationAttributesData) => void;
+  handleArchiveAttr: (id: string) => void;
+  handleRestoreAttr: (id: string) => void;
+  handleClientAttrAction: {
+    loading: boolean;
+    handlePagination: (param: string, value: number) => void;
+  };
 }
-const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }) => {
+const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
+  handleAddMemberAttr,
+  handleAddClientAttr,
+  setEditAttr,
+  setDuplicateAttr,
+  handleArchiveAttr,
+  handleRestoreAttr,
+  handleClientAttrAction
+}) => {
+  const { loading: clientLoading, handlePagination } = handleClientAttrAction;
   return (
     <>
       <SettingsPageTitle
@@ -30,20 +49,25 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({ handleAddMemberAttr }
         <TabsContent value="member">
           <MemberAttributes
             handleAddAttribute={handleAddMemberAttr}
-            handleEditAttribute={console.log}
-            handleDuplicateAttribute={console.log}
+            handleEditAttribute={setEditAttr}
+            handleDuplicateAttribute={setDuplicateAttr}
             handleRestoreAttribute={console.log}
             handleArchiveAttribute={console.log}
           />
         </TabsContent>
         <TabsContent value="client">
-          <ClientAttributes
-            handleAddAttribute={console.log}
-            handleEditAttribute={console.log}
-            handleDuplicateAttribute={console.log}
-            handleRestoreAttribute={console.log}
-            handleArchiveAttribute={console.log}
-          />
+          {clientLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <ClientAttributes
+              handleAddAttribute={handleAddClientAttr}
+              handleEditAttribute={setEditAttr}
+              handleDuplicateAttribute={setDuplicateAttr}
+              handleRestoreAttribute={handleRestoreAttr}
+              handleArchiveAttribute={handleArchiveAttr}
+              handlePagination={handlePagination}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </>

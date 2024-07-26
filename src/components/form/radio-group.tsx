@@ -50,6 +50,7 @@ const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
             {required ? <span className={"text-error-50"}>*</span> : ""}
           </p>
         )}
+
         <div className="relative">
           {hideOptions && (
             <button

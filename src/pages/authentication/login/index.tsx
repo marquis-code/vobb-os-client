@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { LoginUI } from "modules";
+import { useState, useMemo, useEffect } from "react";
+import { LoginUI, initLogin } from "modules";
 import { Login2FA } from "./login2fa";
 import { useApiRequest, useGoogleSignin } from "hooks";
 import { emailLoginService, googleSigninService } from "api";
@@ -9,14 +9,16 @@ import { Routes } from "router";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [loginReq, setLoginReq] = useState<loginData>(initLogin);
   const [twoFactor, setTwoFactor] = useState({
     show: false
   });
   const navigate = useNavigate();
+
   const { authorizationCode: code, googleSignIn } = useGoogleSignin({
     pathname: Routes.login
   });
+
   const {
     run: runEmailLogin,
     data: emailResponse,
@@ -30,9 +32,9 @@ const Login = () => {
     error: googleError
   } = useApiRequest({});
 
-  const submit = (data: loginData) => {
+  const handleEmail = (data: loginData) => {
     runEmailLogin(emailLoginService(data));
-    setEmail(data.email);
+    setLoginReq(data);
   };
 
   useMemo(() => {
@@ -96,9 +98,13 @@ const Login = () => {
 
   return (
     <>
-      <Login2FA {...twoFactor} close={() => setTwoFactor({ show: false })} email={email} />
+      <Login2FA
+        {...twoFactor}
+        close={() => setTwoFactor({ show: false })}
+        email={loginReq?.email ?? ""}
+      />
       <LoginUI
-        submit={submit}
+        submit={handleEmail}
         loading={emailStatus.isPending || googleStatus.isPending}
         handleGoogleSignin={handleGoogleSignin}
       />

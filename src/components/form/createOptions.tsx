@@ -19,13 +19,17 @@ export interface CreateOptionsProps {
 const CreateOptions: React.FC<CreateOptionsProps> = (props) => {
   const { label, parentClassName, required, validatorMessage, onChange, value } = props;
   const [show, setShow] = useState(false);
-  const [options, setOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<string[]>(value);
 
   const ref = useRef(null);
   const close = () => {
     setShow(false);
   };
   useClickOutside(ref, close);
+
+  useEffect(() => {
+    setOptions(value);
+  }, [value]);
 
   const handleRemove = (index: number) => {
     setOptions((prev) => {

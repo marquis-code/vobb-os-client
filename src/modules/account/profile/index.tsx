@@ -4,19 +4,12 @@ import { CheckCircledIcon, QuestionMarkCircledIcon, UploadIcon } from "@radix-ui
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { cn, isFile } from "lib";
+import { cn, isEmptyObj, isFile } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import React, { useEffect, useState } from "react";
+import { useUserContext } from "context";
 
-interface ProfileData {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  jobTitle: string;
-  email: { value: string; isVerified: boolean };
-  avatar: string | undefined;
-}
-
-interface ProfileFormData {
+export interface ProfileFormData {
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -34,39 +27,95 @@ const initData: ProfileFormData = {
   avatarFile: null
 };
 
-const schema = yup.object({
-  firstName: yup.string().required("Required"),
-  lastName: yup.string().required("Required"),
-  phoneNumber: yup.string().required("Required"),
-  jobTitle: yup.string().required("Required"),
-  email: yup.string().required("Required").email("Enter a valid email"),
-  avatarFile: yup
-    .mixed()
-    .required("Profile picture is required")
-    .test("fileSize", "Image is too large", (value) => isFile(value) && value.size <= 1048576 * 10)
-});
-
 interface AccountProfileProps {
+  updateProfile: (formData: FormData) => void;
+  loadingUpdate: boolean;
   handleChangeEmail: () => void;
-  // profile: ProfileData;
+  handleResendEmail: () => void;
 }
+const AccountProfileUI: React.FC<AccountProfileProps> = ({
+  handleChangeEmail,
+  handleResendEmail,
+  updateProfile,
+  loadingUpdate
+}) => {
+  const { userDetails: profile } = useUserContext();
+  const [validateAvatar, setValidateAvatar] = useState(false);
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setValue("avatarFile", e.target.files[0]);
+      setValidateAvatar(true);
+    }
+  };
 
-const AccountProfileUI = ({ handleChangeEmail }) => {
+  const baseSchema = yup.object({
+    firstName: yup.string().required("Required"),
+    lastName: yup.string().required("Required"),
+    phoneNumber: yup.string().required("Required"),
+    jobTitle: yup.string().required("Required"),
+    email: yup.string().required("Required")
+  });
+
+  const avatarSchema = yup
+    .mixed()
+    .test(
+      "fileSize",
+      "Image is too large",
+      (value) => !value || (isFile(value) && value.size <= 1048576 * 10)
+    );
+
+  const validationSchema = baseSchema.shape({
+    avatarFile: validateAvatar ? avatarSchema.required("Profile picture is required") : yup.mixed()
+  });
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, dirtyFields },
     watch,
     setValue,
+    getValues,
     reset
   } = useForm<ProfileFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver<any>(validationSchema),
     defaultValues: initData
   });
 
+  useEffect(() => {
+    if (profile) {
+      reset({
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        phoneNumber: profile.phoneNumber,
+        jobTitle: profile.role,
+        email: profile.pendingEmail ?? profile.email,
+        avatarFile: profile.avatar
+      });
+    }
+  }, [profile, reset]);
+
+  const { phoneNumber, avatarFile } = getValues();
+  const avatarChanged = avatarFile !== profile?.avatar;
+  const numberChanged = phoneNumber.replace(/\D/g, "") !== profile?.phoneNumber;
+
   const onSubmit: SubmitHandler<ProfileFormData> = (data) => {
-    console.log(data);
+    const formData = new FormData();
+    if (dirtyFields.firstName) {
+      formData.append("first_name", data.firstName);
+    }
+    if (dirtyFields.lastName) {
+      formData.append("last_name", data.lastName);
+    }
+    if (numberChanged) {
+      formData.append("phone_number", data.phoneNumber.replace(/\D/g, ""));
+    }
+    if (avatarChanged) {
+      formData.append("avatar", data.avatarFile);
+    }
+    updateProfile(formData);
   };
+
+  const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
 
   return (
     <>
@@ -75,10 +124,18 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
         <div className="flex gap-4 mb-8">
           <Avatar className="w-16 h-16">
             <AvatarImage
-              src={watch("avatarFile") ? URL.createObjectURL(watch("avatarFile")) : ""}
-              alt="avatar"
+              src={
+                watch("avatarFile") instanceof File
+                  ? URL.createObjectURL(watch("avatarFile"))
+                  : watch("avatarFile") || ""
+              }
+              alt="profile picture"
             />
-            <AvatarFallback>CN</AvatarFallback>
+
+            <AvatarFallback>
+              {profile?.firstName.charAt(0)}
+              {profile?.lastName.charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <div>
             <p
@@ -93,7 +150,7 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
               htmlFor="avatar">
               <UploadIcon /> <span>Upload image</span>
               <input
-                onChange={(e) => e.target.files && setValue("avatarFile", e.target.files[0])}
+                onChange={handleAvatarChange}
                 className="hidden"
                 id="avatar"
                 type="file"
@@ -128,8 +185,11 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
           <CustomPhoneInput
             label="Phone Number"
             name="phoneNumber"
+            value={watch("phoneNumber", profile?.phoneNumber)}
             validatorMessage={errors.phoneNumber?.message}
-            handleChange={(val) => setValue("phoneNumber", val)}
+            handleChange={(val) => {
+              setValue("phoneNumber", val);
+            }}
             parentClassName="mb-2"
           />
           <CustomInput
@@ -152,24 +212,29 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
                 disabled
                 parentClassName="mb-0"
               />
+
               <div className="absolute -right-8 top-7">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                      <CheckCircledIcon width={20} height={20} color="var(--success-50)" />{" "}
-                      {/* Verified email icon */}
-                      <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      {profile?.pendingEmail ? (
+                        <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
+                      ) : (
+                        <CheckCircledIcon width={20} height={20} color="var(--success-50)" />
+                      )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Email is unverified, please request a new verification email</p>{" "}
-                      {/* If verified, change text to: Email is verified! */}
+                      <p>
+                        {profile?.pendingEmail
+                          ? "Email is unverified, please request a new verification email"
+                          : "Email is verified!"}
+                      </p>{" "}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
             </div>
-
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between">
               <Button
                 onClick={(e) => {
                   e.preventDefault();
@@ -180,10 +245,18 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
                 variant={"link"}>
                 Change email address
               </Button>
-              <Button className="p-0 underline text-vobb-primary-50" size={"sm"} variant={"link"}>
-                Resend verification mail
-              </Button>{" "}
-              {/* Hide this button when email is verified */}
+              {profile?.pendingEmail && (
+                <Button
+                  className="p-0 underline text-vobb-primary-50"
+                  size={"sm"}
+                  variant={"link"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleResendEmail();
+                  }}>
+                  Resend verification mail
+                </Button>
+              )}
             </div>
           </div>
         </form>
@@ -192,7 +265,10 @@ const AccountProfileUI = ({ handleChangeEmail }) => {
         <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
           Cancel
         </Button>
-        <Button disabled={!isDirty} onClick={handleSubmit(onSubmit)} variant={"fill"}>
+        <Button
+          disabled={!isDirty || loadingUpdate}
+          onClick={handleSubmit(onSubmit)}
+          variant={"fill"}>
           Save
         </Button>
       </div>

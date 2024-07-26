@@ -1,17 +1,35 @@
 import { Button, ColorPicker, SettingsPageTitle } from "components";
+import { useUserContext } from "context";
 import { useState } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 
-const OrgBrandingUI = () => {
-  const [primary, setPrimary] = useState("#dde6ee");
-  const [secondary, setSecondary] = useState("#000000");
+export interface OrgBrandingData {
+  primary: string;
+  secondary: string;
+}
+interface OrgBrandingProps {
+  submit: (data: OrgBrandingData) => void;
+  loading: boolean;
+}
+const OrgBrandingUI: React.FC<OrgBrandingProps> = ({ submit, loading }) => {
+  const { orgDetails } = useUserContext();
+  const { primaryBrandColor = "", secondaryBrandColor = "" } = orgDetails || {};
+
+  const [primary, setPrimary] = useState<string>(primaryBrandColor);
+  const [secondary, setSecondary] = useState<string>(secondaryBrandColor);
+
+  const handleDefault = () => {
+    setPrimary(primaryBrandColor);
+    setSecondary(secondaryBrandColor);
+  };
+
+  const handleSubmit = () => {
+    submit({ primary, secondary });
+  };
 
   return (
     <>
-      <SettingsPageTitle
-        title="Branding"
-        className="max-w-none"
-      />
+      <SettingsPageTitle title="Branding" className="max-w-none" />
       <section className="grid grid-cols-[1fr,2fr] gap-4 pt-4">
         <div>
           <div className="mb-8">
@@ -23,10 +41,10 @@ const OrgBrandingUI = () => {
             <ColorPicker value={secondary} handleChange={setSecondary} />{" "}
           </div>
           <div className="flex gap-2 justify-start max-w-[800px] pt-10">
-            <Button onClick={console.log} variant={"outline"}>
+            <Button onClick={handleDefault} variant={"outline"} disabled={loading}>
               Cancel
             </Button>
-            <Button onClick={console.log} variant={"fill"}>
+            <Button onClick={handleSubmit} variant={"fill"} disabled={loading} loading={loading}>
               Save
             </Button>
           </div>
