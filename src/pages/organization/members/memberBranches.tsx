@@ -29,7 +29,7 @@ const MemberBranches = (props: MemberBranchesProps) => {
         close={closeConfirmRemoval}
         show={confirm.show}
       />
-      <MemberBranchesModal handleRemoveBranch={confirmRemoval} {...props} />;
+      <MemberBranchesModal handleRemoveBranch={confirmRemoval} {...props} />
     </>
   );
 };

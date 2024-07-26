@@ -30,7 +30,7 @@ const MemberTeams = (props: MemberTeamsProps) => {
         close={closeConfirmRemoval}
         show={confirm.show}
       />
-      <MemberTeamsModal handleRemoveTeam={confirmRemoval} {...props} />;
+      <MemberTeamsModal handleRemoveTeam={confirmRemoval} {...props} />
     </>
   );
 };
