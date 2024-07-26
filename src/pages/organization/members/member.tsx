@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Routes } from "router";
 import { MemberProfileDetails } from "./memberDetails";
 import { MemberProfileContext } from "context";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MemberProfileComments } from "./memberComments";
 import { MemberProfileActivity } from "./memberActivity";
 import { MemberProfileEmails } from "./memberEmails";
@@ -14,11 +14,20 @@ import { MemberProfileFiles } from "./memberFiles";
 import { MemberProfileNotes } from "./memberNotes";
 import { MemberProfileTasks } from "./memberTasks";
 import { MemberProfileClients } from "./memberClients";
+import { ChangeRole } from "./changeRole";
+import { ChangeBranch } from "./changeBranch";
+import { ChangeTeam } from "./changeTeam";
+import { SuspendMember } from "./suspendMember";
+import { UndoSuspension } from "./undoSuspension";
 
 const Member = () => {
   const params = useParams();
-
   const navigate = useNavigate();
+
+  const [changeRole, setChangeRole] = useState(false);
+  const [changeBranch, setChangeBranch] = useState(false);
+  const [changeTeam, setChangeTeam] = useState(false);
+  const [suspension, setSuspension] = useState(false);
 
   const handleMainTabChange = (route) => {
     navigate(Routes.member(params.id, route));
@@ -26,21 +35,80 @@ const Member = () => {
 
   const { subTab } = useContext(MemberProfileContext);
 
+  const handleChangeRole = () => {
+    setChangeRole(true);
+  };
+
+  const handleCloseChangeRole = () => {
+    setChangeRole(false);
+  };
+
+  const handleChangeBranch = () => {
+    setChangeBranch(true);
+  };
+
+  const handleCloseChangeBranch = () => {
+    setChangeBranch(false);
+  };
+
+  const handleChangeTeam = () => {
+    setChangeTeam(true);
+  };
+
+  const handleCloseChangeTeam = () => {
+    setChangeTeam(false);
+  };
+
+  const handleSuspension = () => {
+    setSuspension(true);
+  };
+
+  const handleCloseSuspension = () => {
+    setSuspension(false);
+  };
+
   return (
     <>
-      {/* Only shown when member is suspended */}
-      <Badge
-        text={"This member has been suspended"}
-        btnText={"Undo suspension"}
-        variant={"light"}
-        action={console.log}
-        type={"error"}
-        badge={"trailing"}
-        size={"md"}
-        className="justify-center rounded-none -mt-4 -ml-4 w-[calc(100%+2rem)] border-t-0 border-x-0 py-2 gap-2"
-        btnClassName="ml-0"
+      <ChangeRole
+        id={params.id ?? ""}
+        name="Jason Doe"
+        currentRole="member"
+        show={changeRole}
+        close={handleCloseChangeRole}
       />
-      <MemberProfileHeader />
+      <ChangeBranch
+        id={params.id ?? ""}
+        name="Jason Doe"
+        show={changeBranch}
+        close={handleCloseChangeBranch}
+      />
+      <ChangeTeam
+        id={params.id ?? ""}
+        name="Jason Doe"
+        show={changeTeam}
+        close={handleCloseChangeTeam}
+      />
+      <SuspendMember
+        id={params.id ?? ""}
+        name="Jason Doe"
+        show={suspension}
+        close={handleCloseSuspension}
+      />
+      {/* <UndoSuspension
+        id={params.id ?? ""}
+        name="Jason Doe"
+        show={suspension}
+        close={handleCloseSuspension}
+      /> */}
+      <MemberProfileHeader
+        handleChangeRole={handleChangeRole}
+        handleChangeBranch={handleChangeBranch}
+        handleChangeTeam={handleChangeTeam}
+        handleSuspension={handleSuspension}
+        handleComposeEmail={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
       <MemberProfileTabs
         handleMainTabChange={handleMainTabChange}
         mainTab={params.route ?? "activity"}

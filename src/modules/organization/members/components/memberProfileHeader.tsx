@@ -1,5 +1,5 @@
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Button } from "components";
+import { Badge, Button } from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import {
   DropdownMenu,
@@ -10,19 +10,35 @@ import {
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 
-// Add to context
-interface MemberProfileHeaderProps {
-  avatar: string | undefined;
-  intials: string;
-  fullName: string;
-  email: string;
-  jobTitle: string;
-  role: string;
+// Get member profile info from context and remove the comments
+interface MemberProfileHeaderProps extends MenuProps {
+  // avatar: string | undefined;
+  // intials: string;
+  // fullName: string;
+  // email: string;
+  // jobTitle: string;
+  // role: string;
 }
 
-const MemberProfileHeader = () => {
+const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
   return (
     <>
+      {/* Only shown when member is suspended */}
+      {props.isSuspended ? (
+        <Badge
+          text={"This member has been suspended"}
+          btnText={"Undo suspension"}
+          variant={"light"}
+          action={props.handleSuspension}
+          type={"error"}
+          badge={"trailing"}
+          size={"md"}
+          className="justify-center rounded-none -mt-4 -ml-4 w-[calc(100%+2rem)] border-t-0 border-x-0 py-2 gap-2"
+          btnClassName="ml-0"
+        />
+      ) : (
+        ""
+      )}
       <section className="pb-4">
         <div className="flex items-center gap-2">
           <Avatar className="w-10 h-10">
@@ -35,7 +51,7 @@ const MemberProfileHeader = () => {
           </div>
 
           <div className="ml-auto">
-            <Menu />
+            <Menu {...props} />
           </div>
         </div>
       </section>
@@ -60,7 +76,23 @@ const MemberProfileHeader = () => {
   );
 };
 
-const Menu = () => {
+interface MenuProps {
+  handleChangeRole: () => void;
+  handleChangeBranch: () => void;
+  handleChangeTeam: () => void;
+  handleSuspension: () => void;
+  handleComposeEmail: () => void;
+  isSuspended?: boolean;
+}
+
+const Menu = ({
+  handleChangeRole,
+  handleChangeBranch,
+  handleChangeTeam,
+  handleSuspension,
+  handleComposeEmail,
+  isSuspended
+}: MenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -71,12 +103,14 @@ const Menu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-36 mr-4">
         <DropdownMenuGroup>
-          <DropdownMenuItem>Change role</DropdownMenuItem>
-          <DropdownMenuItem onClick={console.log}>Change team</DropdownMenuItem>
-          <DropdownMenuItem>Change branch</DropdownMenuItem>
-          <DropdownMenuItem>Compose email</DropdownMenuItem> {/*TBD after sendup*/}
-          <DropdownMenuItem>Suspend account</DropdownMenuItem>{" "}
-          {/*Change to "Undo suspension" when member is suspended*/}
+          <DropdownMenuItem onClick={handleChangeRole}>Change role</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleChangeTeam}>Change team</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleChangeBranch}>Change branch</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleComposeEmail}>Compose email</DropdownMenuItem>{" "}
+          {/*TBD after sendup*/}
+          <DropdownMenuItem onClick={handleSuspension}>
+            {isSuspended ? "Undo suspension" : "Suspend account"}
+          </DropdownMenuItem>{" "}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

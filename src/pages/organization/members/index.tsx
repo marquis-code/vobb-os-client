@@ -6,6 +6,7 @@ import { ResendInvitation } from "./resendInvitation";
 import { SuspendMember } from "./suspendMember";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import { ChangeRole } from "./changeRole";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Members = () => {
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
   const [resendInvite, setResendInvite] = useState({ show: false, id: "", email: "" });
   const [cancelInvite, setCancelInvite] = useState({ show: false, id: "", email: "" });
+  const [changeRole, setChangeRole] = useState({ show: false, name: "", id: "", currentRole: "" });
 
   const handleInviteMember = () => setInviteMember(true);
   const closeInviteMember = () => setInviteMember(false);
@@ -62,6 +64,14 @@ const Members = () => {
     navigate(Routes.member(id, "activity"));
   };
 
+  const handleChangeRole = ({ id, name, role }) => {
+    setChangeRole({ show: true, id, name, currentRole: role });
+  };
+
+  const handleCloseChangeRole = () => {
+    setChangeRole({ show: false, id: "", name: "", currentRole: "" });
+  };
+
   return (
     <>
       <SuspendMember
@@ -69,12 +79,19 @@ const Members = () => {
         show={suspension.show && suspension.suspend}
         close={handleCloseSuspend}
       />
+      {/* <UndoSuspension
+        id={params.id ?? ""}
+        name="Jason Doe"
+        show={suspension}
+        close={handleCloseSuspension}
+      /> */}
+      <ChangeRole {...changeRole} close={handleCloseChangeRole} />
       <CancelInvitation {...cancelInvite} close={handleCloseCancellation} />
       <ResendInvitation {...resendInvite} close={handleCloseResend} />
       <InviteMember show={inviteMember} close={closeInviteMember} />
       <MembersUI
         handleCancelInvitation={handleCancelInvite}
-        handleChangeRole={console.log}
+        handleChangeRole={handleChangeRole}
         handleResendInvitation={handleResendInvite}
         handleSuspension={handleSuspension}
         handleViewMember={handleViewMember}

@@ -13,3 +13,6 @@ export * from "./teamBranchesModal";
 export * from "./editTeamModal";
 export * from "./inviteMemberModal";
 export * from "./suspendMemberModal";
+export * from "./changeRoleModal";
+export * from "./changeBranchModal";
+export * from "./changeTeamModal";
