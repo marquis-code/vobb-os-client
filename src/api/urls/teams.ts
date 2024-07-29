@@ -125,3 +125,17 @@ export const unsuspendMemberURL = () => `/user/unsuspend`;
  *
  */
 export const fetchTeamRolesURL = ({ id }) => `${prefixTeam}/roles/${id}`;
+
+/**
+ *Validate invite to a member to organisation URL
+ * @returns url string
+ *
+ */
+export const validateInviteURL = () => `${prefixTeam}/invite/validate`;
+
+/**
+ *Accept invite by a member to the organisation URL
+ * @returns url string
+ *
+ */
+export const acceptInviteURL = () => `${prefixTeam}/invite`;

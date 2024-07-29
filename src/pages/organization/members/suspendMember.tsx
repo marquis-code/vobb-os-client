@@ -8,7 +8,7 @@ import { ModalProps } from "types";
 interface SuspendMemberProps extends ModalProps {
   id: string;
   name: string;
-  fetchMembers: () => void;
+  fetchMembers?: () => void;
 }
 
 const SuspendMember = ({ show, close, id, name, fetchMembers }: SuspendMemberProps) => {
@@ -36,7 +36,7 @@ const SuspendMember = ({ show, close, id, name, fetchMembers }: SuspendMemberPro
         description: response?.data?.message
       });
       close();
-      fetchMembers();
+      fetchMembers?.();
     } else if (error) {
       toast({
         variant: "destructive",

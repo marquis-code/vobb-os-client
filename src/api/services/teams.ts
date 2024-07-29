@@ -6,6 +6,7 @@ TEAMS SERVICES
 
 import { deleteRequest, getRequest, patchRequest, postRequest } from "api/requestProcessor";
 import {
+  acceptInviteURL,
   createTeamURL,
   editATeamURL,
   fetchATeamBranchesURL,
@@ -18,7 +19,8 @@ import {
   resendOrCancelInviteToMemberURL,
   setTeamPermissionsURL,
   suspendMemberURL,
-  unsuspendMemberURL
+  unsuspendMemberURL,
+  validateInviteURL
 } from "api";
 import { fetchMemberQueryParams, inviteMemberProperties, PaginationProps } from "types";
 
@@ -54,6 +56,12 @@ export interface suspendMemberRequestBody {
     start_date: string;
     end_date: string;
   };
+}
+
+interface acceptInviteRequestBody {
+  first_name: string;
+  last_name: string;
+  password: string;
 }
 
 /**
@@ -209,5 +217,26 @@ export const unsuspendMemberService = (data: { member: string }) => {
 export const fetchTeamRolesService = (id: string) => {
   return getRequest({
     url: fetchTeamRolesURL({ id })
+  });
+};
+
+/**
+ * Validate invite Service
+ * @returns axios promise
+ */
+export const validateInviteService = () => {
+  return getRequest({
+    url: validateInviteURL()
+  });
+};
+
+/**
+ * Accept invite Service
+ * @returns axios promise
+ */
+export const acceptInviteService = (data: acceptInviteRequestBody) => {
+  return patchRequest({
+    url: acceptInviteURL(),
+    data
   });
 };

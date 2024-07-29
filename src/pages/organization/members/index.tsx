@@ -10,7 +10,6 @@ import { useApiRequest } from "hooks";
 import { fetchOrgMembersService } from "api";
 import { MemberDataProps } from "types";
 import { getInitials } from "lib";
-import { UnsuspendMember } from "./unsuspendMember";
 import { ChangeRole } from "./changeRole";
 import { UndoSuspension } from "./undoSuspension";
 import { toast } from "components";
@@ -29,7 +28,7 @@ const Members = () => {
   const navigate = useNavigate();
   const [inviteMember, setInviteMember] = useState(false);
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
-  const [unsuspension, setUnsuspension] = useState({
+  const [undoSuspension, setUndoSuspension] = useState({
     show: false,
     id: "",
     name: "",
@@ -69,7 +68,7 @@ const Members = () => {
           ...props,
           show: true
         })
-      : setUnsuspension({
+      : setUndoSuspension({
           ...props,
           show: true
         });
@@ -110,7 +109,7 @@ const Members = () => {
   };
 
   const handleCloseUnsuspend = () => {
-    setUnsuspension({ show: false, id: "", name: "", suspend: false });
+    setUndoSuspension({ show: false, id: "", name: "", suspend: false });
   };
 
   const handleViewMember = (id) => {
@@ -177,12 +176,6 @@ const Members = () => {
         close={handleCloseSuspend}
         fetchMembers={fetchOrgMembers}
       />
-      {/* <UnsuspendMember
-        {...unsuspension}
-        show={unsuspension.show && !suspension.suspend}
-        close={handleCloseUnsuspend}
-        fetchMembers={fetchOrgMembers}
-      /> */}
       <CancelInvitation
         {...cancelInvite}
         close={handleCloseCancellation}
@@ -195,9 +188,10 @@ const Members = () => {
       />
       <InviteMember show={inviteMember} close={closeInviteMember} fetchMembers={fetchOrgMembers} />
       <UndoSuspension
-        {...suspension}
-        show={suspension.show && !suspension.suspend}
-        close={handleCloseSuspend}
+        {...undoSuspension}
+        show={undoSuspension.show && !suspension.suspend}
+        close={handleCloseUnsuspend}
+        fetchMembers={fetchOrgMembers}
       />
       <ChangeRole {...changeRole} close={handleCloseChangeRole} />
       <MembersUI

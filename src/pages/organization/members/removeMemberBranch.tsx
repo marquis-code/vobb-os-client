@@ -23,6 +23,7 @@ const RemoveMemberBranch = ({ show, close, id, branch, name }: RemoveMemberBranc
         handleContinue={handleContinue}
         close={close}
         show={show}
+        loading={false}
       />
     </>
   );
