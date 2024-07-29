@@ -10,16 +10,16 @@ import { CountriesProvider, MemberProfileProvider, UserDetailsProvider } from "c
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-    <MemberProfileProvider>
-      <UserDetailsProvider>
+    <UserDetailsProvider>
+      <MemberProfileProvider>
         <CountriesProvider>
           <BrowserRouter>
             <App />
             <Toaster />
           </BrowserRouter>
         </CountriesProvider>
-      </UserDetailsProvider>
-    </MemberProfileProvider>
+      </MemberProfileProvider>
+    </UserDetailsProvider>
   </React.StrictMode>
 );
 

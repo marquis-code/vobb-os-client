@@ -11,6 +11,8 @@ import { fetchOrgMembersService } from "api";
 import { MemberDataProps } from "types";
 import { getInitials } from "lib";
 import { UnsuspendMember } from "./unsuspendMember";
+import { ChangeRole } from "./changeRole";
+import { UndoSuspension } from "./undoSuspension";
 import { toast } from "components";
 
 const initMembersData: MemberDataProps = {
@@ -53,6 +55,7 @@ const Members = () => {
     error: fetchError,
     requestStatus: fetchStatus
   } = useApiRequest({});
+  const [changeRole, setChangeRole] = useState({ show: false, name: "", id: "", currentRole: "" });
 
   const fetchOrgMembers = () => {
     runFetchMembers(fetchOrgMembersService(membersQueryParams));
@@ -157,6 +160,15 @@ const Members = () => {
   useEffect(() => {
     fetchOrgMembers();
   }, [membersQueryParams]);
+
+  const handleChangeRole = ({ id, name, role }) => {
+    setChangeRole({ show: true, id, name, currentRole: role });
+  };
+
+  const handleCloseChangeRole = () => {
+    setChangeRole({ show: false, id: "", name: "", currentRole: "" });
+  };
+
   return (
     <>
       <SuspendMember
@@ -165,12 +177,12 @@ const Members = () => {
         close={handleCloseSuspend}
         fetchMembers={fetchOrgMembers}
       />
-      <UnsuspendMember
+      {/* <UnsuspendMember
         {...unsuspension}
         show={unsuspension.show && !suspension.suspend}
         close={handleCloseUnsuspend}
         fetchMembers={fetchOrgMembers}
-      />
+      /> */}
       <CancelInvitation
         {...cancelInvite}
         close={handleCloseCancellation}
@@ -182,6 +194,12 @@ const Members = () => {
         fetchMembers={fetchOrgMembers}
       />
       <InviteMember show={inviteMember} close={closeInviteMember} fetchMembers={fetchOrgMembers} />
+      <UndoSuspension
+        {...suspension}
+        show={suspension.show && !suspension.suspend}
+        close={handleCloseSuspend}
+      />
+      <ChangeRole {...changeRole} close={handleCloseChangeRole} />
       <MembersUI
         handleViewMembers={{
           loading: fetchStatus.isPending,
@@ -189,7 +207,7 @@ const Members = () => {
           handleParams: handleUpdateMembersQueryParams
         }}
         handleCancelInvitation={handleCancelInvite}
-        handleChangeRole={console.log}
+        handleChangeRole={handleChangeRole}
         handleResendInvitation={handleResendInvite}
         handleSuspension={handleSuspension}
         handleViewMember={handleViewMember}
@@ -201,3 +219,6 @@ const Members = () => {
 
 export { Members };
 export * from "./member";
+export * from "./acceptInvite";
+export * from "./invitationSuccessful";
+export * from "./invitationFailed";

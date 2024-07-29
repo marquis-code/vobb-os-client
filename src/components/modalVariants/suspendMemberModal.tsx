@@ -103,7 +103,6 @@ const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({
           />
         </form>
         <p className="text-xs text-vobb-neutral-70 mt-6">
-          {" "}
           NB: These actions are reversible so the accounts will still be visible on your dashboard
           if you need to restore them
         </p>

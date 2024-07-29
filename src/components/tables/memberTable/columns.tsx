@@ -31,7 +31,7 @@ export interface MemberTableActions {
   handleViewMember: (id: string) => void;
   handleSuspension: ({ id, suspend, name }: { id: string; suspend: boolean; name: string }) => void;
   handleCancelInvitation: ({ id, email }: { id: string; email: string }) => void;
-  handleChangeRole: ({ id, name }: { id: string; name: string }) => void;
+  handleChangeRole: ({ id, name, role }: { id: string; name: string; role: string }) => void;
   handleResendInvitation: ({ id, email }: { id: string; email: string }) => void;
 }
 
@@ -139,7 +139,7 @@ export const getMemberTableColumns = ({
   {
     id: "actions",
     cell: ({ row }) => {
-      const { id, status, name, email } = row.original;
+      const { id, status, name, email, role } = row.original;
 
       const viewMember = () => {
         handleViewMember(id);
@@ -157,7 +157,7 @@ export const getMemberTableColumns = ({
       };
 
       const changeRole = () => {
-        handleChangeRole({ id, name });
+        handleChangeRole({ id, name, role });
       };
 
       return (
