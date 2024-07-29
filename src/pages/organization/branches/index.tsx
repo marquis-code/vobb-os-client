@@ -2,15 +2,15 @@ import { OrgBranchesUI } from "modules";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
-import { ConfirmationModal, toast } from "components";
+import { toast } from "components";
 import { useApiRequest } from "hooks";
-import { useCountriesContext, useUserContext } from "context";
-import { BranchesDataProps, OrganisationBranchesData } from "types";
-import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
+import { OrganisationBranchesData } from "types";
+import { markBranchAsPrimaryService } from "api";
 import { PreventDeleteBranch } from "./preventDeleteBranch";
 import { DeleteBranch } from "./deleteBranch";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import { useFetchBranches } from "hooks/useFetchBranches";
 const initBranchData = {
   id: "",
   name: "",
@@ -24,31 +24,26 @@ const initBranchData = {
   isPrimary: false
 };
 
-const defaultBranchesData: BranchesDataProps = {
-  branchesArray: [],
-  branchesMetaData: {
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0,
-    pageLimit: 0
-  }
-};
 const OrgBranches = () => {
-  const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
-  const { orgBranches } = useUserContext();
+  const navigate = useNavigate();
+  const [branchesQueryParams, setBranchesQueryParams] = useState({ page: 1, limit: 20 });
+  const { page, limit } = branchesQueryParams;
+  const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({ limit });
   const { currentPage } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
     totalPages: 0
   };
-  const [page, setPage] = useState(currentPage);
-  const [limit, setLimit] = useState(8);
+  const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
+
   const [confirm, setConfirm] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
-  const navigate = useNavigate();
-
   const [deleteBranch, setDeleteBranch] = useState({ show: false, id: "", name: "" });
+
+  const handleBranchPagination = (param: string, value: number) => {
+    setBranchesQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
 
   const handleEditBranch = (branchData: OrganisationBranchesData) => {
     setEditBranch({ show: true, branchData });
@@ -88,44 +83,10 @@ const OrgBranches = () => {
     }
   }, [primaryResponse, primaryError]);
 
-  const { run: runFetchBranches, data: fetchResponse, error: fetchError } = useApiRequest({});
-  const { countries } = useCountriesContext();
-  const { handleUpdateBranches } = useUserContext();
-
-  const fetchOrgBranches = ({ page, limit }) =>
-    runFetchBranches(fetchOrgBranchesService({ page, limit }));
-
-  useMemo<BranchesDataProps>(() => {
-    if (fetchResponse?.status === 200) {
-      const data = fetchResponse.data.data.branches.map((item) => ({
-        id: item._id,
-        name: item.name,
-        country: countries.find((country) => country.value === item.country)?.label,
-        zipCode: item.zip_code,
-        province: item.state,
-        isPrimary: item.is_primary,
-        addressLine1: item.address_line_1,
-        addressLine2: item.address_line_2 ?? "",
-        city: item.city,
-        timeZone: item.timezone ?? ""
-      }));
-      const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
-      const branchesMetaData = {
-        currentPage: fetchResponse?.data?.data?.page ?? 1,
-        totalPages: fetchResponse?.data?.data?.total_pages,
-        totalCount: fetchResponse?.data?.data?.total_count,
-        pageLimit: limit
-      };
-      handleUpdateBranches({ branchesArray, branchesMetaData });
-      return { branchesArray, branchesMetaData };
-    }
-
-    return defaultBranchesData;
-  }, [fetchResponse, fetchError]);
-
   useEffect(() => {
     fetchOrgBranches({ page, limit });
   }, [page, limit]);
+
   const handleViewBranch = (id: string) => {
     navigate(Routes.branch(id));
   };
@@ -138,25 +99,20 @@ const OrgBranches = () => {
         close={() => setDeleteBranch((prev) => ({ ...prev, show: false }))}
         handleOpen={() => setDeleteBranch((prev) => ({ ...prev, show: true }))}
       />
-      <AddBranch
-        show={addBranch}
-        close={() => setAddBranch(false)}
-        fetchOrgBranches={fetchOrgBranches}
-      />
+      <AddBranch show={addBranch} close={() => setAddBranch(false)} />
       <EditBranch
         {...editBranch}
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
-        fetchOrgBranches={fetchOrgBranches}
       />
       <DeleteBranch {...deleteBranch} close={handleCloseConfirmation} show={confirm} />
       <OrgBranchesUI
+        orgBranches={orgBranches}
+        loading={loadingBranches}
         handleAddBranch={handleAddBranch}
         handleEditBranch={handleEditBranch}
         handleDeleteBranch={handleInitiateDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
-        limit={limit}
-        setPage={setPage}
-        setLimit={setLimit}
+        handlePagination={handleBranchPagination}
         handleViewBranch={handleViewBranch}
       />
     </>

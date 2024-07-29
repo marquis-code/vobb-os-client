@@ -10,18 +10,7 @@ import {
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 import { IconPickerItem } from "react-icons-picker";
-
-// This type is used to define the shape of our data.
-export type TeamTableData = {
-  id: string;
-  icon: string;
-  name: string;
-  teamLeads: string[];
-  teamManagers: string[];
-  date: string;
-  numberOfMembers: number;
-  numberOfBranches: number;
-};
+import { TeamTableData } from "types";
 
 export interface TeamTableActions {
   handleEditTeam: (id: string) => void;

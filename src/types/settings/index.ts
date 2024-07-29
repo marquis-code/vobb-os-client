@@ -112,6 +112,57 @@ export interface fetchMemberQueryParams {
   page?: number;
   limit?: number;
   status?: string;
-  sort_order?: "asc" | "desc";
-  sort_property?: string;
+  branch?: string;
+  team?: string;
+}
+
+export type TeamTableData = {
+  id: string;
+  icon: string;
+  name: string;
+  teamLeads: string[];
+  teamManagers: string[];
+  date: string;
+  numberOfMembers: number;
+  numberOfBranches: number;
+};
+export interface inviteMemberProperties {
+  email: string;
+  branch?: string;
+  team?: string;
+  role: string;
+  title: string;
+}
+
+export interface TeamDataProps {
+  teamsData: TeamTableData[];
+  metaData: MetaDataProps;
+}
+export interface SingleTeamResponseProps {
+  id: string;
+  icon: string;
+  name: string;
+  description: string;
+  isGeneral: boolean;
+}
+
+export type statuses = "invited" | "expired" | "active" | "suspended";
+
+export type MemberTableData = {
+  id: string;
+  avatar: string;
+  name: string;
+  branch: string[];
+  teams: string[];
+  role: string;
+  email: string;
+  date: string;
+  lastActive: string;
+  initial: string;
+  status: statuses;
+};
+
+export interface MemberDataProps {
+  membersArray: MemberTableData[];
+  metaData: MetaDataProps;
 }

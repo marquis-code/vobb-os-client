@@ -32,7 +32,7 @@ export const sectorOptions: optionTypeSector[] = [
   },
   {
     label: "Medical and Health",
-    value: "Health"
+    value: "Medical and Health"
   },
   {
     label: "Tourism",
@@ -228,5 +228,5 @@ export const roleOptions: optionType[] = [
   {
     label: "Member",
     value: "member"
-  },
-]
+  }
+];

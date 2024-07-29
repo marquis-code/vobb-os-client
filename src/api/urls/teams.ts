@@ -1,4 +1,4 @@
-import { fetchMemberQueryParams } from "types";
+import { fetchMemberQueryParams, PaginationProps } from "types";
 
 /*
 =================================
@@ -30,8 +30,15 @@ export const setTeamPermissionsURL = ({ id }) => `${prefixTeam}/set-permissions/
  * @returns url string
  *
  */
-export const fetchTeamsURL = ({ page, limit }) => `${prefixTeam}/all?page=${page}&limit=${limit}`;
+export const fetchTeamsURL = ({ page, limit }: PaginationProps) => {
+  const queryParams = new URLSearchParams();
 
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+
+  const queryString = queryParams.toString();
+  return `${prefixTeam}/all${queryString ? `?${queryString}` : ""}`;
+};
 /**
  * Fetch a team URL
  *@param id of team
@@ -69,31 +76,17 @@ export const fetchATeamsMembersURL = ({ id, page, limit }) =>
   `${prefixTeam}/members/${id}?page=${page}&limit=${limit}`;
 
 /**
- * Fetch orgnasiation's accepted members URL
+ * Fetch orgnasiation's members URL
  * @returns url string
  *
  */
-export const fetchAcceptedMembersURL = (queryParams: fetchMemberQueryParams) => {
+export const fetchOrgMembersURL = (queryParams: fetchMemberQueryParams) => {
   const queryString = Object.entries(queryParams)
     .filter(([_, value]) => value !== undefined && value !== "")
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
     .join("&");
 
-  return `/org/accepted-members${queryString ? `&${queryString}` : ""}`;
-};
-
-/**
- * Fetch orgnasiation's pending members URL
- * @returns url string
- *
- */
-export const fetchPendingMembersURL = (queryParams: fetchMemberQueryParams) => {
-  const queryString = Object.entries(queryParams)
-    .filter(([_, value]) => value !== undefined && value !== "")
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
-    .join("&");
-
-  return `/org/pending-members${queryString ? `&${queryString}` : ""}`;
+  return `/org/members${queryString ? `?${queryString}` : ""}`;
 };
 
 /**
@@ -101,7 +94,7 @@ export const fetchPendingMembersURL = (queryParams: fetchMemberQueryParams) => {
  * @returns url string
  *
  */
-export const inviteMemberURL = () => `${prefixTeam}/invite/member`;
+export const inviteMemberURL = () => `${prefixTeam}/invite`;
 
 /**
  * Resend/Cancel invite to a member to organisation URL
@@ -124,3 +117,11 @@ export const suspendMemberURL = () => `/user/suspend`;
  *
  */
 export const unsuspendMemberURL = () => `/user/unsuspend`;
+
+/**
+ * Fetch team roles URL
+ * @param id of team
+ * @returns url string
+ *
+ */
+export const fetchTeamRolesURL = ({ id }) => `${prefixTeam}/roles/${id}`;

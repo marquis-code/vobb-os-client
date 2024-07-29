@@ -2,12 +2,9 @@ import {
   AttributeTableData,
   BranchMemberTableData,
   BranchTeamTableData,
-  // memberStatuses,
-  MemberTableData,
-  TeamMemberTableData,
-  TeamTableData
+  TeamMemberTableData
 } from "components";
-import { optionType, formFieldData } from "types";
+import { optionType, formFieldData, MemberTableData } from "types";
 import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
 
 export const loginHistoryMock = [
@@ -551,7 +548,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   }
 ];
 
-export const TeamTableMock: TeamTableData[] = [
+export const TeamTableMock = [
   {
     id: "728ed52f",
     name: "Finance",
@@ -635,7 +632,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "---",
     lastActive: "---",
     status: "invited",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -648,7 +645,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "12/12/2023",
     lastActive: "07/07/2024",
     status: "expired",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -661,7 +658,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "12/12/2023",
     lastActive: "07/07/2024",
     status: "active",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -674,7 +671,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "12/12/2023",
     lastActive: "07/07/2024",
     status: "suspended",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -687,7 +684,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "---",
     lastActive: "---",
     status: "invited",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -700,7 +697,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "---",
     lastActive: "---",
     status: "invited",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   }

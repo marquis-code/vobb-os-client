@@ -1,18 +1,17 @@
 import { AddTeamData, EditTeamModal, toast } from "components";
-import { ModalProps } from "types";
+import { ModalProps, SingleTeamResponseProps } from "types";
 import { editATeamService, fetchATeamService } from "api";
-import { useApiRequest } from "hooks";
-import { TeamDataProps } from ".";
+import { useApiRequest, useFetchTeams } from "hooks";
 import { useEffect, useMemo } from "react";
 
 interface EditTeamProps extends ModalProps {
   show: boolean;
   id: string;
-  fetchAllTeams: () => void;
 }
 
 const EditTeam = (props: EditTeamProps) => {
-  const { id, close, fetchAllTeams } = props;
+  const { id, close } = props;
+  const { fetchAllTeams } = useFetchTeams({ limit: 20 });
   const { run: runFetchATeam, data: teamResponse, requestStatus: teamStatus } = useApiRequest({});
   const {
     run: runEditTeam,
@@ -29,7 +28,7 @@ const EditTeam = (props: EditTeamProps) => {
     runEditTeam(editATeamService(id, data));
   };
 
-  const teamData = useMemo<TeamDataProps>(() => {
+  const teamData = useMemo<SingleTeamResponseProps>(() => {
     if (teamResponse?.status === 200) {
       const item = teamResponse?.data?.data;
       const propertyArray = {
@@ -56,7 +55,7 @@ const EditTeam = (props: EditTeamProps) => {
       toast({
         description: editResponse?.data?.message
       });
-      fetchAllTeams();
+      fetchAllTeams({});
       close();
     } else if (editError) {
       toast({

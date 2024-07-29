@@ -20,3 +20,8 @@ export interface MetaDataProps {
   totalPages: number;
   pageLimit?: number;
 }
+
+export interface PaginationProps {
+  page?: number;
+  limit?: number;
+}

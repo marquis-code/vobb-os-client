@@ -1,19 +1,19 @@
-import { resendInviteToMemberService } from "api";
+import { unsuspendMemberService } from "api";
 import { ConfirmationModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps } from "types";
 
-interface ResendInvitationProps extends ModalProps {
+interface UnsuspendMemberProps extends ModalProps {
   id: string;
-  email: string;
+  name: string;
   fetchMembers: () => void;
 }
 
-const ResendInvitation = ({ show, close, id, email, fetchMembers }: ResendInvitationProps) => {
+const UnsuspendMember = ({ show, close, id, name, fetchMembers }: UnsuspendMemberProps) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = () => {
-    run(resendInviteToMemberService({ id }));
+    run(unsuspendMemberService({ member: id }));
   };
 
   useMemo(() => {
@@ -36,7 +36,7 @@ const ResendInvitation = ({ show, close, id, email, fetchMembers }: ResendInvita
       <ConfirmationModal
         text={
           <>
-            The invitation to <b>{email}</b> will be resent
+            Are you sure you want to unsuspend <b>{name}</b>?
           </>
         }
         handleContinue={handleContinue}
@@ -48,4 +48,4 @@ const ResendInvitation = ({ show, close, id, email, fetchMembers }: ResendInvita
   );
 };
 
-export { ResendInvitation };
+export { UnsuspendMember };

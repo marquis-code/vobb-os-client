@@ -1,20 +1,9 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import {
-  Button,
-  CheckboxWithText,
-  CustomInput,
-  CustomTextarea,
-  DatePicker,
-  Modal,
-  SelectInput
-} from "components";
-import { ModalProps, optionType } from "types";
+import { Button, CheckboxWithText, CustomTextarea, DatePicker, Modal } from "components";
+import { ModalProps } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { getOptionTypeValidationMsg } from "lib";
-import { roleOptions } from "lib/constants";
 
 interface SuspendMemberData {
   reason?: string | undefined;
@@ -40,28 +29,37 @@ const schema = yup.object({
 
 interface SuspendMemberModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
+  name: string;
 }
 
-const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({ submit, close, show }) => {
+const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({
+  submit,
+  close,
+  show,
+  loading,
+  name
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-    setValue
+    setValue,
+    reset
   } = useForm<SuspendMemberData>({
     resolver: yupResolver(schema)
   });
 
   const onSubmit: SubmitHandler<SuspendMemberData> = (data) => {
     submit(data);
+    reset();
   };
-
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Suspend Amaka</h2>
+          <h2 className="text-lg font-bold">Suspend {name}</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"}>
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
@@ -90,8 +88,8 @@ const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({ submit, close, 
               />
               <DatePicker
                 label="To"
-                value={watch("startDate")}
-                handleChange={(val: Date | undefined) => setValue("startDate", val)}
+                value={watch("endDate")}
+                handleChange={(val: Date | undefined) => setValue("endDate", val)}
                 validatorMessage={errors.endDate?.message}
               />
             </div>
@@ -114,10 +112,16 @@ const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({ submit, close, 
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            disabled={loading}
+            loading={loading}>
             {watch("isIndefinite") ? "Deactivate account" : "Suspend account"}
           </Button>
         </div>

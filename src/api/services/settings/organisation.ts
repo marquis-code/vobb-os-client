@@ -11,6 +11,7 @@ import {
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
   fetchOrgDetailsURL,
+  fetchTeamsPerBranchURL,
   getRequest,
   patchRequest,
   postRequest,
@@ -26,6 +27,7 @@ import {
   updateOrgSusNotifyURL,
   verifyOrgEmailsURL
 } from "api";
+import { PaginationProps } from "types";
 
 /*
 ORGANIZATION SERVICES
@@ -181,9 +183,20 @@ export const updateIndefSusNotifyService = (data: { indefinite_suspension_notify
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgBranchesService = ({ page, limit }) => {
+export const fetchOrgBranchesService = (query: PaginationProps = {}) => {
   return getRequest({
-    url: fetchOrgBranchesURL({ page, limit })
+    url: fetchOrgBranchesURL(query)
+  });
+};
+
+/**
+ * Fetch organisation's branch's teams service
+ * @param id of branch requested,
+ * @returns axios promise
+ */
+export const fetchTeamsPerBranchService = (id: string) => {
+  return getRequest({
+    url: fetchTeamsPerBranchURL({ id })
   });
 };
 

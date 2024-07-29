@@ -8,11 +8,11 @@ import { deleteRequest, getRequest, patchRequest, postRequest } from "api/reques
 import {
   createTeamURL,
   editATeamURL,
-  fetchAcceptedMembersURL,
   fetchATeamBranchesURL,
   fetchATeamsMembersURL,
   fetchATeamURL,
-  fetchPendingMembersURL,
+  fetchOrgMembersURL,
+  fetchTeamRolesURL,
   fetchTeamsURL,
   inviteMemberURL,
   resendOrCancelInviteToMemberURL,
@@ -20,7 +20,7 @@ import {
   suspendMemberURL,
   unsuspendMemberURL
 } from "api";
-import { fetchMemberQueryParams } from "types";
+import { fetchMemberQueryParams, inviteMemberProperties, PaginationProps } from "types";
 
 type teamPermissionTypes = {
   manager: boolean;
@@ -44,16 +44,12 @@ interface setTeamPermissionsRequestBody {
 }
 
 interface inviteMemberRequestBody {
-  email: string;
-  branch: string;
-  team: string;
-  role: string;
-  title: string;
+  members: inviteMemberProperties[];
 }
 
-interface suspendMemberRequestBody {
+export interface suspendMemberRequestBody {
   member: string;
-  reason: string;
+  reason?: string;
   duration?: {
     start_date: string;
     end_date: string;
@@ -89,9 +85,9 @@ export const setTeamPermissionsService = (id: string, data: setTeamPermissionsRe
  * Fetch all teams service
  * @returns axios promise
  */
-export const fetchTeamsService = ({ page, limit }) => {
+export const fetchTeamsService = (query: PaginationProps = {}) => {
   return getRequest({
-    url: fetchTeamsURL({ page, limit })
+    url: fetchTeamsURL(query)
   });
 };
 
@@ -144,22 +140,12 @@ export const fetchATeamsMembersService = ({ id, page, limit }) => {
 };
 
 /**
- * Fetch a organisation's accepted members service
+ * Fetch a organisation's members service
  * @returns axios promise
  */
-export const fetchAcceptedMembersService = (queryParams: fetchMemberQueryParams) => {
+export const fetchOrgMembersService = (queryParams: fetchMemberQueryParams) => {
   return getRequest({
-    url: fetchAcceptedMembersURL(queryParams)
-  });
-};
-
-/**
- * Fetch a organisation's pending members service
- * @returns axios promise
- */
-export const fetchPendingMembersService = (queryParams: fetchMemberQueryParams) => {
-  return getRequest({
-    url: fetchPendingMembersURL(queryParams)
+    url: fetchOrgMembersURL(queryParams)
   });
 };
 
@@ -213,5 +199,15 @@ export const unsuspendMemberService = (data: { member: string }) => {
   return patchRequest({
     url: unsuspendMemberURL(),
     data
+  });
+};
+
+/**
+ * Fetch team roles Service
+ * @returns axios promise
+ */
+export const fetchTeamRolesService = (id: string) => {
+  return getRequest({
+    url: fetchTeamRolesURL({ id })
   });
 };

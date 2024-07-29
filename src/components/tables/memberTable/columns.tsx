@@ -18,6 +18,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { cn } from "lib";
+import { MemberTableData, statuses } from "types";
 
 export enum memberStatuses {
   invited = "Invited",
@@ -25,23 +26,6 @@ export enum memberStatuses {
   active = "Active",
   suspended = "Suspended"
 }
-
-type statuses = "invited" | "expired" | "active" | "suspended";
-
-// This type is used to define the shape of our data.
-export type MemberTableData = {
-  id: string;
-  avatar: string;
-  name: string;
-  branch: string;
-  teams: string[];
-  role: string;
-  email: string;
-  date: string;
-  lastActive: string;
-  initial: string;
-  status: statuses;
-};
 
 export interface MemberTableActions {
   handleViewMember: (id: string) => void;
@@ -84,7 +68,20 @@ export const getMemberTableColumns = ({
   },
   {
     accessorKey: "branch",
-    header: "Branch"
+    header: "Branch",
+    cell: ({ row }) => {
+      const { branch } = row.original;
+      return (
+        <div className="flex items-center gap-2 text-left">
+          {branch.slice(0, 2).join(", ")}{" "}
+          {branch.length > 2 ? (
+            <span className="text-vobb-neutral-50 block text-xs">+{branch.length - 2}</span>
+          ) : (
+            ""
+          )}
+        </div>
+      );
+    }
   },
   {
     accessorKey: "teams",
@@ -130,7 +127,10 @@ export const getMemberTableColumns = ({
       const { status } = row.original;
       return (
         <div
-          className={cn("font-medium w-fit py-1 px-2 rounded-2xl text-xs", getMemberStatusStyle(status))}>
+          className={cn(
+            "font-medium w-fit py-1 px-2 rounded-2xl text-xs",
+            getMemberStatusStyle(status)
+          )}>
           {memberStatuses[status]}
         </div>
       );
@@ -145,7 +145,7 @@ export const getMemberTableColumns = ({
         handleViewMember(id);
       };
       const suspension = () => {
-        handleSuspension({ id, suspend: status === "active" ? true : true, name });
+        handleSuspension({ id, suspend: status === "active" ? true : false, name });
       };
 
       const resendInvitation = () => {

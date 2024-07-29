@@ -4,6 +4,8 @@ SETTINGS URLS
 =================================
 */
 
+import { PaginationProps } from "types";
+
 const prefixOrg = "/settings/org";
 
 /**
@@ -67,8 +69,24 @@ export const updateOrgSusNotifyURL = () => `${prefixOrg}/suspension`;
  * @returns url string
  *
  */
-export const fetchOrgBranchesURL = ({ page, limit }) =>
-  `${prefixOrg}/branch?page=${page}&limit=${limit}`;
+export const fetchOrgBranchesURL = ({ page, limit }: PaginationProps) => {
+  const queryParams = new URLSearchParams();
+
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+
+  const queryString = queryParams.toString();
+
+  return `${prefixOrg}/branch${queryString ? `?${queryString}` : ""}`;
+};
+
+/**
+ * Fetch a branch's teams URL
+ * @param id of branch
+ * @returns url string
+ *
+ */
+export const fetchTeamsPerBranchURL = ({ id }) => `${prefixOrg}/teams/${id}`;
 
 /**
  * Add a new organisation's branch URL

@@ -11,8 +11,8 @@ import {
   TeamTable,
   LoadingSpinner
 } from "components";
-import { teamsDataProps } from "pages";
 import { useMemo, useState } from "react";
+import { TeamDataProps } from "types";
 
 const attributes: attributeType[] = [
   {
@@ -30,7 +30,7 @@ const attributes: attributeType[] = [
 interface TeamsUIProps extends TeamTableActions {
   handleAddTeam: () => void;
   teams: {
-    teamsData: teamsDataProps;
+    orgTeams: TeamDataProps;
     handlePagination: (param: string, value: number) => void;
     loading: boolean;
   };
@@ -42,7 +42,7 @@ const TeamsUI = ({
   handleTeamHistory,
   handleViewTeam,
   handleAddTeam,
-  teams: { teamsData, handlePagination, loading }
+  teams: { orgTeams, handlePagination, loading }
 }: TeamsUIProps) => {
   const teamColumns = useMemo(
     () =>
@@ -55,7 +55,7 @@ const TeamsUI = ({
     [handleEditTeam, handleViewBranches, handleTeamHistory, handleViewTeam]
   );
   const [filters, setFilters] = useState<FilterData[]>([]);
-  const { teamsData: tableData, metaData } = teamsData;
+  const { teamsData: tableData, metaData } = orgTeams;
   const { currentPage, pageLimit, totalCount, totalPages } = metaData;
   return (
     <>
@@ -83,4 +83,4 @@ const TeamsUI = ({
 export { TeamsUI };
 export * from "./team";
 export * from "./teamPermissions";
-export * from "./teamActivity"
+export * from "./teamActivity";

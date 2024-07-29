@@ -20,6 +20,7 @@ const DeleteBranch: React.FC<Props> = ({ show, close, id, name }) => {
         close={close}
         show={show}
         isDestructive
+        loading={false}
       />
     </>
   );

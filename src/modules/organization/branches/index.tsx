@@ -4,27 +4,28 @@ import {
   BranchTableActions,
   Button,
   getBranchTableColumns,
+  LoadingSpinner,
   Pagination,
   SettingsPageTitle
 } from "components";
-import { useUserContext } from "context";
 import { useMemo } from "react";
+import { BranchesDataProps } from "types";
 
 interface OrgBranchesUIProps extends BranchTableActions {
+  loading: boolean;
+  orgBranches: BranchesDataProps;
   handleAddBranch: () => void;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  setLimit: React.Dispatch<React.SetStateAction<number>>;
-  limit: number;
+  handlePagination: (param: string, value: number) => void;
 }
 
 const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
+  loading,
+  orgBranches,
   handleDeleteBranch,
   handleEditBranch,
   handlePrimaryBranch,
   handleAddBranch,
-  setPage,
-  setLimit,
-  limit,
+  handlePagination,
   handleViewBranch
 }) => {
   const columns = useMemo(
@@ -38,18 +39,11 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch, handleViewBranch]
   );
 
-  const { orgBranches } = useUserContext();
-  const { currentPage, totalCount, totalPages } = orgBranches?.branchesMetaData || {
+  const { currentPage, totalCount, totalPages, pageLimit } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
-    totalPages: 0
-  };
-  const handleChangePage = (page: number) => {
-    setPage(page);
-  };
-
-  const handlePageLimit = (limit: number) => {
-    setLimit(limit);
+    totalPages: 0,
+    pageLimit: 0
   };
 
   const tableData = orgBranches?.branchesArray || [];
@@ -61,13 +55,13 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
         <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
           <PlusCircledIcon /> New branch
         </Button>
-        <BranchesTable columns={columns} data={tableData} />
+        {loading ? <LoadingSpinner /> : <BranchesTable columns={columns} data={tableData} />}
         <Pagination
           // hidePageLimit
-          handleChange={handleChangePage}
-          handlePageLimit={handlePageLimit}
+          handleChange={(val) => handlePagination("page", val)}
+          handlePageLimit={(val) => handlePagination("limit", val)}
           totalCount={totalCount}
-          pageLimit={limit}
+          pageLimit={pageLimit ?? 10}
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-4"
