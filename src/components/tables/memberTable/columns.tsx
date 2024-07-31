@@ -68,7 +68,7 @@ export const getMemberTableColumns = ({
   },
   {
     accessorKey: "branch",
-    header: "Branch",
+    header: "Branches",
     cell: ({ row }) => {
       const { branch } = row.original;
       return (

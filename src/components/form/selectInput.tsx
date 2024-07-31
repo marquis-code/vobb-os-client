@@ -149,8 +149,12 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = (props) => {
           option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected ? "var(--vobb-primary-40)" : "#fff",
+            color: state.isDisabled ? "gray" : base.color,
+            cursor: state.isDisabled ? "not-allowed" : "default",
             "&:hover": {
-              backgroundColor: state.isSelected
+              backgroundColor: state.isDisabled
+                ? "#fff"
+                : state.isSelected
                 ? "var(--vobb-primary-40)"
                 : "var(--vobb-primary-20)"
             }
