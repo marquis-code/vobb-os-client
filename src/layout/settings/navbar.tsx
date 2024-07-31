@@ -1,4 +1,3 @@
-import { cn } from "lib";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,11 +9,10 @@ import {
 
 interface NavBarProps {
   sideBarWidth: string;
-  title: string;
-  parent: string;
+  items: { title: string; path?: string }[];
 }
 
-const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, title, parent }) => {
+const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
   return (
     <>
       <header
@@ -22,11 +20,16 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, title, parent }) => {
         className="border-b border-vobb-neutral-30 w-full fixed top-0 right-0 px-4 py-1 h-[55px] flex items-center bg-white z-[4]">
         <Breadcrumb>
           <BreadcrumbList className="text-xs">
-            <BreadcrumbItem>{parent}</BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{title}</BreadcrumbPage>
-            </BreadcrumbItem>
+            {items?.map((item, index) => (
+              <>
+                {item.path ? (
+                  <BreadcrumbLink href={item.path}>{item.title}</BreadcrumbLink>
+                ) : (
+                  <BreadcrumbItem>{item.title}</BreadcrumbItem>
+                )}
+                {index !== items.length - 1 ? <BreadcrumbSeparator /> : ""}
+              </>
+            ))}
           </BreadcrumbList>
         </Breadcrumb>
       </header>

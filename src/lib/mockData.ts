@@ -1,6 +1,14 @@
+import {
+  AttributeTableData,
+  BranchMemberTableData,
+  BranchTeamTableData,
+  // memberStatuses,
+  MemberTableData,
+  TeamMemberTableData,
+  TeamTableData
+} from "components";
 import { optionType, formFieldData } from "types";
-import { AttributeTableData, BranchMemberTableData, BranchTeamTableData } from "components";
-import { AccountActivityData, OrgActivityData } from "modules";
+import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
 
 export const loginHistoryMock = [
   {
@@ -508,7 +516,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Finance",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -517,7 +525,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Engineering",
-    icon: "tool",
+    icon: "BsTools",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -526,7 +534,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Support",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
@@ -535,10 +543,200 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   {
     id: "728ed52f",
     name: "Sales",
-    icon: "momey",
+    icon: "FaUsers",
     teamLeads: ["Busayo Cole", "Itune Ajayi"],
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
     numberOfMembers: 12
+  }
+];
+
+export const TeamTableMock: TeamTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Finance",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Engineering",
+    icon: "BsTools",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Support",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  },
+  {
+    id: "728ed52f",
+    name: "Sales",
+    icon: "FaUsers",
+    teamLeads: ["Busayo Cole", "Itune Ajayi"],
+    teamManagers: ["Busayo Cole", "Itune Ajayi"],
+    date: "12/12/2023",
+    numberOfMembers: 12,
+    numberOfBranches: 15
+  }
+];
+
+export const TeamMemberTableMock: TeamMemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Member",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Team lead",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    role: "Branch manager",
+    date: "12/12/2023"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derulo",
+    email: "jason@gmail.com",
+    role: "Team manager",
+    date: "12/12/2023"
+  }
+];
+
+export const MemberTableMock: MemberTableData[] = [
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jasonjasonjasonjason@gmail.com",
+    teams: ["Finance", "Operations", "Finance", "Operations", "Finance", "Operations"],
+    role: "Member",
+    date: "---",
+    lastActive: "---",
+    status: "invited",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: "expired",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: "active",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "12/12/2023",
+    lastActive: "07/07/2024",
+    status: "suspended",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "---",
+    lastActive: "---",
+    status: "invited",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  },
+  {
+    id: "728ed52f",
+    name: "Jason Derule",
+    email: "jason@gmail.com",
+    teams: ["Finance", "Operations"],
+    role: "Member",
+    date: "---",
+    lastActive: "---",
+    status: "invited",
+    branch: "Headquarters",
+    avatar: "",
+    initial: "JD"
+  }
+];
+
+export const teamActivityMockData: TeamActivityData[] = [
+  {
+    action: "new_member",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "James Arukpo", id: "james" },
+    metadata: undefined
+  },
+  {
+    action: "edited",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      fields: "Name, Icon, Permissions"
+    }
+  },
+  {
+    action: "new_invitation",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: {
+      memberName: "Tolulope Adeniji"
+    }
+  },
+  {
+    action: "created",
+    date: "05/05/2024",
+    time: "5:05pm",
+    initiator: { name: "Dayo", id: "dayo" },
+    metadata: undefined
   }
 ];

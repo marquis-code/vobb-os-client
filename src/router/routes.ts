@@ -25,6 +25,11 @@ export const Routes = {
   completed_email_verify: "/verify-email/completed",
   recaptcha: "/recaptcha",
 
+  // Public
+  accept_invite: "/invitation",
+  invitation_success: "/invitation/success",
+  invitation_failed: "/invitation/failed",
+
   // Dashboard
   overview: "/overview",
   profile: "/settings/profile",
@@ -47,5 +52,8 @@ export const Routes = {
   organization_activity: "/settings/organization-activity",
 
   // Team
-  team: (id = ":id") => `/teams/${id}`
+  teams: "/settings/teams",
+  team: (id = ":id") => `/teams/${id}`,
+  members: "/settings/members",
+  member: (id = ":id", tab = ":route") => `/members/${id}/${tab}`
 };

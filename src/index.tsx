@@ -5,18 +5,20 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { Toaster } from "components";
-import { CountriesProvider, UserDetailsProvider } from "context";
+import { CountriesProvider, MemberProfileProvider, UserDetailsProvider } from "context";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     <UserDetailsProvider>
-      <CountriesProvider>
-        <BrowserRouter>
-          <App />
-          <Toaster />
-        </BrowserRouter>
-      </CountriesProvider>
+      <MemberProfileProvider>
+        <CountriesProvider>
+          <BrowserRouter>
+            <App />
+            <Toaster />
+          </BrowserRouter>
+        </CountriesProvider>
+      </MemberProfileProvider>
     </UserDetailsProvider>
   </React.StrictMode>
 );

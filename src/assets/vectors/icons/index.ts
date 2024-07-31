@@ -13,8 +13,22 @@ import { ReactComponent as HashIcon } from "./hashIcon.svg";
 import { ReactComponent as PhoneIcon } from "./phoneIcon.svg";
 import { ReactComponent as CheckDoneIcon } from "./checkDoneIcon.svg";
 import { ReactComponent as FlagIcon } from "./flagIcon.svg";
+import { ReactComponent as UsersIcon } from "./usersIcon.svg";
+import { ReactComponent as UsersRightIcon } from "./usersRight.svg";
+import { ReactComponent as FolderIcon } from "./folderIcon.svg";
+import { ReactComponent as LineChartUpIcon } from "./lineChartUpIcon.svg";
+import { ReactComponent as CheckSquareIcon } from "./checkSquareIcon.svg";
+import { ReactComponent as UserCircleIcon } from "./userCircleIcon.svg";
+import { ReactComponent as MessageChatSquareIcon } from "./messageChatSquareIcon.svg";
 
 export {
+  UserCircleIcon,
+  MessageChatSquareIcon,
+  CheckSquareIcon,
+  FolderIcon,
+  LineChartUpIcon,
+  UsersRightIcon,
+  UsersIcon,
   FlagIcon,
   CheckDoneIcon,
   PhoneIcon,
