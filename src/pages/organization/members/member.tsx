@@ -124,7 +124,7 @@ const Member = () => {
         avatar: data.avatar,
         email: data.email,
         role: data.role,
-        jobTitle: data.job_title ?? "Not passed",
+        jobTitle: data.title ?? "Not passed",
         initials: getInitials(`${data.first_name} ${data.last_name}`),
         status: data.status
       };
@@ -180,6 +180,7 @@ const Member = () => {
         show={showBranches}
       />
       <MemberTeams
+        id={params.id ?? ""}
         handleAddTeam={handleChangeTeam}
         close={handleCloseTeams}
         name={memberProfile?.fullName}

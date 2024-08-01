@@ -4,20 +4,26 @@ TEAMS SERVICES
 =================================
 */
 
-import { getRequest } from "api/requestProcessor";
+import { deleteRequest, getRequest, patchRequest } from "api/requestProcessor";
 import {
   fetchMemberBranchesURL,
   fetchMemberProfileURL,
   fetchMemberProsBranchesURL,
   fetchMemberTeamsURL,
   fetchOrgMembersURL,
-  removeMemberFromBranchURL
+  removeBranchFromMemberURL,
+  removeTeamFromMemberURL
 } from "api";
 import { fetchMemberQueryParams, PaginationProps } from "types";
 
-interface removeMemberRequestBody {
+interface removeMemberFromBranchRequestBody {
   member: string;
   branch: string;
+}
+
+interface removeMemberFromTeamRequestBody {
+  member: string;
+  team: string;
 }
 
 /**
@@ -77,13 +83,25 @@ export const fetchMemberTeamsService = (id: string, query: PaginationProps = {})
 };
 
 /**
- * Remove member from branch Service
+ * Remove branch from member Service
  * @returns url string
  *
  */
-export const removeMemberFromBranchService = (data: removeMemberRequestBody) => {
-  return getRequest({
-    url: removeMemberFromBranchURL(),
+export const removeBranchFromMemberService = (data: removeMemberFromBranchRequestBody) => {
+  return patchRequest({
+    url: removeBranchFromMemberURL(),
+    data
+  });
+};
+
+/**
+ * Remove team from member Service
+ * @returns url string
+ *
+ */
+export const removeTeamFromMemberService = (data: removeMemberFromTeamRequestBody) => {
+  return deleteRequest({
+    url: removeTeamFromMemberURL(),
     data
   });
 };

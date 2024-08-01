@@ -96,5 +96,8 @@ export async function patchRequest(request: ApiRequestProps) {
 }
 
 export async function deleteRequest(request: ApiRequestProps) {
-  return await axiosInstance.delete(request.url, request.config);
+  return await axiosInstance.delete(request.url, {
+    ...request.config,
+    data: request.data
+  });
 }

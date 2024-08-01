@@ -50,7 +50,7 @@ const MemberBranchesModal = ({
         ) : (
           <section className="max-h-[calc(100vh-220px)] overflow-auto border border-input rounded-md divide-y-[1px]">
             {branches?.map((branch) => (
-              <div className=" justify-between items-center gap-1 p-2">
+              <div className=" justify-between items-center gap-1 p-2" key={branch.id}>
                 <div className="flex justify-between mb-1">
                   <p>
                     <Link target="blank" to={Routes.branch(branch.id)} className="font-medium">
@@ -77,7 +77,7 @@ const MemberBranchesModal = ({
           handleChange={(val) => handlePagination(val)}
           handlePageLimit={console.log}
           totalCount={totalCount}
-          pageLimit={3}
+          pageLimit={totalCount}
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-2"

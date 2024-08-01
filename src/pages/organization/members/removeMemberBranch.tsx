@@ -1,4 +1,4 @@
-import { removeMemberFromBranchService } from "api";
+import { removeBranchFromMemberService } from "api";
 import { ConfirmationModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
@@ -9,14 +9,22 @@ interface RemoveMemberBranchProps extends ModalProps {
   id: string;
   branch: string;
   name: string;
+  fetchMemberBranches: () => void;
 }
 
-const RemoveMemberBranch = ({ show, close, id, branch, name }: RemoveMemberBranchProps) => {
+const RemoveMemberBranch = ({
+  show,
+  close,
+  id,
+  branch,
+  name,
+  fetchMemberBranches
+}: RemoveMemberBranchProps) => {
   const params = useParams();
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
   const handleContinue = () => {
-    if (params.id) run(removeMemberFromBranchService({ member: params.id, branch: id }));
+    if (params.id) run(removeBranchFromMemberService({ member: params.id, branch: id }));
   };
 
   useMemo(() => {
@@ -25,6 +33,7 @@ const RemoveMemberBranch = ({ show, close, id, branch, name }: RemoveMemberBranc
         description: response?.data?.message
       });
       close();
+      fetchMemberBranches();
     } else if (error) {
       toast({
         variant: "destructive",

@@ -78,15 +78,15 @@ export const fetchMemberTeamsURL = (id: string, { page, limit }: PaginationProps
 };
 
 /**
- * Remove member from branch URL
+ * Remove branch from member URL
  * @returns url string
  *
  */
-export const removeMemberFromBranchURL = () => `teams/remove-member-branch`;
+export const removeBranchFromMemberURL = () => `teams/remove-member-branch`;
 
 /**
- * Add branch to member URL
+ * Remove team from member URL
  * @returns url string
  *
  */
-export const addBranchToMemberURL = () => `${prefixMember}/remove-member-branch`;
+export const removeTeamFromMemberURL = () => `teams/remove-member`;

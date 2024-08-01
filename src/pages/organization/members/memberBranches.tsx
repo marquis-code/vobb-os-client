@@ -97,6 +97,7 @@ const MemberBranches = (props: MemberBranchesProps) => {
         name={props.name}
         close={closeConfirmRemoval}
         show={confirm.show}
+        fetchMemberBranches={fetchMemberBranches}
       />
       <MemberBranchesModal
         handleRemoveBranch={confirmRemoval}
