@@ -25,3 +25,16 @@ export const arraysHaveSameElements = (arr1: string[], arr2: string[]): boolean 
 export const getOptionTypeValidationMsg = (error) => {
   return error?.message ?? error?.value?.message?.toString() ?? error?.label?.message?.toString();
 };
+
+export const getInitials = (fullName: string) => {
+  const names = fullName.split(" ");
+
+  if (names.length > 1) {
+    return names
+      .slice(0, 2)
+      .map((name) => name[0].toUpperCase())
+      .join("");
+  } else {
+    return names[0].slice(0, 2).toUpperCase();
+  }
+};

@@ -4,7 +4,6 @@ import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
 import { getOptionTypeValidationMsg } from "lib";
 
 interface ChangeBranchData {
@@ -23,9 +22,20 @@ const schema = yup.object({
 interface ChangeBranchModalProps extends ModalProps {
   submit: (data) => void;
   name: string;
+  handleViewBranches: {
+    options: optionType[];
+    loading: boolean;
+  };
 }
 
-const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, show, name }) => {
+const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
+  submit,
+  close,
+  show,
+  name,
+  handleViewBranches
+}) => {
+  const { loading: loadingBranches, options } = handleViewBranches;
   const {
     handleSubmit,
     formState: { errors },
@@ -59,18 +69,15 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
         <form>
           <SelectInput
             label="Branch"
-            options={[
-              { label: "Test", value: "test" },
-              { label: "Two (Not eligible to join)", value: "two", isDisabled: true },
-              { label: "Three", value: "three" }
-            ]}
+            options={options}
             value={watch("branch")?.value === "" ? null : branch}
             onChange={(val) => val && setValue("branch", val)}
             validatorMessage={getOptionTypeValidationMsg(errors.branch)}
+            loading={loadingBranches}
           />
         </form>
         <p className="text-xs text-vobb-neutral-70 mt-6">
-          NB: This adds the member to a new branch and does not remove them their current
+          NB: This adds the member to a new branch and does not remove them from their current
           branch(es).
         </p>
         <div className="flex justify-end gap-2 items-center mt-12">

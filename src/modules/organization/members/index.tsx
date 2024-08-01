@@ -8,10 +8,11 @@ import {
   MemberTable,
   MemberTableActions,
   Pagination,
-  getMemberTableColumns
+  getMemberTableColumns,
+  LoadingSpinner
 } from "components";
-import { MemberTableMock } from "lib";
 import { useMemo, useState } from "react";
+import { MemberDataProps } from "types";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -51,8 +52,14 @@ const attributes: attributeType[] = [
 
 interface MembersUIProps extends MemberTableActions {
   handleInviteMember: () => void;
+  handleViewMembers: {
+    loading: boolean;
+    orgMembersData: MemberDataProps;
+    handleParams: (filter: string, value: string | number) => void;
+  };
 }
 const MembersUI: React.FC<MembersUIProps> = ({
+  handleViewMembers,
   handleInviteMember,
   handleViewMember,
   handleSuspension,
@@ -61,6 +68,7 @@ const MembersUI: React.FC<MembersUIProps> = ({
   handleResendInvitation
 }) => {
   const [filters, setFilters] = useState<FilterData[]>([]);
+  const { loading, orgMembersData, handleParams } = handleViewMembers;
 
   const memberColumns = useMemo(
     () =>
@@ -80,6 +88,9 @@ const MembersUI: React.FC<MembersUIProps> = ({
     ]
   );
 
+  const membersData = orgMembersData?.membersArray;
+  const { currentPage, totalCount, totalPages, pageLimit = 20 } = orgMembersData?.metaData;
+
   return (
     <>
       <SettingsPageTitle title="Members" className="max-w-none" />
@@ -89,15 +100,15 @@ const MembersUI: React.FC<MembersUIProps> = ({
           <PlusCircledIcon /> Invite member
         </Button>
       </section>
-      <MemberTable columns={memberColumns} data={MemberTableMock} />
+      {loading ? <LoadingSpinner /> : <MemberTable columns={memberColumns} data={membersData} />}
       <Pagination
         // hidePageLimit
-        handleChange={console.log}
-        handlePageLimit={console.log}
-        totalCount={3}
-        pageLimit={3}
-        totalPages={1}
-        currentPage={1}
+        handleChange={(val) => handleParams("page", val)}
+        handlePageLimit={(val) => handleParams("limit", val)}
+        totalCount={totalCount}
+        pageLimit={pageLimit}
+        totalPages={totalPages}
+        currentPage={currentPage}
         className="mt-4"
       />
     </>

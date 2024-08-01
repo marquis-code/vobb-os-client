@@ -1,5 +1,5 @@
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Badge, Button } from "components";
+import { Badge, Button, LoadingSpinner } from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import {
   DropdownMenu,
@@ -9,22 +9,22 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import { MemberProfileProps } from "types";
 
 // Get member profile info from context and remove the comments
 interface MemberProfileHeaderProps extends MenuProps {
-  // avatar: string | undefined;
-  // intials: string;
-  // fullName: string;
-  // email: string;
-  // jobTitle: string;
-  // role: string;
+  memberProfile: MemberProfileProps;
+  loading: boolean;
 }
 
 const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
+  const { avatar, initials, fullName, email, jobTitle, role, status } = props.memberProfile;
+  const isSuspended = status === "suspended";
+
+  if (props.loading) return <LoadingSpinner />;
   return (
     <>
-      {/* Only shown when member is suspended */}
-      {props.isSuspended ? (
+      {isSuspended ? (
         <Badge
           text={"This member has been suspended"}
           btnText={"Undo suspension"}
@@ -42,16 +42,16 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
       <section className="pb-4">
         <div className="flex items-center gap-2">
           <Avatar className="w-10 h-10">
-            <AvatarImage src={""} alt="avatar" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={avatar} alt="avatar" />
+            <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold">Jason Doe</p>
-            <p className="text-xs text-vobb-neutral-70">jasondoe@gmail.com</p>
+            <p className="font-semibold">{fullName}</p>
+            <p className="text-xs text-vobb-neutral-70">{email}</p>
           </div>
 
           <div className="ml-auto">
-            <Menu {...props} />
+            <Menu {...props} isSuspended={isSuspended} />
           </div>
         </div>
       </section>
@@ -59,14 +59,14 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">Frontend Engineer</span>
+              <span className="bg-white border rounded-xl px-2 py-1">{jobTitle}</span>
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Job Title</TooltipContent>
           </Tooltip>
           <span className="bg-vobb-neutral-40 rounded-md w-[6px] h-[6px] block"></span>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">Team lead</span>
+              <span className="bg-white border rounded-xl px-2 py-1">{role}</span>
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Role</TooltipContent>
           </Tooltip>

@@ -26,6 +26,7 @@ import {
   updateOrgSusNotifyURL,
   verifyOrgEmailsURL
 } from "api";
+import { PaginationProps } from "types";
 
 /*
 ORGANIZATION SERVICES
@@ -181,9 +182,9 @@ export const updateIndefSusNotifyService = (data: { indefinite_suspension_notify
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgBranchesService = ({ page, limit }) => {
+export const fetchOrgBranchesService = (query: PaginationProps = {}) => {
   return getRequest({
-    url: fetchOrgBranchesURL({ page, limit })
+    url: fetchOrgBranchesURL(query)
   });
 };
 

@@ -1,4 +1,4 @@
-import { Badge } from "components";
+import { Badge, toast } from "components";
 import { MemberProfileBody } from "modules/organization/members/components/memberProfileBody";
 import { MemberProfileHeader } from "modules/organization/members/components/memberProfileHeader";
 import { MemberProfileTabs } from "modules/organization/members/components/memberProfileTabs";
@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Routes } from "router";
 import { MemberProfileDetails } from "./memberDetails";
 import { MemberProfileContext } from "context";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { MemberProfileComments } from "./memberComments";
 import { MemberProfileActivity } from "./memberActivity";
 import { MemberProfileEmails } from "./memberEmails";
@@ -21,10 +21,29 @@ import { SuspendMember } from "./suspendMember";
 import { UndoSuspension } from "./undoSuspension";
 import { MemberBranches } from "./memberBranches";
 import { MemberTeams } from "./memberTeams";
+import { useApiRequest } from "hooks";
+import { fetchMemberProfileService } from "api";
+import { MemberProfileProps } from "types";
+import { getInitials } from "lib";
 
+const initProfile = {
+  avatar: "",
+  fullName: "",
+  email: "",
+  role: "",
+  jobTitle: "",
+  initials: "",
+  status: ""
+};
 const Member = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const {
+    run: runFetchProfile,
+    data: profileResponse,
+    error: profileError,
+    requestStatus: profileStatus
+  } = useApiRequest({});
 
   const [changeRole, setChangeRole] = useState(false);
   const [changeBranch, setChangeBranch] = useState(false);
@@ -89,30 +108,61 @@ const Member = () => {
     setShowTeams(false);
   };
 
+  const handleFetchProfile = () => {
+    if (params.id) runFetchProfile(fetchMemberProfileService(params.id));
+  };
+
+  useEffect(() => {
+    handleFetchProfile();
+  }, [params.id]);
+
+  const memberProfile = useMemo<MemberProfileProps>(() => {
+    if (profileResponse?.status === 200) {
+      const data = profileResponse?.data?.data;
+      const profile = {
+        fullName: `${data.first_name} ${data.last_name}`,
+        avatar: data.avatar,
+        email: data.email,
+        role: data.role,
+        jobTitle: data.job_title ?? "Not passed",
+        initials: getInitials(`${data.first_name} ${data.last_name}`),
+        status: data.status
+      };
+
+      return profile;
+    } else if (profileError) {
+      toast({
+        variant: "destructive",
+        description: profileError?.response?.data?.error
+      });
+    }
+    return initProfile;
+  }, [profileResponse, profileError]);
+
   return (
     <>
       <ChangeRole
         id={params.id ?? ""}
-        name="Jason Doe"
-        currentRole="member"
+        name={memberProfile?.fullName}
+        currentRole={memberProfile?.role}
         show={changeRole}
         close={handleCloseChangeRole}
       />
       <ChangeBranch
         id={params.id ?? ""}
-        name="Jason Doe"
+        name={memberProfile?.fullName}
         show={changeBranch}
         close={handleCloseChangeBranch}
       />
       <ChangeTeam
         id={params.id ?? ""}
-        name="Jason Doe"
+        name={memberProfile?.fullName}
         show={changeTeam}
         close={handleCloseChangeTeam}
       />
       <SuspendMember
         id={params.id ?? ""}
-        name="Jason Doe"
+        name={memberProfile?.fullName}
         show={suspension}
         close={handleCloseSuspension}
       />
@@ -123,18 +173,21 @@ const Member = () => {
         close={handleCloseSuspension}
       /> */}
       <MemberBranches
+        id={params.id ?? ""}
         handleAddBranch={handleChangeBranch}
         close={handleCloseBranches}
-        name="Jason Doe"
+        name={memberProfile?.fullName}
         show={showBranches}
       />
       <MemberTeams
         handleAddTeam={handleChangeTeam}
         close={handleCloseTeams}
-        name="Jason Doe"
+        name={memberProfile?.fullName}
         show={showTeams}
       />
       <MemberProfileHeader
+        memberProfile={memberProfile}
+        loading={profileStatus.isPending}
         handleChangeRole={handleChangeRole}
         handleChangeBranch={handleBranches}
         handleChangeTeam={handleTeams}

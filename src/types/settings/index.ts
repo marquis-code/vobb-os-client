@@ -20,6 +20,11 @@ export interface BlacklistProps {
   status: boolean;
 }
 
+export interface PaginationProps {
+  page?: number;
+  limit?: number;
+}
+
 export interface OrganisationProfileProps {
   organisation: string;
   logo: string;
@@ -60,6 +65,23 @@ export interface OrganisationAttributesData {
   description?: string;
   metaData?: any;
 }
+export interface createTeamRequestBody {
+  name?: string;
+  description?: string;
+  icon?: string;
+  general?: boolean;
+  join_team?: boolean;
+}
+
+export interface suspendMemberRequestBody {
+  member: string;
+  reason?: string;
+  duration?: {
+    start_date: string;
+    end_date: string;
+  };
+}
+
 export interface BranchesDataProps {
   branchesArray: OrganisationBranchesData[];
   branchesMetaData: MetaDataProps;
@@ -105,4 +127,60 @@ export type BranchTeamTableData = {
 export interface BranchTeamsProps {
   teamsArray: BranchTeamTableData[];
   teamsMetaData: MetaDataProps;
+}
+
+export interface fetchMemberQueryParams {
+  search?: string;
+  page?: number;
+  limit?: number;
+  status?: string;
+  branch?: string;
+  team?: string;
+}
+
+export type TeamTableData = {
+  id: string;
+  icon: string;
+  name: string;
+  teamLeads: string[];
+  teamManagers: string[];
+  date: string;
+  numberOfMembers: number;
+  numberOfBranches: number;
+};
+
+export interface TeamDataProps {
+  teamsData: TeamTableData[];
+  metaData: MetaDataProps;
+}
+
+export type statuses = "invited" | "expired" | "active" | "suspended";
+
+export type MemberTableData = {
+  id: string;
+  avatar: string;
+  name: string;
+  branch: string[];
+  teams: string[];
+  role: string;
+  email: string;
+  date: string;
+  lastActive: string;
+  initial: string;
+  status: statuses;
+};
+
+export interface MemberDataProps {
+  membersArray: MemberTableData[];
+  metaData: MetaDataProps;
+}
+
+export interface MemberProfileProps {
+  avatar: string | undefined;
+  initials: string;
+  fullName: string;
+  email: string;
+  jobTitle: string;
+  role: string;
+  status: string;
 }
