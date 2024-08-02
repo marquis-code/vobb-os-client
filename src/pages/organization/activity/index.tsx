@@ -1,4 +1,5 @@
 import { fetchOrgActivitiesService } from "api";
+import { useUserContext } from "context";
 import { format, parseISO } from "date-fns";
 import { useApiRequest } from "hooks";
 import { OrgActivityData, OrgActivityUI } from "modules";
@@ -22,6 +23,15 @@ const initData = {
 };
 
 const OrgActivity = () => {
+  const { userDetails } = useUserContext();
+  const userDateFormat = userDetails?.dateFormat;
+  const dateFormatted =
+    userDateFormat === "Month D, Yr"
+      ? "MMMM dd, yyyy"
+      : userDateFormat === "DD/MM/YYYY"
+      ? "dd-MM-yyyy"
+      : "MM-dd-yyyy";
+
   const { run, data: response, requestStatus } = useApiRequest({});
   const [queryParams, setQueryParams] = useState<QueryParamProps>({
     page: 1,
@@ -52,7 +62,7 @@ const OrgActivity = () => {
     if (response?.status === 200) {
       const activityArray = response?.data?.data?.activities.map((item) => ({
         action: item.action.split("-").join("_"),
-        date: item.date.slice(0, -8),
+        date: format(parseISO(item.time), dateFormatted),
         time: format(parseISO(item.time), "h:mma"),
         initiator: item.meta?.user?._id
           ? { name: item.initiator.full_name, id: item.initiator._id }

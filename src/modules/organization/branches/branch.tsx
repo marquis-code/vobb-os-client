@@ -17,7 +17,6 @@ import {
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { useUserContext } from "context";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
 
 // This list should come from the API
@@ -130,7 +129,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 handleChange={(val) => handleUpdateMembersParams("page", val)}
                 handlePageLimit={(val) => handleUpdateMembersParams("limit", val)}
                 totalCount={membersMetaData.totalCount}
-                pageLimit={membersMetaData.pageLimit}
+                pageLimit={membersMetaData.pageLimit ?? 20}
                 totalPages={membersMetaData.totalPages}
                 currentPage={membersMetaData.currentPage}
                 className="mt-4"
@@ -148,7 +147,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 handleChange={(val) => handleUpdateTeamsParams("page", val)}
                 handlePageLimit={(val) => handleUpdateTeamsParams("limit", val)}
                 totalCount={teamsMetaData.totalCount}
-                pageLimit={teamsMetaData.pageLimit}
+                pageLimit={teamsMetaData.pageLimit ?? 20}
                 totalPages={teamsMetaData.totalPages}
                 currentPage={teamsMetaData.currentPage}
                 className="mt-4"

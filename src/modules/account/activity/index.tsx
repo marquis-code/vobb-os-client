@@ -41,7 +41,7 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
   loading
 }) => {
   const { order: sortOrder, startDate, endDate } = queryParams;
-  const { currentPage, totalCount, totalPages, pageLimit } = metaData;
+  const { currentPage, totalCount, totalPages, pageLimit = 20 } = metaData;
 
   const [date, setDate] = useState<DateRange | undefined>(undefined);
   const [sortBy, setSortBy] = useState<optionType | undefined>(sortOptions[0]);

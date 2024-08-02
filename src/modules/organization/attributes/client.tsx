@@ -43,6 +43,8 @@ const ClientAttributes: React.FC<ClientAttributesProps> = ({
     totalPages: 0
   };
 
+  const { currentPage, pageLimit = 20, totalCount, totalPages } = metaData;
+
   return (
     <>
       <section className="pb-8 mb-12 max-w-[800px]">
@@ -56,10 +58,10 @@ const ClientAttributes: React.FC<ClientAttributesProps> = ({
         <Pagination
           handleChange={(val) => handlePagination("page", val)}
           handlePageLimit={(val) => handlePagination("limit", val)}
-          totalCount={metaData.totalCount}
-          pageLimit={metaData.pageLimit}
-          totalPages={metaData.totalPages}
-          currentPage={metaData.currentPage}
+          totalCount={totalCount}
+          pageLimit={pageLimit}
+          totalPages={totalPages}
+          currentPage={currentPage}
           className="mt-4"
         />
       </section>

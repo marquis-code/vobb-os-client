@@ -6,25 +6,22 @@ import {
 } from "components/modalVariants/editAttributeModal";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { AttributesDataProps, ModalProps, OrganisationAttributesData } from "types";
+import { ModalProps, OrganisationAttributesData } from "types";
 
 interface CreateAttributesProps extends ModalProps {
-  fetchAttributes: ({ page, limit }) => void;
+  callback: () => void;
   prefilledAttribute: OrganisationAttributesData;
-  clientAttributes: AttributesDataProps;
 }
 
 const EditClientAttribute = ({
   show,
   close,
-  fetchAttributes,
+
   prefilledAttribute,
-  clientAttributes
+  callback
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { pageLimit } = clientAttributes?.attributesMetaData || {
-    pageLimit: 0
-  };
+
   const { id } = prefilledAttribute;
 
   const submit = (data: EditAttributesData) => {
@@ -50,7 +47,7 @@ const EditClientAttribute = ({
       toast({
         description: response?.data?.message
       });
-      fetchAttributes({ page: 1, limit: pageLimit });
+      callback();
       close();
     } else if (error) {
       toast({

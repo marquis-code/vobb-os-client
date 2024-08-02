@@ -18,10 +18,11 @@ interface SelectInputProps {
   icon?: ReactNode;
   required?: boolean;
   styles?: CSSObjectWithLabel;
+  loading?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = (props) => {
-  const { label, validatorMessage, parentClassName, hint, icon, required, styles } = props;
+  const { label, validatorMessage, parentClassName, hint, icon, required, styles, loading } = props;
 
   return (
     <div className={cn("mb-4", parentClassName)}>
@@ -78,6 +79,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
             })
           }}
           menuShouldScrollIntoView
+          isLoading={loading}
         />
       </div>
       {validatorMessage && (

@@ -2,18 +2,14 @@ import { addNewOrgBranchService, organisationBranchRequestBody } from "api";
 import { AddBranchData, AddBranchModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { BranchesDataProps, ModalProps } from "types";
+import { ModalProps } from "types";
 
 interface AddBranchProps extends ModalProps {
-  fetchOrgBranches: ({ page, limit }) => void;
-  orgBranches: BranchesDataProps;
+  callback: () => void;
 }
 
-const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches, orgBranches }) => {
+const AddBranch: React.FC<AddBranchProps> = ({ show, close, callback }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { pageLimit } = orgBranches?.branchesMetaData || {
-    pageLimit: 0
-  };
 
   const submit = (data: AddBranchData) => {
     const requestBody: organisationBranchRequestBody = {
@@ -40,7 +36,7 @@ const AddBranch: React.FC<AddBranchProps> = ({ show, close, fetchOrgBranches, or
       toast({
         description: response?.data?.message
       });
-      fetchOrgBranches({ page: 1, limit: pageLimit });
+      callback();
       close();
     } else if (error) {
       toast({

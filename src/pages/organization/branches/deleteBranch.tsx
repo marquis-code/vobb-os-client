@@ -7,22 +7,11 @@ import { BranchesDataProps, ModalProps } from "types";
 interface Props extends ModalProps {
   id: string;
   name: string;
-  fetchOrgBranches: ({ page, limit }) => void;
-  orgBranches: BranchesDataProps;
+  callback: () => void;
 }
 
-const DeleteBranch: React.FC<Props> = ({
-  show,
-  close,
-  id,
-  name,
-  fetchOrgBranches,
-  orgBranches
-}) => {
+const DeleteBranch: React.FC<Props> = ({ show, close, id, name, callback }) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
-  const { pageLimit } = orgBranches?.branchesMetaData || {
-    pageLimit: 0
-  };
 
   const submit = () => {
     run(deleteOrgBranchService({ id }));
@@ -33,7 +22,7 @@ const DeleteBranch: React.FC<Props> = ({
       toast({
         description: response?.data?.message
       });
-      fetchOrgBranches({ page: 1, limit: pageLimit });
+      callback();
       close();
     } else if (error) {
       toast({

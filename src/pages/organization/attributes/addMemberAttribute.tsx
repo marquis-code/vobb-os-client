@@ -5,22 +5,18 @@ import { useMemo } from "react";
 import { AttributesDataProps, ModalProps, OrganisationAttributesData } from "types";
 
 interface CreateAttributesProps extends ModalProps {
-  fetchAttributes: ({ page, limit }) => void;
+  callback: () => void;
   prefilledAttribute: OrganisationAttributesData;
-  memberAttributes: AttributesDataProps;
 }
 
 const AddMemberAttribute = ({
   show,
   close,
-  fetchAttributes,
   prefilledAttribute,
-  memberAttributes
+  callback
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { pageLimit } = memberAttributes?.attributesMetaData || {
-    pageLimit: 0
-  };
+
   const submit = (data: AddAttributesData) => {
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
@@ -45,7 +41,7 @@ const AddMemberAttribute = ({
       toast({
         description: response?.data?.message
       });
-      fetchAttributes({ page: 1, limit: pageLimit });
+      callback();
     } else if (error) {
       toast({
         variant: "destructive",

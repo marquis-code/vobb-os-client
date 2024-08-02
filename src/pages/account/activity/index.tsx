@@ -1,5 +1,6 @@
 import { fetchUserActivitiesService } from "api";
 import { SortOrderType } from "components";
+import { useUserContext } from "context";
 import { format, parseISO } from "date-fns";
 import { useApiRequest } from "hooks";
 import { AccountActivityData, AccountActivityUI } from "modules";
@@ -29,6 +30,15 @@ const initData = {
 };
 
 const AccountActivity = () => {
+  const { userDetails } = useUserContext();
+  const userDateFormat = userDetails?.dateFormat;
+  const dateFormatted =
+    userDateFormat === "Month D, Yr"
+      ? "MMMM dd, yyyy"
+      : userDateFormat === "DD/MM/YYYY"
+      ? "dd-MM-yyyy"
+      : "MM-dd-yyyy";
+
   const { run, data: response, requestStatus } = useApiRequest({});
   const [queryParams, setQueryParams] = useState<QueryParamProps>({
     page: 1,
@@ -59,7 +69,7 @@ const AccountActivity = () => {
     if (response?.status === 200) {
       const activityArray = response?.data?.data?.activity.map((item) => ({
         action: item.action.split("-").join("_"),
-        date: item.date.slice(0, -8),
+        date: format(parseISO(item.time), dateFormatted),
         time: format(parseISO(item.time), "h:mma"),
         initiator:
           item.initiator._id === item.meta?.user?._id

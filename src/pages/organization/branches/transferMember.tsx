@@ -1,17 +1,16 @@
 import { transferAllMembersToBranchService, transferMultipleMembersToBranchService } from "api";
 import { toast, TransferMemberModal } from "components";
-import { useApiRequest } from "hooks";
-import { useMemo } from "react";
-import { BranchesDataProps, ModalProps, optionType } from "types";
+import { useApiRequest, useFetchBranches } from "hooks";
+import { useEffect, useMemo } from "react";
+import { ModalProps, optionType } from "types";
 
 interface Props extends ModalProps {
   id: string;
   transferIds: string[] | undefined;
   handleTransfer?: () => void;
-  fetchOrgBranches?: ({ page, limit }) => void;
+  callback?: () => void;
   fetchBranchMembers: () => void;
   type: "member" | "branch";
-  orgBranches?: BranchesDataProps;
 }
 
 const TransferMember: React.FC<Props> = ({
@@ -20,10 +19,10 @@ const TransferMember: React.FC<Props> = ({
   id,
   transferIds,
   fetchBranchMembers,
-  fetchOrgBranches,
-  handleTransfer,
-  orgBranches
+  callback,
+  handleTransfer
 }) => {
+  const { orgBranches, fetchOrgBranches, loadingBranches } = useFetchBranches({});
   const {
     run: runTransferMultiple,
     data: multipleResponse,
@@ -63,7 +62,7 @@ const TransferMember: React.FC<Props> = ({
         description: multipleResponse?.data?.message
       });
       fetchBranchMembers();
-      fetchOrgBranches?.({ page: 1, limit: 20 });
+      callback?.();
       handleTransfer?.();
       close();
     } else if (multipleError) {
@@ -80,7 +79,7 @@ const TransferMember: React.FC<Props> = ({
         description: allResponse?.data?.message
       });
       fetchBranchMembers();
-      fetchOrgBranches?.({ page: 1, limit: 20 });
+      callback?.();
       handleTransfer?.();
       close();
     } else if (allError) {
@@ -90,6 +89,10 @@ const TransferMember: React.FC<Props> = ({
       });
     }
   }, [allResponse, allError]);
+
+  useEffect(() => {
+    fetchOrgBranches({ page: 1 });
+  }, []);
   return (
     <>
       <TransferMemberModal
@@ -100,6 +103,7 @@ const TransferMember: React.FC<Props> = ({
         multiple={transferIds ? transferIds.length > 1 : false}
         loading={multipleStatus.isPending || allStatus.isPending}
         orgBranches={orgBranches}
+        loadingBranches={loadingBranches}
       />
     </>
   );

@@ -193,9 +193,8 @@ const OrgAttributes = () => {
           setInitAttr(initAttrFields);
         }}
         show={addMemberAttr}
-        fetchAttributes={fetchMemberAttributes}
+        callback={fetchMemberAttributes}
         prefilledAttribute={initAttr}
-        memberAttributes={memberAttributes}
       />
       <AddClientAttribute
         close={() => {
@@ -203,9 +202,8 @@ const OrgAttributes = () => {
           setInitAttr(initAttrFields);
         }}
         show={addClientAttr}
-        fetchAttributes={fetchClientAttributes}
+        callback={fetchClientAttributes}
         prefilledAttribute={initAttr}
-        clientAttributes={clientAttributes}
       />
       <EditMemberAttribute
         close={() => {
@@ -214,8 +212,7 @@ const OrgAttributes = () => {
         }}
         show={editMemberAttr}
         prefilledAttribute={initAttr}
-        fetchAttributes={fetchMemberAttributes}
-        memberAttributes={memberAttributes}
+        callback={fetchMemberAttributes}
       />
       <EditClientAttribute
         close={() => {
@@ -224,8 +221,7 @@ const OrgAttributes = () => {
         }}
         show={editClientAttr}
         prefilledAttribute={initAttr}
-        fetchAttributes={fetchClientAttributes}
-        clientAttributes={clientAttributes}
+        callback={fetchClientAttributes}
       />
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}

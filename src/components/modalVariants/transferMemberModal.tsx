@@ -24,6 +24,7 @@ interface TransferMemberModalProps extends ModalProps {
   branchId: string;
   loading: boolean;
   orgBranches?: BranchesDataProps;
+  loadingBranches: boolean;
 }
 
 const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
@@ -33,7 +34,8 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   multiple,
   branchId,
   loading,
-  orgBranches
+  orgBranches,
+  loadingBranches
 }) => {
   const branchesArray = orgBranches?.branchesArray;
   const branchesOptions =
@@ -78,6 +80,7 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
           validatorMessage={
             errors.branch?.message ?? errors.branch?.value?.message ?? errors.branch?.label?.message
           }
+          loading={loadingBranches}
         />
 
         <div className="flex justify-end gap-2">

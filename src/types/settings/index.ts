@@ -135,3 +135,8 @@ export interface activityParamsProps {
   start_date?: string;
   end_date?: string;
 }
+
+export interface PaginationProps {
+  page?: number;
+  limit?: number;
+}
