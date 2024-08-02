@@ -5,11 +5,12 @@ import { UseFormRegister } from "react-hook-form";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 
 export interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  label?: string | ReactNode;
   icon?: ReactNode;
   validatorMessage?: string;
   hint?: string;
   parentClassName?: string;
+  labelClassName?: string;
   className?: string;
   register?: UseFormRegister<any>;
   defaultValue?: string;
@@ -26,51 +27,54 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     hint,
     name,
     register,
-    defaultValue
+    defaultValue,
+    labelClassName
   } = props;
 
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>
         {label && (
-          <label className={"block font-inter text-xs mb-1"}>
+          <label className={cn("block font-inter text-xs mb-1", labelClassName)}>
             {label}
             {required ? <span className={"text-error-50"}>*</span> : ""}
           </label>
         )}
-        <div className="relative">
-          {icon ? <span className="absolute left-2 top-[10px]">{icon}</span> : ""}
-          {register && name ? (
-            <Input
-              {...props}
-              {...register(name, {
-                required: required,
-                minLength: props.minLength,
-                onChange: props.onChange,
-                min: props.min,
-                max: props.max
-              })}
-              defaultValue={defaultValue}
-              className={cn(
-                `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
-                className,
-                icon ? "pl-8" : ""
-              )}
-            />
-          ) : (
-            <Input
-              className={cn(
-                `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
-                className
-              )}
-              {...props}
-            />
+        <div>
+          <div className="relative">
+            {icon ? <span className="absolute left-2 top-[10px]">{icon}</span> : ""}
+            {register && name ? (
+              <Input
+                {...props}
+                {...register(name, {
+                  required: required,
+                  minLength: props.minLength,
+                  onChange: props.onChange,
+                  min: props.min,
+                  max: props.max
+                })}
+                defaultValue={defaultValue}
+                className={cn(
+                  `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
+                  className,
+                  icon ? "pl-8" : ""
+                )}
+              />
+            ) : (
+              <Input
+                className={cn(
+                  `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
+                  className
+                )}
+                {...props}
+              />
+            )}
+          </div>
+          {validatorMessage && (
+            <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
           )}
+          {hint && <small className="block text-[11px] mt-1 text-vobb-neutral-60">{hint}</small>}
         </div>
-        {validatorMessage && (
-          <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>
-        )}
-        {hint && <small className="block text-[11px] mt-1 text-vobb-neutral-60">{hint}</small>}
       </div>
     </>
   );
