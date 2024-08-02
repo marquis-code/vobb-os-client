@@ -9,13 +9,10 @@ import {
   ProfileSelectInput,
   ProfileTextarea
 } from "components/form/profile-fields";
-import { useUserContext } from "context";
 import { useState } from "react";
 
 const MemberProfileDetailsUI = () => {
   const [file, setFile] = useState<File | null>(null);
-  const { userDetails } = useUserContext();
-  console.log(userDetails);
   return (
     <>
       <div>
