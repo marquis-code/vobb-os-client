@@ -32,7 +32,10 @@ import {
   Teams,
   Members,
   Team,
-  Member
+  Member,
+  AcceptInvite,
+  InvitationFailed,
+  InvitationSuccessful
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout, SettingsLayoutProps } from "layout";
 
@@ -117,6 +120,20 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.completed_email_verify,
     Element: CompletedEmailVerify
+  },
+
+  // Public
+  {
+    path: Routes.accept_invite,
+    Element: AcceptInvite
+  },
+  {
+    path: Routes.invitation_failed,
+    Element: InvitationFailed
+  },
+  {
+    path: Routes.invitation_success,
+    Element: InvitationSuccessful
   },
 
   // Dashboard Routes

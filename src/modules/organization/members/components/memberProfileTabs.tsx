@@ -70,7 +70,7 @@ const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
       icon: <MessageChatSquareIcon width={16} height={16} />
     }
   ];
-  
+
   return (
     <>
       <section className="grid grid-cols-[2fr,1.25fr] -ml-4 w-[calc(100%+2rem)] items-center">

@@ -1,9 +1,8 @@
 import { FileIcon, ImageIcon, UploadIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
 import { useState } from "react";
-import { UseFormRegister } from "react-hook-form";
 
-interface CustomFileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface CustomFileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   validatorMessage?: string;
   hint?: string;
