@@ -22,6 +22,7 @@ const UndoSuspension = ({ show, close, id, name }: UndoSuspensionProps) => {
         handleContinue={handleContinue}
         close={close}
         show={show}
+        loading={false}
       />
     </>
   );
