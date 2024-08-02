@@ -4,20 +4,16 @@ import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { getOptionTypeValidationMsg } from "lib";
+import { getOptionTypeValidationMsg, optionTypeSchema, optionTypeSchemaReq } from "lib";
 
 interface ChangeBranchData {
-  branch: { label?: string | undefined; value?: string | undefined };
+  branch: optionType;
+  team: { label?: string | undefined; value?: string | undefined };
 }
 
-const optionTypeSchema = yup.object({
-  label: yup.string(),
-  value: yup.string()
-});
-
 const schema = yup.object({
-  branch: optionTypeSchema
+  branch: optionTypeSchemaReq,
+  team: optionTypeSchema
 });
 
 interface ChangeBranchModalProps extends ModalProps {
@@ -43,6 +39,11 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
     value: watch("branch")?.value ?? ""
   };
 
+  const team: optionType = {
+    label: watch("team")?.label ?? "",
+    value: watch("team")?.value ?? ""
+  };
+
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
@@ -53,20 +54,34 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
           </Button>
         </div>
         <p className="text-vobb-neutral-70 mb-4">
-          Add <strong>{name}</strong> to a branch they are eligible to join. A member is eligible to
-          join a branch if their current team(s) exist in the new branch.
+          Add <strong>{name}</strong> to a new branch and select a new team if their current team(s)
+          don't exist in the new branch.
         </p>
         <form>
           <SelectInput
             label="Branch"
             options={[
               { label: "Test", value: "test" },
-              { label: "Two (Not eligible to join)", value: "two", isDisabled: true },
+              { label: "Two", value: "two" },
               { label: "Three", value: "three" }
             ]}
             value={watch("branch")?.value === "" ? null : branch}
             onChange={(val) => val && setValue("branch", val)}
             validatorMessage={getOptionTypeValidationMsg(errors.branch)}
+          />
+          <SelectInput
+            label={`Team (Optional)`} //Show "(Optional)" only if the member already has teams in the selected branch.
+            options={[
+              { label: "Test", value: "test" },
+              { label: "Two (Already a member)", value: "two", isDisabled: true },
+              { label: "Three", value: "three" }
+            ]}
+            value={watch("team")?.value === "" ? null : team}
+            onChange={(val) => val && setValue("team", val)}
+            validatorMessage={getOptionTypeValidationMsg(errors.team)}
+            hint={`The member will be able to access the following teams in the new branch: {current teams}, ${
+              watch("team")?.label
+            }`}
           />
         </form>
         <p className="text-xs text-vobb-neutral-70 mt-6">
