@@ -128,7 +128,7 @@ export const createOrgPropertiesURL = () => `${prefixAcc}/attribute/`;
  *
  */
 
-export const updateOrgPropertiesURL = ({ id }) => `${prefixAcc}/attribute/${id}`;
+export const updateOrgPropertiesURL = () => `${prefixAcc}/attribute`;
 
 /**
  * Fetch user's activities URL

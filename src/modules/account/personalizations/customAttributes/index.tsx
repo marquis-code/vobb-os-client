@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler, useWatch } from "react-hook-form";
 import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
 import { dynamicValidationSchema, renderFormFields } from "lib";
-import { useCountriesContext } from "context";
+import { useCountriesContext, useUserContext } from "context";
 
 export interface CustomAttributesProps {
   submit: (data: { name: string; value: string | optionType; orgRefId: string }) => void;

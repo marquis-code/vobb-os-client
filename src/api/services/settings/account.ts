@@ -225,9 +225,9 @@ export const createOrgPropertiesService = (data: updatePropertiesRequestBody) =>
  * @param id of attribute
  * @returns axios promise
  */
-export const updateOrgPropertiesService = (id: string, data: updatePropertiesRequestBody) => {
+export const updateOrgPropertiesService = (data: updatePropertiesRequestBody) => {
   return putRequest({
-    url: updateOrgPropertiesURL({ id }),
+    url: updateOrgPropertiesURL(),
     data
   });
 };

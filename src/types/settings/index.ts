@@ -14,6 +14,7 @@ export interface UserProfileProps {
   timezone: string;
   pendingEmail: string | null;
   fluentLanguages: string[];
+  userAttributes: { attribute: []; data: [] }[];
 }
 export interface BlacklistProps {
   ipAddress: string;

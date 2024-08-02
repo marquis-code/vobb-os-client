@@ -1,4 +1,3 @@
-import { SettingsPageTitle } from "components";
 import { CustomAttributes, CustomAttributesProps } from "./customAttributes";
 import { DateFormat, DateFormatProps } from "./dateFormat";
 import { SystemLanguage, SystemLanguageProps } from "./systemLanguage";

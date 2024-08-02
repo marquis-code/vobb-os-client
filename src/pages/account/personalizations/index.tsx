@@ -1,5 +1,4 @@
 import {
-  createOrgPropertiesService,
   fetchMemberPropertiesService,
   fetchOrgPropertiesService,
   personalAccountUpdateService,
@@ -47,11 +46,6 @@ const AccountPersonalizations = () => {
   const { run: runFetchAttr, data: fetchResponse } = useApiRequest({});
   const { run: runFetchMemberProps, data: memberPropsResponse } = useApiRequest({});
 
-  const {
-    run: runCreateProperties,
-    data: createPropertiesResponse,
-    error: createPropertiesError
-  } = useApiRequest({});
   const {
     run: runUpdateProperties,
     data: updatePropertiesResponse,
@@ -141,20 +135,6 @@ const AccountPersonalizations = () => {
   }, [timezoneResponse, timezoneError]);
 
   useMemo(() => {
-    if (createPropertiesResponse?.status === 201) {
-      toast({
-        description: createPropertiesResponse?.data?.message
-      });
-      fetchMemberProperties();
-    } else if (createPropertiesError) {
-      toast({
-        variant: "destructive",
-        description: createPropertiesError?.response?.data?.error
-      });
-    }
-  }, [createPropertiesResponse, createPropertiesError]);
-
-  useMemo(() => {
     if (updatePropertiesResponse?.status === 200) {
       toast({
         description: updatePropertiesResponse?.data?.message
@@ -230,9 +210,7 @@ const AccountPersonalizations = () => {
       data: body
     };
 
-    orgRefId
-      ? runUpdateProperties(updateOrgPropertiesService(attribute, requestBody))
-      : runCreateProperties(createOrgPropertiesService(requestBody));
+    runUpdateProperties(updateOrgPropertiesService(requestBody));
   };
 
   useEffect(() => {
