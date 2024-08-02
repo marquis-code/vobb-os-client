@@ -90,3 +90,18 @@ export const removeBranchFromMemberURL = () => `teams/remove-member-branch`;
  *
  */
 export const removeTeamFromMemberURL = () => `teams/remove-member`;
+
+/**
+ * Change Member role URL
+ * @returns url string
+ *
+ */
+export const changeMemberRoleURL = () => `${prefixMember}/role`;
+
+/**
+ * Edit Member details URL
+ * @param id of the member to edit details
+ * @returns url string
+ *
+ */
+export const editMemberDetailsURL = ({ id }) => `${prefixMember}/${id}`;

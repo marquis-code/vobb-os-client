@@ -112,10 +112,6 @@ const Member = () => {
     if (params.id) runFetchProfile(fetchMemberProfileService(params.id));
   };
 
-  useEffect(() => {
-    handleFetchProfile();
-  }, [params.id]);
-
   const memberProfile = useMemo<MemberProfileProps>(() => {
     if (profileResponse?.status === 200) {
       const data = profileResponse?.data?.data;
@@ -139,6 +135,10 @@ const Member = () => {
     return initProfile;
   }, [profileResponse, profileError]);
 
+  useEffect(() => {
+    handleFetchProfile();
+  }, [params.id]);
+
   return (
     <>
       <ChangeRole
@@ -147,6 +147,7 @@ const Member = () => {
         currentRole={memberProfile?.role}
         show={changeRole}
         close={handleCloseChangeRole}
+        handleFetch={handleFetchProfile}
       />
       <ChangeBranch
         id={params.id ?? ""}

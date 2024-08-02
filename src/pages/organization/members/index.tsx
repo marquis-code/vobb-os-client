@@ -166,7 +166,7 @@ const Members = () => {
         show={suspension.show && !suspension.suspend}
         close={handleCloseSuspend}
       />
-      <ChangeRole {...changeRole} close={handleCloseChangeRole} />
+      <ChangeRole {...changeRole} close={handleCloseChangeRole} handleFetch={fetchOrgMembers} />
       <CancelInvitation {...cancelInvite} close={handleCloseCancellation} />
       <ResendInvitation {...resendInvite} close={handleCloseResend} />
       <InviteMember show={inviteMember} close={closeInviteMember} />

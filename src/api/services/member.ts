@@ -12,7 +12,9 @@ import {
   fetchMemberTeamsURL,
   fetchOrgMembersURL,
   removeBranchFromMemberURL,
-  removeTeamFromMemberURL
+  removeTeamFromMemberURL,
+  changeMemberRoleURL,
+  editMemberDetailsURL
 } from "api";
 import { fetchMemberQueryParams, PaginationProps } from "types";
 
@@ -24,6 +26,18 @@ interface removeMemberFromBranchRequestBody {
 interface removeMemberFromTeamRequestBody {
   member: string;
   team: string;
+}
+
+interface changeMemberRoleRequestBody {
+  member: string;
+  role: string;
+}
+
+interface editMemberDetailsRequestBody {
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
+  avatar?: string;
 }
 
 /**
@@ -102,6 +116,32 @@ export const removeBranchFromMemberService = (data: removeMemberFromBranchReques
 export const removeTeamFromMemberService = (data: removeMemberFromTeamRequestBody) => {
   return deleteRequest({
     url: removeTeamFromMemberURL(),
+    data
+  });
+};
+
+/**
+ * Change member role Service
+ * @returns url string
+ *
+ */
+export const changeMemberRoleService = (data: changeMemberRoleRequestBody) => {
+  return patchRequest({
+    url: changeMemberRoleURL(),
+    data
+  });
+};
+
+/**
+ * Edit Member details Service
+ * @param id of the member to edit details
+ * @param data details to edit
+ * @returns url string
+ *
+ */
+export const editMemberDetailsService = (id: string, data: editMemberDetailsRequestBody) => {
+  return patchRequest({
+    url: editMemberDetailsURL({ id }),
     data
   });
 };
