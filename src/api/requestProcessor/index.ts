@@ -1,8 +1,8 @@
-import { refreshTokenURL } from "api";
+import { refreshTokenURL } from "api/urls";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { Routes } from "router";
 
-// Create and axios instance
+// Create an axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL
 });
@@ -11,10 +11,9 @@ export const axiosInstanceUnauth = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
-// axios request interceptor
+// axios request interceptor for authenticated instance
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Get Access Token from local storage
     const accessToken = localStorage.getItem("vobbOSAccess");
     if (accessToken && config.headers) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
