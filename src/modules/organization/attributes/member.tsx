@@ -6,11 +6,13 @@ import {
   getAttributeTableColumns,
   Pagination
 } from "components";
-import { AttributesTableMock } from "lib";
 import { useMemo } from "react";
+import { AttributesDataProps } from "types";
 
 interface MemberAttributesProps extends AttributeTableActions {
   handleAddAttribute: () => void;
+  handlePagination: (param: string, value: number) => void;
+  memberAttributes: AttributesDataProps;
 }
 
 const MemberAttributes: React.FC<MemberAttributesProps> = ({
@@ -18,7 +20,9 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
   handleEditAttribute,
   handleDuplicateAttribute,
   handleRestoreAttribute,
-  handleArchiveAttribute
+  handleArchiveAttribute,
+  handlePagination,
+  memberAttributes
 }) => {
   const columns = useMemo(
     () =>
@@ -30,6 +34,16 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
       }),
     [handleEditAttribute, handleDuplicateAttribute, handleRestoreAttribute, handleArchiveAttribute]
   );
+  const tableData = memberAttributes?.attributesArray || [];
+  const metaData = memberAttributes?.attributesMetaData || {
+    currentPage: 1,
+    pageLimit: 0,
+    totalCount: 0,
+    totalPages: 0
+  };
+
+  const { currentPage, pageLimit = 20, totalCount, totalPages } = metaData;
+
   return (
     <>
       <section className="pb-8 mb-12 max-w-[800px]">
@@ -39,14 +53,14 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
           variant={"fill"}>
           <MixIcon /> New member attribute
         </Button>
-        <AttributesTable columns={columns} data={AttributesTableMock} />
+        <AttributesTable columns={columns} data={tableData} />
         <Pagination
-          handleChange={console.log}
-          handlePageLimit={console.log}
-          totalCount={3}
-          pageLimit={3}
-          totalPages={1}
-          currentPage={1}
+          handleChange={(val) => handlePagination("page", val)}
+          handlePageLimit={(val) => handlePagination("limit", val)}
+          totalCount={totalCount}
+          pageLimit={pageLimit}
+          totalPages={totalPages}
+          currentPage={currentPage}
           className="mt-4"
         />
       </section>

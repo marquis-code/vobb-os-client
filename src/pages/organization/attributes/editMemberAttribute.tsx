@@ -4,27 +4,23 @@ import {
   EditAttributeModal,
   EditAttributesData
 } from "components/modalVariants/editAttributeModal";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps, OrganisationAttributesData } from "types";
 
 interface CreateAttributesProps extends ModalProps {
-  fetchAttributes: ({ page, limit }) => void;
+  callback: () => void;
   prefilledAttribute: OrganisationAttributesData;
 }
 
-const EditAttribute = ({
+const EditMemberAttribute = ({
   show,
   close,
-  fetchAttributes,
-  prefilledAttribute
+  prefilledAttribute,
+  callback
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { clientAttributes } = useUserContext();
-  const { pageLimit } = clientAttributes?.attributesMetaData || {
-    pageLimit: 0
-  };
+
   const { id } = prefilledAttribute;
 
   const submit = (data: EditAttributesData) => {
@@ -50,7 +46,7 @@ const EditAttribute = ({
       toast({
         description: response?.data?.message
       });
-      fetchAttributes({ page: 1, limit: pageLimit });
+      callback();
       close();
     } else if (error) {
       toast({
@@ -73,4 +69,4 @@ const EditAttribute = ({
   );
 };
 
-export { EditAttribute };
+export { EditMemberAttribute };

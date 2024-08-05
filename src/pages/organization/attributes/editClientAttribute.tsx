@@ -1,5 +1,9 @@
-import { createAttributeRequestBody, createOrgAttributeService } from "api";
-import { AddAttributeModal, toast } from "components";
+import { createAttributeRequestBody, updateOrgAttributeService } from "api";
+import { toast } from "components";
+import {
+  EditAttributeModal,
+  EditAttributesData
+} from "components/modalVariants/editAttributeModal";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps, OrganisationAttributesData } from "types";
@@ -9,20 +13,22 @@ interface CreateAttributesProps extends ModalProps {
   prefilledAttribute: OrganisationAttributesData;
 }
 
-const AddClientAttribute = ({
+const EditClientAttribute = ({
   show,
   close,
+
   prefilledAttribute,
   callback
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
 
-  const submit = (data) => {
+  const { id } = prefilledAttribute;
+
+  const submit = (data: EditAttributesData) => {
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
       label: data.title,
-      is_required: data.required ?? false,
-      is_client_prop: true
+      is_required: data.required ?? false
     };
     if (data.description) {
       requestBody.description = data.description;
@@ -33,16 +39,16 @@ const AddClientAttribute = ({
     if (data.options?.length) {
       requestBody.meta = data.options;
     }
-
-    run(createOrgAttributeService(requestBody));
+    run(updateOrgAttributeService(id, requestBody));
   };
 
   useMemo(() => {
-    if (response?.status === 201) {
+    if (response?.status === 200) {
       toast({
         description: response?.data?.message
       });
       callback();
+      close();
     } else if (error) {
       toast({
         variant: "destructive",
@@ -53,7 +59,7 @@ const AddClientAttribute = ({
 
   return (
     <>
-      <AddAttributeModal
+      <EditAttributeModal
         submit={submit}
         close={close}
         show={show}
@@ -64,4 +70,4 @@ const AddClientAttribute = ({
   );
 };
 
-export { AddClientAttribute };
+export { EditClientAttribute };

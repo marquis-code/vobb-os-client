@@ -1,7 +1,7 @@
 export interface optionType {
   label: string;
   value: string;
-  isDisabled?: boolean
+  isDisabled?: boolean;
 }
 
 export interface ModalProps {
@@ -19,5 +19,5 @@ export interface MetaDataProps {
   currentPage: number;
   totalCount: number;
   totalPages: number;
-  pageLimit: number;
+  pageLimit?: number;
 }

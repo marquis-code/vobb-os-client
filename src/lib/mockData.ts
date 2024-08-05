@@ -1,14 +1,11 @@
 import {
   AttributeTableData,
-  BranchMemberTableData,
-  BranchTeamTableData,
-  // memberStatuses,
   MemberTableData,
   TeamMemberTableData,
   TeamTableData
 } from "components";
-import { optionType, formFieldData } from "types";
-import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
+import { optionType, formFieldData, BranchMemberTableData, BranchTeamTableData } from "types";
+import { TeamActivityData } from "modules";
 
 export const loginHistoryMock = [
   {
@@ -136,7 +133,7 @@ export const MockDynamicData: formFieldData[] = [
   }
 ];
 
-export const accountActivityMockData: AccountActivityData[] = [
+export const accountActivityMockData = [
   {
     action: "updated_role",
     date: "05/05/2024",
@@ -257,7 +254,7 @@ export const accountActivityMockData: AccountActivityData[] = [
   }
 ];
 
-export const orgActivityMockData: OrgActivityData[] = [
+export const orgActivityMockData = [
   {
     action: "updated_branding",
     date: "05/05/2024",
@@ -434,47 +431,47 @@ export const AttributesTableMock: AttributeTableData[] = [
     required: true,
     isSystem: true,
     isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Date of birth",
-    type: "date",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "City",
-    type: "dropdown",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Language",
-    type: "multiple-choice",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Remote",
-    type: "checkbox",
-    required: true,
-    isSystem: false,
-    isActive: true
-  },
-  {
-    id: "728ed52f",
-    title: "Start date",
-    type: "date",
-    required: true,
-    isSystem: false,
-    isActive: false
   }
+  // {
+  //   id: "728ed52f",
+  //   title: "Date of birth",
+  //   type: "date",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "City",
+  //   type: "dropdown",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "Language",
+  //   type: "multiple-choice",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "Remote",
+  //   type: "checkbox",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: true
+  // },
+  // {
+  //   id: "728ed52f",
+  //   title: "Start date",
+  //   type: "date",
+  //   required: true,
+  //   isSystem: false,
+  //   isActive: false
+  // }
 ];
 
 export const BranchMemberTableMock: BranchMemberTableData[] = [

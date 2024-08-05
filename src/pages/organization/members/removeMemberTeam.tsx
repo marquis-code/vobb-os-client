@@ -30,6 +30,7 @@ const RemoveMemberTeam = ({ show, close, id, team, name }: RemoveMemberTeamProps
         handleContinue={handleContinue}
         close={close}
         show={show}
+        loading={false}
       />
     </>
   );

@@ -28,7 +28,8 @@ export const useFetchUser = () => {
         twoFaStatus: user.two_fa_status,
         googleStatus: user.google_signup,
         pendingEmail: user.pending_email ?? null,
-        fluentLanguages: user.fluent_languages
+        fluentLanguages: user.fluent_languages,
+        userAttributes: user.user_attributes
       };
       handleUpdateUser(profile);
       return profile;

@@ -119,7 +119,6 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
       });
     }
   }, [initData, reset]);
-
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>

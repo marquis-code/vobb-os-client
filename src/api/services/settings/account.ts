@@ -7,7 +7,11 @@ SETTINGS SERVICES
 import {
   blacklistIpAddressURL,
   changePasswordProfileURL,
+  createOrgPropertiesURL,
   fetchLoginHistoryURL,
+  fetchMemberPropertiesURL,
+  fetchOrgPropertiessURL,
+  fetchUserActivitiesURL,
   getRequest,
   patchRequest,
   personalAccountDetailsURL,
@@ -16,10 +20,13 @@ import {
   personalEmailUpdateURL,
   personalEmailUpdateVerifyURL,
   postRequest,
+  putRequest,
   send2faCodeURL,
   toggle2faStatusURL,
-  toggleGoogleAuthURL
+  toggleGoogleAuthURL,
+  updateOrgPropertiesURL
 } from "api";
+import { activityParamsProps } from "types";
 
 interface changePasswordRequestBody {
   oldPassword: string;
@@ -30,6 +37,11 @@ interface changePasswordRequestBody {
 interface blacklistRequestBody {
   ip: string;
   blacklist_status: boolean;
+}
+
+interface queryParamsProps {
+  page?: number;
+  limit?: number;
 }
 
 export interface updatePropertiesRequestBody {
@@ -171,5 +183,66 @@ export const blacklistIpAddressService = (data: blacklistRequestBody) => {
   return patchRequest({
     url: blacklistIpAddressURL(),
     data
+  });
+};
+
+/**
+ * Fetch organisation's properties service
+ * @param page showing page number requested,
+ * @param limit showing number of items per page
+ * @returns axios promise
+ */
+export const fetchOrgPropertiesService = ({ page, limit }: queryParamsProps) => {
+  return getRequest({
+    url: fetchOrgPropertiessURL({ page, limit })
+  });
+};
+
+/**
+ * Fetch organisation's attributes service
+ * @returns axios promise
+ */
+export const fetchMemberPropertiesService = () => {
+  return getRequest({
+    url: fetchMemberPropertiesURL()
+  });
+};
+
+/**
+ * Create an organisation's property service
+ * @param id of attribute
+ * @returns axios promise
+ */
+export const createOrgPropertiesService = (data: updatePropertiesRequestBody) => {
+  return postRequest({
+    url: createOrgPropertiesURL(),
+    data
+  });
+};
+
+/**
+ * Update an organisation's property service
+ * @param id of attribute
+ * @returns axios promise
+ */
+export const updateOrgPropertiesService = (data: updatePropertiesRequestBody) => {
+  return putRequest({
+    url: updateOrgPropertiesURL(),
+    data
+  });
+};
+
+/**
+ * Fetch user's activity service
+ * @returns axios promise
+ */
+export const fetchUserActivitiesService = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
+  return getRequest({
+    url: fetchUserActivitiesURL({ page, limit, sort, ...queryParams })
   });
 };

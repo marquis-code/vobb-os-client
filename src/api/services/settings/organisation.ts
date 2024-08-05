@@ -8,15 +8,23 @@ import {
   addNewOrgBranchURL,
   archiveOrgAttributeURL,
   createOrgAttributeURL,
+  deleteOrgBranchURL,
+  deleteRequest,
+  fetchABranchURL,
+  fetchOrgActivitiesURL,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
+  fetchOrgBranchMembersURL,
   fetchOrgDetailsURL,
+  fetchTeamsPerBranchURL,
   getRequest,
   patchRequest,
   postRequest,
   putRequest,
   resendCodeOrgEmailsURL,
   restoreOrgAttributeURL,
+  transferAllMembersToBranchURL,
+  transferMultipleMembersToBranchURL,
   updateOrgAttributeURL,
   updateOrgBranchURL,
   updateOrgBrandingURL,
@@ -26,6 +34,7 @@ import {
   updateOrgSusNotifyURL,
   verifyOrgEmailsURL
 } from "api";
+import { activityParamsProps, branchQueryParamsProps, PaginationProps } from "types";
 
 /*
 ORGANIZATION SERVICES
@@ -70,9 +79,15 @@ export interface createAttributeRequestBody {
   type: string;
   label: string;
   is_required: boolean;
-  is_client_prop?: boolean;
   description?: string;
+  is_client_prop?: boolean;
   meta?: any;
+}
+
+interface transferMembersRequestBody {
+  oldBranch: string;
+  newBranch: string;
+  members?: string[];
 }
 
 /**
@@ -181,9 +196,20 @@ export const updateIndefSusNotifyService = (data: { indefinite_suspension_notify
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgBranchesService = ({ page, limit }) => {
+export const fetchOrgBranchesService = (query: PaginationProps = {}) => {
   return getRequest({
-    url: fetchOrgBranchesURL({ page, limit })
+    url: fetchOrgBranchesURL(query)
+  });
+};
+
+/**
+ * Fetch a branch's service
+ * @param id of branch requested
+ * @returns axios promise
+ */
+export const fetchABranchService = ({ id }) => {
+  return getRequest({
+    url: fetchABranchURL({ id })
   });
 };
 
@@ -229,7 +255,7 @@ export const markBranchAsPrimaryService = (id: string) => {
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgAttributesService = ({ page, limit, type }) => {
+export const fetchOrgAttributesService = ({ page, limit, type }: branchQueryParamsProps) => {
   return getRequest({
     url: fetchOrgAttributesURL({ page, limit, type })
   });
@@ -278,5 +304,79 @@ export const archiveOrgAttributeService = ({ id }) => {
 export const restoreOrgAttributeService = ({ id }) => {
   return patchRequest({
     url: restoreOrgAttributeURL({ id })
+  });
+};
+
+/**
+ * Delete an organisation's branch service
+ * @param id of branch
+ * @returns axios promise
+ */
+export const deleteOrgBranchService = ({ id }) => {
+  return deleteRequest({
+    url: deleteOrgBranchURL({ id })
+  });
+};
+
+/**
+ * Fetch organisation's branch's members service
+ * @params must include id of branch, optional query parameters that will not be included if not called for.
+ * @returns axios promise
+ */
+export const fetchOrgBranchMembersService = (
+  id: string,
+  queryParams: branchQueryParamsProps = {}
+) => {
+  return getRequest({
+    url: fetchOrgBranchMembersURL({ id, queryParams })
+  });
+};
+
+/**
+ * TRansfers organisation's branch's one or more members to another branch.
+ * @param data request body
+ * @returns axios promise
+ */
+export const transferMultipleMembersToBranchService = (data: transferMembersRequestBody) => {
+  return postRequest({
+    url: transferMultipleMembersToBranchURL(),
+    data
+  });
+};
+
+/*TRansfers all of an organisation's branch's members to another branch.
+ * @param data request body
+ * @returns axios promise
+ */
+export const transferAllMembersToBranchService = (data: transferMembersRequestBody) => {
+  return postRequest({
+    url: transferAllMembersToBranchURL(),
+    data
+  });
+};
+
+/**
+ * Fetch teams per branch service
+ * @param id of branch
+ * @returns axios promise
+ */
+export const fetchTeamsPerBranchService = ({ id, page, limit }) => {
+  return getRequest({
+    url: fetchTeamsPerBranchURL({ id, page, limit })
+  });
+};
+
+/**
+ * Fetch org's activity service
+ * @returns axios promise
+ */
+export const fetchOrgActivitiesService = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
+  return getRequest({
+    url: fetchOrgActivitiesURL({ page, limit, sort, ...queryParams })
   });
 };
