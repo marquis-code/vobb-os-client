@@ -190,7 +190,7 @@ export const transferAllMembersToBranchURL = () => `${prefixOrg}/transfer/member
  * @returns url string
  *
  */
-export const fetchTeamsPerBranchURL = ({ id, page, limit }) => {
+export const fetchTeamsPerBranchURL = (id: string, { page, limit }: PaginationProps) => {
   const queryParams = new URLSearchParams();
 
   if (page !== undefined) queryParams.append("page", page.toString());

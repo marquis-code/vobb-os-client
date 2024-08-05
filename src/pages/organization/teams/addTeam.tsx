@@ -11,7 +11,7 @@ interface AddTeamProps extends ModalProps {
 
 const AddTeam: React.FC<AddTeamProps> = (props) => {
   const { callback, handleSetTeamId } = props;
-  const { fetchAllTeams } = useFetchTeams({});
+  const { fetchAllTeams } = useFetchTeams({ limit: 20 });
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
   const handleSubmit = (data: AddTeamData) => {
@@ -33,7 +33,7 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
         description: response?.data?.message
       });
       const newTeamId = response?.data?.data?.team;
-      fetchAllTeams({});
+      fetchAllTeams({ page: 1 });
       handleSetTeamId(newTeamId);
       callback();
     } else if (error) {

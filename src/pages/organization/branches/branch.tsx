@@ -4,8 +4,22 @@ import { TransferMember } from "./transferMember";
 import { useApiRequest } from "hooks";
 import { fetchABranchService, fetchOrgBranchMembersService, fetchTeamsPerBranchService } from "api";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
-import { useCountriesContext } from "context";
-import { initBranchData } from ".";
+import { useCountriesContext, useUserContext } from "context";
+import { format, parseISO } from "date-fns";
+
+const initBranchData = {
+  id: "",
+  name: "",
+  country: "",
+  province: "",
+  city: "",
+  timeZone: "",
+  zipCode: "",
+  addressLine1: "",
+  addressLine2: "",
+  isPrimary: false,
+  hasMembers: false
+};
 
 const initMembersData: BranchMembersProps = {
   membersArray: [],
@@ -28,6 +42,14 @@ const initTeamsData: BranchTeamsProps = {
 };
 
 const OrgBranch = () => {
+  const { userDetails } = useUserContext();
+  const userDateFormat = userDetails?.dateFormat;
+  const dateFormatted =
+    userDateFormat === "Month D, Yr"
+      ? "MMMM dd, yyyy"
+      : userDateFormat === "DD/MM/YYYY"
+      ? "dd-MM-yyyy"
+      : "MM-dd-yyyy";
   const [memberQueryParams, setMemberQueryParams] = useState({
     page: 1,
     limit: 20,
@@ -79,8 +101,7 @@ const OrgBranch = () => {
 
   const fetchBranchTeams = () => {
     runTeams(
-      fetchTeamsPerBranchService({
-        id: branchId,
+      fetchTeamsPerBranchService(branchId, {
         page: teamQueryParams.page,
         limit: teamQueryParams.limit
       })
@@ -97,7 +118,7 @@ const OrgBranch = () => {
         id: item._id,
         email: item.email,
         role: item.role,
-        date: item.date_added.slice(0, -8),
+        date: format(parseISO(item.date), dateFormatted),
         teams: item.teams.map((team) => team.name)
       }));
 
@@ -120,7 +141,7 @@ const OrgBranch = () => {
         name: item.name,
         id: item._id,
         icon: item.icon ?? "",
-        date: item.date_added.slice(0, -8),
+        date: item.date_added.split(" ")[0],
         teamLeads: item.team_leads.map((lead) => lead.name),
         teamManagers: item.team_managers.map((manager) => manager.name),
         numberOfMembers: item.members

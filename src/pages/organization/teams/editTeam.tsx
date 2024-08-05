@@ -55,7 +55,7 @@ const EditTeam = (props: EditTeamProps) => {
       toast({
         description: editResponse?.data?.message
       });
-      fetchAllTeams({});
+      fetchAllTeams({ page: 1 });
       close();
     } else if (editError) {
       toast({

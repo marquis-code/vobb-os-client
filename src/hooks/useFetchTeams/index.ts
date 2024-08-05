@@ -34,7 +34,7 @@ export const useFetchTeams = ({ limit }: { limit?: number }) => {
           Array.isArray(item?.team_managers) && item.team_managers.length > 0
             ? item.team_managers.map((mgr) => mgr.name)
             : [""],
-        date: item.createdAt.slice(0, -8),
+        date: item.createdAt.split(" ")[0],
         numberOfMembers: item.members,
         numberOfBranches: item.total_branches
       }));

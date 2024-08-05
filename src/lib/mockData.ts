@@ -1,20 +1,11 @@
 import {
-  AttributeTableData,
-<<<<<<< HEAD
-  BranchMemberTableData,
-  BranchTeamTableData,
-  TeamMemberTableData
-} from "components";
-import { optionType, formFieldData, MemberTableData } from "types";
-import { AccountActivityData, OrgActivityData, TeamActivityData } from "modules";
-=======
+  optionType,
+  formFieldData,
   MemberTableData,
-  TeamMemberTableData,
-  TeamTableData
-} from "components";
-import { optionType, formFieldData, BranchMemberTableData, BranchTeamTableData } from "types";
+  BranchMemberTableData,
+  BranchTeamTableData
+} from "types";
 import { TeamActivityData } from "modules";
->>>>>>> 544bd351d667093b45bb3541d3fc73f4b5054f38
 
 export const loginHistoryMock = [
   {
@@ -376,7 +367,7 @@ export const orgActivityMockData = [
   }
 ];
 
-export const AttributesTableMock: AttributeTableData[] = [
+export const AttributesTableMock = [
   {
     id: "1234",
     title: "First name",
@@ -600,7 +591,7 @@ export const TeamTableMock = [
   }
 ];
 
-export const TeamMemberTableMock: TeamMemberTableData[] = [
+export const TeamMemberTableMock = [
   {
     id: "728ed52f",
     name: "Jason Derule",

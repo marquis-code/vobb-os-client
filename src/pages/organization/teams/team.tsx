@@ -50,7 +50,7 @@ const Team = () => {
         name: `${item.first_name} ${item.last_name}`,
         email: item.email ?? "",
         role: item.role,
-        date: item.date_added.slice(0, -8)
+        date: item.date_added.split(" ")[0]
       }));
       const metaData = {
         currentPage: membersResponse?.data?.data?.page ?? 1,
