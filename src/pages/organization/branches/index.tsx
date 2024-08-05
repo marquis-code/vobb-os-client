@@ -148,23 +148,23 @@ const OrgBranches = () => {
         show={preventDelete}
         close={() => setPreventDelete(false)}
         handleOpen={() => setPreventDelete(true)}
-        callback={() => fetchOrgBranches({ page, limit })}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
       />
       <AddBranch
         show={addBranch}
         close={() => setAddBranch(false)}
-        callback={() => fetchOrgBranches({ page, limit })}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
       />
       <EditBranch
         {...editBranch}
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
-        callback={() => fetchOrgBranches({ page, limit })}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
       />
       <DeleteBranch
         {...deleteBranch}
         close={handleCloseConfirmation}
         show={confirm}
-        callback={() => fetchOrgBranches({ page, limit })}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
       />
       <OrgBranchesUI
         handleAddBranch={handleAddBranch}

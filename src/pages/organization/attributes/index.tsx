@@ -45,10 +45,13 @@ const OrgAttributes = () => {
     page: 1,
     limit: 20
   });
+  const { page: memberPage, limit: memberLimit } = memberQueryParams;
+
   const [clientQueryParams, setClientQueryParams] = useState({
     page: 1,
     limit: 20
   });
+  const { page: clientPage, limit: clientLimit } = clientQueryParams;
 
   const handleMemberPagination = (param: string, value: number) => {
     setMemberQueryParams((prev) => ({ ...prev, [param]: value }));
@@ -73,20 +76,20 @@ const OrgAttributes = () => {
   const { run: runArchive, data: archiveResponse, error: archiveError } = useApiRequest({});
   const { run: runRestore, data: restoreResponse, error: restoreError } = useApiRequest({});
 
-  const fetchMemberAttributes = () => {
+  const fetchMemberAttributes = (page: number, limit: number) => {
     runFetchMember(
       fetchOrgAttributesService({
-        page: memberQueryParams.page,
-        limit: memberQueryParams.limit,
+        page,
+        limit,
         type: "member"
       })
     );
   };
-  const fetchClientAttributes = () => {
+  const fetchClientAttributes = (page: number, limit: number) => {
     runFetchClient(
       fetchOrgAttributesService({
-        page: clientQueryParams.page,
-        limit: clientQueryParams.limit,
+        page,
+        limit,
         type: "client"
       })
     );
@@ -104,8 +107,8 @@ const OrgAttributes = () => {
       toast({
         description: archiveResponse?.data?.message
       });
-      fetchMemberAttributes();
-      fetchClientAttributes();
+      fetchMemberAttributes(memberPage, memberLimit);
+      fetchClientAttributes(clientPage, clientLimit);
     } else if (archiveError) {
       toast({
         variant: "destructive",
@@ -119,8 +122,8 @@ const OrgAttributes = () => {
       toast({
         description: restoreResponse?.data?.message
       });
-      fetchMemberAttributes();
-      fetchClientAttributes();
+      fetchMemberAttributes(memberPage, memberLimit);
+      fetchClientAttributes(clientPage, clientLimit);
     } else if (restoreError) {
       toast({
         variant: "destructive",
@@ -178,11 +181,11 @@ const OrgAttributes = () => {
   }, [clientResponse]);
 
   useEffect(() => {
-    fetchClientAttributes();
+    fetchClientAttributes(clientPage, clientLimit);
   }, [clientQueryParams]);
 
   useEffect(() => {
-    fetchMemberAttributes();
+    fetchMemberAttributes(memberPage, memberLimit);
   }, [memberQueryParams]);
 
   return (
@@ -193,7 +196,7 @@ const OrgAttributes = () => {
           setInitAttr(initAttrFields);
         }}
         show={addMemberAttr}
-        callback={fetchMemberAttributes}
+        callback={() => fetchMemberAttributes(memberPage, memberLimit)}
         prefilledAttribute={initAttr}
       />
       <AddClientAttribute
@@ -202,7 +205,7 @@ const OrgAttributes = () => {
           setInitAttr(initAttrFields);
         }}
         show={addClientAttr}
-        callback={fetchClientAttributes}
+        callback={() => fetchClientAttributes(clientPage, clientLimit)}
         prefilledAttribute={initAttr}
       />
       <EditMemberAttribute
@@ -212,7 +215,7 @@ const OrgAttributes = () => {
         }}
         show={editMemberAttr}
         prefilledAttribute={initAttr}
-        callback={fetchMemberAttributes}
+        callback={() => fetchMemberAttributes(memberPage, memberLimit)}
       />
       <EditClientAttribute
         close={() => {
@@ -221,7 +224,7 @@ const OrgAttributes = () => {
         }}
         show={editClientAttr}
         prefilledAttribute={initAttr}
-        callback={fetchClientAttributes}
+        callback={() => fetchClientAttributes(clientPage, clientLimit)}
       />
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}
