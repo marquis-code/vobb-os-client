@@ -243,7 +243,7 @@ const FilterValue = ({ value, setValue, className, variant, type, options }: Fil
             : ""}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[200px] p-0 flex flex-col p-1">
+      <PopoverContent align="start" className="w-[200px] flex flex-col p-1">
         {isText ? (
           <CustomInput
             autoFocus
@@ -424,7 +424,7 @@ const Filter = ({ filters, setFilter, attributes, className }: FilterProps) => {
                   value={item.value}
                   setValue={(val) => handleValue(val, index)}
                   type={item.property.type}
-                  options={conditions}
+                  options={conditions} //has to be particular to type
                 />
               )}
               <FilterMenu

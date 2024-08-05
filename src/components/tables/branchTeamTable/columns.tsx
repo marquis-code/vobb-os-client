@@ -1,16 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { BranchTeamTableData } from "types";
 import { IconPickerItem } from "react-icons-picker";
-
-// This type is used to define the shape of our data.
-export type BranchTeamTableData = {
-  id: string;
-  icon: string;
-  name: string;
-  teamLeads: string[];
-  teamManagers: string[];
-  date: string;
-  numberOfMembers: number;
-};
 
 export const getBranchTeamTableColumns = (): ColumnDef<BranchTeamTableData>[] => [
   {

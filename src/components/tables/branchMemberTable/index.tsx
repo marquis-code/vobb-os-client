@@ -6,13 +6,15 @@ interface BranchMemberTableProps<TData, TValue> {
   data: TData[];
 }
 
-const BranchMemberTable = <TData, TValue>({ columns, data }: BranchMemberTableProps<TData, TValue>) => {
+const BranchMemberTable = <TData, TValue>({
+  columns,
+  data
+}: BranchMemberTableProps<TData, TValue>) => {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel()
   });
-
   return (
     <div className="rounded-md border">
       <Table>

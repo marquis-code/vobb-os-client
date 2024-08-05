@@ -14,6 +14,7 @@ export interface UserProfileProps {
   timezone: string;
   pendingEmail: string | null;
   fluentLanguages: string[];
+  userAttributes: { attribute: []; data: [] }[];
 }
 export interface BlacklistProps {
   ipAddress: string;
@@ -48,8 +49,8 @@ export interface OrganisationBranchesData {
   addressLine2: string;
   city: string;
   timeZone: string;
+  hasMembers: boolean;
 }
-
 export interface OrganisationAttributesData {
   id: string;
   title: string;
@@ -162,7 +163,39 @@ export type MemberTableData = {
   status: statuses;
 };
 
+type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
+
 export interface MemberDataProps {
   membersArray: MemberTableData[];
   metaData: MetaDataProps;
+}
+interface filterParamsStructure {
+  value: string;
+  cond: conditions;
+}
+
+export interface branchQueryParamsProps {
+  page?: number;
+  limit?: number;
+  type?: string;
+  name?: filterParamsStructure[];
+  team?: filterParamsStructure[];
+  role?: filterParamsStructure[];
+  email?: filterParamsStructure[];
+  operation?: string;
+}
+
+export interface activityParamsProps {
+  page: number;
+  limit: number;
+  sort: string;
+  start?: string;
+  end?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export interface PaginationProps {
+  page?: number;
+  limit?: number;
 }

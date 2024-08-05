@@ -46,12 +46,14 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
         validatorMessage={
           errors.sector?.message ?? errors.sector?.value?.message ?? errors.sector?.label?.message
         }
+        data-cy="sector"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
         className="w-full mt-6"
         size={"default"}
-        variant="fill">
+        variant="fill"
+        data-cy="continue-btn">
         Submit
       </Button>
     </form>

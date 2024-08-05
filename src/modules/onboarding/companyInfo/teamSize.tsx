@@ -46,8 +46,14 @@ const TeamSizeForm: React.FC<TeamSizeFormProps> = ({ initData, submit }) => {
         validatorMessage={
           errors.size?.message ?? errors.size?.value?.message ?? errors.size?.label?.message
         }
+        data-cy="teamsize"
       />
-      <Button type="submit" className="w-full mt-6" size={"default"} variant="fill">
+      <Button
+        type="submit"
+        className="w-full mt-6"
+        size={"default"}
+        variant="fill"
+        data-cy="continue-btn">
         Continue
       </Button>
     </form>

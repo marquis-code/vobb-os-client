@@ -39,7 +39,12 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch, handleViewBranch]
   );
 
-  const { currentPage, totalCount, totalPages, pageLimit } = orgBranches?.branchesMetaData || {
+  const {
+    currentPage,
+    totalCount,
+    totalPages,
+    pageLimit = 20
+  } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
     totalPages: 0,
@@ -61,7 +66,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
           handleChange={(val) => handlePagination("page", val)}
           handlePageLimit={(val) => handlePagination("limit", val)}
           totalCount={totalCount}
-          pageLimit={pageLimit ?? 10}
+          pageLimit={pageLimit}
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-4"

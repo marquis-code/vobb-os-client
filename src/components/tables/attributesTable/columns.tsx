@@ -36,10 +36,10 @@ export interface AttributeTableActions {
 }
 
 export const getAttributeTableColumns = ({
-  handleEditAttribute,
   handleDuplicateAttribute,
   handleRestoreAttribute,
-  handleArchiveAttribute
+  handleArchiveAttribute,
+  handleEditAttribute
 }: AttributeTableActions): ColumnDef<AttributeTableData>[] => [
   {
     accessorKey: "title",

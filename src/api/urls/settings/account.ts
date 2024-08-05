@@ -4,6 +4,8 @@ SETTINGS URLS
 =================================
 */
 
+import { activityParamsProps } from "types";
+
 /*
 PERSONAL PROFILE URLS
 */
@@ -126,12 +128,26 @@ export const createOrgPropertiesURL = () => `${prefixAcc}/attribute/`;
  *
  */
 
-export const updateOrgPropertiesURL = ({ id }) => `${prefixAcc}/attribute/${id}`;
+export const updateOrgPropertiesURL = () => `${prefixAcc}/attribute`;
 
 /**
  * Fetch user's activities URL
  * @returns url string
  *
  */
-export const fetchUserActivitiesURL = ({ page, limit, order, startDate, endDate }) =>
-  `${prefixAcc}/activity?page=${page}&limit=${limit}&sort=${order}&start=${startDate}&end=${endDate}`;
+
+export const fetchUserActivitiesURL = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefixAcc}/activity?page=${page}&limit=${limit}&sort=${sort}${
+    queryString ? `&${queryString}` : ""
+  }`;
+};

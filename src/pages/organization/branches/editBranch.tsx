@@ -1,22 +1,16 @@
 import { organisationBranchRequestBody, updateOrgBranchService } from "api";
 import { EditBranchModal, toast } from "components";
-import { useApiRequest, useFetchBranches } from "hooks";
+import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps, OrganisationBranchesData } from "types";
 
 interface Props extends ModalProps {
   branchData: OrganisationBranchesData;
+  callback: () => void;
 }
 
-const EditBranch: React.FC<Props> = ({ show, close, branchData }) => {
+const EditBranch: React.FC<Props> = ({ show, close, branchData, callback }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-  const { fetchOrgBranches, orgBranches } = useFetchBranches({});
-  const { currentPage, pageLimit } = orgBranches?.branchesMetaData || {
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0,
-    pageLimit: 0
-  };
 
   const submit = (data: organisationBranchRequestBody) => {
     run(updateOrgBranchService(branchData.id, data));
@@ -27,8 +21,8 @@ const EditBranch: React.FC<Props> = ({ show, close, branchData }) => {
       toast({
         description: response?.data?.message
       });
+      callback();
       close();
-      fetchOrgBranches({ page: currentPage, limit: pageLimit });
     } else if (error) {
       toast({
         variant: "destructive",

@@ -21,7 +21,8 @@ const initBranchData = {
   zipCode: "",
   addressLine1: "",
   addressLine2: "",
-  isPrimary: false
+  isPrimary: false,
+  hasMembers: false
 };
 
 const OrgBranches = () => {
@@ -29,17 +30,19 @@ const OrgBranches = () => {
   const [branchesQueryParams, setBranchesQueryParams] = useState({ page: 1, limit: 20 });
   const { page, limit } = branchesQueryParams;
   const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({ limit });
-  const { currentPage } = orgBranches?.branchesMetaData || {
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0
-  };
+
   const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
 
   const [confirm, setConfirm] = useState(false);
+  const [preventDelete, setPreventDelete] = useState(false);
   const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
-  const [deleteBranch, setDeleteBranch] = useState({ show: false, id: "", name: "" });
+
+  const [deleteBranch, setDeleteBranch] = useState({
+    id: "",
+    name: "",
+    hasMembers: false
+  });
 
   const handleBranchPagination = (param: string, value: number) => {
     setBranchesQueryParams((prev) => ({ ...prev, [param]: value }));
@@ -53,8 +56,13 @@ const OrgBranches = () => {
     setConfirm(true);
   };
 
-  const handleInitiateDeleteBranch = (id: string, name: string) => {
-    setDeleteBranch({ id, name, show: true });
+  const handlePreventDelete = () => {
+    setPreventDelete(true);
+  };
+
+  const handleInitiateDeleteBranch = (id: string, name: string, hasMembers: boolean) => {
+    setDeleteBranch({ id, name, hasMembers });
+    hasMembers ? handlePreventDelete() : handleDeleteBranch();
   };
 
   const handlePrimaryBranch = useCallback((id: string) => {
@@ -74,7 +82,7 @@ const OrgBranches = () => {
       toast({
         description: primaryResponse?.data?.message
       });
-      fetchOrgBranches({ page: currentPage, limit });
+      fetchOrgBranches({ page: 1, limit });
     } else if (primaryError) {
       toast({
         variant: "destructive",
@@ -96,15 +104,27 @@ const OrgBranches = () => {
       <PreventDeleteBranch
         {...deleteBranch}
         handleDeleteBranch={handleDeleteBranch}
-        close={() => setDeleteBranch((prev) => ({ ...prev, show: false }))}
-        handleOpen={() => setDeleteBranch((prev) => ({ ...prev, show: true }))}
+        show={preventDelete}
+        close={() => setPreventDelete(false)}
+        handleOpen={() => setPreventDelete(true)}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
       />
-      <AddBranch show={addBranch} close={() => setAddBranch(false)} />
+      <AddBranch
+        show={addBranch}
+        close={() => setAddBranch(false)}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
+      />
       <EditBranch
         {...editBranch}
         close={() => setEditBranch({ show: false, branchData: initBranchData })}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
       />
-      <DeleteBranch {...deleteBranch} close={handleCloseConfirmation} show={confirm} />
+      <DeleteBranch
+        {...deleteBranch}
+        close={handleCloseConfirmation}
+        show={confirm}
+        callback={() => fetchOrgBranches({ page: 1, limit })}
+      />
       <OrgBranchesUI
         orgBranches={orgBranches}
         loading={loadingBranches}
