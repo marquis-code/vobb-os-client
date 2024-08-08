@@ -53,17 +53,18 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, loading }) => {
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
-        <LockClosedIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
+        <LockClosedIcon className="mb-12 mt-2 mx-auto w-8 h-8" data-cy="logo" />
 
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Set new Password
         </h1>
-        <p className="text-center mb-8">
+        <p className="text-center mb-8" data-cy="subtitle">
           Your new password must be different to previously used passwords.
         </p>
 
         <form>
           <PasswordInput
+            data-cy="newPassword"
             label="New Password"
             type="password"
             name="newPassword"
@@ -71,6 +72,7 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, loading }) => {
             validatorMessage={errors.newPassword?.message}
           />
           <PasswordInput
+            data-cy="confirmPassword"
             label="Confirm password"
             type="password"
             name="confirmPassword"
@@ -84,7 +86,8 @@ const NewPasswordUI: React.FC<NewPasswordProps> = ({ submit, loading }) => {
             type="submit"
             className="w-full mt-6"
             size={"default"}
-            variant="fill">
+            variant="fill"
+            data-cy="reset-btn">
             Reset Password
           </Button>
         </form>

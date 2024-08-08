@@ -2,30 +2,46 @@ import { LoadingSpinner, SettingsPageTitle } from "components";
 import { MemberAttributes } from "./member";
 import { ClientAttributes } from "./client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { OrganisationAttributesData } from "types";
+import { AttributesDataProps, OrganisationAttributesData } from "types";
 
 interface OrgAttributesUIProps {
   handleAddMemberAttr: () => void;
   handleAddClientAttr: () => void;
-  setEditAttr: (attr: OrganisationAttributesData) => void;
-  setDuplicateAttr: (attr: OrganisationAttributesData) => void;
+  setEditMemberAttr: (attr: OrganisationAttributesData) => void;
+  setEditClientAttr: (attr: OrganisationAttributesData) => void;
+  setDuplicateMemberAttr: (attr: OrganisationAttributesData) => void;
+  setDuplicateClientAttr: (attr: OrganisationAttributesData) => void;
   handleArchiveAttr: (id: string) => void;
   handleRestoreAttr: (id: string) => void;
+  handleMemberAttrAction: {
+    loading: boolean;
+    handlePagination: (param: string, value: number) => void;
+  };
   handleClientAttrAction: {
     loading: boolean;
     handlePagination: (param: string, value: number) => void;
   };
+  clientAttributes: AttributesDataProps;
+  memberAttributes: AttributesDataProps;
 }
 const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
   handleAddMemberAttr,
   handleAddClientAttr,
-  setEditAttr,
-  setDuplicateAttr,
+  setEditMemberAttr,
+  setEditClientAttr,
+  setDuplicateMemberAttr,
+  setDuplicateClientAttr,
   handleArchiveAttr,
   handleRestoreAttr,
-  handleClientAttrAction
+  handleMemberAttrAction,
+  handleClientAttrAction,
+  memberAttributes,
+  clientAttributes
 }) => {
-  const { loading: clientLoading, handlePagination } = handleClientAttrAction;
+  const { loading: memberLoading, handlePagination: handleMemberPagination } =
+    handleMemberAttrAction;
+  const { loading: clientLoading, handlePagination: handleClientPagination } =
+    handleClientAttrAction;
   return (
     <>
       <SettingsPageTitle
@@ -47,13 +63,19 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="member">
-          <MemberAttributes
-            handleAddAttribute={handleAddMemberAttr}
-            handleEditAttribute={setEditAttr}
-            handleDuplicateAttribute={setDuplicateAttr}
-            handleRestoreAttribute={console.log}
-            handleArchiveAttribute={console.log}
-          />
+          {memberLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <MemberAttributes
+              handleAddAttribute={handleAddMemberAttr}
+              handleEditAttribute={setEditMemberAttr}
+              handleDuplicateAttribute={setDuplicateMemberAttr}
+              handleRestoreAttribute={handleRestoreAttr}
+              handleArchiveAttribute={handleArchiveAttr}
+              handlePagination={handleMemberPagination}
+              memberAttributes={memberAttributes}
+            />
+          )}
         </TabsContent>
         <TabsContent value="client">
           {clientLoading ? (
@@ -61,11 +83,12 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
           ) : (
             <ClientAttributes
               handleAddAttribute={handleAddClientAttr}
-              handleEditAttribute={setEditAttr}
-              handleDuplicateAttribute={setDuplicateAttr}
+              handleEditAttribute={setEditClientAttr}
+              handleDuplicateAttribute={setDuplicateClientAttr}
               handleRestoreAttribute={handleRestoreAttr}
               handleArchiveAttribute={handleArchiveAttr}
-              handlePagination={handlePagination}
+              handlePagination={handleClientPagination}
+              clientAttributes={clientAttributes}
             />
           )}
         </TabsContent>

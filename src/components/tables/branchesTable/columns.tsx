@@ -22,7 +22,7 @@ import {
 export interface BranchTableActions {
   handleEditBranch: (data: OrganisationBranchesData) => void;
   handlePrimaryBranch: (id: string) => void;
-  handleDeleteBranch: (id: string, name: string) => void;
+  handleDeleteBranch: (id: string, name: string, hasMembers: boolean) => void;
   handleViewBranch: (id: string) => void;
 }
 
@@ -70,7 +70,7 @@ export const getBranchTableColumns = ({
         handleEditBranch(branchData);
       };
       const deleteBranch = () => {
-        handleDeleteBranch(branchId, row.original.name);
+        handleDeleteBranch(branchId, row.original.name, row.original.hasMembers);
       };
       const primaryBranch = () => {
         handlePrimaryBranch(branchId);

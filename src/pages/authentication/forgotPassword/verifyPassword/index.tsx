@@ -8,7 +8,12 @@ import { toast } from "components";
 import { forgotPasswordParams } from "types";
 
 const VerifyPassword = () => {
-  const { run: runVerify, data: verifyResponse, error: verifyError } = useApiRequest({});
+  const {
+    run: runVerify,
+    data: verifyResponse,
+    error: verifyError,
+    requestStatus: verifyStatus
+  } = useApiRequest({});
   const navigate = useNavigate();
   const handleVerifyCode = (data: forgotPasswordParams) => {
     runVerify(forgotPasswordVerifyService(data));
@@ -61,7 +66,7 @@ const VerifyPassword = () => {
       <VerifyPasswordUI
         submit={handleVerifyCode}
         handleResend={handleResendCode}
-        loading={resendStatus.isPending}
+        loading={resendStatus.isPending || verifyStatus.isPending}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button, CheckboxWithText, CustomInput, Modal, SelectInput } from "components";
+import { Button, Modal, SelectInput } from "components";
 import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -20,9 +20,24 @@ const schema = yup.object({ team: optionTypeSchema });
 interface ChangeTeamModalProps extends ModalProps {
   submit: (data) => void;
   name: string;
+  handleSetTeam: (id: string) => void;
+  loading: boolean;
+  teams: {
+    loading: boolean;
+    options: optionType[];
+  };
 }
 
-const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({ submit, close, show, name }) => {
+const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({
+  submit,
+  close,
+  show,
+  name,
+  loading,
+  teams,
+  handleSetTeam
+}) => {
+  const { loading: loadingTeams, options: teamOptions } = teams;
   const {
     handleSubmit,
     formState: { errors },
@@ -55,10 +70,14 @@ const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({ submit, close, show, 
         <form>
           <SelectInput
             label="Team"
-            options={[]}
+            options={teamOptions}
             value={watch("team")?.value === "" ? null : team}
-            onChange={(val) => val && setValue("team", val)}
+            onChange={(val) => {
+              val && setValue("team", val);
+              val && handleSetTeam(val.value);
+            }}
             validatorMessage={getOptionTypeValidationMsg(errors.team)}
+            loading={loadingTeams}
           />
         </form>
         <p className="text-xs text-vobb-neutral-70 mt-6">
@@ -69,10 +88,16 @@ const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({ submit, close, show, 
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            disabled={loading}
+            loading={loading}>
             Save
           </Button>
         </div>

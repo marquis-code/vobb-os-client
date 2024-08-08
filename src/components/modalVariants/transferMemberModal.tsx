@@ -1,4 +1,4 @@
-import { ModalProps, optionType } from "types";
+import { BranchesDataProps, ModalProps, optionType } from "types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
 import { SelectInput } from "../form";
@@ -21,14 +21,28 @@ const schema = yup.object({
 interface TransferMemberModalProps extends ModalProps {
   submit: (data) => void;
   multiple: boolean;
+  branchId: string;
+  loading: boolean;
+  orgBranches?: BranchesDataProps;
+  loadingBranches: boolean;
 }
 
 const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   show,
   close,
   submit,
-  multiple
+  multiple,
+  branchId,
+  loading,
+  orgBranches,
+  loadingBranches
 }) => {
+  const branchesArray = orgBranches?.branchesArray;
+  const branchesOptions =
+    branchesArray
+      ?.filter((branch) => branch.id !== branchId)
+      .map((branch) => ({ label: branch.name, value: branch.id })) || [];
+
   const {
     handleSubmit,
     formState: { errors },
@@ -40,7 +54,8 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   });
 
   const onSubmit: SubmitHandler<TransferMemberData> = (data) => {
-    submit(data);
+    submit(data.branch);
+    reset();
   };
 
   return (
@@ -58,13 +73,14 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
 
         <SelectInput
           label="Select branch"
-          options={[{ label: "Test", value: "Test" }]}
+          options={branchesOptions}
           value={watch("branch")?.value === "" ? null : watch("branch")}
           onChange={(val) => val && setValue("branch", val)}
           placeholder="Select a branch"
           validatorMessage={
             errors.branch?.message ?? errors.branch?.value?.message ?? errors.branch?.label?.message
           }
+          loading={loadingBranches}
         />
 
         <div className="flex justify-end gap-2">
@@ -75,7 +91,11 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
             variant={"outline"}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            loading={loading}>
             Transfer
           </Button>
         </div>

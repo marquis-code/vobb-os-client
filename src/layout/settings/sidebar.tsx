@@ -195,7 +195,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
           <p className="text-xs text-vobb-neutral-50 mb-2 font-light">Workspace</p>
           {orgItems.map(({ icon, title, value, path }) => (
             <Link
-              key={value}
+              key={title}
               className={cn(
                 "flex items-center gap-2 w-full hover:bg-vobb-neutral-10 p-2 rounded-md text-vobb-neutral-100 font-medium mb-1",
                 value === active ? "bg-vobb-neutral-10 font-semibold" : ""

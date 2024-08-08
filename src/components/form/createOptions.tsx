@@ -20,7 +20,6 @@ const CreateOptions: React.FC<CreateOptionsProps> = (props) => {
   const { label, parentClassName, required, validatorMessage, onChange, value } = props;
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState<string[]>(value);
-
   const ref = useRef(null);
   const close = () => {
     setShow(false);

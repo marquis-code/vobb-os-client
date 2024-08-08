@@ -1,38 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { optionType } from "types/interfaces";
-import { MockDynamicData, dynamicValidationSchema, renderFormFields } from "lib";
-import { CustomAttributesFormData } from "types";
+import { useForm, SubmitHandler, useWatch } from "react-hook-form";
+import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
+import { calculateTotalWordCount, debounce, dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
 
-interface CustomAttributesProps {
-  submit: () => void;
+export interface CustomAttributesProps {
+  submit: (data: { name: string; value: string | optionType; orgId: string }) => void;
+  orgProperties: OrganisationAttributesData[];
+  memberProperties: MemberPropertiesData[];
 }
 
-const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
+const CustomAttributes: React.FC<CustomAttributesProps> = ({
+  submit,
+  orgProperties,
+  memberProperties
+}) => {
   const { countries } = useCountriesContext();
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
   const [selectedCheckboxValues, setSelectedCheckboxValues] = useState<optionType[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState<optionType>();
 
-  const handleCheckboxChange = (newValues: optionType[]) => {
+  const handleCheckboxChange = (newValues: optionType[], id: string) => {
     setSelectedCheckboxValues(newValues);
     const selectedValues = newValues.map((option) => option.value);
-    setValue("checkbox", selectedValues);
+    setValue(`checkbox_${id}`, selectedValues);
   };
 
-  const handleRadioChange = (newValue: optionType | undefined) => {
+  const handleRadioChange = (newValue: optionType | undefined, id: string) => {
     setSelectedRadioValue(newValue);
-    setValue("multipleChoice", selectedRadioValue);
+    setValue(`multiple-choice_${id}`, newValue);
   };
 
-  const schemaFields = MockDynamicData.reduce((acc, field) => {
-    const fieldName = Object.keys(field)[0];
-    acc[fieldName] = dynamicValidationSchema(field);
+  const schemaFields = orgProperties?.reduce((acc, field) => {
+    acc[`${field.type}_${field.id}`] = dynamicValidationSchema(field);
     return acc;
   }, {} as any);
 
@@ -44,20 +48,55 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
     register,
     formState: { errors },
     setValue,
-    watch
-  } = useForm<CustomAttributesFormData>({
+    control,
+    watch,
+    getValues
+  } = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: {}
   });
 
-  const longText = watch("longText") || "";
-  const longTextCount = longText.trim().split(/\s+/).length;
+  //set initial value
+  useEffect(() => {
+    if (memberProperties.length > 0) {
+      const resetValues = {};
 
-  const onSubmit: SubmitHandler<CustomAttributesFormData> = (data) => {
+      memberProperties.forEach((memberProp) => {
+        const fieldName = `${memberProp.type}_${memberProp.id}`;
+        const resetValue = memberProp.values[0];
+
+        resetValues[fieldName] = resetValue;
+      });
+
+      reset(resetValues);
+    }
+  }, [memberProperties, reset]);
+
+  const longTextValues = useWatch({ control });
+
+  const debouncedSubmit = debounce((name: string, orgId: string) => {
+    const value = getValues()[name];
+    if (value !== "" || value !== null) submit({ name, value, orgId });
+  }, 1000);
+
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (!name) return;
+      const createdAttrId = name.split("_")[1];
+
+      //Get OrgId
+      const orgId =
+        memberProperties.filter((prop) => prop.id === createdAttrId)[0]?.attribute ?? undefined;
+      if (getValues()[name]) {
+        debouncedSubmit(name, orgId);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, getValues, memberProperties]);
+
+  const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data);
-    submit();
   };
-
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -68,17 +107,17 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
           </p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {MockDynamicData.map((field, index) => {
-            const fieldName = Object.keys(field)[0];
-            const fieldData = field[fieldName];
-
+          {orgProperties?.map((fieldData) => {
+            // properties already set by member have a new id that will replace it's id from organisation(for the purpose of reset)
+            const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
+            const id = memberProp ? memberProp.id : fieldData.id;
             return renderFormFields({
               fieldData,
-              index,
+              id,
               register,
               errors,
               setValue,
-              longTextCount,
+              longTextCount: calculateTotalWordCount(longTextValues)[`long-text_${id}`] ?? 0,
               countries,
               radio: {
                 value: selectedRadioValue,
@@ -95,7 +134,8 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({ submit }) => {
               file: {
                 value: file,
                 handleChange: setFile
-              }
+              },
+              watch
             });
           })}
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">

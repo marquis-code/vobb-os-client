@@ -40,7 +40,6 @@ const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
 
   const ref = useRef(null);
   useClickOutside(ref, close);
-
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>

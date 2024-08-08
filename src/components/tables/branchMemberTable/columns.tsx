@@ -9,16 +9,7 @@ import {
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 import { EyeOpenIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
-
-// This type is used to define the shape of our data.
-export type BranchMemberTableData = {
-  id: string;
-  name: string;
-  email: string;
-  teams: string[];
-  role: string;
-  date: string;
-};
+import { BranchMemberTableData } from "types";
 
 export interface BranchMemberTableActions {
   handleViewMember: (id: string) => void;
@@ -55,7 +46,7 @@ export const getBranchMemberTableColumns = ({
   },
   {
     accessorKey: "date",
-    header: () => <span className="text-right w-full inline-block" >Date added</span>,
+    header: () => <span className="text-right w-full inline-block">Date added</span>,
     cell: ({ row }) => {
       const { date } = row.original;
       return <div className="text-right">{date}</div>;

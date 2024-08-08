@@ -5,13 +5,14 @@ import {
   SettingsPageTitle,
   SortBy,
   DateFilter,
-  SortOrderType
+  LoadingSpinner
 } from "components";
-import { accountActivityMockData, cn } from "lib";
+import { QueryParamProps } from "pages";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";
-import { optionType } from "types";
+import { Routes } from "router";
+import { MetaDataProps, optionType } from "types";
 
 // {
 //   from: addDays(new Date(), -30),
@@ -25,12 +26,28 @@ const sortOptions: optionType[] = [
   }
 ];
 
-const AccountActivityUI = () => {
+interface AccountActivityProps {
+  userActivities: AccountActivityData[];
+  metaData: MetaDataProps;
+  handleFilter: (param: string, value: string | number) => void;
+  queryParams: QueryParamProps;
+  loading: boolean;
+}
+
+const AccountActivityUI: React.FC<AccountActivityProps> = ({
+  userActivities,
+  metaData,
+  handleFilter,
+  queryParams,
+  loading
+}) => {
+  const { order: sortOrder, startDate, endDate } = queryParams;
+  const { currentPage, totalCount, totalPages, pageLimit = 20 } = metaData;
+
   const [date, setDate] = useState<DateRange | undefined>(undefined);
   const [sortBy, setSortBy] = useState<optionType | undefined>(sortOptions[0]);
-  const [sortOrder, setSortOrder] = useState<SortOrderType | undefined>(undefined);
 
-  const activityList: ActivityCardProps[] = accountActivityMockData.map(
+  const activityList: ActivityCardProps[] = userActivities.map(
     ({ date, time, action, metadata, initiator }) => ({
       time,
       date,
@@ -45,6 +62,7 @@ const AccountActivityUI = () => {
         title="Account Activity"
         description={"Monitor your account activities over time"}
       />
+
       <section className="grid gap-4 max-w-[800px]">
         <div className="flex gap-2">
           <SortBy
@@ -57,22 +75,43 @@ const AccountActivityUI = () => {
             order={{
               show: true,
               active: sortOrder,
-              handleChange: setSortOrder
+              handleChange: (val) => handleFilter("order", val as string)
             }}
           />
-          <DateFilter showPreset value={date} handleChange={setDate} />
+          <DateFilter
+            showPreset
+            value={date}
+            handleChange={(val) => {
+              setDate(val);
+              if (val) {
+                handleFilter(
+                  "startDate",
+                  val.from ? val.from.toISOString().slice(0, 10) : startDate
+                );
+                handleFilter("endDate", val.to ? val.to.toISOString().slice(0, 10) : endDate);
+              }
+            }}
+          />
         </div>
-        {activityList.map((item, index) => (
-          <ActivityCard {...item} key={`${index}_${item.date}`} />
-        ))}
-        <Pagination
-          handleChange={console.log}
-          handlePageLimit={console.log}
-          totalCount={16}
-          pageLimit={20}
-          totalPages={1}
-          currentPage={1}
-        />
+        {loading ? (
+          <LoadingSpinner />
+        ) : !activityList.length ? (
+          <p>No Account activities for this time.</p>
+        ) : (
+          <>
+            {activityList.map((item, index) => (
+              <ActivityCard {...item} key={`${index}_${item.date}`} />
+            ))}
+            <Pagination
+              handleChange={(val) => handleFilter("page", val)}
+              handlePageLimit={(val) => handleFilter("limit", val)}
+              totalCount={totalCount}
+              pageLimit={pageLimit}
+              totalPages={totalPages}
+              currentPage={currentPage}
+            />
+          </>
+        )}
       </section>
     </>
   );
@@ -88,8 +127,8 @@ type accountActions =
   | "changed_password"
   | "added_google_auth"
   | "removed_google_auth"
-  | "added_2fa"
-  | "removed_2fa"
+  | "enabled_2fa"
+  | "disabled_2fa"
   | "assigned_role"
   | "updated_role";
 
@@ -130,9 +169,9 @@ const getMessage = ({
           Added to the team{" "}
           <Link
             target="_blank"
-            to={""}
+            to={Routes.team(metadata?.team?._id)}
             className="text-vobb-primary-70 hover:underline cursor-pointer">
-            {metadata?.teamName}
+            {metadata?.team?.name}
           </Link>
         </>
       );
@@ -140,7 +179,10 @@ const getMessage = ({
     case "updated_profile":
       message = (
         <>
-          {initiator === "self" ? "You" : initiator.name} updated your profile: {metadata.fields}
+          {initiator === "self" ? "You" : initiator.name} updated your profile:{" "}
+          {Array.isArray(metadata?.modified_fields) && metadata.modified_fields.length > 0
+            ? metadata.modified_fields.join(", ")
+            : "no fields were modified"}
         </>
       );
       break;
@@ -151,16 +193,15 @@ const getMessage = ({
       message = (
         <>
           {initiator === "self" ? "You" : initiator.name} changed your email from{" "}
-          <span className="font-semibold">{metadata.oldEmail}</span> to{" "}
-          <span className="font-semibold">{metadata.newEmail}</span>
+          <span className="font-semibold">{metadata.old_email}</span> to{" "}
+          <span className="font-semibold">{metadata.new_email}</span>
         </>
       );
       break;
     case "verified_email":
       message = (
         <>
-          Your new email <span className="font-semibold">{metadata.email}</span> was
-          verified!
+          Your new email <span className="font-semibold">{metadata.email}</span> was verified!
         </>
       );
       break;
@@ -170,10 +211,10 @@ const getMessage = ({
     case "removed_google_auth":
       message = <>You disconnected google authentication</>;
       break;
-    case "added_2fa":
+    case "enabled_2fa":
       message = <>You added two-factor authentication</>;
       break;
-    case "removed_2fa":
+    case "disabled_2fa":
       message = <>You disabled two-factor authentication</>;
       break;
     case "assigned_role":

@@ -1,7 +1,7 @@
 import { Cross1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button, LoadingSpinner, Pagination } from "components";
 import { Modal } from "components/modal";
-import { MemberTeamsDataProps } from "pages/organization/members/memberTeams";
+import { MemberTeamsDataProps } from "pages";
 import { Link } from "react-router-dom";
 import { Routes } from "router";
 import { ModalProps } from "types";

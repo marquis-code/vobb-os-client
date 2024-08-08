@@ -43,8 +43,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             size={"default"}
             variant={"fill"}
             onClick={handleContinue}
-            disabled={loading}
-            loading={loading}>
+            loading={loading}
+            disabled={loading}>
             Continue
           </Button>
         </div>

@@ -5,7 +5,7 @@ import { MemberProfileTabs } from "modules/organization/members/components/membe
 import { useNavigate, useParams } from "react-router-dom";
 import { Routes } from "router";
 import { MemberProfileDetails } from "./memberDetails";
-import { MemberProfileContext } from "context";
+import { MemberProfileContext, useCountriesContext } from "context";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { MemberProfileComments } from "./memberComments";
 import { MemberProfileActivity } from "./memberActivity";
@@ -22,9 +22,18 @@ import { UndoSuspension } from "./undoSuspension";
 import { MemberBranches } from "./memberBranches";
 import { MemberTeams } from "./memberTeams";
 import { useApiRequest } from "hooks";
-import { fetchMemberProfileService } from "api";
-import { MemberProfileProps } from "types";
+import {
+  fetchMemberBranchesService,
+  fetchMemberProfileService,
+  fetchMemberTeamsService
+} from "api";
+import { MemberProfileProps, MetaDataProps } from "types";
 import { getInitials } from "lib";
+
+export interface MemberTeamsDataProps {
+  teams: { id: string; name: string; dateAdded: string }[];
+  metaData: MetaDataProps;
+}
 
 const initProfile = {
   avatar: "",
@@ -33,16 +42,71 @@ const initProfile = {
   role: "",
   jobTitle: "",
   initials: "",
-  status: ""
+  status: "",
+  pendingEmail: "",
+  timeZone: "",
+  phoneNumber: "",
+  dateFormat: "",
+  syslanguage: "",
+  fluentLanguages: [],
+  userAttributes: []
 };
+
+const initMemberTeams: MemberTeamsDataProps = {
+  teams: [],
+  metaData: {
+    currentPage: 1,
+    totalCount: 0,
+    totalPages: 0
+  }
+};
+export interface MemberBranchesData {
+  id: string;
+  name: string;
+  city: string;
+  country: string;
+  province: string;
+  dateAdded: string;
+}
+
+export interface MemberBranchesDataProps {
+  branches: MemberBranchesData[];
+  metaData: MetaDataProps;
+}
+
+const initMemberBranches: MemberBranchesDataProps = {
+  branches: [],
+  metaData: {
+    currentPage: 1,
+    totalCount: 0,
+    totalPages: 0
+  }
+};
+
 const Member = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const { countries } = useCountriesContext();
+
   const {
     run: runFetchProfile,
     data: profileResponse,
     error: profileError,
     requestStatus: profileStatus
+  } = useApiRequest({});
+
+  const {
+    run: runFetchMemberTeams,
+    data: memberTeamsResponse,
+    error: memberTeamsError,
+    requestStatus: memberTeamsStatus
+  } = useApiRequest({});
+
+  const {
+    run: runFetchMemberBranches,
+    data: memberBranchesResponse,
+    error: memberBranchesError,
+    requestStatus: memberBranchesStatus
   } = useApiRequest({});
 
   const [changeRole, setChangeRole] = useState(false);
@@ -51,6 +115,16 @@ const Member = () => {
   const [suspension, setSuspension] = useState(false);
   const [showBranches, setShowBranches] = useState(false);
   const [showTeams, setShowTeams] = useState(false);
+
+  const [teamPage, setTeamPage] = useState(1);
+  const handleTeamPagination = (page: number) => {
+    setTeamPage(page);
+  };
+
+  const [branchesPage, setBRanchesPage] = useState(1);
+  const handleBranchesPagination = (page: number) => {
+    setBRanchesPage(page);
+  };
 
   const handleMainTabChange = (route) => {
     navigate(Routes.member(params.id, route));
@@ -112,6 +186,13 @@ const Member = () => {
     if (params.id) runFetchProfile(fetchMemberProfileService(params.id));
   };
 
+  const handleFetchMemberTeams = (page: number) => {
+    if (params.id) runFetchMemberTeams(fetchMemberTeamsService(params.id, { page }));
+  };
+
+  const fetchMemberBranches = (page: number) => {
+    if (params.id) runFetchMemberBranches(fetchMemberBranchesService(params.id, { page }));
+  };
   const memberProfile = useMemo<MemberProfileProps>(() => {
     if (profileResponse?.status === 200) {
       const data = profileResponse?.data?.data;
@@ -119,10 +200,17 @@ const Member = () => {
         fullName: `${data.first_name} ${data.last_name}`,
         avatar: data.avatar,
         email: data.email,
+        pendingEmail: data.pending_email,
         role: data.role,
         jobTitle: data.title ?? "Not passed",
         initials: getInitials(`${data.first_name} ${data.last_name}`),
-        status: data.status
+        status: data.status,
+        timeZone: data.timezone,
+        phoneNumber: data.phone_number,
+        userAttributes: data.user_attributes,
+        dateFormat: data.date_format,
+        syslanguage: data.language,
+        fluentLanguages: data.fluent_languages
       };
 
       return profile;
@@ -135,8 +223,53 @@ const Member = () => {
     return initProfile;
   }, [profileResponse, profileError]);
 
+  const memberTeams = useMemo<MemberTeamsDataProps>(() => {
+    if (memberTeamsResponse?.status === 200) {
+      const teams = memberTeamsResponse.data.data.teams.map((item) => ({
+        id: item._id,
+        name: item.team,
+        dateAdded: item.date_added.slice(0, -8)
+      }));
+      const metaData = {
+        currentPage: memberTeamsResponse?.data?.data?.page ?? 1,
+        totalPages: memberTeamsResponse?.data?.data?.total_pages,
+        totalCount: memberTeamsResponse?.data?.data?.total_count
+      };
+      return { teams, metaData };
+    } else if (memberTeamsError) {
+      toast({ description: memberTeamsError?.response?.data.error });
+    }
+
+    return initMemberTeams;
+  }, [memberTeamsResponse, memberTeamsError]);
+
+  const memberBranches = useMemo<MemberBranchesDataProps>(() => {
+    if (memberBranchesResponse?.status === 200) {
+      const branches = memberBranchesResponse.data.data.branches.map((item) => ({
+        id: item._id,
+        name: item.branch,
+        country: countries.find((country) => country.value === item.country)?.label,
+        province: item.state,
+        city: item.city,
+        dateAdded: item.time.slice(0, -8)
+      }));
+      const metaData = {
+        currentPage: memberBranchesResponse?.data?.data?.page ?? 1,
+        totalPages: memberBranchesResponse?.data?.data?.total_pages,
+        totalCount: memberBranchesResponse?.data?.data?.total_count
+      };
+      return { branches, metaData };
+    } else if (memberBranchesError) {
+      toast({ description: memberBranchesError?.response?.data.error });
+    }
+
+    return initMemberBranches;
+  }, [memberBranchesResponse, memberBranchesError]);
+
   useEffect(() => {
     handleFetchProfile();
+    handleFetchMemberTeams(teamPage);
+    fetchMemberBranches(branchesPage);
   }, [params.id]);
 
   return (
@@ -154,12 +287,18 @@ const Member = () => {
         name={memberProfile?.fullName}
         show={changeBranch}
         close={handleCloseChangeBranch}
+        memberBranches={{
+          branchData: memberBranches.branches,
+          teamsData: memberTeams.teams,
+          callback: () => fetchMemberBranches(1)
+        }}
       />
       <ChangeTeam
         id={params.id ?? ""}
         name={memberProfile?.fullName}
         show={changeTeam}
         close={handleCloseChangeTeam}
+        memberTeams={{ data: memberTeams.teams, callback: () => handleFetchMemberTeams(1) }}
       />
       <SuspendMember
         id={params.id ?? ""}
@@ -179,13 +318,24 @@ const Member = () => {
         close={handleCloseBranches}
         name={memberProfile?.fullName}
         show={showBranches}
+        memberBranches={{
+          data: memberBranches,
+          loading: memberBranchesStatus.isPending,
+          callback: () => fetchMemberBranches(1),
+          handlePagination: handleBranchesPagination
+        }}
       />
       <MemberTeams
-        id={params.id ?? ""}
         handleAddTeam={handleChangeTeam}
         close={handleCloseTeams}
         name={memberProfile?.fullName}
         show={showTeams}
+        memberTeams={{
+          data: memberTeams,
+          loading: memberTeamsStatus.isPending,
+          callback: () => handleFetchMemberTeams(1),
+          handlePagination: handleTeamPagination
+        }}
       />
       <MemberProfileHeader
         memberProfile={memberProfile}
@@ -204,7 +354,13 @@ const Member = () => {
         mainTab={params.route ?? "activity"}
       />
       <MemberProfileBody
-        subSection={subTab === "comments" ? <MemberProfileComments /> : <MemberProfileDetails />}>
+        subSection={
+          subTab === "comments" ? (
+            <MemberProfileComments />
+          ) : (
+            <MemberProfileDetails profile={memberProfile} callback={() => handleFetchProfile()} />
+          )
+        }>
         {params.route === "activity" ? (
           <MemberProfileActivity />
         ) : params.route === "emails" ? (

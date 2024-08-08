@@ -2,16 +2,16 @@ import { OrgAttributesUI } from "modules";
 import { AddMemberAttribute } from "./addMemberAttribute";
 import { useEffect, useMemo, useState } from "react";
 import { AddClientAttribute } from "./addClientAttribute";
-import { useUserContext } from "context";
 import { useApiRequest } from "hooks";
-import { toast } from "components";
 import {
   archiveOrgAttributeService,
   fetchOrgAttributesService,
   restoreOrgAttributeService
 } from "api";
 import { AttributesDataProps, OrganisationAttributesData } from "types";
-import { EditAttribute } from "./editAttribute";
+import { EditMemberAttribute } from "./editMemberAttribute";
+import { toast } from "components";
+import { EditClientAttribute } from "./editClientAttribute";
 
 const defaultAttributesData: AttributesDataProps = {
   attributesArray: [],
@@ -22,34 +22,50 @@ const defaultAttributesData: AttributesDataProps = {
     pageLimit: 0
   }
 };
+const initAttrFields = {
+  id: "",
+  title: "",
+  type: "",
+  required: false,
+  isSystem: false,
+  isActive: true
+};
 
 const OrgAttributes = () => {
   const [addMemberAttr, setAddMemberAttr] = useState(false);
+  const [editMemberAttr, setEditMemberAttr] = useState(false);
 
   const [addClientAttr, setAddClientAttr] = useState<boolean>(false);
-  const [editAttr, setEditAttr] = useState<boolean>(false);
+  const [editClientAttr, setEditClientAttr] = useState<boolean>(false);
 
-  const { clientAttributes, handleUpdateClientAttributes } = useUserContext();
-  const { currentPage: clientPage } = clientAttributes?.attributesMetaData || {
-    currentPage: 1
-  };
-  const [initAttr, setInitAttr] = useState<OrganisationAttributesData>({
-    id: "",
-    title: "",
-    type: "",
-    required: false,
-    isSystem: false,
-    isActive: true
-  });
+  const [initAttr, setInitAttr] = useState<OrganisationAttributesData>(initAttrFields);
 
-  const [clientQueryParams, setClientQueryParams] = useState({
-    page: clientPage,
+  //paginations
+  const [memberQueryParams, setMemberQueryParams] = useState({
+    page: 1,
     limit: 20
   });
+  const { page: memberPage, limit: memberLimit } = memberQueryParams;
+
+  const [clientQueryParams, setClientQueryParams] = useState({
+    page: 1,
+    limit: 20
+  });
+  const { page: clientPage, limit: clientLimit } = clientQueryParams;
 
   const handleMemberPagination = (param: string, value: number) => {
+    setMemberQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
+
+  const handleClientPagination = (param: string, value: number) => {
     setClientQueryParams((prev) => ({ ...prev, [param]: value }));
   };
+
+  const {
+    run: runFetchMember,
+    data: memberResponse,
+    requestStatus: memberStatus
+  } = useApiRequest({});
 
   const {
     run: runFetchClient,
@@ -60,11 +76,20 @@ const OrgAttributes = () => {
   const { run: runArchive, data: archiveResponse, error: archiveError } = useApiRequest({});
   const { run: runRestore, data: restoreResponse, error: restoreError } = useApiRequest({});
 
-  const fetchClientAttributes = () => {
+  const fetchMemberAttributes = (page: number, limit: number) => {
+    runFetchMember(
+      fetchOrgAttributesService({
+        page,
+        limit,
+        type: "member"
+      })
+    );
+  };
+  const fetchClientAttributes = (page: number, limit: number) => {
     runFetchClient(
       fetchOrgAttributesService({
-        page: clientQueryParams.page,
-        limit: clientQueryParams.limit,
+        page,
+        limit,
         type: "client"
       })
     );
@@ -82,7 +107,8 @@ const OrgAttributes = () => {
       toast({
         description: archiveResponse?.data?.message
       });
-      fetchClientAttributes();
+      fetchMemberAttributes(memberPage, memberLimit);
+      fetchClientAttributes(clientPage, clientLimit);
     } else if (archiveError) {
       toast({
         variant: "destructive",
@@ -96,7 +122,8 @@ const OrgAttributes = () => {
       toast({
         description: restoreResponse?.data?.message
       });
-      fetchClientAttributes();
+      fetchMemberAttributes(memberPage, memberLimit);
+      fetchClientAttributes(clientPage, clientLimit);
     } else if (restoreError) {
       toast({
         variant: "destructive",
@@ -105,7 +132,31 @@ const OrgAttributes = () => {
     }
   }, [restoreResponse, restoreError]);
 
-  useMemo<AttributesDataProps>(() => {
+  const memberAttributes = useMemo<AttributesDataProps>(() => {
+    if (memberResponse?.status === 200) {
+      const attributesArray = memberResponse?.data?.data?.attributes.map((item) => ({
+        id: item._id,
+        title: item.label,
+        type: item.type,
+        required: item.is_required,
+        isSystem: item.is_system_prop ?? false,
+        isActive: item.is_active ?? true,
+        description: item.description,
+        metaData: item.meta
+      }));
+      const attributesMetaData = {
+        currentPage: memberResponse?.data?.data?.page ?? 1,
+        totalPages: memberResponse?.data?.data?.total_pages,
+        totalCount: memberResponse?.data?.data?.total_count,
+        pageLimit: memberQueryParams.limit
+      };
+      return { attributesArray, attributesMetaData };
+    }
+
+    return defaultAttributesData;
+  }, [memberResponse]);
+
+  const clientAttributes = useMemo<AttributesDataProps>(() => {
     if (clientResponse?.status === 200) {
       const attributesArray = clientResponse?.data?.data?.attributes.map((item) => ({
         id: item._id,
@@ -123,7 +174,6 @@ const OrgAttributes = () => {
         totalCount: clientResponse?.data?.data?.total_count,
         pageLimit: clientQueryParams.limit
       };
-      handleUpdateClientAttributes({ attributesArray, attributesMetaData });
       return { attributesArray, attributesMetaData };
     }
 
@@ -131,63 +181,82 @@ const OrgAttributes = () => {
   }, [clientResponse]);
 
   useEffect(() => {
-    fetchClientAttributes();
+    fetchClientAttributes(clientPage, clientLimit);
   }, [clientQueryParams]);
+
+  useEffect(() => {
+    fetchMemberAttributes(memberPage, memberLimit);
+  }, [memberQueryParams]);
 
   return (
     <>
-      <AddMemberAttribute close={() => setAddMemberAttr(false)} show={addMemberAttr} />
+      <AddMemberAttribute
+        close={() => {
+          setAddMemberAttr(false);
+          setInitAttr(initAttrFields);
+        }}
+        show={addMemberAttr}
+        callback={() => fetchMemberAttributes(1, memberLimit)}
+        prefilledAttribute={initAttr}
+      />
       <AddClientAttribute
         close={() => {
           setAddClientAttr(false);
-          setInitAttr({
-            id: "",
-            title: "",
-            type: "",
-            required: false,
-            isSystem: false,
-            isActive: true
-          });
+          setInitAttr(initAttrFields);
         }}
         show={addClientAttr}
-        fetchAttributes={fetchClientAttributes}
+        callback={() => fetchClientAttributes(1, clientLimit)}
         prefilledAttribute={initAttr}
       />
-
-      <EditAttribute
+      <EditMemberAttribute
         close={() => {
-          setEditAttr(false);
-          setInitAttr({
-            id: "",
-            title: "",
-            type: "",
-            required: false,
-            isSystem: false,
-            isActive: true
-          });
+          setEditMemberAttr(false);
+          setInitAttr(initAttrFields);
         }}
-        show={editAttr}
+        show={editMemberAttr}
         prefilledAttribute={initAttr}
-        fetchAttributes={fetchClientAttributes}
+        callback={() => fetchMemberAttributes(1, memberLimit)}
       />
-
+      <EditClientAttribute
+        close={() => {
+          setEditClientAttr(false);
+          setInitAttr(initAttrFields);
+        }}
+        show={editClientAttr}
+        prefilledAttribute={initAttr}
+        callback={() => fetchClientAttributes(1, clientLimit)}
+      />
       <OrgAttributesUI
         handleAddMemberAttr={() => setAddMemberAttr(true)}
         handleAddClientAttr={() => setAddClientAttr(true)}
-        setEditAttr={(attr: OrganisationAttributesData) => {
-          setEditAttr(true);
+        setEditMemberAttr={(attr: OrganisationAttributesData) => {
+          setEditMemberAttr(true);
           setInitAttr(attr);
         }}
-        setDuplicateAttr={(attr: OrganisationAttributesData) => {
+        setEditClientAttr={(attr: OrganisationAttributesData) => {
+          setEditClientAttr(true);
+          setInitAttr(attr);
+        }}
+        setDuplicateMemberAttr={(attr: OrganisationAttributesData) => {
+          setAddMemberAttr(true);
+          setInitAttr(attr);
+        }}
+        setDuplicateClientAttr={(attr: OrganisationAttributesData) => {
           setAddClientAttr(true);
           setInitAttr(attr);
         }}
         handleArchiveAttr={archiveAttribute}
         handleRestoreAttr={restoreAttribute}
-        handleClientAttrAction={{
-          loading: clientStatus.isPending,
+        handleMemberAttrAction={{
+          loading: memberStatus.isPending,
           handlePagination: handleMemberPagination
         }}
+        handleClientAttrAction={{
+          loading: clientStatus.isPending,
+          handlePagination: handleClientPagination
+        }}
+        memberAttributes={memberAttributes}
+        clientAttributes={clientAttributes}
       />
     </>
   );

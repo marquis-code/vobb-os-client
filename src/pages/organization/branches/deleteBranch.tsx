@@ -1,12 +1,36 @@
-import { ConfirmationModal } from "components";
-import { ModalProps } from "types";
+import { deleteOrgBranchService } from "api";
+import { ConfirmationModal, toast } from "components";
+import { useApiRequest } from "hooks";
+import { useMemo } from "react";
+import { BranchesDataProps, ModalProps } from "types";
 
 interface Props extends ModalProps {
   id: string;
   name: string;
+  callback: () => void;
 }
 
-const DeleteBranch: React.FC<Props> = ({ show, close, id, name }) => {
+const DeleteBranch: React.FC<Props> = ({ show, close, id, name, callback }) => {
+  const { run, data: response, error, requestStatus } = useApiRequest({});
+
+  const submit = () => {
+    run(deleteOrgBranchService({ id }));
+  };
+
+  useMemo(() => {
+    if (response?.status === 202) {
+      toast({
+        description: response?.data?.message
+      });
+      callback();
+      close();
+    } else if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
+    }
+  }, [response, error]);
   return (
     <>
       <ConfirmationModal
@@ -16,10 +40,11 @@ const DeleteBranch: React.FC<Props> = ({ show, close, id, name }) => {
             <b className="text-vobb-neutral-100">{name}</b> branch?
           </>
         }
-        handleContinue={console.log}
+        handleContinue={submit}
         close={close}
         show={show}
         isDestructive
+        loading={requestStatus.isPending}
       />
     </>
   );

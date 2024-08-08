@@ -104,4 +104,60 @@ export const changeMemberRoleURL = () => `${prefixMember}/role`;
  * @returns url string
  *
  */
-export const editMemberDetailsURL = ({ id }) => `${prefixMember}/${id}`;
+export const editMemberDetailsURL = ({ id }) => `${prefixMember}/edit/${id}`;
+
+/**
+ * Change Member email URL
+ * @param id of the member to change email
+ * @returns url string
+ *
+ */
+export const changeMemberEmailURL = ({ id }) => `${prefixMember}/edit-email/${id}`;
+
+/**
+ * Edit Member attribute URL
+ * @param memberId - id of the member to edit attribute
+ * @param attrId - id of the attribute to edit
+ * @returns url string
+ *
+ */
+export const editMemberAttributeURL = ({ memberId, attrId }) =>
+  `${prefixMember}/attribute/${memberId}/${attrId}`;
+
+/**
+ * Fetch teams a member can join within current branches URL
+ * @param id of the member
+ * @returns url string
+ *
+ */
+export const fetchMemberAllAccessibleTeamsURL = ({ id }) => `/teams/per-member/${id}`;
+
+/**
+ * Fetches teams a member can join in a branch URL
+ * @param id of the member
+ * @returns url string
+ *
+ */
+export const fetchMemberTeamsPerBranchURL = ({ id }) => `/teams/per-branch/${id}`;
+
+/**
+ * Add a member to a team URL
+ * @param teamId id of team
+ * @param memberId id of member
+ * @returns url string
+ *
+ */
+
+export const addMemberToTeamURL = ({ teamId, memberId }) =>
+  `teams/add-member/${teamId}/${memberId}`;
+
+/**
+ * Add a member to a branch URL
+ * @param memberId id member
+ * @param branchId id of branch
+ * @returns url string
+ *
+ */
+
+export const addMemberToBranchURL = ({ memberId, branchId }) =>
+  `${prefixMember}/add-branch/${memberId}/${branchId}`;

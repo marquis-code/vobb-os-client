@@ -21,6 +21,12 @@ export interface BlacklistProps {
   status: boolean;
 }
 
+export interface updatePropertiesRequestBody {
+  attribute: string;
+  type: string;
+  data: string[];
+}
+
 export interface PaginationProps {
   page?: number;
   limit?: number;
@@ -54,8 +60,8 @@ export interface OrganisationBranchesData {
   addressLine2: string;
   city: string;
   timeZone: string;
+  hasMembers: boolean;
 }
-
 export interface OrganisationAttributesData {
   id: string;
   title: string;
@@ -184,4 +190,56 @@ export interface MemberProfileProps {
   jobTitle: string;
   role: string;
   status: string;
+  timeZone: string;
+  phoneNumber: string;
+  dateFormat: string;
+  syslanguage: string;
+  pendingEmail: string | null;
+  fluentLanguages: string[];
+  userAttributes: any;
+}
+
+type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
+
+interface filterParamsStructure {
+  value: string;
+  cond: conditions;
+}
+
+export interface branchQueryParamsProps {
+  page?: number;
+  limit?: number;
+  type?: string;
+  name?: filterParamsStructure[];
+  team?: filterParamsStructure[];
+  role?: filterParamsStructure[];
+  email?: filterParamsStructure[];
+  operation?: string;
+}
+
+export interface activityParamsProps {
+  page: number;
+  limit: number;
+  sort: string;
+  start?: string;
+  end?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export interface PaginationProps {
+  page?: number;
+  limit?: number;
+}
+
+export interface editMemberDetailsRequestBody {
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
+  avatar?: string;
+  title?: string;
+  language?: string;
+  timezone?: string;
+  date_format?: string;
+  fluent_languages?: string[];
 }

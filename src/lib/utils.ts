@@ -38,3 +38,23 @@ export const getInitials = (fullName: string) => {
     return names[0].slice(0, 2).toUpperCase();
   }
 };
+
+export const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
+export const calculateTotalWordCount = (values: any) => {
+  let wordCountObj = {};
+  Object.keys(values).forEach((fieldName) => {
+    if (fieldName.startsWith("long-text")) {
+      wordCountObj[fieldName] = values[fieldName].trim().split(/\s+/).length;
+    }
+  });
+  return wordCountObj;
+};

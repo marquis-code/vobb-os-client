@@ -1,59 +1,129 @@
-import { fetchMemberProsBranchesService } from "api";
 import { ChangeBranchModal, toast } from "components";
-import { useApiRequest } from "hooks";
-import { useEffect, useMemo } from "react";
-import { ModalProps, optionType } from "types";
+import { useApiRequest, useFetchBranches } from "hooks";
+import { useEffect, useMemo, useState } from "react";
+import { ModalProps } from "types";
+import { MemberBranchesData } from "./member";
+import { addMemberToBranchService, fetchTeamsPerBranchService } from "api";
 
 interface ChangeBranchProps extends ModalProps {
   name: string;
   id: string;
+  memberBranches: {
+    branchData: MemberBranchesData[];
+    teamsData: { id: string; name: string; dateAdded: string }[];
+    callback: () => void;
+  };
 }
 
 const ChangeBranch = (props: ChangeBranchProps) => {
-  const { id } = props;
+  const { memberBranches, id, close } = props;
+  const { branchData, teamsData, callback } = memberBranches;
+
+  const [branchTeams, setBranchTeams] = useState({ id: "", teams: [] });
+  const [teamId, setTeamId] = useState("");
+
+  const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({});
   const {
-    run: runFetch,
-    data: fetchResponse,
-    error: fetchError,
-    requestStatus: fetchStatus
+    run: runFetchTeams,
+    data: teamsResponse,
+    error: teamsError,
+    requestStatus: teamsLoading
   } = useApiRequest({});
+
   const {
-    run: runChange,
-    data: changeResponse,
-    error: changeError,
-    requestStatus: changeStatus
+    run: runAddToBranch,
+    data: addResponse,
+    error: addError,
+    requestStatus: addStatus
   } = useApiRequest({});
 
-  const fetchMemberProspectiveBranches = () => runFetch(fetchMemberProsBranchesService(id, {}));
-  // const fetchMemberProspectiveBranches = () => runFetch(fetchMemberProsBranchesService(id, {}));
+  const handleSetBranchId = (id: string) => {
+    setBranchTeams((prev) => ({ ...prev, id }));
+    setTeamId("");
+  };
 
-  const options = useMemo<optionType[]>(() => {
-    if (fetchResponse?.status === 200) {
-      const options = fetchResponse.data.data.branches.map((item) => ({
-        label: item.branch,
-        value: item._id,
-        isDisabled: item.status === "inactive" ? true : false
-      }));
+  const handleSetTeamId = (id: string) => {
+    setTeamId(id);
+  };
 
-      return options;
-    } else if (fetchError) {
-      toast({ description: fetchError?.response?.data.error });
+  const fetchBranchTeams = () => {
+    runFetchTeams(fetchTeamsPerBranchService(branchTeams.id));
+  };
+
+  const handleAddToTeam = () => {
+    teamId
+      ? runAddToBranch(addMemberToBranchService(id, branchTeams.id, { team: teamId }))
+      : runAddToBranch(addMemberToBranchService(id, branchTeams.id));
+  };
+
+  const branchesOptions = orgBranches?.branchesArray.map((item) => {
+    const isDisabled = branchData.some(
+      (memberBranch) => memberBranch.name === item.name && memberBranch.id === item.id
+    );
+    return {
+      label: `${item.name} ${isDisabled ? "(Already in this branch)" : ""}`,
+      value: item.id,
+      isDisabled
+    };
+  });
+
+  useMemo(() => {
+    if (teamsResponse?.status === 200) {
+      const teamsArray = teamsResponse.data.data.teams.map((item) => {
+        const isDisabled = teamsData.some(
+          (memberTeam) => memberTeam.name === item.name && memberTeam.id === item._id
+        );
+
+        return {
+          label: `${item.name} ${isDisabled ? "(Already a member)" : ""}`,
+          value: item._id,
+          isDisabled
+        };
+      });
+
+      setBranchTeams((prev) => ({ ...prev, teams: teamsArray }));
+    } else if (teamsError) {
+      toast({
+        variant: "destructive",
+        description: teamsError?.response?.data?.error
+      });
     }
+  }, [teamsResponse, teamsError]);
 
+  useMemo(() => {
+    if (addResponse?.status === 200) {
+      toast({ description: addResponse?.data?.message });
+      callback();
+      handleSetTeamId("");
+      close();
+    } else if (addError) {
+      toast({
+        variant: "destructive",
+        description: addError?.response?.data?.error
+      });
+    }
     return [];
-  }, [fetchResponse, fetchError]);
+  }, [addResponse, addError]);
 
   useEffect(() => {
-    fetchMemberProspectiveBranches();
-  }, []);
+    fetchOrgBranches({ page: 1 });
+    if (branchTeams.id) fetchBranchTeams();
+  }, [branchTeams.id]);
 
   return (
     <ChangeBranchModal
-      submit={console.log}
+      submit={handleAddToTeam}
+      loading={addStatus.isPending}
       {...props}
       handleViewBranches={{
-        options,
-        loading: fetchStatus.isPending
+        options: branchesOptions,
+        loading: loadingBranches,
+        handleSetId: handleSetBranchId
+      }}
+      handleViewTeams={{
+        options: branchTeams.teams,
+        loading: teamsLoading.isPending,
+        handleSetId: handleSetTeamId
       }}
     />
   );

@@ -4,6 +4,8 @@ SETTINGS URLS
 =================================
 */
 
+import { activityParamsProps, PaginationProps } from "types";
+
 /*
 PERSONAL PROFILE URLS
 */
@@ -110,9 +112,15 @@ export const fetchMemberPropertiesURL = () => `${prefixAcc}/attribute`;
  * @returns url string
  *
  */
-export const fetchOrgPropertiessURL = ({ page, limit }) =>
-  `${prefixAcc}/org-attribute?page=${page}&limit=${limit}`;
+export const fetchOrgPropertiessURL = ({ page, limit }: PaginationProps) => {
+  const queryParams = new URLSearchParams();
 
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+
+  const queryString = queryParams.toString();
+  return `${prefixAcc}/org-attribute${queryString ? `?${queryString}` : ""}`;
+};
 /**
  * Create organisation's properties URL
  * @returns url string
@@ -126,12 +134,26 @@ export const createOrgPropertiesURL = () => `${prefixAcc}/attribute/`;
  *
  */
 
-export const updateOrgPropertiesURL = ({ id }) => `${prefixAcc}/attribute/${id}`;
+export const updateOrgPropertiesURL = () => `${prefixAcc}/attribute`;
 
 /**
  * Fetch user's activities URL
  * @returns url string
  *
  */
-export const fetchUserActivitiesURL = ({ page, limit, order, startDate, endDate }) =>
-  `${prefixAcc}/activity?page=${page}&limit=${limit}&sort=${order}&start=${startDate}&end=${endDate}`;
+
+export const fetchUserActivitiesURL = ({
+  page,
+  limit,
+  sort,
+  ...queryParams
+}: activityParamsProps) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefixAcc}/activity?page=${page}&limit=${limit}&sort=${sort}${
+    queryString ? `&${queryString}` : ""
+  }`;
+};

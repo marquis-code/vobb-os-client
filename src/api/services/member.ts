@@ -4,7 +4,7 @@ TEAMS SERVICES
 =================================
 */
 
-import { deleteRequest, getRequest, patchRequest } from "api/requestProcessor";
+import { deleteRequest, getRequest, patchRequest, postRequest } from "api/requestProcessor";
 import {
   fetchMemberBranchesURL,
   fetchMemberProfileURL,
@@ -14,9 +14,14 @@ import {
   removeBranchFromMemberURL,
   removeTeamFromMemberURL,
   changeMemberRoleURL,
-  editMemberDetailsURL
+  editMemberDetailsURL,
+  editMemberAttributeURL,
+  changeMemberEmailURL,
+  fetchMemberTeamsPerBranchURL,
+  fetchMemberAllAccessibleTeamsURL,
+  addMemberToBranchURL
 } from "api";
-import { fetchMemberQueryParams, PaginationProps } from "types";
+import { fetchMemberQueryParams, PaginationProps, updatePropertiesRequestBody } from "types";
 
 interface removeMemberFromBranchRequestBody {
   member: string;
@@ -31,13 +36,6 @@ interface removeMemberFromTeamRequestBody {
 interface changeMemberRoleRequestBody {
   member: string;
   role: string;
-}
-
-interface editMemberDetailsRequestBody {
-  first_name?: string;
-  last_name?: string;
-  phone_number?: string;
-  avatar?: string;
 }
 
 /**
@@ -139,9 +137,70 @@ export const changeMemberRoleService = (data: changeMemberRoleRequestBody) => {
  * @returns url string
  *
  */
-export const editMemberDetailsService = (id: string, data: editMemberDetailsRequestBody) => {
+export const editMemberDetailsService = (id: string, data: FormData) => {
   return patchRequest({
     url: editMemberDetailsURL({ id }),
+    data
+  });
+};
+
+/**
+ * Change Member email Service
+ * @param id of the member to change email
+ * @param email new email
+ * @returns url string
+ *
+ */
+export const changeMemberEmailService = (id: string, data: { email: string }) => {
+  return patchRequest({
+    url: changeMemberEmailURL({ id }),
+    data
+  });
+};
+
+/**
+ * Edit member's attribute service
+ * @returns axios promise
+ */
+export const editMemberAttributeService = (memberId: string, data: updatePropertiesRequestBody) => {
+  return patchRequest({
+    url: editMemberAttributeURL({ memberId, attrId: data.attribute }),
+    data
+  });
+};
+/**
+ * Fetches teams a member can within current branches.
+ * @param id of member requested,
+ * @returns axios promise
+ */
+export const fetchMemberAllAccessibleTeamsService = (id: string) => {
+  return getRequest({
+    url: fetchMemberAllAccessibleTeamsURL({ id })
+  });
+};
+
+/**
+ * Fetches teams a member can join in a branch service
+ * @param id of member requested,
+ * @returns axios promise
+ */
+export const fetchMemberTeamsPerBranchService = (id: string) => {
+  return getRequest({
+    url: fetchMemberTeamsPerBranchURL({ id })
+  });
+};
+
+/**
+ * Add a member to a branch service
+ * @returns axios promise
+ */
+export const addMemberToBranchService = (
+  memberId: string,
+  branchId: string,
+  data?: { team: string }
+) => {
+  return postRequest({
+    url: addMemberToBranchURL({ memberId, branchId }),
     data
   });
 };

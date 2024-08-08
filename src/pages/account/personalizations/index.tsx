@@ -1,11 +1,20 @@
-import { personalAccountUpdateService } from "api";
+import {
+  fetchMemberPropertiesService,
+  personalAccountUpdateService,
+  updateOrgPropertiesService
+} from "api";
 import { toast } from "components";
-import { useApiRequest, useFetchUser } from "hooks";
+import { useApiRequest, useFetchOrgAttributes, useFetchUser } from "hooks";
 import { AccountPersonalizationsUI } from "modules";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { MemberPropertiesData, optionType, updatePropertiesRequestBody } from "types";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
+  const { fetchOrgProperties, orgProperties } = useFetchOrgAttributes();
+
+  const [orgAttrQueryParams, setOrgAttrQueryParam] = useState({ page: 1, limit: 20 });
+  const { page, limit } = orgAttrQueryParams;
 
   const {
     run: runSystemLanguage,
@@ -35,6 +44,14 @@ const AccountPersonalizations = () => {
     requestStatus: timezoneStatus
   } = useApiRequest({});
 
+  const { run: runFetchMemberProps, data: memberPropsResponse } = useApiRequest({});
+
+  const {
+    run: runUpdateProperties,
+    data: updatePropertiesResponse,
+    error: updatePropertiesError
+  } = useApiRequest({});
+
   const handleChangeSystemLanguage = (formData: FormData) => {
     runSystemLanguage(personalAccountUpdateService(formData));
   };
@@ -50,6 +67,11 @@ const AccountPersonalizations = () => {
   const handleSetTimezone = (formData: FormData) => {
     runTimezone(personalAccountUpdateService(formData));
   };
+
+  const fetchMemberProperties = () => {
+    runFetchMemberProps(fetchMemberPropertiesService());
+  };
+
   useMemo(() => {
     if (systemLangResponse?.status === 200) {
       toast({
@@ -106,6 +128,73 @@ const AccountPersonalizations = () => {
     }
   }, [timezoneResponse, timezoneError]);
 
+  useMemo(() => {
+    if (updatePropertiesResponse?.status === 200) {
+      toast({
+        description: updatePropertiesResponse?.data?.message
+      });
+      fetchMemberProperties();
+    } else if (updatePropertiesError) {
+      toast({
+        variant: "destructive",
+        description: updatePropertiesError?.response?.data?.error
+      });
+    }
+  }, [updatePropertiesResponse, updatePropertiesError]);
+
+  //already set member's properties.(used to determine update or create)
+  const memberProperties = useMemo<MemberPropertiesData[]>(() => {
+    if (memberPropsResponse?.status === 200) {
+      const propertiesArray = memberPropsResponse?.data?.data?.attributes.map((item) => ({
+        id: item._id,
+        attribute: item.attribute,
+        values: item.data,
+        title: item.label,
+        type: item.type
+      }));
+
+      return propertiesArray;
+    }
+
+    return [];
+  }, [memberPropsResponse]);
+
+  //Create or update the account's (member's) property.
+  const handleMemberProperties = (data: {
+    name: string;
+    value: optionType | string;
+    orgId: string;
+  }) => {
+    const { name, value, orgId } = data;
+    const type = name.split("_")[0];
+    const attribute = name.split("_")[1];
+
+    const body =
+      type === "phone-number"
+        ? [(value as string).replace(/\D/g, "")]
+        : type === "country"
+        ? [(value as optionType).value]
+        : type === "multiple-choice"
+        ? [(value as optionType).value]
+        : [value as string];
+
+    const requestBody: updatePropertiesRequestBody = {
+      attribute: orgId ?? attribute,
+      type,
+      data: body
+    };
+
+    runUpdateProperties(updateOrgPropertiesService(requestBody));
+  };
+
+  useEffect(() => {
+    fetchOrgProperties({ page, limit });
+  }, [orgAttrQueryParams]);
+
+  useEffect(() => {
+    fetchMemberProperties();
+  }, []);
+
   return (
     <>
       <AccountPersonalizationsUI
@@ -124,6 +213,11 @@ const AccountPersonalizations = () => {
         timeZone={{
           submit: handleSetTimezone,
           loadingTimezone: timezoneStatus.isPending
+        }}
+        orgProperties={{
+          orgProperties,
+          memberProperties,
+          submit: handleMemberProperties
         }}
       />
     </>

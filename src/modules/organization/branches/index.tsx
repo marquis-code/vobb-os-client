@@ -4,17 +4,20 @@ import {
   BranchTableActions,
   Button,
   getBranchTableColumns,
+  LoadingSpinner,
   Pagination,
   SettingsPageTitle
 } from "components";
-import { useUserContext } from "context";
 import { useMemo } from "react";
+import { BranchesDataProps, OrganisationBranchesData } from "types";
 
 interface OrgBranchesUIProps extends BranchTableActions {
   handleAddBranch: () => void;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   limit: number;
+  loading: boolean;
+  orgBranches: BranchesDataProps;
 }
 
 const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
@@ -25,7 +28,9 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   setPage,
   setLimit,
   limit,
-  handleViewBranch
+  handleViewBranch,
+  loading,
+  orgBranches
 }) => {
   const columns = useMemo(
     () =>
@@ -38,7 +43,6 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     [handleEditBranch, handleDeleteBranch, handlePrimaryBranch, handleViewBranch]
   );
 
-  const { orgBranches } = useUserContext();
   const { currentPage, totalCount, totalPages } = orgBranches?.branchesMetaData || {
     currentPage: 1,
     totalCount: 0,
@@ -57,22 +61,29 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   return (
     <>
       <SettingsPageTitle title="Branches" />
-      <section className="pb-8 mb-12 max-w-[800px]">
-        <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
-          <PlusCircledIcon /> New branch
-        </Button>
-        <BranchesTable columns={columns} data={tableData} />
-        <Pagination
-          // hidePageLimit
-          handleChange={handleChangePage}
-          handlePageLimit={handlePageLimit}
-          totalCount={totalCount}
-          pageLimit={limit}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          className="mt-4"
-        />
-      </section>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <section className="pb-8 mb-12 max-w-[800px]">
+          <Button
+            onClick={handleAddBranch}
+            className="flex mt-8 mb-6 gap-2 ml-auto"
+            variant={"fill"}>
+            <PlusCircledIcon /> New branch
+          </Button>
+          <BranchesTable columns={columns} data={tableData} />
+          <Pagination
+            // hidePageLimit
+            handleChange={handleChangePage}
+            handlePageLimit={handlePageLimit}
+            totalCount={totalCount}
+            pageLimit={limit}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            className="mt-4"
+          />
+        </section>
+      )}
     </>
   );
 };

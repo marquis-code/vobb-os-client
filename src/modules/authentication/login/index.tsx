@@ -66,6 +66,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
       recaptchaRef.current.reset();
     }
   };
+
   return (
     <>
       {isMobile ? (
@@ -73,12 +74,13 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
       ) : (
         <main>
           <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
-            <LogoIcon className="mb-12 m-auto" />
+            <LogoIcon className="mb-12 m-auto" data-cy="logo" />
             <h1 className="text-xl sm:text-2xl font-bold mb-8 text-vobb-neutral-100 text-center">
               Sign in to your account
             </h1>
             <form>
               <CustomInput
+                data-cy="email"
                 label="Email"
                 type="email"
                 name="email"
@@ -86,13 +88,14 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
                 validatorMessage={errors.email?.message}
               />
               <PasswordInput
+                data-cy="password"
                 label="Password"
                 type="password"
                 name="password"
                 register={register}
                 validatorMessage={errors.password?.message}
               />
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4" data-cy="rememberMe">
                 <CheckboxWithText
                   label="Stay signed in for a week"
                   labelClassName="text-[13px]"
@@ -118,6 +121,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
                     setValue("recaptcha", token);
                   }}
                   ref={recaptchaRef}
+                  data-cy="recaptcha"
                 />
               )}
               {errors.recaptcha?.message && (
@@ -132,7 +136,8 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
                 disabled={loading}
                 className="w-full mt-6"
                 size={"default"}
-                variant="fill">
+                variant="fill"
+                data-cy="signin-btn">
                 Sign in
               </Button>
             </form>
@@ -141,12 +146,16 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
               size={"default"}
               variant="outline"
               disabled={loading}
-              onClick={handleGoogleSignin}>
-              <GoogleLogoIcon width={20} /> Signin with Google
+              onClick={handleGoogleSignin}
+              data-cy="signin-google-btn">
+              <GoogleLogoIcon width={20} /> Sign in with Google
             </Button>
-            <p className="mt-6 text-center text-[13px]">
+            <p className="mt-6 text-center text-[13px]" data-cy="dont-have-account">
               Don't have an account?{" "}
-              <Link className="text-vobb-primary-70 font-semibold" to={Routes.home}>
+              <Link
+                className="text-vobb-primary-70 font-semibold"
+                to={Routes.home}
+                data-cy="go-to-signup">
                 Sign up
               </Link>
             </p>
