@@ -115,6 +115,15 @@ export const editMemberDetailsURL = ({ id }) => `${prefixMember}/edit/${id}`;
 export const changeMemberEmailURL = ({ id }) => `${prefixMember}/edit-email/${id}`;
 
 /**
+ * Verify Member email URL
+ * @param token of the member to verify email
+ * @returns url string
+ *
+ */
+export const verifyMemberEmailURL = ({ token }) =>
+  `${prefixMember}/verify-member-email?token=${token}`;
+
+/**
  * Edit Member attribute URL
  * @param memberId - id of the member to edit attribute
  * @param attrId - id of the attribute to edit

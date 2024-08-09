@@ -4,7 +4,13 @@ TEAMS SERVICES
 =================================
 */
 
-import { deleteRequest, getRequest, patchRequest, postRequest } from "api/requestProcessor";
+import {
+  axiosInstanceUnauth,
+  deleteRequest,
+  getRequest,
+  patchRequest,
+  postRequest
+} from "api/requestProcessor";
 import {
   fetchMemberBranchesURL,
   fetchMemberProfileURL,
@@ -19,7 +25,8 @@ import {
   changeMemberEmailURL,
   fetchMemberTeamsPerBranchURL,
   fetchMemberAllAccessibleTeamsURL,
-  addMemberToBranchURL
+  addMemberToBranchURL,
+  verifyMemberEmailURL
 } from "api";
 import { fetchMemberQueryParams, PaginationProps, updatePropertiesRequestBody } from "types";
 
@@ -159,6 +166,15 @@ export const changeMemberEmailService = (id: string, data: { email: string }) =>
 };
 
 /**
+ * Verify Member email Service
+ * @param token of member requested,
+ * @returns axios promise
+ */
+export const verifyEmailMemberService = (token: string) => {
+  return axiosInstanceUnauth.patch(verifyMemberEmailURL({ token }));
+};
+
+/**
  * Edit member's attribute service
  * @returns axios promise
  */
@@ -168,6 +184,7 @@ export const editMemberAttributeService = (memberId: string, data: updatePropert
     data
   });
 };
+
 /**
  * Fetches teams a member can within current branches.
  * @param id of member requested,
