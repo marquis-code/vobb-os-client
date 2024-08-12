@@ -66,6 +66,7 @@ Cypress.Commands.add("solveGoogleReCAPTCHA", () => {
     .should("be.visible")
     .then(($checkbox) => {
       cy.wrap($checkbox).should("have.class", "recaptcha-checkbox-checked");
+      cy.wait(1000);
     });
 });
 
@@ -73,11 +74,10 @@ Cypress.Commands.add("loginUserWithEmail", (email, password) => {
   cy.get('[data-cy="email"]').type(email);
   cy.get('[data-cy="password"]').type(password);
   cy.solveGoogleReCAPTCHA();
+  cy.wait(2000);
   cy.get('[data-cy="signin-btn"]').click();
 
   cy.url({ timeout: 10000 }).should("not.include", "/login");
-  // Wait additional time if necessary
-  cy.wait(2000);
 
   cy.window().then((window) => {
     const vobbOSAccess = window.localStorage.getItem("vobbOSAccess");

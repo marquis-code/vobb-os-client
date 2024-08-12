@@ -63,7 +63,7 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
       />
 
       <section className="grid gap-4 max-w-[800px]">
-        <div className="flex gap-2">
+        <div className="flex gap-2" data-cy="filter-div">
           <SortBy
             isClearable
             sort={{
@@ -93,13 +93,13 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
           />
         </div>
         {loading ? (
-          <LoadingSpinner />
+          <LoadingSpinner data-cy="loading-spinner" />
         ) : !activityList.length ? (
           <p>No Account activities for this time.</p>
         ) : (
           <>
             {activityList.map((item, index) => (
-              <ActivityCard {...item} key={`${index}_${item.date}`} />
+              <ActivityCard {...item} key={`${index}_${item.date}`} data-cy="activity-card" />
             ))}
             <Pagination
               handleChange={(val) => handleFilter("page", val)}
@@ -108,6 +108,7 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
               pageLimit={pageLimit}
               totalPages={totalPages}
               currentPage={currentPage}
+              data-cy="pagination"
             />
           </>
         )}

@@ -121,7 +121,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
     <>
       <SettingsPageTitle title="Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8" data-cy="avatar-section">
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={
@@ -202,7 +202,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             parentClassName="mb-2"
           />
           <div className="mb-2">
-            <div className="relative">
+            <div className="relative" data-cy="email-address">
               <CustomInput
                 label="Primary Email Address"
                 type="email"
@@ -216,7 +216,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
               <div className="absolute -right-8 top-7">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()} data-cy="tooltip-trigger">
                       {profile?.pendingEmail ? (
                         <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
                       ) : (
@@ -224,7 +224,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                       )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
+                      <p data-cy="tooltip-content">
                         {profile?.pendingEmail
                           ? "Email is unverified, please request a new verification email"
                           : "Email is verified!"}
