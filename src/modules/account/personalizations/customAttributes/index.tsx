@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler, useWatch } from "react-hook-form";
 import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
 import { dynamicValidationSchema, renderFormFields } from "lib";
-import { useCountriesContext, useUserContext } from "context";
+import { useCountriesContext } from "context";
 
 export interface CustomAttributesProps {
   submit: (data: { name: string; value: string | optionType; orgRefId: string }) => void;
@@ -112,9 +112,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     return () => subscription.unsubscribe();
   }, [watch, getValues, memberProperties]);
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data);
-  };
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -124,7 +121,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
             These are the properties your organization administrator has defined for all members
           </p>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           {orgProperties?.map((fieldData) => {
             const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
             const id = memberProp ? memberProp.id : fieldData.id;
@@ -155,14 +152,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
               watch
             });
           })}
-          <div className="flex gap-2 justify-end max-w-[800px] pt-4">
-            <Button onClick={() => reset()} variant={"outline"}>
-              Cancel
-            </Button>
-            <Button type="submit" variant={"fill"}>
-              Save
-            </Button>
-          </div>
         </form>
       </section>
     </>

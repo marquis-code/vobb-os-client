@@ -63,8 +63,8 @@ const AccountProfile = () => {
       />
       <VerifyEmail show={emailOTP} close={() => setEmailOTP(false)} />
       <AccountProfileUI
-        updateProfile={updateProfile}
-        loadingUpdate={updateStatus.isPending}
+        submit={updateProfile}
+        loading={updateStatus.isPending}
         handleChangeEmail={() => setChangeEmail(true)}
         handleResendEmail={handleResendEmailVerify}
       />

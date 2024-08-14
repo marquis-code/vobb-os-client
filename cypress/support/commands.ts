@@ -87,16 +87,17 @@ Cypress.Commands.add("loginUserWithEmail", (email, password) => {
   });
 });
 
-Cypress.Commands.add("checkAndCloseToastNotification", (message) => {
-  cy.get('li[role="status"]')
+Cypress.Commands.add("checkAndCloseToastNotification", (message, timeout = 10000) => {
+  cy.get('li[role="status"]', { timeout: timeout })
     .should("be.visible")
     .within(() => {
       cy.get("div > div").should("contain.text", message);
       cy.get('button[type="button"]').click();
     });
 
-  cy.get('li[role="status"]').should("not.exist");
+  cy.get('li[role="status"]', { timeout: 5000 }).should("not.exist");
 });
+
 Cypress.Commands.add("checkRequiredFieldError", (field, btnId) => {
   cy.get(`[data-cy="${field}"]`).clear(); // Clear the field if it has any value
   cy.get(`[data-cy="${btnId}"]`).click();
@@ -131,7 +132,15 @@ Cypress.Commands.add("checkValidPasswordCriteria", (fieldId, password, btnId) =>
   } else if (!/@|#|&|\$]/.test(password)) {
     cy.contains(
       "small",
-      "Password should contain at least special character (e.g. @, #, &, $)"
+      "Password should contain at least one special character (e.g. @, #, &, $)"
     ).should("exist");
   }
+});
+
+Cypress.Commands.add("togglePasswordVisibility", (inputName, index = 0) => {
+  cy.get(`input[name="${inputName}"]`).should("have.attr", "type", "password");
+  cy.get('svg[role="button"]').eq(index).click();
+  cy.get(`input[name="${inputName}"]`).should("have.attr", "type", "text");
+  cy.get('svg[role="button"]').eq(index).click();
+  cy.get(`input[name="${inputName}"]`).should("have.attr", "type", "password");
 });

@@ -14,9 +14,29 @@ describe("Account Activities", () => {
     cy.url().should("include", "/settings/account-activity");
   });
 
-  it("displays the account activities page", () => {
+  it("displays the header nav and it's elements", () => {
+    cy.get("header")
+      .should("exist")
+      .within(() => {
+        cy.get("nav")
+          .should("exist")
+          .within(() => {
+            cy.get("ol")
+              .should("exist")
+              .within(() => {
+                cy.get("li").should("have.length", 3);
+
+                cy.get("li").eq(0).should("contain", "Account");
+                cy.get("li").eq(1).find("svg").should("exist");
+                cy.get("li").eq(2).should("contain", "Activity");
+              });
+          });
+      });
+  });
+
+  it("displays the account activities if any", () => {
     cy.get("h1").should("contain", "Account Activity");
-    cy.get("p").first().should("contain", "Monitor your account activities over time");
+    cy.contains("p", "Monitor your account activities over time").should("exist").and("be.visible");
 
     cy.get('[data-cy="filter-div"]').should("exist").and("be.visible");
 
