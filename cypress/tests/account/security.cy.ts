@@ -139,4 +139,124 @@ describe("Account Security Settings", () => {
     cy.get("button").contains("Save").click();
     cy.checkAndCloseToastNotification("Password changed successfully");
   });
+
+  it("should display the two-factor auth section", () => {
+    cy.get("h2").eq(1).should("contain", "Two-Factor Authentication");
+    cy.contains("p", "Secure your account by adding an extra layer of protection").should(
+      "be.visible"
+    );
+    cy.contains("p", "Enable Two-Factor Authentication").should("be.visible");
+    cy.get('span[data-cy="2fa-switch"]').within(() => {
+      cy.get("button").contains("Learn more").should("be.visible").and("be.enabled");
+      cy.get('button[role="switch"]').should("be.visible").and("be.enabled");
+    });
+  });
+
+  it("two-factor 'learn more' button should display info modal", () => {
+    cy.get('span[data-cy="2fa-switch"]').within(() => {
+      cy.get("button").contains("Learn more").click();
+    });
+    cy.get("aside.fixed").find("h2").should("contain.text", "About 2FA");
+    cy.get("aside.fixed").find("button").should("be.visible").and("be.enabled");
+
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        `Two-Factor Authentication (2FA) is an advanced security measure that fortifies your account against unauthorized access. 
+  When you log in, 2FA demands two distinct forms of identification: your password and a unique verification code sent to your registered email. 
+  This additional security step adds a critical barrier, making it exceedingly difficult for malicious actors to breach your account.`
+      );
+
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        `To setup 2FA, you will be required to enter a verification code sent to your email. 
+  This helps us to know that you're able to receive the necessary verification code when you need to login`
+      );
+  });
+
+  it("two-factor switch button should display otp modal", () => {
+    cy.get('span[data-cy="2fa-switch"]').within(() => {
+      cy.get('button[role="switch"]').click();
+    });
+
+    cy.get("aside.fixed").find("h2").should("contain.text", "Two-Factor Authentication");
+
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        "We’ve sent a 6-character code to alt.d2-3o7w9412@yopmail.com. The code expires shortly, so please enter it soon."
+      );
+
+    cy.get('div[data-input-otp-container="true"]')
+      .should("exist")
+      .as("otpContainer")
+      .children("div")
+      .should("have.length", 8);
+    cy.get('[role="separator"]').should("exist");
+    cy.get("svg").should("exist");
+
+    cy.get("aside.fixed")
+      .find("button")
+      .contains("Continue")
+      .should("be.visible")
+      .and("be.disabled");
+
+    cy.get('input[data-input-otp="true"]').should("be.enabled");
+    cy.get('input[data-input-otp="true"]').type("123456");
+    cy.contains("button", "Continue").should("be.visible").and("not.be.disabled");
+  });
+
+  it("should display the connected accounts section", () => {
+    cy.get("h2").eq(2).should("contain", "Connected Accounts");
+    cy.contains("p", "Seamlessly integrate your preferred platforms to login with ease").should(
+      "be.visible"
+    );
+    cy.contains("p", "Enable Two-Factor Authentication").should("be.visible");
+
+    cy.get('[data-cy="google-connection"]').within(() => {
+      cy.get("svg").should("be.visible");
+      cy.contains("p", "Enable Google Authentication").should("be.visible");
+    });
+
+    cy.get('span[data-cy="connect-switch"]').within(() => {
+      cy.get("button").contains("Learn more").should("be.visible").and("be.enabled");
+      cy.get('button[role="switch"]').should("be.visible").and("be.enabled");
+    });
+  });
+
+  it("connected account 'learn more' button should display info modal", () => {
+    cy.get('span[data-cy="connect-switch"]').within(() => {
+      cy.get("button").contains("Learn more").click();
+    });
+    cy.get("aside.fixed").find("h2").should("contain.text", "About Google Authentication");
+    cy.get("aside.fixed").find("button").should("be.visible").and("be.enabled");
+
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        `By connecting your Google account, you'll enjoy a secure and hassle-free login process. No need to remember yet another username and password.`
+      );
+
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        `With Google's robust security measures, you can trust that your sensitive business data will be protected.`
+      );
+  });
+
+  it("should display login history section", () => {
+    cy.get("h2").eq(3).should("contain", "Who logged in?");
+    cy.get("[data-cy='history-section']").within(() => {
+      cy.contains("We’ll alert you via").should("be.visible");
+      cy.get("b").should("contain.text", "alt.d2-3o7w9412@yopmail.com");
+      cy.contains("if there is any unusual activity on your account").should("be.visible");
+    });
+    cy.get("[data-cy='history-data']").should("exist");
+  });
 });

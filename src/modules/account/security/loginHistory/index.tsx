@@ -26,12 +26,12 @@ const LoginHistory: React.FC<LoginHistoryProps> = ({
       <section className="grid grid-cols-[1fr,2fr] gap-8 mb-12 max-w-[800px]">
         <div>
           <h2 className="text-[16px] font-semibold mb-2">Who logged in?</h2>
-          <p className="text-xs">
+          <p className="text-xs" data-cy="history-section">
             We’ll alert you via <b>{userDetails?.email}</b> if there is any unusual activity on your
             account
           </p>
         </div>
-        <div className="">
+        <div className="" data-cy="history-data">
           {loginHistory &&
             loginHistory?.map((item, index) => (
               <Device
