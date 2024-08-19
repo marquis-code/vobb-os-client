@@ -203,14 +203,14 @@ describe("Account Profile", () => {
   });
   //submits valid number
   it("should submit valid phone number successfully", () => {
-    cy.get(".react-tel-input input").clear().type("234 634 567 890 9");
+    cy.get(".react-tel-input input").clear().type("634 567 890 9");
     cy.get("button").contains("Save").click();
     cy.checkAndCloseToastNotification("Success");
   });
 
   //returns error on invalid number
   it("should throw an error if invalid phone number is submitted", () => {
-    cy.get(".react-tel-input input").type("234 634 567 890 9");
+    cy.get(".react-tel-input input").type("591 284 032 1");
     cy.get("button").contains("Save").click();
     cy.checkAndCloseToastNotification(`"phone_number" contains an invalid value`);
   });
