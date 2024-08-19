@@ -42,6 +42,7 @@ const AddMemberAttribute = ({
         description: response?.data?.message
       });
       callback();
+      close();
     } else if (error) {
       toast({
         variant: "destructive",

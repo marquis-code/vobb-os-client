@@ -202,7 +202,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     <>
       <SettingsPageTitle title="Organization Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8" data-cy="avatar-section">
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={
@@ -329,7 +329,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 }}
                 className="p-0 underline"
                 size={"sm"}
-                variant={"link"}>
+                variant={"link"}
+                data-cy="primary-emailBtn">
                 {profile?.primaryEmail || profile?.pendingPrimaryEmail
                   ? "Change email address"
                   : "Add email address"}
@@ -392,7 +393,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 }}
                 className="p-0 underline"
                 size={"sm"}
-                variant={"link"}>
+                variant={"link"}
+                data-cy="secondary-emailBtn">
                 {profile?.secondaryEmail || profile?.pendingSecondaryEmail
                   ? "Change email address"
                   : "Add email address"}

@@ -262,13 +262,14 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
         </form>
       </section>
       <div className="flex gap-2 justify-end max-w-[800px] mb-8 pt-2">
-        <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
+        <Button disabled={!isDirty || loadingUpdate} onClick={() => reset()} variant={"outline"}>
           Cancel
         </Button>
         <Button
           disabled={!isDirty || loadingUpdate}
           onClick={handleSubmit(onSubmit)}
-          variant={"fill"}>
+          variant={"fill"}
+          loading={loadingUpdate}>
           Save
         </Button>
       </div>
