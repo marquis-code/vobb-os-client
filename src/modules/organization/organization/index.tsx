@@ -88,10 +88,9 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           value: yup.string().required("Required")
         })
       )
+      .min(1, "At least one sector must be selected")
       .required("Required"),
     website: yup.string().required("Required").url("Enter a valid url"),
-    primaryEmail: yup.string().required("Required").email("Enter a valid email"),
-    secondaryEmail: yup.string().required("Required").email("Enter a valid email"),
     primaryNumber: yup.string().required("Required"),
     secondaryNumber: yup.string().required("Required")
   });
@@ -130,8 +129,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
         website: profile.website,
         primaryEmail: profile.pendingPrimaryEmail ?? profile.primaryEmail,
         secondaryEmail: profile.pendingSecondaryEmail ?? profile.secondaryEmail,
-        primaryNumber: profile.primaryPhoneNumber,
-        secondaryNumber: profile.secondaryPhoneNumber,
+        primaryNumber: profile.primaryPhoneNumber ?? "234",
+        secondaryNumber: profile.secondaryPhoneNumber ?? "234",
         sector: profile.sector
           ? profile.sector.map(
               (sector) => sectorOptions.find((option) => option.value === sector) || initOptionType
@@ -150,10 +149,13 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     !arraysHaveSameElements(
       sector.map((item) => item.value),
       profile.sector.map((item) => item)
-    ) &&
-    sector.length;
-  const primaryNumChanged = primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
-  const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
+    );
+  const primaryNumChanged =
+    primaryNumber?.replace(/\D/g, "")?.length > 10 &&
+    primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
+  const secondaryNumChanged =
+    secondaryNumber?.replace(/\D/g, "")?.length > 10 &&
+    secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
 
   const onSubmit: SubmitHandler<OrgProfileFormData> = (data) => {
     const handleProfileUpdate = () => {
@@ -197,7 +199,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     secondaryNumChanged ||
     logoChanged ||
     sectorChanged;
-
+  console.log(errors.sector);
   return (
     <>
       <SettingsPageTitle title="Organization Profile" />
@@ -249,6 +251,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             register={register}
             validatorMessage={errors.name?.message}
             parentClassName="mb-2"
+            data-cy="name"
           />
           <CustomInput
             label="Company Website"
@@ -257,6 +260,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             register={register}
             validatorMessage={errors.website?.message}
             parentClassName="mb-2"
+            data-cy="website"
           />
           <MultiSelectInput
             label="Sectors"
@@ -268,6 +272,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             }}
             placeholder="Select sectors"
             parentClassName="col-span-2"
+            validatorMessage={errors.sector?.message as string}
           />
           <CustomPhoneInput
             label="Primary Phone Number"
@@ -425,7 +430,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           disabled={!isDirty}
           loading={submitLoading || numbersLoading}
           onClick={handleSubmit(onSubmit)}
-          variant={"fill"}>
+          variant={"fill"}
+          data-cy="save-btn">
           Save
         </Button>
       </div>

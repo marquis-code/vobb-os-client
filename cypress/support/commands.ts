@@ -156,22 +156,27 @@ Cypress.Commands.add("testAddEmailAddressModal", (inputSelector, buttonSelector)
       .and("be.enabled")
       .click();
 
-    cy.get("aside.fixed").within(() => {
-      cy.get("h2").should("contain.text", "Change email address");
-      cy.get("label").should("contain.text", "New Email Address");
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Change email address");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+        cy.get("label").should("contain.text", "New Email Address");
 
-      cy.get('input[name="email"]')
-        .should("exist")
-        .type("test@example.com")
-        .should("have.value", "test@example.com")
-        .clear();
+        cy.get('input[name="email"]')
+          .should("exist")
+          .clear()
+          .type("test@example.com")
+          .should("have.value", "test@example.com")
+          .clear();
 
-      cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
+        cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
 
-      cy.get("button").contains("Continue").should("be.visible").and("be.disabled");
+        cy.get("button").contains("Continue").should("be.visible").and("be.disabled");
 
-      cy.get('input[name="email"]').clear().type("newemail@example.com");
-      cy.get("button").contains("Continue").should("be.enabled");
-    });
+        cy.get('input[name="email"]').clear().type("newemail@example.com");
+        cy.get("button").contains("Continue").should("be.enabled");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled").click();
+      });
   });
 });

@@ -86,6 +86,7 @@ describe("Organisation Profile", () => {
     cy.get(".react-tel-input")
       .eq(0)
       .within(() => {
+        cy.get('input[name="primaryNumber"]').clear();
         cy.get(".flag-dropdown").click();
         cy.get("ul")
           .should("be.visible")
@@ -98,13 +99,14 @@ describe("Organisation Profile", () => {
     cy.get(".react-tel-input")
       .eq(1)
       .within(() => {
+        cy.get('input[name="secondaryNumber"]').clear();
         cy.get(".flag-dropdown").click();
         cy.get("ul")
           .should("be.visible")
           .within(() => {
             cy.get('li[data-country-code="ng"]').click();
           });
-        cy.get('input[name="primaryNumber"]').type("634 567 890 5");
+        cy.get('input[name="secondaryNumber"]').type("634 567 890 5");
       });
   });
 
@@ -127,5 +129,158 @@ describe("Organisation Profile", () => {
     cy.get('input[name="name"]').clear().type("Tutounder", { delay: 0 });
     cy.get("button").contains("Save").should("not.be.disabled");
     cy.get("button").contains("Cancel").should("not.be.disabled");
+  });
+
+  it("should validate company name and website", () => {
+    cy.checkRequiredFieldError("name", "save-btn");
+    cy.checkRequiredFieldError("website", "save-btn");
+    cy.get('input[name="website"]').clear().type("travelspace");
+    cy.get("button").contains("Save").click();
+    cy.contains("small", "Enter a valid url").should("exist");
+  });
+
+  it("should validate company sector", () => {
+    cy.get(".css-1hy9hrv-control").within(() => {
+      cy.get(".css-1xc3v61-indicatorContainer").eq(0).click();
+    });
+    cy.get("button").contains("Save").click();
+
+    cy.contains("small", "At least one sector must be selected").should("exist");
+  });
+
+  it("should submit company website successfully", () => {
+    cy.get('input[name="website"]').clear().type("https://tulips.ng");
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification("Company profile saved sucessfully");
+  });
+
+  it("should submit company name successfully", () => {
+    cy.get('input[name="name"]').clear().type("Tulips");
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification("Company profile saved sucessfully");
+  });
+
+  it("should submit company sector successfully", () => {
+    cy.get(".css-1hy9hrv-control").within(() => {
+      cy.get(".css-1xc3v61-indicatorContainer").eq(1).click();
+    });
+
+    cy.get(".css-1nmdiq5-menu").should("exist");
+    cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
+    cy.get("div#react-select-3-option-0").should("be.visible").click();
+
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification("Company profile saved sucessfully");
+  });
+
+  it("should allow updating of primary number", () => {
+    cy.get(".react-tel-input")
+      .eq(0)
+      .within(() => {
+        cy.get('input[name="primaryNumber"]').clear();
+        cy.get(".flag-dropdown").click();
+        cy.get("ul")
+          .should("be.visible")
+          .within(() => {
+            cy.get('li[data-country-code="ng"]').click();
+          });
+        cy.get('input[name="primaryNumber"]').type("708 283 684 6");
+      });
+
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification("Company profile saved sucessfully");
+  });
+
+  it("should allow updating of secondary number", () => {
+    cy.get(".react-tel-input")
+      .eq(1)
+      .within(() => {
+        cy.get('input[name="secondaryNumber"]').clear();
+        cy.get(".flag-dropdown").click();
+        cy.get("ul")
+          .should("be.visible")
+          .within(() => {
+            cy.get('li[data-country-code="ng"]').click();
+          });
+        cy.get('input[name="secondaryNumber"]').type("706 991 081 8");
+      });
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification("Company profile saved sucessfully");
+  });
+
+  it("should update primary email and display otp modal", () => {
+    cy.get("[data-cy='primary-emailBtn']").click();
+    cy.get("aside.fixed").find('input[name="email"]').clear().type("test4@example.com");
+    cy.get("aside.fixed").find("button").contains("Continue").click();
+    cy.get("aside.fixed").should("be.visible");
+    cy.get("aside.fixed").find("h2").should("contain.text", "Verify Your Email");
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        "We’ve sent a 6-character code to test4@example.com The code expires shortly, so please enter it soon."
+      );
+
+    cy.get('div[data-input-otp-container="true"]')
+      .should("exist")
+      .as("otpContainer")
+      .children("div")
+      .should("have.length", 8);
+    cy.get('[role="separator"]').should("exist");
+    cy.get("svg").should("exist");
+
+    cy.get("aside.fixed")
+      .find("button")
+      .contains("Continue")
+      .should("be.visible")
+      .and("be.disabled");
+
+    cy.get('input[data-input-otp="true"]').should("be.enabled");
+    cy.get('input[data-input-otp="true"]').type("123456");
+    cy.contains("button", "Continue").should("be.visible").and("not.be.disabled");
+  });
+
+  it("should update secondary email and display otp modal", () => {
+    cy.get("[data-cy='secondary-emailBtn']").click();
+    cy.get("aside.fixed").find('input[name="email"]').clear().type("test3@example.com");
+    cy.get("aside.fixed").find("button").contains("Continue").click();
+    cy.get("aside.fixed").should("be.visible");
+    cy.get("aside.fixed").find("h2").should("contain.text", "Verify Your Email");
+    cy.get("aside.fixed")
+      .find("p")
+      .should(
+        "contain.text",
+        "We’ve sent a 6-character code to test3@example.com The code expires shortly, so please enter it soon."
+      );
+
+    cy.get('div[data-input-otp-container="true"]')
+      .should("exist")
+      .as("otpContainer")
+      .children("div")
+      .should("have.length", 8);
+    cy.get('[role="separator"]').should("exist");
+    cy.get("svg").should("exist");
+
+    cy.get("aside.fixed")
+      .find("button")
+      .contains("Continue")
+      .should("be.visible")
+      .and("be.disabled");
+
+    cy.get('input[data-input-otp="true"]').should("be.enabled");
+    cy.get('input[data-input-otp="true"]').type("123456");
+    cy.contains("button", "Continue").should("be.visible").and("not.be.disabled");
+  });
+
+  it("should throw an error if invalid primary number is submitted", () => {
+    cy.get(".react-tel-input input").eq(0).clear().type("9 174 564 512 6");
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification(`"phone_number" contains an invalid value`);
+  });
+
+  it("should throw an error if invalid secondary number is submitted", () => {
+    cy.get(".react-tel-input input").eq(1).clear().type("4 634 567 890 9");
+    cy.get("button").contains("Save").click();
+    cy.checkAndCloseToastNotification(`"phone_number" contains an invalid value`);
   });
 });

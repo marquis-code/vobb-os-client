@@ -88,7 +88,10 @@ const OrgProfile = () => {
   return (
     <>
       <ChangeEmail
-        callback={() => setEmailOTP(true)}
+        callback={() => {
+          setChangeEmail(false);
+          setEmailOTP(true);
+        }}
         show={changeEmail}
         close={() => setChangeEmail(false)}
       />
