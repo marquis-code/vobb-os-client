@@ -50,7 +50,8 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
         <Button
           onClick={handleAddAttribute}
           className="flex mt-8 mb-6 gap-2 ml-auto"
-          variant={"fill"}>
+          variant={"fill"}
+          data-cy="add-memberAttr">
           <MixIcon /> New member attribute
         </Button>
         <AttributesTable columns={columns} data={tableData} />
@@ -62,6 +63,7 @@ const MemberAttributes: React.FC<MemberAttributesProps> = ({
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-4"
+          data-cy="pagination"
         />
       </section>
     </>

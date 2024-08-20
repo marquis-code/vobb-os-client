@@ -68,7 +68,8 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
           <Button
             onClick={handleAddBranch}
             className="flex mt-8 mb-6 gap-2 ml-auto"
-            variant={"fill"}>
+            variant={"fill"}
+            data-cy="add-branch">
             <PlusCircledIcon /> New branch
           </Button>
           <BranchesTable columns={columns} data={tableData} />
@@ -81,6 +82,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
             totalPages={totalPages}
             currentPage={currentPage}
             className="mt-4"
+            data-cy="pagination"
           />
         </section>
       )}

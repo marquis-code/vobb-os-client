@@ -81,7 +81,7 @@ const OrgCommunicationUI: React.FC<OrgCommProps> = ({
             </div>
           ))}
         </div>
-        <div className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20">
+        <div className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20" data-cy="preview">
           {notices.find((notice) => notice.key === preview)?.preview ||
             "No notice selected for preview"}
         </div>

@@ -50,7 +50,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         className="max-w-none"
       />
       <Tabs defaultValue="member">
-        <TabsList className="mb-2">
+        <TabsList className="mb-2" data-cy="attr-tablist">
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
             value="member">
