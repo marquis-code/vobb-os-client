@@ -62,7 +62,11 @@ const TeamsUI = ({
       <SettingsPageTitle title="Teams" className="max-w-none" />
       <section className="mb-6 flex justify-between gap-4 items-center">
         <Filter className="mb-0" filters={filters} setFilter={setFilters} attributes={attributes} />
-        <Button onClick={handleAddTeam} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
+        <Button
+          onClick={handleAddTeam}
+          className="flex mb-6 gap-2 ml-auto"
+          variant={"fill"}
+          data-cy="add-team">
           <PlusCircledIcon /> New team
         </Button>
       </section>
@@ -74,7 +78,7 @@ const TeamsUI = ({
         pageLimit={pageLimit ?? 20}
         totalPages={totalPages}
         currentPage={currentPage}
-        className="mt-4 mb-28"
+        className="mt-4 mb-28 paginate"
       />
     </>
   );
