@@ -90,7 +90,7 @@ describe("Organisation teams", () => {
       });
   });
 
-  it("validates required fields in add team modal", () => {
+  it("validates required fields, icon and name, in add team modal", () => {
     cy.get('[data-cy="add-team"]').click();
 
     cy.get("aside.fixed")
@@ -158,5 +158,13 @@ describe("Organisation teams", () => {
         cy.get("button:has(svg)").eq(0).click();
       });
     cy.checkAndCloseToastNotification("This team already exists in your company");
+  });
+
+  it("checks that actions button is active", () => {
+    cy.get("td")
+      .eq(6)
+      .within(() => {
+        cy.get("button").should("be.visible").and("not.be.disabled");
+      });
   });
 });
