@@ -197,4 +197,155 @@ describe("Organisation Members", () => {
       "An account with this ekeneikeokoro@gmail.com exists already"
     );
   });
+
+  it("Resends invitation", () => {
+    cy.get("td")
+      .eq(8)
+      .within(() => {
+        cy.wait(1000);
+
+        cy.get("button").click();
+      });
+    cy.get("div").contains("Actions").should("exist");
+    cy.get('div[role="menuitem"]')
+      .eq(1)
+      .contains("Cancel invitation")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get('div[role="menuitem"]').eq(0).contains("Resend invitation").click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Confirm Action");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+
+        cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
+        cy.get("button").contains("Continue").should("be.visible").click();
+        cy.get("button:has(svg)").eq(0).click();
+      });
+    cy.checkAndCloseToastNotification("Invite resent successfully");
+  });
+
+  it("Cancels invitation", () => {
+    cy.get("td")
+      .eq(8)
+      .within(() => {
+        cy.wait(1000);
+        cy.get("button").click();
+      });
+    cy.get("div").contains("Actions").should("exist");
+    cy.get('div[role="menuitem"]')
+      .eq(0)
+      .contains("Resend invitation")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get('div[role="menuitem"]').eq(1).contains("Cancel invitation").click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Confirm Action");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+
+        cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
+        cy.get("button").contains("Continue").should("be.visible").click();
+        cy.get("button:has(svg)").eq(0).click();
+      });
+    cy.checkAndCloseToastNotification("Invite cancelled successfully");
+  });
+
+  it("displays actions options for active user", () => {
+    cy.get("td")
+      .eq(8)
+      .within(() => {
+        cy.get("button").click();
+      });
+    cy.get("div").contains("Actions").should("exist");
+    cy.get('div[role="menuitem"]')
+      .eq(0)
+      .contains("View member")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get('div[role="menuitem"]')
+      .eq(1)
+      .contains("Change role")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get('div[role="menuitem"]')
+      .eq(2)
+      .contains("Suspend member")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+  });
+
+  it("displays change role modal for active user", () => {
+    cy.get("td")
+      .eq(8)
+      .within(() => {
+        cy.get("button").click();
+      });
+    cy.get('div[role="menuitem"]').eq(1).contains("Change role").click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Change Poseph Dewbottom's Role");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+
+        cy.get("label").should("contain.text", "Select role");
+        cy.get("div.css-b62m3t-container").should("exist");
+
+        cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
+        cy.get("button").contains("Save").should("be.visible").and("be.enabled");
+        cy.get("button:has(svg)").eq(0).click();
+      });
+  });
+
+  it("displays suspend member modal for active user", () => {
+    cy.get("td")
+      .eq(8)
+      .within(() => {
+        cy.get("button").click();
+      });
+    cy.get('div[role="menuitem"]').eq(2).contains("Suspend member").click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Suspend Poseph Dewbottom");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+
+        cy.get("p")
+          .contains(
+            "You can select a start and end date to temporarily suspend an account, or choose indefinite suspension to deactivate an account."
+          )
+          .should("exist");
+
+        cy.get("label").should("contain.text", "Reason (optional)");
+        cy.get("textarea[name='reason']").should("be.visible").and("be.enabled");
+
+        cy.get("label").should("contain.text", "From");
+        cy.get("label").should("contain.text", "To");
+        cy.get("span").filter(':contains("Pick a date")').should("have.length", 2);
+
+        cy.get("label").should("contain.text", "Indefinite suspension");
+        cy.get("button[role='checkbox']").should("exist");
+
+        cy.get("p")
+          .contains(
+            "NB: These actions are reversible so the accounts will still be visible on your dashboard if you need to restore them"
+          )
+          .should("exist");
+
+        cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
+        cy.get("button").contains("Suspend account").should("be.visible").and("be.enabled");
+        cy.get("button:has(svg)").eq(0).click();
+      });
+  });
 });

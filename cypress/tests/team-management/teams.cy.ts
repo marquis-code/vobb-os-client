@@ -160,11 +160,64 @@ describe("Organisation teams", () => {
     cy.checkAndCloseToastNotification("This team already exists in your company");
   });
 
-  it("checks that actions button is active", () => {
+  it("displays actions options for a team user", () => {
     cy.get("td")
       .eq(6)
       .within(() => {
-        cy.get("button").should("be.visible").and("not.be.disabled");
+        cy.get("button").click();
       });
+    cy.get("div").contains("Actions").should("exist");
+    cy.get('div[role="menuitem"]')
+      .eq(0)
+      .contains("Edit team")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get('div[role="menuitem"]')
+      .eq(1)
+      .contains("View team")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get('div[role="menuitem"]')
+      .eq(2)
+      .contains("View team history")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+  });
+
+  it("Edits team details", () => {
+    cy.get("td")
+      .eq(6)
+      .within(() => {
+        cy.get("button").click();
+      });
+    cy.get('div[role="menuitem"]').eq(0).click();
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Edit Team");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+        cy.wait(1000);
+
+        cy.get("div.reactIconsPickerContainer").within(() => {
+          cy.get("div.pickButton").click();
+          cy.get("div.modalFade").within(() => {
+            cy.get("input.searchInput").type("sun{enter}");
+          });
+          cy.get("div.modalIcons").eq(0).click();
+        });
+
+        cy.get('input[name="name"]').clear().type("Sunshine Delight");
+        cy.get('textarea[name="description"]').clear().type("FUn team arm of organisation");
+
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true });
+
+        cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
+        cy.get("button").contains("Save").click();
+        cy.get("button:has(svg)").eq(0).click();
+      });
+    cy.checkAndCloseToastNotification("Team details updated successfully");
   });
 });
