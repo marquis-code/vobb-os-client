@@ -81,8 +81,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
             pageLimit={limit}
             totalPages={totalPages}
             currentPage={currentPage}
-            className="mt-4"
-            data-cy="pagination"
+            className="mt-4 paginate"
           />
         </section>
       )}

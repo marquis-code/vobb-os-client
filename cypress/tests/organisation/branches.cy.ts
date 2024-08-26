@@ -1,3 +1,4 @@
+//@ts-ignore
 describe("Organisation branches", () => {
   before(() => {
     cy.visit("/login");
@@ -52,6 +53,42 @@ describe("Organisation branches", () => {
         cy.get("th").eq(5).should("have.text", "");
       });
     });
-    cy.get('[data-cy="pagination"]').should("exist");
+    cy.get("section.paginate").should("exist");
+  });
+
+  it("displays add branch modal when button is clicked", () => {
+    cy.get('[data-cy="add-branch"]').click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get("h2").should("contain.text", "Create New Branch");
+        cy.get("button:has(svg)").should("be.visible").and("be.enabled");
+
+        cy.get("label").should("contain.text", "Branch Name");
+        cy.get('input[name="name"]').should("exist").and("not.be.disabled");
+
+        cy.get("label").should("contain.text", "Country of Operation");
+        cy.get("label").should("contain.text", "Timezone");
+        cy.get("div.css-1gmin95-control").should("have.length", 2);
+
+        cy.get("label").should("contain.text", "State");
+        cy.get('input[name="state"]').should("exist").and("not.be.disabled");
+
+        cy.get("label").should("contain.text", "City");
+        cy.get('input[name="city"]').should("exist").and("not.be.disabled");
+
+        cy.get("label").should("contain.text", "Address Line 1");
+        cy.get('input[name="addressLine1"]').should("exist").and("not.be.disabled");
+
+        cy.get("label").should("contain.text", "Address Line 2 (Optional)");
+        cy.get('input[name="addressLine2"]').should("exist").and("not.be.disabled");
+
+        cy.get("label").should("contain.text", "Postal Code");
+        cy.get('input[name="postalCode"]').should("exist").and("not.be.disabled");
+
+        cy.get("button").contains("Cancel").should("be.visible").and("not.be.disabled");
+        cy.get("button").contains("Create").should("be.visible").and("not.be.enabled");
+      });
   });
 });
