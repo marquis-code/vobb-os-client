@@ -1,28 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useForm, SubmitHandler, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
-import { calculateTotalWordCount, debounce, dynamicValidationSchema, renderFormFields } from "lib";
+import { dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
+import { LoadingSpinner } from "components";
 
 export interface CustomAttributesProps {
-  submit: (data: { name: string; value: string | optionType; orgId: string }) => void;
+  submit: (data: { name: string; value: string | optionType; orgRefId: string }) => void;
   orgProperties: OrganisationAttributesData[];
   memberProperties: MemberPropertiesData[];
+  loading: boolean;
 }
 
 const CustomAttributes: React.FC<CustomAttributesProps> = ({
   submit,
   orgProperties,
-  memberProperties
+  memberProperties,
+  loading
 }) => {
   const { countries } = useCountriesContext();
   const [date, setDate] = useState<Date>();
   const [file, setFile] = useState<File | null>(null);
   const [selectedCheckboxValues, setSelectedCheckboxValues] = useState<optionType[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState<optionType>();
+
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
 
   const handleCheckboxChange = (newValues: optionType[], id: string) => {
     setSelectedCheckboxValues(newValues);
@@ -43,7 +55,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
   const schema = yup.object().shape(schemaFields);
 
   const {
-    handleSubmit,
     reset,
     register,
     formState: { errors },
@@ -63,7 +74,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
 
       memberProperties.forEach((memberProp) => {
         const fieldName = `${memberProp.type}_${memberProp.id}`;
-        const resetValue = memberProp.values[0];
+        const resetValue = memberProp.values;
 
         resetValues[fieldName] = resetValue;
       });
@@ -72,31 +83,36 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     }
   }, [memberProperties, reset]);
 
+  //long text word length
   const longTextValues = useWatch({ control });
+  const calculateTotalWordCount = () => {
+    let wordCountObj = {};
+    Object.keys(longTextValues).forEach((fieldName) => {
+      if (fieldName.startsWith("long-text")) {
+        wordCountObj[fieldName] = longTextValues[fieldName].trim().split(/\s+/).length;
+      }
+    });
+    return wordCountObj;
+  };
 
-  const debouncedSubmit = debounce((name: string, orgId: string) => {
-    const value = getValues()[name];
-    if (value !== "" || value !== null) submit({ name, value, orgId });
+  const debouncedSubmit = debounce((name: string, orgRefId: string) => {
+    const values = getValues();
+    submit({ name, value: values[name], orgRefId });
   }, 1000);
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (!name) return;
       const createdAttrId = name.split("_")[1];
-
-      //Get OrgId
-      const orgId =
+      const orgRefId =
         memberProperties.filter((prop) => prop.id === createdAttrId)[0]?.attribute ?? undefined;
       if (getValues()[name]) {
-        debouncedSubmit(name, orgId);
+        debouncedSubmit(name, orgRefId);
       }
     });
     return () => subscription.unsubscribe();
   }, [watch, getValues, memberProperties]);
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data);
-  };
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -106,47 +122,49 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
             These are the properties your organization administrator has defined for all members
           </p>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {orgProperties?.map((fieldData) => {
-            // properties already set by member have a new id that will replace it's id from organisation(for the purpose of reset)
-            const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
-            const id = memberProp ? memberProp.id : fieldData.id;
-            return renderFormFields({
-              fieldData,
-              id,
-              register,
-              errors,
-              setValue,
-              longTextCount: calculateTotalWordCount(longTextValues)[`long-text_${id}`] ?? 0,
-              countries,
-              radio: {
-                value: selectedRadioValue,
-                handleChange: handleRadioChange
-              },
-              checkbox: {
-                value: selectedCheckboxValues,
-                handleChange: handleCheckboxChange
-              },
-              date: {
-                value: date,
-                handleChange: setDate
-              },
-              file: {
-                value: file,
-                handleChange: setFile
-              },
-              watch
-            });
-          })}
-          <div className="flex gap-2 justify-end max-w-[800px] pt-4">
-            <Button onClick={() => reset()} variant={"outline"}>
-              Cancel
-            </Button>
-            <Button type="submit" variant={"fill"}>
-              Save
-            </Button>
-          </div>
-        </form>
+        <div className="relative">
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+              <LoadingSpinner />
+            </div>
+          )}
+          {!loading && orgProperties.length === 0 ? (
+            <p>No properties set by organisation for now.</p>
+          ) : (
+            <form className="relative z-0">
+              {orgProperties?.map((fieldData) => {
+                const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
+                const id = memberProp ? memberProp.id : fieldData.id;
+                return renderFormFields({
+                  fieldData,
+                  id,
+                  register,
+                  errors,
+                  setValue,
+                  longTextCount: calculateTotalWordCount()[`long-text_${id}`] ?? 0,
+                  countries,
+                  radio: {
+                    value: selectedRadioValue,
+                    handleChange: handleRadioChange
+                  },
+                  checkbox: {
+                    value: selectedCheckboxValues,
+                    handleChange: handleCheckboxChange
+                  },
+                  date: {
+                    value: date,
+                    handleChange: setDate
+                  },
+                  file: {
+                    value: file,
+                    handleChange: setFile
+                  },
+                  watch
+                });
+              })}
+            </form>
+          )}
+        </div>
       </section>
     </>
   );

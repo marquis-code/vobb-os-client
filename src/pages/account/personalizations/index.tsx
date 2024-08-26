@@ -1,20 +1,22 @@
 import {
   fetchMemberPropertiesService,
+  fetchOrgPropertiesService,
   personalAccountUpdateService,
   updateOrgPropertiesService
 } from "api";
 import { toast } from "components";
-import { useApiRequest, useFetchOrgAttributes, useFetchUser } from "hooks";
+import { useApiRequest, useFetchUser } from "hooks";
 import { AccountPersonalizationsUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
-import { MemberPropertiesData, optionType, updatePropertiesRequestBody } from "types";
+import {
+  MemberPropertiesData,
+  OrganisationAttributesData,
+  updatePropertiesRequestBody
+} from "types";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();
-  const { fetchOrgProperties, orgProperties } = useFetchOrgAttributes();
-
   const [orgAttrQueryParams, setOrgAttrQueryParam] = useState({ page: 1, limit: 20 });
-  const { page, limit } = orgAttrQueryParams;
 
   const {
     run: runSystemLanguage,
@@ -44,12 +46,18 @@ const AccountPersonalizations = () => {
     requestStatus: timezoneStatus
   } = useApiRequest({});
 
+  const {
+    run: runFetchAttr,
+    data: fetchAttrResponse,
+    requestStatus: fetchAttrStatus
+  } = useApiRequest({});
   const { run: runFetchMemberProps, data: memberPropsResponse } = useApiRequest({});
 
   const {
     run: runUpdateProperties,
     data: updatePropertiesResponse,
-    error: updatePropertiesError
+    error: updatePropertiesError,
+    requestStatus: updatePropertiesStatus
   } = useApiRequest({});
 
   const handleChangeSystemLanguage = (formData: FormData) => {
@@ -66,6 +74,12 @@ const AccountPersonalizations = () => {
 
   const handleSetTimezone = (formData: FormData) => {
     runTimezone(personalAccountUpdateService(formData));
+  };
+
+  const fetchOrgProperties = () => {
+    runFetchAttr(
+      fetchOrgPropertiesService({ page: orgAttrQueryParams.page, limit: orgAttrQueryParams.limit })
+    );
   };
 
   const fetchMemberProperties = () => {
@@ -142,6 +156,26 @@ const AccountPersonalizations = () => {
     }
   }, [updatePropertiesResponse, updatePropertiesError]);
 
+  //organisation's properties
+  const orgProperties = useMemo<OrganisationAttributesData[]>(() => {
+    if (fetchAttrResponse?.status === 200) {
+      const propertiesArray = fetchAttrResponse?.data?.data?.attributes.map((item) => ({
+        id: item._id,
+        title: item.label,
+        type: item.type,
+        required: item.is_required,
+        isSystem: item.is_system_prop,
+        isActive: item.is_active,
+        description: item.description,
+        metaData: item.meta
+      }));
+
+      return propertiesArray;
+    }
+
+    return [];
+  }, [fetchAttrResponse]);
+
   //already set member's properties.(used to determine update or create)
   const memberProperties = useMemo<MemberPropertiesData[]>(() => {
     if (memberPropsResponse?.status === 200) {
@@ -160,26 +194,22 @@ const AccountPersonalizations = () => {
   }, [memberPropsResponse]);
 
   //Create or update the account's (member's) property.
-  const handleMemberProperties = (data: {
-    name: string;
-    value: optionType | string;
-    orgId: string;
-  }) => {
-    const { name, value, orgId } = data;
+  const handleMemberProperties = (data: { name: string; value; orgRefId: string }) => {
+    const { name, value, orgRefId } = data;
     const type = name.split("_")[0];
     const attribute = name.split("_")[1];
 
     const body =
       type === "phone-number"
-        ? [(value as string).replace(/\D/g, "")]
+        ? value.replace(/\D/g, "")
         : type === "country"
-        ? [(value as optionType).value]
+        ? value.value
         : type === "multiple-choice"
-        ? [(value as optionType).value]
-        : [value as string];
+        ? value.value
+        : value;
 
     const requestBody: updatePropertiesRequestBody = {
-      attribute: orgId ?? attribute,
+      attribute: orgRefId ?? attribute,
       type,
       data: body
     };
@@ -188,7 +218,7 @@ const AccountPersonalizations = () => {
   };
 
   useEffect(() => {
-    fetchOrgProperties({ page, limit });
+    fetchOrgProperties();
   }, [orgAttrQueryParams]);
 
   useEffect(() => {
@@ -217,7 +247,8 @@ const AccountPersonalizations = () => {
         orgProperties={{
           orgProperties,
           memberProperties,
-          submit: handleMemberProperties
+          submit: handleMemberProperties,
+          loading: fetchAttrStatus.isPending || updatePropertiesStatus.isPending
         }}
       />
     </>

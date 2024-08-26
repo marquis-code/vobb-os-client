@@ -22,9 +22,24 @@ const MemberProfileDetails: React.FC<MemberProfileDetailsProps> = ({ profile, ca
   const { page, limit } = orgAttrQueryParams;
   const { fetchOrgProperties, orgProperties, loading: loadingCustom } = useFetchOrgAttributes();
 
-  const { run: runChangeEmail, data: emailResponse, error: emailError } = useApiRequest({});
-  const { run: runEditDefaultAttr, data: defaultResponse, error: defaultError } = useApiRequest({});
-  const { run: runEditCustomAttr, data: customResponse, error: customError } = useApiRequest({});
+  const {
+    run: runChangeEmail,
+    data: emailResponse,
+    error: emailError,
+    requestStatus: emailStatus
+  } = useApiRequest({});
+  const {
+    run: runEditDefaultAttr,
+    data: defaultResponse,
+    error: defaultError,
+    requestStatus: defaultStatus
+  } = useApiRequest({});
+  const {
+    run: runEditCustomAttr,
+    data: customResponse,
+    error: customError,
+    requestStatus: customStatus
+  } = useApiRequest({});
 
   const handleMemberDetails = async (data: { name: string; value; orgId: string }) => {
     const { name, value, orgId } = data;
@@ -74,11 +89,7 @@ const MemberProfileDetails: React.FC<MemberProfileDetailsProps> = ({ profile, ca
 
     //custom attributes
     const body =
-      type === "phone-number"
-        ? [value.replace(/\D/g, "")]
-        : type === "country"
-        ? [value.value]
-        : [value];
+      type === "phone-number" ? value.replace(/\D/g, "") : type === "country" ? value.value : value;
 
     const customAttrBody: updatePropertiesRequestBody = {
       attribute: orgId ?? customAttr,
@@ -155,6 +166,7 @@ const MemberProfileDetails: React.FC<MemberProfileDetailsProps> = ({ profile, ca
         orgAttributes={orgProperties}
         submit={handleMemberDetails}
         loadingCustom={loadingCustom}
+        loading={emailStatus.isPending || defaultStatus.isPending || customStatus.isPending}
       />
     </>
   );

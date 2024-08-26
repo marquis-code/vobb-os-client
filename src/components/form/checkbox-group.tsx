@@ -16,6 +16,7 @@ export interface CheckboxGroupProps {
   validatorMessage?: string;
   hideOptions?: boolean;
   labelClassName?: string;
+  disabled?: boolean;
 }
 
 const CustomCheckboxGroup: React.FC<CheckboxGroupProps> = (props) => {
@@ -29,7 +30,8 @@ const CustomCheckboxGroup: React.FC<CheckboxGroupProps> = (props) => {
     hideOptions,
     validatorMessage,
     labelClassName,
-    hint
+    hint,
+    disabled
   } = props;
 
   const handleChange = (item: optionType) => {
@@ -81,6 +83,7 @@ const CustomCheckboxGroup: React.FC<CheckboxGroupProps> = (props) => {
                     checked={value?.some((val) => item.value === val.value) ?? false}
                     handleChecked={() => handleChange(item)}
                     labelClassName="font-normal"
+                    disabled={disabled}
                   />
                 ))}
               </div>

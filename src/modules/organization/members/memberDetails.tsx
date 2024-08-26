@@ -39,6 +39,7 @@ interface MemberProfileDetailsUIProps {
     orgId: string;
   }) => void;
   loadingCustom: boolean;
+  loading: boolean;
   customMemberAttr: MemberPropertiesData[];
 }
 
@@ -47,6 +48,7 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
   orgAttributes,
   submit,
   loadingCustom,
+  loading,
   customMemberAttr
 }) => {
   const { countries } = useCountriesContext();
@@ -90,7 +92,7 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
 
     customMemberAttr.forEach((attr) => {
       const fieldName = `${attr.type}_${attr.id}`;
-      const resetValue = attr.values[0];
+      const resetValue = attr.values;
 
       customAttrValues[fieldName] = resetValue;
     });
@@ -147,137 +149,145 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
   }, [watch, getValues, customMemberAttr]);
 
   return (
-    <>
-      <div>
-        {" "}
-        <p className="mb-4 font-medium">Member Details</p>
-        <ProfileInput
-          label={"First name"}
-          icon={<PersonIcon />}
-          type="text"
-          name="firstName"
-          register={register}
-          placeholder="Set first name"
-        />
-        <ProfileInput
-          label={"Last name"}
-          icon={<PersonIcon />}
-          type="text"
-          name="lastName"
-          register={register}
-          placeholder="Set last name"
-        />
-        <ProfileInput
-          label={"Email address"}
-          icon={<EnvelopeClosedIcon />}
-          type="email"
-          name="email"
-          register={register}
-          placeholder="Set email address"
-        />
-        <ProfilePhoneInput
-          icon={<CalendarIcon />}
-          label="Phone number"
-          name="phoneNumber"
-          value={watch("phoneNumber", profile?.phoneNumber)}
-          validatorMessage=""
-          // validatorMessage={errors.phoneNumber?.message}
-          handleChange={(val) => {
-            setValue("phoneNumber", val);
-          }}
-        />
-        <ProfileFileUpload
-          icon={<ImageIcon />}
-          label="Avatar"
-          file={file}
-          multiple
-          id={"file"}
-          name="avatar"
-          onFileChange={(files) => {
-            setFile(files);
-            setValue("avatar", files);
-          }}
-        />
-        <ProfileSelectInput
-          icon={<CalendarIcon />}
-          label="System Language"
-          placeholder="select a language"
-          options={[{ label: "English", value: "English" }]}
-          value={watch("sysLanguage")?.value === "" ? null : watch("sysLanguage")}
-          onChange={(val) => val && setValue("sysLanguage", val)}
-        />
-        <ProfileSelectInput
-          icon={<CalendarIcon />}
-          label="Timezone"
-          placeholder="select a timezone"
-          options={timeZoneOptions}
-          value={watch("timeZone")?.value === "" ? null : watch("timeZone")}
-          onChange={(val) => val && setValue("timeZone", val)}
-        />
-        <ProfileSelectInput
-          icon={<CalendarIcon />}
-          label="Date format"
-          placeholder="select a date format"
-          options={dateFormatOptions}
-          value={watch("dateFormat")?.value === "" ? null : watch("dateFormat")}
-          onChange={(val) => val && setValue("dateFormat", val)}
-        />
-        <ProfileInput
-          label={"Job Title"}
-          icon={<PersonIcon />}
-          type="text"
-          name="jobTitle"
-          register={register}
-          placeholder="Set Job title"
-        />
-        <ProfileCheckboxGroup
-          icon={<PersonIcon />}
-          label="Languages"
-          options={languagesOptions}
-          value={watch("languages")}
-          onChange={(val) => {
-            const value = val as optionType[];
-            setValue("languages", value);
-          }}
-        />
-        <p className="my-4 font-medium">Custom Attributes</p>
-        {loadingCustom ? (
-          <LoadingSpinner />
-        ) : (
-          orgAttributes?.map((fieldData) => {
-            // properties already set by member have a new id that will replace it's id from organisation.
-            const memberProp = customMemberAttr.find((attr) => attr.label === fieldData.title);
-            const id = memberProp ? memberProp.id : fieldData.id;
-            return renderProfileFormFields({
-              fieldData,
-              id,
-              register,
-              errors,
-              setValue,
-              longTextCount: calculateTotalWordCount(longTextValues)[`long-text_${id}`] ?? 0,
-              countries,
-              radio: {
-                value: selectedRadioValue,
-                handleChange: handleRadioChange
-              },
-              checkbox: {
-                value: selectedCheckboxValues,
-                handleChange: handleCheckboxChange
-              },
-              date: {
-                value: date,
-                handleChange: setDate
-              },
-              file: {
-                value: file,
-                handleChange: setFile
-              },
-              watch
-            });
-          })
-        )}
-      </div>{" "}
-    </>
+    <div data-cy="member-details">
+      <p className="mb-4 font-medium">Member Details</p>
+      <ProfileInput
+        label={"First name"}
+        icon={<PersonIcon />}
+        type="text"
+        name="firstName"
+        register={register}
+        placeholder="Set first name"
+        disabled={loading}
+      />
+      <ProfileInput
+        label={"Last name"}
+        icon={<PersonIcon />}
+        type="text"
+        name="lastName"
+        register={register}
+        placeholder="Set last name"
+        disabled={loading}
+      />
+      <ProfileInput
+        label={"Email address"}
+        icon={<EnvelopeClosedIcon />}
+        type="email"
+        name="email"
+        register={register}
+        placeholder="Set email address"
+        disabled={loading}
+      />
+      <ProfilePhoneInput
+        icon={<CalendarIcon />}
+        label="Phone number"
+        name="phoneNumber"
+        value={watch("phoneNumber", profile?.phoneNumber)}
+        validatorMessage={
+          typeof errors.phoneNumber?.message === "string" ? errors.phoneNumber.message : undefined
+        }
+        handleChange={(val) => {
+          setValue("phoneNumber", val);
+        }}
+        disabled={loading}
+      />
+      <ProfileFileUpload
+        icon={<ImageIcon />}
+        label="Avatar"
+        file={file}
+        multiple
+        id={"file"}
+        name="avatar"
+        onFileChange={(files) => {
+          setFile(files);
+          setValue("avatar", files);
+        }}
+        disabled={loading}
+      />
+      <ProfileSelectInput
+        icon={<CalendarIcon />}
+        label="System Language"
+        placeholder="select a language"
+        options={[{ label: "English", value: "English" }]}
+        value={watch("sysLanguage")?.value === "" ? null : watch("sysLanguage")}
+        onChange={(val) => val && setValue("sysLanguage", val)}
+        disabled={loading}
+      />
+      <ProfileSelectInput
+        icon={<CalendarIcon />}
+        label="Timezone"
+        placeholder="select a timezone"
+        options={timeZoneOptions}
+        value={watch("timeZone")?.value === "" ? null : watch("timeZone")}
+        onChange={(val) => val && setValue("timeZone", val)}
+        disabled={loading}
+      />
+      <ProfileSelectInput
+        icon={<CalendarIcon />}
+        label="Date format"
+        placeholder="select a date format"
+        options={dateFormatOptions}
+        value={watch("dateFormat")?.value === "" ? null : watch("dateFormat")}
+        onChange={(val) => val && setValue("dateFormat", val)}
+        disabled={loading}
+      />
+      <ProfileInput
+        label={"Job Title"}
+        icon={<PersonIcon />}
+        type="text"
+        name="jobTitle"
+        register={register}
+        placeholder="Set Job title"
+        disabled={loading}
+      />
+      <ProfileCheckboxGroup
+        icon={<PersonIcon />}
+        label="Languages"
+        options={languagesOptions}
+        value={watch("languages")}
+        onChange={(val) => {
+          const value = val as optionType[];
+          setValue("languages", value);
+        }}
+        disabled={loading}
+      />
+      {loadingCustom ? (
+        <LoadingSpinner />
+      ) : (
+        orgAttributes?.map((fieldData) => {
+          // properties already set by member have a new id that will replace it's id from organisation.
+          const memberProp = customMemberAttr.find((attr) => attr.label === fieldData.title);
+          const id = memberProp ? memberProp.id : fieldData.id;
+          return renderProfileFormFields({
+            fieldData,
+            id,
+            register,
+            errors,
+            setValue,
+            longTextCount: calculateTotalWordCount(longTextValues)[`long-text_${id}`] ?? 0,
+            countries,
+            radio: {
+              value: selectedRadioValue,
+              handleChange: handleRadioChange
+            },
+            checkbox: {
+              value: selectedCheckboxValues,
+              handleChange: handleCheckboxChange
+            },
+            date: {
+              value: date,
+              handleChange: setDate
+            },
+            file: {
+              value: file,
+              handleChange: setFile
+            },
+            watch,
+            loading
+          });
+        })
+      )}
+    </div>
   );
 };
 

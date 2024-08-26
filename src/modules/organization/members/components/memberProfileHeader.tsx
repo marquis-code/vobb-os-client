@@ -40,7 +40,7 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
         ""
       )}
       <section className="pb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-cy="avatar-section">
           <Avatar className="w-10 h-10">
             <AvatarImage src={avatar} alt="avatar" />
             <AvatarFallback>{initials}</AvatarFallback>
@@ -55,7 +55,9 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
           </div>
         </div>
       </section>
-      <section className="border-y py-3 px-4 flex text-xs gap-2 bg-vobb-neutral-10 -ml-4 w-[calc(100%+2rem)] items-center">
+      <section
+        className="border-y py-3 px-4 flex text-xs gap-2 bg-vobb-neutral-10 -ml-4 w-[calc(100%+2rem)] items-center"
+        data-cy="tabs-section">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
