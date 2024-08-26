@@ -85,7 +85,8 @@ const YourLanguages: React.FC<YourLanguagesProps> = ({ submit, loadingPreferredL
               onClick={handleSubmit(onSubmit)}
               variant={"fill"}
               loading={loadingPreferredLang}
-              disabled={loadingPreferredLang}>
+              disabled={loadingPreferredLang}
+              data-cy="save-btn">
               Save
             </Button>
           </div>

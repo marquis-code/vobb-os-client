@@ -57,7 +57,7 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) =>
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
         <div>
-          <h2 className="text-[16px] font-semibold mb-2">Preffered Date Format</h2>
+          <h2 className="text-[16px] font-semibold mb-2">Preferred Date Format</h2>
           <p className="text-xs">
             Choose the format in which you want dates to be presented to you
           </p>
@@ -77,7 +77,8 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) =>
               onClick={handleSubmit(onSubmit)}
               variant={"fill"}
               loading={loadingDateFormat}
-              disabled={loadingDateFormat}>
+              disabled={loadingDateFormat}
+              data-cy="save-btn">
               Save
             </Button>
           </div>

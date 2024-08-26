@@ -239,7 +239,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(newValue) =>
             radio?.handleChange ? radio.handleChange(newValue, id) : () => {}
           }
@@ -252,7 +252,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue?.map((option) => ({ label: option, value: option }))}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(newValue) =>
             checkbox?.handleChange ? checkbox.handleChange(newValue, id) : () => {}
           }
@@ -265,7 +265,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(val) => val && setValue(fieldName, val.value)}
           validatorMessage={getErrorMessage(errors[fieldName])}
         />
