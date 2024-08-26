@@ -87,8 +87,90 @@ describe("Organisation branches", () => {
         cy.get("label").should("contain.text", "Postal Code");
         cy.get('input[name="postalCode"]').should("exist").and("not.be.disabled");
 
-        cy.get("button").contains("Cancel").should("be.visible").and("not.be.disabled");
+        cy.get("button").contains("Cancel").should("be.visible").and("not.be.enabled");
         cy.get("button").contains("Create").should("be.visible").and("not.be.enabled");
       });
+  });
+
+  it("validates the seven required fields in add branch form", () => {
+    cy.get('[data-cy="add-branch"]').click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get('input[name="name"]').type("menco").clear();
+        cy.get("button").contains("Create").click();
+        cy.get("small").filter(':contains("Required")').should("have.length", 7);
+      });
+  });
+
+  it("successfully adds new branch with correct details", () => {
+    cy.get('[data-cy="add-branch"]').click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get('input[name="name"]').clear().type("Blamo");
+        cy.get('input[name="state"]').clear().type("Ekiti");
+        cy.get('input[name="city"]').clear().type("Ado");
+        cy.get('input[name="addressLine1"]').clear().type("54 Akamu street");
+        cy.get('input[name="postalCode"]').clear().type("104140");
+
+        cy.get("div.css-b62m3t-container")
+          .eq(0)
+          .within(() => {
+            cy.get("div.css-1xc3v61-indicatorContainer").click();
+            cy.wait(1000);
+            cy.get("div.css-1nmdiq5-menu").should("exist");
+            cy.get("div#react-select-7-option-6").should("be.visible").click();
+          });
+        cy.get("div.css-b62m3t-container")
+          .eq(1)
+          .within(() => {
+            cy.get("div.css-1xc3v61-indicatorContainer").click();
+            cy.wait(1000);
+            cy.get("div.css-1nmdiq5-menu").should("exist");
+            cy.get("div#react-select-9-option-1").should("be.visible").click();
+          });
+
+        cy.get("button").contains("Create").click();
+        cy.get("button:has(svg)").eq(0).click();
+      });
+    cy.checkAndCloseToastNotification("1 branch created");
+  });
+
+  it("Throws error when there is existing branch with name", () => {
+    cy.get('[data-cy="add-branch"]').click();
+
+    cy.get("aside.fixed")
+      .eq(1)
+      .within(() => {
+        cy.get('input[name="name"]').clear().type("Blamo");
+        cy.get('input[name="state"]').clear().type("Lagos");
+        cy.get('input[name="city"]').clear().type("Ado");
+        cy.get('input[name="addressLine1"]').clear().type("54 Imani street");
+        cy.get('input[name="postalCode"]').clear().type("104140");
+
+        cy.get("div.css-b62m3t-container")
+          .eq(0)
+          .within(() => {
+            cy.get("div.css-1xc3v61-indicatorContainer").click();
+            cy.wait(1000);
+            cy.get("div.css-1nmdiq5-menu").should("exist");
+            cy.get("div#react-select-7-option-6").should("be.visible").click();
+          });
+        cy.get("div.css-b62m3t-container")
+          .eq(1)
+          .within(() => {
+            cy.get("div.css-1xc3v61-indicatorContainer").click();
+            cy.wait(1000);
+            cy.get("div.css-1nmdiq5-menu").should("exist");
+            cy.get("div#react-select-9-option-1").should("be.visible").click();
+          });
+
+        cy.get("button").contains("Create").click();
+        cy.get("button:has(svg)").eq(0).click();
+      });
+    cy.checkAndCloseToastNotification("Duplicate branch address not allowed, found at pos [0]");
   });
 });

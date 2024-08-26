@@ -141,7 +141,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
             className="text-error-10"
             size={"default"}
             variant={"outline"}
-            disabled={loading}>
+            disabled={!isDirty || loading}>
             Cancel
           </Button>
           <Button
