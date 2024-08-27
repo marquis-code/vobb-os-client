@@ -52,7 +52,8 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <>
       <section
-        className={cn("flex items-center justify-between gap-4 text-vobb-neutral-90", className)}>
+        className={cn("flex items-center justify-between gap-4 text-vobb-neutral-90", className)}
+        data-cy="pagination">
         {hidePageLimit ? (
           ""
         ) : (

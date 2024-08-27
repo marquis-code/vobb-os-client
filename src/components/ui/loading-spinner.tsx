@@ -7,7 +7,7 @@ export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
 
 const LoadingSpinner = ({ size = 50, className, ...props }: ISVGProps) => {
   return (
-    <div className="flex items-center justify-center h-2/4">
+    <div className="flex items-center justify-center h-2/4" data-cy="loading-spinner">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
