@@ -214,8 +214,7 @@ const EditAttributeModal: React.FC<EditAttributeModalProps> = ({
             onClick={handleSubmit(onSubmit)}
             size={"default"}
             variant={"fill"}
-            loading={loading}
-            disabled={loading}>
+            loading={loading}>
             Save
           </Button>
         </div>

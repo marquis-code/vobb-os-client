@@ -111,20 +111,23 @@ const ActionColumn = ({ editTeam, viewHistory, viewTeam }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button variant="ghost" className="h-6 w-6 p-0" data-cy="menu-team">
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={editTeam} className="gap-2 cursor-pointer">
+        <DropdownMenuItem onClick={editTeam} className="gap-2 cursor-pointer" testId="edit-team">
           <Pencil1Icon /> Edit team
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={viewTeam} className="gap-2 cursor-pointer">
+        <DropdownMenuItem onClick={viewTeam} className="gap-2 cursor-pointer" testId="view-team">
           <EyeOpenIcon /> View team
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={viewHistory} className="gap-2 cursor-pointer">
+        <DropdownMenuItem
+          onClick={viewHistory}
+          className="gap-2 cursor-pointer"
+          testId="team-history">
           <EyeOpenIcon /> View team history
         </DropdownMenuItem>
       </DropdownMenuContent>

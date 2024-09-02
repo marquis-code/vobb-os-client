@@ -141,7 +141,7 @@ const OrgBranch = () => {
         name: item.name,
         id: item._id,
         icon: item.icon ?? "",
-        date: item.date_added.split(" ")[0],
+        date: item.date_added,
         teamLeads: item.team_leads.map((lead) => lead.name),
         teamManagers: item.team_managers.map((manager) => manager.name),
         numberOfMembers: item.members

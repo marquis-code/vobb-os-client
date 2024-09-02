@@ -21,10 +21,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
+      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="confirm-modal">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-bold">Confirm Action</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-cy="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
@@ -43,8 +43,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             size={"default"}
             variant={"fill"}
             onClick={handleContinue}
-            loading={loading}
-            disabled={loading}>
+            loading={loading}>
             Continue
           </Button>
         </div>

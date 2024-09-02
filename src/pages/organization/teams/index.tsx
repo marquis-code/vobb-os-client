@@ -25,19 +25,20 @@ const Teams = () => {
   const handlePagination = (param: string, value: number) => {
     setTeamsQueryParams((prev) => ({ ...prev, [param]: value }));
   };
+  const handleSetTeamId = (id: string) => {
+    setTeamId(id);
+  };
 
-  const handlCloseAddTeam = () => {
+  const handlCloseAddTeam = (id) => {
     setAddTeam(false);
     handleShowPermissions();
+    handleSetTeamId(id);
   };
 
   const handleAddTeam = () => setAddTeam(true);
   const handleShowPermissions = () => setPermissions(true);
   const handleClosePermissions = () => setPermissions(false);
   const handleViewTeam = (id: string) => navigate(Routes.team(id));
-  const handleSetTeamId = (id: string) => {
-    setTeamId(id);
-  };
 
   const handleShowBranches = (id: string) => {
     setBranches(true);
@@ -54,15 +55,17 @@ const Teams = () => {
 
   return (
     <>
-      <AddTeam
-        callback={handlCloseAddTeam}
-        show={addTeam}
-        close={() => setAddTeam(false)}
-        handleSetTeamId={handleSetTeamId}
-      />
+      <AddTeam callback={() => handlCloseAddTeam} show={addTeam} close={() => setAddTeam(false)} />
       <TeamPermissions show={permissions} close={handleClosePermissions} teamId={teamId} />
       <TeamBranches show={branches} close={handleCloseBranches} teamId={teamId} />
-      <EditTeam {...editTeam} close={handlCloseEditTeam} />
+      <EditTeam
+        {...editTeam}
+        close={handlCloseEditTeam}
+        callback={() => {
+          fetchAllTeams({ page: 1, limit });
+          handlCloseEditTeam();
+        }}
+      />
       <TeamsUI
         teams={{
           orgTeams,

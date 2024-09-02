@@ -19,10 +19,21 @@ interface SelectInputProps {
   required?: boolean;
   styles?: CSSObjectWithLabel;
   loading?: boolean;
+  testId?: string;
 }
 
 const SelectInput: React.FC<SelectInputProps> = (props) => {
-  const { label, validatorMessage, parentClassName, hint, icon, required, styles, loading } = props;
+  const {
+    label,
+    validatorMessage,
+    parentClassName,
+    hint,
+    icon,
+    required,
+    styles,
+    loading,
+    testId
+  } = props;
 
   return (
     <div className={cn("mb-4", parentClassName)}>
@@ -32,7 +43,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
           {required ? <span className={"text-error-50"}>*</span> : ""}
         </label>
       )}
-      <div className="relative">
+      <div className="relative" data-cy={testId}>
         {icon ? <span className="absolute left-2 top-[10px] z-[1]">{icon}</span> : ""}
         <Select
           {...props}

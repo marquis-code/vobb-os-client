@@ -1,10 +1,10 @@
-import { fetchATeamsMembersService } from "api";
+import { fetchATeamService, fetchATeamsMembersService } from "api";
 import { TeamMemberTableData } from "components";
 import { useApiRequest } from "hooks";
 import { TeamUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
-import { MetaDataProps } from "types";
-import { useNavigate } from "react-router-dom";
+import { MetaDataProps, SingleTeamResponseProps } from "types";
+import { useNavigate, useParams } from "react-router-dom";
 import { Routes } from "router";
 
 export interface TeamMembersDataProps {
@@ -23,8 +23,7 @@ const initMemberData = {
 };
 const Team = () => {
   const navigate = useNavigate();
-  const teamPath = window.location.pathname.split("/");
-  const id = teamPath[teamPath.length - 1];
+  const { id } = useParams();
   const {
     run: runFetchMembers,
     data: membersResponse,
@@ -34,6 +33,10 @@ const Team = () => {
     page: 1,
     limit: 20
   });
+  const { run: runFetchATeam, data: teamResponse, requestStatus: teamStatus } = useApiRequest({});
+  const fetchATeam = () => {
+    if (id) runFetchATeam(fetchATeamService(id));
+  };
 
   const { page, limit } = membersQueryParams;
   const handlePagination = (param: string, value: number) => {
@@ -43,10 +46,32 @@ const Team = () => {
     runFetchMembers(fetchATeamsMembersService({ id, page, limit }));
   };
 
+  const teamData = useMemo<SingleTeamResponseProps>(() => {
+    if (teamResponse?.status === 200) {
+      const item = teamResponse?.data?.data;
+      const propertyArray = {
+        id: item._id,
+        icon: item.icon,
+        name: item.name,
+        description: item.description,
+        isGeneral: item.general
+      };
+
+      return propertyArray;
+    }
+    return {
+      id: "",
+      icon: "",
+      name: "",
+      description: "",
+      isGeneral: true
+    };
+  }, [teamResponse]);
   const teamsMembersData = useMemo<TeamMembersDataProps>(() => {
     if (membersResponse?.status === 200) {
       const membersArray = membersResponse?.data?.data?.members.map((item) => ({
         id: item._id,
+        team: item.team,
         name: `${item.first_name} ${item.last_name}`,
         email: item.email ?? "",
         role: item.role,
@@ -76,6 +101,7 @@ const Team = () => {
       <TeamUI
         handleAddMember={console.log}
         handleViewMember={handleViewMember}
+        teamName={teamData.name}
         memberData={{
           loading: membersStatus.isPending,
           teamsMembersData: teamsMembersData,

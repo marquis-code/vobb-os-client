@@ -59,6 +59,7 @@ const permissions: PermissionItem[] = [
 
 interface TeamUIProps extends TeamMemberTableActions {
   handleAddMember: () => void;
+  teamName: string;
   // loading: boolean;
   // teamsMembersData:
   memberData: {
@@ -71,6 +72,7 @@ interface TeamUIProps extends TeamMemberTableActions {
 const TeamUI = ({
   handleViewMember,
   handleAddMember,
+  teamName,
   memberData: { loading, teamsMembersData, handlePagination }
 }: TeamUIProps) => {
   const teamColumns = useMemo(
@@ -95,7 +97,7 @@ const TeamUI = ({
         action={console.log}
         className="max-w-[800px]"
       />
-      <SettingsPageTitle title="Team Name" />
+      <SettingsPageTitle title={teamName} />
       <Tabs className="max-w-[800px]" defaultValue="member">
         <TabsList defaultValue={"permissions"} className="mb-2">
           <TabsTrigger

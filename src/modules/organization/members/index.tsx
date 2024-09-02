@@ -113,7 +113,8 @@ const MembersUI: React.FC<MembersUIProps> = ({
         pageLimit={pageLimit}
         totalPages={totalPages}
         currentPage={currentPage}
-        className="mt-4 mb-28 paginate"
+        className="mt-4 mb-28"
+        testId="pagination"
       />
     </>
   );

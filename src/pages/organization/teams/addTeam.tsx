@@ -5,12 +5,11 @@ import { useMemo } from "react";
 import { createTeamRequestBody, createTeamService } from "api";
 
 interface AddTeamProps extends ModalProps {
-  callback: () => void;
-  handleSetTeamId: (id: string) => void;
+  callback: (id: string) => void;
 }
 
 const AddTeam: React.FC<AddTeamProps> = (props) => {
-  const { callback, handleSetTeamId } = props;
+  const { callback } = props;
   const { fetchAllTeams } = useFetchTeams({ limit: 20 });
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
@@ -34,8 +33,7 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
       });
       const newTeamId = response?.data?.data?.team;
       fetchAllTeams({ page: 1 });
-      handleSetTeamId(newTeamId);
-      callback();
+      callback(newTeamId);
     } else if (error) {
       toast({
         variant: "destructive",

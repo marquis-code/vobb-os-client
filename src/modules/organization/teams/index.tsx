@@ -78,7 +78,8 @@ const TeamsUI = ({
         pageLimit={pageLimit ?? 20}
         totalPages={totalPages}
         currentPage={currentPage}
-        className="mt-4 mb-28 paginate"
+        className="mt-4 mb-28"
+        testId="pagination"
       />
     </>
   );

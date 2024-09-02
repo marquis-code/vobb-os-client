@@ -16,6 +16,7 @@ export interface teamBranchDataProps {
     state: string;
     country: string;
     date: string;
+    city: string;
   }[];
   metaData: MetaDataProps;
 }
@@ -42,7 +43,8 @@ const TeamBranches: React.FC<TeamBranchesProps> = (props) => {
     if (response?.status === 200) {
       const teamBranchData = response?.data?.data?.branches.map((item) => ({
         id: item._id,
-        name: item.name ?? "Unnamed",
+        name: item.name,
+        city: item.city ?? "",
         addressLine1: item.address_line_1,
         zipcode: item.zip_code,
         state: item.state,

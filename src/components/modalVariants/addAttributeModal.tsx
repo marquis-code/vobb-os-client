@@ -212,8 +212,7 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
             onClick={handleSubmit(onSubmit)}
             size={"default"}
             variant={"fill"}
-            loading={loading}
-            disabled={loading}>
+            loading={loading}>
             Create
           </Button>
         </div>

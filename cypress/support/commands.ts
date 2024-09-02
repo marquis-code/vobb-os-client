@@ -180,3 +180,24 @@ Cypress.Commands.add("testAddEmailAddressModal", (inputSelector, buttonSelector)
       });
   });
 });
+
+Cypress.Commands.add("verifyHeaderNavAndTitle", (text) => {
+  cy.get("header")
+    .should("exist")
+    .within(() => {
+      cy.get("nav")
+        .should("exist")
+        .within(() => {
+          cy.get("ol")
+            .should("exist")
+            .within(() => {
+              cy.get("li").should("have.length", 3);
+
+              cy.get("li").eq(0).should("contain", "Workspace");
+              cy.get("li").eq(1).find("svg").should("exist");
+              cy.get("li").eq(2).should("contain", text);
+            });
+        });
+    });
+  cy.get("h1").should("contain", text);
+});

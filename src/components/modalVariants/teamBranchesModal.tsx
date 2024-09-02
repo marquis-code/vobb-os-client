@@ -20,7 +20,7 @@ const TeamBranchesModal = ({
   branchesDetails: { loading, teamBranches, handlePagination }
 }: TeamBranchesModalProps) => {
   const { teamBranchData, metaData } = teamBranches;
-  const { currentPage, totalCount, totalPages } = metaData;
+  const { currentPage, totalCount, totalPages, pageLimit = 8 } = metaData;
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -43,7 +43,7 @@ const TeamBranchesModal = ({
                   {branch.name} -
                 </Link>
                 <span className="text-xs">
-                  ({branch.addressLine1}, {branch.state}, {branch.country})
+                  ({branch.city}, {branch.state}, {branch.country})
                 </span>
                 <span className="text-xs ml-auto">on {branch.date}</span>
               </p>
@@ -55,7 +55,7 @@ const TeamBranchesModal = ({
           handleChange={(val) => handlePagination(val)}
           handlePageLimit={console.log}
           totalCount={totalCount}
-          pageLimit={1}
+          pageLimit={pageLimit}
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-2"

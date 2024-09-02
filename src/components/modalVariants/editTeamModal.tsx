@@ -72,10 +72,10 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
 
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
+      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="editTeam-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Edit Team</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-cy="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
@@ -214,8 +214,7 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
             onClick={handleSubmit(onSubmit)}
             size={"default"}
             variant={"fill"}
-            loading={loadingEdit}
-            disabled={loadingEdit}>
+            loading={loadingEdit}>
             Save
           </Button>
         </div>
