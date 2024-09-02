@@ -90,6 +90,7 @@ const Team = () => {
 
   useEffect(() => {
     if (id) fetchTeamMembers();
+    fetchATeam();
   }, [membersQueryParams]);
 
   const handleViewMember = (id) => {
