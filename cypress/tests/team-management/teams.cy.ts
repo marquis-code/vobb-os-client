@@ -15,7 +15,7 @@ describe("Organisation teams", () => {
   });
 
   it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Teams");
+    cy.verifyHeaderNavAndTitle("Workspace", "Teams");
   });
 
   it("displays the filter component", () => {

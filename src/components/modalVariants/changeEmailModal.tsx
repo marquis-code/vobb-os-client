@@ -63,7 +63,8 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            loading={!isDirty || loading}
+            disabled={!isDirty}
+            loading={loading}
             size={"default"}
             variant={"fill"}>
             Continue

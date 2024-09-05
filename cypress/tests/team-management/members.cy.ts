@@ -15,7 +15,7 @@ describe("Organisation Members", () => {
   });
 
   it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Members");
+    cy.verifyHeaderNavAndTitle("Workspace", "Members");
   });
 
   it("displays the filter component", () => {

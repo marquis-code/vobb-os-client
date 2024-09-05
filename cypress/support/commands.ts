@@ -181,7 +181,7 @@ Cypress.Commands.add("testAddEmailAddressModal", (inputSelector, buttonSelector)
   });
 });
 
-Cypress.Commands.add("verifyHeaderNavAndTitle", (text) => {
+Cypress.Commands.add("verifyHeaderNavAndTitle", (sectionText, pageText) => {
   cy.get("header")
     .should("exist")
     .within(() => {
@@ -193,11 +193,11 @@ Cypress.Commands.add("verifyHeaderNavAndTitle", (text) => {
             .within(() => {
               cy.get("li").should("have.length", 3);
 
-              cy.get("li").eq(0).should("contain", "Workspace");
+              cy.get("li").eq(0).should("contain", sectionText);
               cy.get("li").eq(1).find("svg").should("exist");
-              cy.get("li").eq(2).should("contain", text);
+              cy.get("li").eq(2).should("contain", pageText);
             });
         });
     });
-  cy.get("h1").should("contain", text);
+  cy.get("h1").should("contain", pageText);
 });
