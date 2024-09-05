@@ -85,7 +85,7 @@ const DropdownMenuItem = React.forwardRef<
       className
     )}
     {...props}
-    data-cy={testId}
+    data-testid={testId}
   />
 ));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;

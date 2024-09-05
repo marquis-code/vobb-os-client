@@ -6,10 +6,8 @@ import {
   DropdownMenuIcon,
   EnvelopeClosedIcon,
   FileIcon,
-  FrameIcon,
   LetterCaseCapitalizeIcon,
   ListBulletIcon,
-  MixIcon,
   TextAlignJustifyIcon
 } from "@radix-ui/react-icons";
 import { CheckDoneIcon, FlagIcon, HashIcon, PhoneIcon } from "assets";

@@ -100,7 +100,7 @@ const MembersUI: React.FC<MembersUIProps> = ({
           onClick={handleInviteMember}
           className="flex gap-2 ml-auto"
           variant={"fill"}
-          data-cy="invite-member">
+          data-testid="invite-member">
           <PlusCircledIcon /> Invite member
         </Button>
       </section>

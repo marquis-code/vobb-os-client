@@ -32,7 +32,7 @@ const Modal: React.FC<ModalUIProps> = ({
           "w-full h-full fixed bg-[#344054]/30 bg-opacity-75 z-[1500] p-4 top-0 left-0 flex",
           dialogClassName
         )}
-        data-cy={testId}>
+        data-testid={testId}>
         <section
           ref={modalRef}
           className={cn(

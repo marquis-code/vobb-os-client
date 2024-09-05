@@ -3,7 +3,7 @@ import { useApiRequest } from "hooks/useApiRequest";
 import { useMemo } from "react";
 import { PaginationProps, TeamDataProps } from "types";
 
-const initTeamsData = {
+export const initTeamsData = {
   teamsData: [],
   metaData: {
     currentPage: 1,

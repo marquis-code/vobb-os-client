@@ -71,11 +71,11 @@ Cypress.Commands.add("solveGoogleReCAPTCHA", () => {
 });
 
 Cypress.Commands.add("loginUserWithEmail", (email, password) => {
-  cy.get('[data-cy="email"]').type(email);
-  cy.get('[data-cy="password"]').type(password);
+  cy.get('[data-testid="email"]').type(email);
+  cy.get('[data-testid="password"]').type(password);
   cy.solveGoogleReCAPTCHA();
   cy.wait(2000);
-  cy.get('[data-cy="signin-btn"]').click();
+  cy.get('[data-testid="signin-btn"]').click();
 
   cy.url({ timeout: 10000 }).should("not.include", "/login");
 
@@ -99,28 +99,28 @@ Cypress.Commands.add("checkAndCloseToastNotification", (message, timeout = 10000
 });
 
 Cypress.Commands.add("checkRequiredFieldError", (field, btnId) => {
-  cy.get(`[data-cy="${field}"]`).clear(); // Clear the field if it has any value
-  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.get(`[data-testid="${field}"]`).clear(); // Clear the field if it has any value
+  cy.get(`[data-testid="${btnId}"]`).click();
   cy.contains("small", "Required").should("exist");
 });
 
 Cypress.Commands.add("checkInvalidEmailError", (emailId, email, btnId) => {
-  cy.get(`[data-cy="${emailId}"]`).clear().type(email); // Enter invalid email
-  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.get(`[data-testid="${emailId}"]`).clear().type(email); // Enter invalid email
+  cy.get(`[data-testid="${btnId}"]`).click();
   cy.contains("small", "Enter a valid email").should("exist");
 });
 
 Cypress.Commands.add("checkRecaptchaValueExists", (btnId) => {
   cy.frameLoaded('iframe[title="reCAPTCHA"]');
   cy.iframe('iframe[title="reCAPTCHA"]').find(".recaptcha-checkbox-unchecked").should("be.visible");
-  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.get(`[data-testid="${btnId}"]`).click();
   cy.contains("small", "Required").should("exist");
 });
 
 Cypress.Commands.add("checkValidPasswordCriteria", (fieldId, password, btnId) => {
-  cy.get(`[data-cy="${fieldId}"]`).clear().type(password);
+  cy.get(`[data-testid="${fieldId}"]`).clear().type(password);
 
-  cy.get(`[data-cy="${btnId}"]`).click();
+  cy.get(`[data-testid="${btnId}"]`).click();
   if (password.length < 8) {
     cy.contains("small", "Password should be at least 8 characters long").should("exist");
   } else if (!/[A-Z]/.test(password)) {

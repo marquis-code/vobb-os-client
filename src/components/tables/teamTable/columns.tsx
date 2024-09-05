@@ -111,7 +111,7 @@ const ActionColumn = ({ editTeam, viewHistory, viewTeam }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0" data-cy="menu-team">
+        <Button variant="ghost" className="h-6 w-6 p-0" data-testid="menu-team">
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>

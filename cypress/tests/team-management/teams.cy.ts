@@ -25,7 +25,7 @@ describe("Organisation teams", () => {
   });
 
   it("displays the add team button", () => {
-    cy.get('[data-cy="add-team"]').should("be.visible").and("not.be.disabled");
+    cy.get('[data-testid="add-team"]').should("be.visible").and("not.be.disabled");
   });
 
   it("displays add team table headers", () => {
@@ -52,8 +52,8 @@ describe("Organisation teams", () => {
       req.continue((res) => {});
     }).as("fetchData");
 
-    cy.get("[data-cy='pagination']").should("exist");
-    cy.get("[data-cy='select-limit']").should("be.visible").click();
+    cy.get("[data-testid='pagination']").should("exist");
+    cy.get("[data-testid='select-limit']").should("be.visible").click();
 
     cy.get("div.css-1nmdiq5-menu").should("exist");
 
@@ -61,16 +61,16 @@ describe("Organisation teams", () => {
 
     cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
 
-    cy.get("[data-cy='move-left']").should("be.visible");
-    cy.get("[data-cy='move-right']").should("be.visible");
+    cy.get("[data-testid='move-left']").should("be.visible");
+    cy.get("[data-testid='move-right']").should("be.visible");
   });
 
   it("displays add team modal when button is clicked", () => {
-    cy.get("[data-cy='add-team']").click();
+    cy.get("[data-testid='add-team']").click();
 
-    cy.get("[data-cy='addTeam-modal']").within(() => {
+    cy.get("[data-testid='addTeam-modal']").within(() => {
       cy.get("h2").should("contain.text", "Create New Team");
-      cy.get("[data-cy='close-btn']").should("be.visible").and("be.enabled");
+      cy.get("[data-testid='close-btn']").should("be.visible").and("be.enabled");
 
       cy.get("div.reactIconsPickerContainer").should("exist");
 
@@ -92,14 +92,14 @@ describe("Organisation teams", () => {
   });
 
   it("closes add team modal when cancel button is clicked", () => {
-    cy.get('[data-cy="close-btn"]').click();
-    cy.get("[data-cy='addTeam-modal']").should("not.exist");
+    cy.get('[data-testid="close-btn"]').click();
+    cy.get("[data-testid='addTeam-modal']").should("not.exist");
   });
 
   it("validates required fields, icon and name, in add team modal", () => {
-    cy.get('[data-cy="add-team"]').click();
+    cy.get('[data-testid="add-team"]').click();
 
-    cy.get("[data-cy='addTeam-modal']").within(() => {
+    cy.get("[data-testid='addTeam-modal']").within(() => {
       cy.get('input[name="name"]').clear().type("Newman team");
       cy.get("button").contains("Create").click();
       cy.get("small").filter(':contains("Required")').should("have.length", 1);
@@ -111,9 +111,9 @@ describe("Organisation teams", () => {
   });
 
   it("submits form and successfully initiates team creation when all details are correct", () => {
-    cy.get('[data-cy="add-team"]').click();
+    cy.get('[data-testid="add-team"]').click();
 
-    cy.get("[data-cy='addTeam-modal']").within(() => {
+    cy.get("[data-testid='addTeam-modal']").within(() => {
       cy.get("div.reactIconsPickerContainer").within(() => {
         cy.get("div.pickButton").click();
         cy.get("div.modalFade").within(() => {
@@ -131,15 +131,15 @@ describe("Organisation teams", () => {
       cy.get("button").contains("Create").click();
 
       cy.get("h2").should("contain.text", "Set Team Permissions");
-      cy.get("[data-cy='close-btn']").click();
+      cy.get("[data-testid='close-btn']").click();
     });
     cy.checkAndCloseToastNotification("Proceed to define permissions for team roles");
   });
 
   it("throws error when team name already exists in the system", () => {
-    cy.get('[data-cy="add-team"]').click();
+    cy.get('[data-testid="add-team"]').click();
 
-    cy.get("[data-cy='addTeam-modal']").within(() => {
+    cy.get("[data-testid='addTeam-modal']").within(() => {
       cy.get("div.reactIconsPickerContainer").within(() => {
         cy.get("div.pickButton").click();
         cy.get("div.modalFade").within(() => {
@@ -155,26 +155,26 @@ describe("Organisation teams", () => {
       cy.get('input[type="checkbox"]').eq(1).check({ force: true });
 
       cy.get("button").contains("Create").click();
-      cy.get("[data-cy='close-btn']").eq(0).click();
+      cy.get("[data-testid='close-btn']").eq(0).click();
     });
     cy.checkAndCloseToastNotification("This team already exists in your company");
   });
 
   it("displays actions options for a team", () => {
-    cy.get("[data-cy='menu-team']").eq(0).click();
+    cy.get("[data-testid='menu-team']").eq(0).click();
     cy.get("div").contains("Actions").should("exist");
 
-    cy.get("[data-cy='edit-team']")
+    cy.get("[data-testid='edit-team']")
       .contains("Edit team")
       .within(() => {
         cy.get("svg").should("exist");
       });
-    cy.get("[data-cy='view-team']")
+    cy.get("[data-testid='view-team']")
       .contains("View team")
       .within(() => {
         cy.get("svg").should("exist");
       });
-    cy.get("[data-cy='team-history']")
+    cy.get("[data-testid='team-history']")
       .contains("View team history")
       .within(() => {
         cy.get("svg").should("exist");
@@ -182,12 +182,12 @@ describe("Organisation teams", () => {
   });
 
   it("Edits team details", () => {
-    cy.get("[data-cy='menu-team']").eq(0).click();
+    cy.get("[data-testid='menu-team']").eq(0).click();
 
-    cy.get("[data-cy='edit-team']").click();
-    cy.get("[data-cy='editTeam-modal']").within(() => {
+    cy.get("[data-testid='edit-team']").click();
+    cy.get("[data-testid='editTeam-modal']").within(() => {
       cy.get("h2").should("contain.text", "Edit Team");
-      cy.get("[data-cy='close-btn']").should("be.visible").and("be.enabled");
+      cy.get("[data-testid='close-btn']").should("be.visible").and("be.enabled");
       cy.wait(1000);
 
       cy.get("div.reactIconsPickerContainer").within(() => {
@@ -205,14 +205,14 @@ describe("Organisation teams", () => {
 
       cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
       cy.get("button").contains("Save").click();
-      cy.get("[data-cy='close-btn']").click();
+      cy.get("[data-testid='close-btn']").click();
     });
     cy.checkAndCloseToastNotification("Team details updated successfully");
   });
 
   it("view team button leads to team's page", () => {
-    cy.get("[data-cy='menu-team']").eq(0).click();
-    cy.get("[data-cy='view-team']").click();
+    cy.get("[data-testid='menu-team']").eq(0).click();
+    cy.get("[data-testid='view-team']").click();
     cy.url().should("match", /http:\/\/localhost:3000\/teams\/[a-zA-Z0-9]+$/);
   });
 });

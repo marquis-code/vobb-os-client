@@ -1,4 +1,4 @@
-import { fetchMemberQueryParams, PaginationProps } from "types";
+import { activityParamsProps, fetchMemberQueryParams, PaginationProps } from "types";
 
 /*
 =================================
@@ -139,3 +139,22 @@ export const validateInviteURL = () => `${prefixTeam}/invite/validate`;
  *
  */
 export const acceptInviteURL = () => `${prefixTeam}/invite`;
+
+/**
+ * Fetch team's activities URL
+ * @returns url string
+ *
+ */
+export const fetchTeamActivitiesURL = (
+  id: string,
+  { page, limit, sort, ...queryParams }: activityParamsProps
+) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefixTeam}/history/${id}?page=${page}&limit=${limit}&sort=${sort}${
+    queryString ? `&${queryString}` : ""
+  }`;
+};

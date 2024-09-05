@@ -13,6 +13,7 @@ import {
   fetchATeamsMembersURL,
   fetchATeamURL,
   fetchOrgMembersURL,
+  fetchTeamActivitiesURL,
   fetchTeamRolesURL,
   fetchTeamsURL,
   inviteMemberURL,
@@ -22,7 +23,12 @@ import {
   unsuspendMemberURL,
   validateInviteURL
 } from "api";
-import { fetchMemberQueryParams, inviteMemberProperties, PaginationProps } from "types";
+import {
+  activityParamsProps,
+  fetchMemberQueryParams,
+  inviteMemberProperties,
+  PaginationProps
+} from "types";
 
 type teamPermissionTypes = {
   manager: boolean;
@@ -238,5 +244,18 @@ export const acceptInviteService = (data: acceptInviteRequestBody) => {
   return patchRequest({
     url: acceptInviteURL(),
     data
+  });
+};
+
+/**
+ * Fetch teams's activity service
+ * @returns axios promise
+ */
+export const fetchTeamActivitiesService = (
+  id: string,
+  { page, limit, sort, ...queryParams }: activityParamsProps
+) => {
+  return getRequest({
+    url: fetchTeamActivitiesURL(id, { page, limit, sort, ...queryParams })
   });
 };

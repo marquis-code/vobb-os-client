@@ -199,7 +199,7 @@ const ActionColumn = ({
         <Button
           variant="ghost"
           className="h-6 w-6 p-0"
-          data-cy={
+          data-testid={
             status === "active"
               ? "menu-activeUser"
               : status === "suspended"

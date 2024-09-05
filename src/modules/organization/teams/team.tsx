@@ -15,9 +15,10 @@ import {
 } from "components";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { TeamMembersDataProps } from "pages";
+import { TeamActivityResponse, TeamMembersDataProps } from "pages";
 import { TeamPermissionsUI } from "./teamPermissions";
 import { TeamActivity } from "./teamActivity";
+import { QueryParamProps } from "types";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -67,13 +68,20 @@ interface TeamUIProps extends TeamMemberTableActions {
     teamsMembersData: TeamMembersDataProps;
     handlePagination: (param: string, value: number) => void;
   };
+  teamActivities: {
+    loading: boolean;
+    data: TeamActivityResponse;
+    params: QueryParamProps;
+    handleFilter: (param: string, value: Date | string | number) => void;
+  };
 }
 
 const TeamUI = ({
   handleViewMember,
   handleAddMember,
   teamName,
-  memberData: { loading, teamsMembersData, handlePagination }
+  memberData: { loading, teamsMembersData, handlePagination },
+  teamActivities
 }: TeamUIProps) => {
   const teamColumns = useMemo(
     () =>
@@ -85,6 +93,7 @@ const TeamUI = ({
   const [filters, setFilters] = useState<FilterData[]>([]);
   const { membersArray, metaData } = teamsMembersData;
   const { currentPage, totalCount, totalPages, pageLimit } = metaData;
+
   return (
     <>
       <Badge
@@ -149,7 +158,7 @@ const TeamUI = ({
           <TeamPermissionsUI />
         </TabsContent>
         <TabsContent className="pb-8 mb-12" value="history">
-          <TeamActivity />
+          <TeamActivity teamActivities={teamActivities} />
         </TabsContent>
       </Tabs>
     </>

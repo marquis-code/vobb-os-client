@@ -3,7 +3,8 @@ import {
   formFieldData,
   MemberTableData,
   BranchMemberTableData,
-  BranchTeamTableData
+  BranchTeamTableData,
+  TeamTableData
 } from "types";
 import { TeamActivityData } from "modules";
 
@@ -548,7 +549,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   }
 ];
 
-export const TeamTableMock = [
+export const TeamTableMock: TeamTableData[] = [
   {
     id: "728ed52f",
     name: "Finance",
@@ -705,7 +706,7 @@ export const MemberTableMock: MemberTableData[] = [
 
 export const teamActivityMockData: TeamActivityData[] = [
   {
-    action: "new_member",
+    action: "joined",
     date: "05/05/2024",
     time: "5:05pm",
     initiator: { name: "James Arukpo", id: "james" },

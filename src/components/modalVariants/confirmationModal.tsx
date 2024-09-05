@@ -24,7 +24,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="confirm-modal">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-bold">Confirm Action</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"} data-cy="close-btn">
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>

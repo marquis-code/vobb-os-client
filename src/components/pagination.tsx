@@ -55,7 +55,7 @@ const Pagination: React.FC<PaginationProps> = ({
     <>
       <section
         className={cn("flex items-center justify-between gap-4 text-vobb-neutral-90", className)}
-        data-cy={testId}>
+        data-testid={testId}>
         {hidePageLimit ? (
           ""
         ) : (
@@ -83,7 +83,7 @@ const Pagination: React.FC<PaginationProps> = ({
             variant={"outline"}
             size={"icon"}
             onClick={handleDecrease}
-            data-cy="move-left">
+            data-testid="move-left">
             <ChevronLeftIcon />
           </Button>
           <Button
@@ -91,7 +91,7 @@ const Pagination: React.FC<PaginationProps> = ({
             disabled={currentPage >= totalPages}
             variant={"outline"}
             onClick={handleIncrease}
-            data-cy="move-right">
+            data-testid="move-right">
             <ChevronRightIcon />
           </Button>
         </div>

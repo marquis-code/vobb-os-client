@@ -64,7 +64,7 @@ const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({
         testId="suspendMember-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Suspend {name}</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"} data-cy="close-btn">
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>

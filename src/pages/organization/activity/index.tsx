@@ -3,9 +3,8 @@ import { useUserContext } from "context";
 import { format, parseISO } from "date-fns";
 import { useApiRequest } from "hooks";
 import { OrgActivityData, OrgActivityUI } from "modules";
-import { QueryParamProps } from "pages/account";
 import { useEffect, useMemo, useState } from "react";
-import { MetaDataProps } from "types";
+import { MetaDataProps, QueryParamProps } from "types";
 
 interface OrgActivityResponse {
   activityArray: OrgActivityData[];

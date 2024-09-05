@@ -1,3 +1,4 @@
+import { SortOrderType } from "components";
 import { MetaDataProps } from "types/interfaces";
 
 export interface UserProfileProps {
@@ -198,4 +199,12 @@ export interface activityParamsProps {
 export interface PaginationProps {
   page?: number;
   limit?: number;
+}
+
+export interface QueryParamProps {
+  page: number;
+  limit: number;
+  order: SortOrderType;
+  startDate: string;
+  endDate: string;
 }

@@ -46,15 +46,15 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
               break;
           }
         }}
-        data-cy="arrow-icon"
+        data-testid="arrow-icon"
       />
       <div className="hidden lg:grid">
-        <CompanyInfoIcon className="mb-6 m-auto" data-cy="logo" />
+        <CompanyInfoIcon className="mb-6 m-auto" data-testid="logo" />
         <div className="mb-8 text-center mx-auto">
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Company information
           </h1>
-          <p data-cy="subtitle">Enter your company details.</p>
+          <p data-testid="subtitle">Enter your company details.</p>
         </div>
       </div>
       <div>
@@ -74,19 +74,19 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
             "organisation" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange("organisation")}
-          data-cy="organisation-name-state"></div>
+          data-testid="organisation-name-state"></div>
         <div
           className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
             "teamSize" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange("teamSize")}
-          data-cy="teamsize-state"></div>
+          data-testid="teamsize-state"></div>
         <div
           className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
             "sector" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange("sector")}
-          data-cy="sector-state"></div>
+          data-testid="sector-state"></div>
       </div>
     </div>
   );

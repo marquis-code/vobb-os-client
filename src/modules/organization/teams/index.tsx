@@ -66,11 +66,15 @@ const TeamsUI = ({
           onClick={handleAddTeam}
           className="flex mb-6 gap-2 ml-auto"
           variant={"fill"}
-          data-cy="add-team">
+          data-testid="add-team">
           <PlusCircledIcon /> New team
         </Button>
       </section>
-      {loading ? <LoadingSpinner /> : <TeamTable columns={teamColumns} data={tableData} />}
+      {loading ? (
+        <LoadingSpinner testId="loading" />
+      ) : (
+        <TeamTable columns={teamColumns} data={tableData} />
+      )}
       <Pagination
         handleChange={(val) => handlePagination("page", val)}
         handlePageLimit={(val) => handlePagination("limit", val)}

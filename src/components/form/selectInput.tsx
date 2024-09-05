@@ -43,7 +43,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
           {required ? <span className={"text-error-50"}>*</span> : ""}
         </label>
       )}
-      <div className="relative" data-cy={testId}>
+      <div className="relative" data-testid={testId}>
         {icon ? <span className="absolute left-2 top-[10px] z-[1]">{icon}</span> : ""}
         <Select
           {...props}
