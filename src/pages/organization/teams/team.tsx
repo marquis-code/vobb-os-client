@@ -28,7 +28,7 @@ export interface TeamActivityResponse {
   activityArray: TeamActivityData[];
   metaData: MetaDataProps;
 }
-const initActivityData = {
+export const initActivityData = {
   activityArray: [],
   metaData: {
     currentPage: 1,

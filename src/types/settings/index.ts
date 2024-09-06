@@ -189,7 +189,7 @@ export interface branchQueryParamsProps {
 export interface activityParamsProps {
   page: number;
   limit: number;
-  sort: string;
+  sort: SortOrderType;
   start?: string;
   end?: string;
   start_date?: string;
