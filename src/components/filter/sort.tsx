@@ -26,9 +26,10 @@ interface SortByProps {
   };
   className?: string;
   isClearable?: boolean;
+  testId?: string;
 }
 
-const SortBy = ({ order, sort, className, isClearable }: SortByProps) => {
+const SortBy = ({ order, sort, className, isClearable, testId }: SortByProps) => {
   const handleSortBy = (item: optionType) => {
     sort.handleChange(item);
   };
@@ -41,7 +42,8 @@ const SortBy = ({ order, sort, className, isClearable }: SortByProps) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="py-1 h-7 px-2 gap-1 text-xs text-vobb-neutral-60 focus-visible:ring-0 focus-visible:ring-none">
+          className="py-1 h-7 px-2 gap-1 text-xs text-vobb-neutral-60 focus-visible:ring-0 focus-visible:ring-none"
+          data-testid={testId}>
           {!order.active && <CaretSortIcon />}
           {sort.active ? (
             <>

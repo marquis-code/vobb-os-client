@@ -43,7 +43,6 @@ const TeamActivity: React.FC<TeamActivityProps> = ({
       isFirstAction: action === "created"
     })
   );
-
   return (
     <>
       <section className="grid gap-4 max-w-[800px] mt-4">
@@ -60,6 +59,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({
               active: sortOrder,
               handleChange: (val) => handleFilter("order", val as string)
             }}
+            testId="sortBy"
           />
           <DateFilter
             showPreset
@@ -74,16 +74,17 @@ const TeamActivity: React.FC<TeamActivityProps> = ({
                 handleFilter("endDate", val.to ? val.to.toISOString().slice(0, 10) : endDate);
               }
             }}
+            testId="dateFilter"
           />{" "}
         </div>
         {loading ? (
-          <LoadingSpinner />
+          <LoadingSpinner testId="loading" />
         ) : !activityList.length ? (
-          <p>No team activities for this time.</p>
+          <p data-testid="no-activities">No team activities for this time.</p>
         ) : (
           <>
             {activityList.map((item, index) => (
-              <ActivityCard {...item} key={`${index}_${item.date}`} />
+              <ActivityCard {...item} key={`${index}_${item.date}`} testId="activity-card" />
             ))}
             <Pagination
               handleChange={(val) => handleFilter("page", val)}
@@ -92,6 +93,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({
               pageLimit={pageLimit}
               totalPages={totalPages}
               currentPage={currentPage}
+              testId="pagination"
             />
           </>
         )}

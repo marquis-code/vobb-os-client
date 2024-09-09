@@ -5,9 +5,10 @@ export interface ActivityCardProps {
   date: string;
   time: string;
   isFirstAction: boolean;
+  testId?: string;
 }
 
-const ActivityCard = ({ isFirstAction, date, time, message }: ActivityCardProps) => {
+const ActivityCard = ({ isFirstAction, date, time, message, testId }: ActivityCardProps) => {
   return (
     <div
       className={cn(
@@ -15,7 +16,8 @@ const ActivityCard = ({ isFirstAction, date, time, message }: ActivityCardProps)
         !isFirstAction
           ? "after:content-['_'] after:block after:w-[1px] after:h-[calc(100%+1rem)] after:bg-vobb-neutral-40 after:absolute after:top-2 after:left-1"
           : ""
-      )}>
+      )}
+      data-testid={testId}>
       <p className="mb-1">{message}</p>
       <p className="text-xs text-vobb-neutral-60">
         {date} at {time}

@@ -121,7 +121,8 @@ const TeamUI = ({
           </TabsTrigger>
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-            value="history">
+            value="history"
+            testId="team-history">
             Team History
           </TabsTrigger>
         </TabsList>

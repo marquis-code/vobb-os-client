@@ -1,6 +1,6 @@
 import { ModalProps } from "types";
 import { AddTeamData, AddTeamModal, toast } from "components";
-import { useApiRequest, useFetchTeams } from "hooks";
+import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { createTeamRequestBody, createTeamService } from "api";
 
@@ -10,7 +10,6 @@ interface AddTeamProps extends ModalProps {
 
 const AddTeam: React.FC<AddTeamProps> = (props) => {
   const { callback } = props;
-  const { fetchAllTeams } = useFetchTeams({ limit: 20 });
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
   const handleSubmit = (data: AddTeamData) => {
@@ -32,7 +31,6 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
         description: response?.data?.message
       });
       const newTeamId = response?.data?.data?.team;
-      fetchAllTeams({ page: 1 });
       callback(newTeamId);
     } else if (error) {
       toast({

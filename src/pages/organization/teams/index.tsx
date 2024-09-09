@@ -55,7 +55,14 @@ const Teams = () => {
 
   return (
     <>
-      <AddTeam callback={() => handlCloseAddTeam} show={addTeam} close={() => setAddTeam(false)} />
+      <AddTeam
+        callback={(id) => {
+          fetchAllTeams({ page: 1, limit });
+          handlCloseAddTeam(id);
+        }}
+        show={addTeam}
+        close={() => setAddTeam(false)}
+      />
       <TeamPermissions show={permissions} close={handleClosePermissions} teamId={teamId} />
       <TeamBranches show={branches} close={handleCloseBranches} teamId={teamId} />
       <EditTeam
