@@ -8,8 +8,11 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeftDoubleIcon } from "assets";
+import { useUserContext } from "context";
+import { useFetchBranches } from "hooks";
+import { LoadingSpinner } from "components";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -32,7 +35,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
         <button
           onClick={() => handleCollapse(!collapse)}
           className={collapse ? "ml-[24px]" : "ml-auto"}>
-          <span className="sr-only">{collapse ? "Expand menu" :"Collapse menu"}</span>
+          <span className="sr-only">{collapse ? "Expand menu" : "Collapse menu"}</span>
           <ChevronLeftDoubleIcon className={collapse ? "rotate-180" : undefined} />
         </button>
       </div>
@@ -40,32 +43,88 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
     </aside>
   );
 };
+interface BranchType {
+  id: string;
+  name: string;
+}
 
 export function BranchMenu() {
+  const { userDetails } = useUserContext();
+  const { fetchOrgBranches, orgBranches, loadingBranches } = useFetchBranches({});
+  const [selectedBranch, setSelectedBranch] = useState<BranchType>({ id: "", name: "" });
+  const [allBranches, setAllBranches] = useState<BranchType[]>([]);
+
+  useEffect(() => {
+    fetchOrgBranches({ page: 1, limit: 4 });
+  }, []);
+
+  useEffect(() => {
+    if (!loadingBranches && orgBranches?.branchesArray) {
+      const branches = orgBranches.branchesArray.map((branch) => ({
+        id: branch.id,
+        name: branch.name
+      }));
+      setAllBranches(branches);
+
+      if (branches.length > 0) {
+        setSelectedBranch(branches[0]);
+      }
+    }
+  }, [loadingBranches, orgBranches]);
+
+  const handleSelectedBranch = (branch: BranchType) => {
+    setSelectedBranch(branch);
+  };
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 p-0 font-workSans font-bold text-lg text-vobb-neutral-100">
-          HQ <ChevronDownIcon />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 ml-4 mt-1">
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            HQ <span className="ml-auto rounded-full bg-vobb-primary-70 p-1"></span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>Branch 1</DropdownMenuItem>
-          <DropdownMenuItem>Branch 2</DropdownMenuItem>
-          <DropdownMenuItem>Branch 3</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <button className="font-medium flex items-center">
-            New Branch
-            <PlusCircledIcon className="ml-2" />
-          </button>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+      {loadingBranches ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          {" "}
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 p-0 font-workSans font-bold text-lg text-vobb-neutral-100">
+              {selectedBranch?.name} <ChevronDownIcon />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56 ml-4 mt-1">
+            <DropdownMenuGroup>
+              {userDetails?.role === "Super Admin" ? (
+                allBranches?.map((branch) => (
+                  <DropdownMenuItem
+                    key={branch.id}
+                    onClick={() => {
+                      handleSelectedBranch(branch);
+                    }}>
+                    <span>{branch.name}</span>
+                    <span
+                      className={`ml-auto rounded-full bg-vobb-primary-70 p-1 ${
+                        selectedBranch?.name === branch.name ? "inline" : "hidden"
+                      }`}></span>
+                  </DropdownMenuItem>
+                ))
+              ) : (
+                <>
+                  <DropdownMenuItem>Branch 1</DropdownMenuItem>
+                  <DropdownMenuItem>Branch 2</DropdownMenuItem>
+                  <DropdownMenuItem>Branch 3</DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuGroup>
+            {userDetails?.role === "Super Admin" && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <button className="font-medium flex items-center">
+                    New Branch
+                    <PlusCircledIcon className="ml-2" />
+                  </button>
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </>
+      )}
     </DropdownMenu>
   );
 }

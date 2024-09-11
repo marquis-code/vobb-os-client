@@ -51,6 +51,15 @@ export interface OrganisationBranchesData {
   timeZone: string;
   hasMembers: boolean;
 }
+export interface UserBranchesData {
+  id: string;
+  branch: string;
+  country: string;
+  province: string;
+  city: string;
+  time: string;
+  dateAdded: string;
+}
 export interface OrganisationAttributesData {
   id: string;
   title: string;
@@ -63,6 +72,11 @@ export interface OrganisationAttributesData {
 }
 export interface BranchesDataProps {
   branchesArray: OrganisationBranchesData[];
+  branchesMetaData: MetaDataProps;
+}
+
+export interface UserBranchesDataProps {
+  branchesArray: UserBranchesData[];
   branchesMetaData: MetaDataProps;
 }
 
