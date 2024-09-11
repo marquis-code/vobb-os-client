@@ -63,14 +63,14 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
           </Button>
         </form>
         <p className="cursor-pointer mx-auto mt-6 text-center">
-          <span>Didn't receive the code?</span>
+          <span>{countdown > 0 ? `Resend code in` : `Didn't receive the code?`}</span>
           <Button
             className="text-vobb-primary-70"
             onClick={submitResend}
             disabled={countdown > 0}
-            variant={"ghost"}
+            variant="link"
             data-cy="resend-btn">
-            {countdown > 0 ? countdown : "Click to resend "}
+            {countdown > 0 ? `${countdown} secs` : "Click to resend "}
           </Button>
         </p>
 
