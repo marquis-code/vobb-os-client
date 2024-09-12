@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { ChevronLeftDoubleIcon } from "assets";
+import { useModalContext } from "context";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -32,7 +32,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
         <button
           onClick={() => handleCollapse(!collapse)}
           className={collapse ? "ml-[24px]" : "ml-auto"}>
-          <span className="sr-only">{collapse ? "Expand menu" :"Collapse menu"}</span>
+          <span className="sr-only">{collapse ? "Expand menu" : "Collapse menu"}</span>
           <ChevronLeftDoubleIcon className={collapse ? "rotate-180" : undefined} />
         </button>
       </div>
@@ -42,6 +42,10 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
 };
 
 export function BranchMenu() {
+  const { setAddBranch } = useModalContext();
+  const handleBranch = () => {
+    setAddBranch(true);
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -60,7 +64,7 @@ export function BranchMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <button className="font-medium flex items-center">
+          <button className="font-medium flex items-center" onClick={handleBranch}>
             New Branch
             <PlusCircledIcon className="ml-2" />
           </button>

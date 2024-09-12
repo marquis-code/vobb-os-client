@@ -14,7 +14,7 @@ import {
 import { Button } from "components";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-import { useUserContext } from "context";
+import { useModalContext, useUserContext } from "context";
 import { useFetchUser, useLogout } from "hooks";
 
 interface NavBarProps {
@@ -71,6 +71,13 @@ const UserAvatar = () => {
 
 const Menu = ({ logout }) => {
   const navigate = useNavigate();
+  const { setAddTeam, setInviteMember } = useModalContext();
+  const handleMember = () => {
+    setInviteMember(true);
+  };
+  const handleTeam = () => {
+    setAddTeam(true);
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -98,10 +105,8 @@ const Menu = ({ logout }) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate(Routes.teams)}>Teams</DropdownMenuItem>
-          <DropdownMenuItem>
-            Invite member
-          </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleMember}>Invite member</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleTeam}>
             New Team
             <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
           </DropdownMenuItem>
