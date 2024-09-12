@@ -56,7 +56,7 @@ const TeamsUI = ({
   );
   const [filters, setFilters] = useState<FilterData[]>([]);
   const { teamsData: tableData, metaData } = orgTeams;
-  const { currentPage, pageLimit, totalCount, totalPages } = metaData;
+  const { currentPage, totalCount, totalPages, pageLimit = 20 } = metaData;
   return (
     <>
       <SettingsPageTitle title="Teams" className="max-w-none" />
@@ -79,7 +79,7 @@ const TeamsUI = ({
         handleChange={(val) => handlePagination("page", val)}
         handlePageLimit={(val) => handlePagination("limit", val)}
         totalCount={totalCount}
-        pageLimit={pageLimit ?? 20}
+        pageLimit={pageLimit}
         totalPages={totalPages}
         currentPage={currentPage}
         className="mt-4 mb-28"

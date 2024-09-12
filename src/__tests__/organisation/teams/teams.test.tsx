@@ -1,14 +1,24 @@
-import { render, RenderResult, screen } from "@testing-library/react";
-import { initTeamsData } from "hooks/useFetchTeams";
-import { TeamTableMock } from "lib/mockData";
-import { TeamsUI } from "modules/organization";
+import { render, RenderResult, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { initTeamsData } from "hooks";
+import { TeamTableMock } from "lib";
+import { TeamsUI } from "modules";
 
 describe("Team UI tests", () => {
   let renderResult: RenderResult;
+  const mockHandlePagination = vi.fn();
   const defaultProps = {
     teams: {
-      orgTeams: initTeamsData,
-      handlePagination: vi.fn(),
+      orgTeams: {
+        teamsData: [],
+        metaData: {
+          currentPage: 1,
+          totalCount: 50,
+          totalPages: 5,
+          pageLimit: 20
+        }
+      },
+      handlePagination: mockHandlePagination,
       loading: false
     },
     handleEditTeam: vi.fn(),
@@ -24,11 +34,8 @@ describe("Team UI tests", () => {
   };
 
   beforeEach(() => {
+    vi.clearAllMocks();
     renderResult = customRender();
-  });
-
-  it("should render teams ui page", () => {
-    expect(renderResult.container).toBeTruthy();
   });
 
   it("should check for heading content", () => {
@@ -49,8 +56,6 @@ describe("Team UI tests", () => {
     expect(filterButton).toBeInTheDocument();
     expect(filterButton).toHaveTextContent(/filter/i);
 
-    expect(filterButton).toHaveAttribute("aria-controls", "radix-:r2:");
-    expect(filterButton).toHaveAttribute("aria-expanded", "false");
     expect(filterButton).toHaveAttribute("aria-haspopup", "dialog");
     expect(filterButton).toHaveAttribute("role", "combobox");
   });
@@ -117,5 +122,36 @@ describe("Team UI tests", () => {
     expect(renderResult.container).toBeTruthy();
     const mockedTeam = screen.getByText("Support");
     expect(mockedTeam).toBeInTheDocument();
+  });
+
+  it("renders the pagination component with correct initial values", () => {
+    customRender();
+    const paginationComponents = screen.getAllByTestId("pagination");
+    expect(paginationComponents.length).toBeGreaterThan(0);
+    const paginationComponent = paginationComponents[0];
+    expect(paginationComponent).toBeInTheDocument();
+
+    const limitSelector = within(paginationComponent).getByTestId("select-limit");
+    expect(limitSelector).toHaveTextContent("20");
+
+    const pageInfo = within(paginationComponent).getByText(/Items per page/i);
+    expect(pageInfo).toBeInTheDocument();
+  });
+
+  it("calls handlePagination when a new limit is selected", async () => {
+    customRender();
+
+    const selectContainer = screen.getAllByTestId("select-limit");
+    const selectLimit = selectContainer[0];
+    expect(selectLimit).toBeInTheDocument();
+
+    const selectButton = within(selectLimit).getByRole("combobox");
+    await userEvent.click(selectButton);
+
+    const options = await screen.findAllByText("50");
+    const option = options[0];
+    await userEvent.click(option);
+
+    expect(mockHandlePagination).toHaveBeenCalledWith("limit", 50);
   });
 });

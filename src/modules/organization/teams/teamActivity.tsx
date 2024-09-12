@@ -6,7 +6,6 @@ import {
   Pagination,
   SortBy
 } from "components";
-import { teamActivityMockData } from "lib";
 import { TeamActivityResponse } from "pages";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -31,7 +30,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({
   teamActivities: { loading, data, params, handleFilter }
 }) => {
   const { order: sortOrder, startDate, endDate } = params;
-  const { currentPage, totalCount, totalPages, pageLimit = 8 } = data.metaData;
+  const { currentPage, totalCount, totalPages, pageLimit = 20 } = data.metaData;
 
   const [date, setDate] = useState<DateRange | undefined>(undefined);
   const [sortBy, setSortBy] = useState<optionType | undefined>(sortOptions[0]);
