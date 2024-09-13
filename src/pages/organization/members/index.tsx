@@ -12,6 +12,7 @@ import { MemberDataProps } from "types";
 import { getInitials } from "lib";
 import { ChangeRole } from "./changeRole";
 import { UndoSuspension } from "./undoSuspension";
+
 import { toast } from "components";
 
 const initMembersData: MemberDataProps = {
@@ -24,9 +25,11 @@ const initMembersData: MemberDataProps = {
   }
 };
 
+import { useModalContext } from "context";
+
 const Members = () => {
   const navigate = useNavigate();
-  const [inviteMember, setInviteMember] = useState(false);
+  const { inviteMember, setInviteMember } = useModalContext();
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
   const [undoSuspension, setUndoSuspension] = useState({
     show: false,

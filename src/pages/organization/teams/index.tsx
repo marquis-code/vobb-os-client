@@ -7,10 +7,11 @@ import { Routes } from "router";
 import { TeamBranches } from "./teamBranches";
 import { useFetchTeams } from "hooks";
 import { EditTeam } from "./editTeam";
+import { useModalContext } from "context";
 
 const Teams = () => {
   const navigate = useNavigate();
-  const [addTeam, setAddTeam] = useState(false);
+  const { addTeam, setAddTeam } = useModalContext();
   const [editTeam, setEditTeam] = useState({ show: false, id: "" });
   const [permissions, setPermissions] = useState(false);
   const [branches, setBranches] = useState(false);

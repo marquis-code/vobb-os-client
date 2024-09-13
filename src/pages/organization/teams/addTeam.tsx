@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { createTeamRequestBody, createTeamService } from "api";
 
 interface AddTeamProps extends ModalProps {
-  callback: (id: string) => void;
+  callback?: (id: string) => void;
 }
 
 const AddTeam: React.FC<AddTeamProps> = (props) => {
@@ -31,7 +31,7 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
         description: response?.data?.message
       });
       const newTeamId = response?.data?.data?.team;
-      callback(newTeamId);
+      callback?.(newTeamId);
     } else if (error) {
       toast({
         variant: "destructive",
