@@ -385,10 +385,11 @@ export const fetchOrgActivitiesService = ({
  * Fetch user's branches service
  * @param page showing page number requested,
  * @param limit showing number of items per page
+ * @param search fetches branch from user input
  * @returns axios promise
  */
-export const fetchUserBranchesService = (id: string, query: PaginationProps = {}) => {
+export const fetchUserBranchesService = (query: PaginationProps = {}) => {
   return getRequest({
-    url: fetchUserBranchesURL(id, query)
+    url: fetchUserBranchesURL(query)
   });
 };

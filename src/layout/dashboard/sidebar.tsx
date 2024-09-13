@@ -10,7 +10,7 @@ import {
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { useUserContext } from "context";
-import { useFetchBranches } from "hooks";
+import { useFetchBranches, useFetchUserBranches } from "hooks";
 import { LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
@@ -50,14 +50,35 @@ interface BranchType {
 }
 
 export function BranchMenu() {
+  const { setAddBranch } = useModalContext();
   const { userDetails } = useUserContext();
   const { fetchOrgBranches, orgBranches, loadingBranches } = useFetchBranches({});
-  const [selectedBranch, setSelectedBranch] = useState<BranchType>({ id: "", name: "" });
+  const { fetchUserBranches, userBranches, loading: loadingUser } = useFetchUserBranches({});
+
+  const isAdmin = userDetails?.role === "Super Admin";
+
   const [allBranches, setAllBranches] = useState<BranchType[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<BranchType>({ id: "", name: "" });
+
+  const [userBranchesSearchQuery, setUserBranchesSearchQuery] = useState("");
+  const [allBranchesSearchQuery, setAllBranchesSearchQuery] = useState("");
+
+  const handleSelectedBranch = (branch: BranchType) => {
+    setSelectedBranch(branch);
+  };
+
+  const handleAddBranchModal = () => {
+    setAddBranch(true);
+  };
+
+  const handleAllBranchSearch = (value: string) => {
+    isAdmin ? setAllBranchesSearchQuery(value) : setUserBranchesSearchQuery(value);
+  };
 
   useEffect(() => {
-    fetchOrgBranches({ page: 1, limit: 4 });
-  }, []);
+    fetchOrgBranches({ limit: 4, search: allBranchesSearchQuery });
+    if (!isAdmin) fetchUserBranches({ limit: 4, search: userBranchesSearchQuery });
+  }, [userBranchesSearchQuery, allBranchesSearchQuery]);
 
   useEffect(() => {
     if (!loadingBranches && orgBranches?.branchesArray) {
@@ -70,20 +91,22 @@ export function BranchMenu() {
       if (branches.length > 0) {
         setSelectedBranch(branches[0]);
       }
+    } else if (!loadingUser && userBranches?.branchesArray) {
+      const branches = userBranches.branchesArray.map((branch) => ({
+        id: branch.id,
+        name: branch.branch
+      }));
+      setAllBranches(branches);
+
+      if (branches.length > 0) {
+        setSelectedBranch(branches[0]);
+      }
     }
-  }, [loadingBranches, orgBranches]);
+  }, [loadingUser, userBranches, loadingBranches, orgBranches]);
 
-  const handleSelectedBranch = (branch: BranchType) => {
-    setSelectedBranch(branch);
-  };
-
-  const { setAddBranch } = useModalContext();
-  const handleAddBranch = () => {
-    setAddBranch(true);
-  };
   return (
     <DropdownMenu>
-      {loadingBranches ? (
+      {loadingBranches || loadingUser ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -95,33 +118,25 @@ export function BranchMenu() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 ml-4 mt-1">
             <DropdownMenuGroup>
-              {userDetails?.role === "Super Admin" ? (
-                allBranches?.map((branch) => (
-                  <DropdownMenuItem
-                    key={branch.id}
-                    onClick={() => {
-                      handleSelectedBranch(branch);
-                    }}>
-                    <span>{branch.name}</span>
-                    <span
-                      className={`ml-auto rounded-full bg-vobb-primary-70 p-1 ${
-                        selectedBranch?.name === branch.name ? "inline" : "hidden"
-                      }`}></span>
-                  </DropdownMenuItem>
-                ))
-              ) : (
-                <>
-                  <DropdownMenuItem>Branch 1</DropdownMenuItem>
-                  <DropdownMenuItem>Branch 2</DropdownMenuItem>
-                  <DropdownMenuItem>Branch 3</DropdownMenuItem>
-                </>
-              )}
+              {allBranches?.map((branch) => (
+                <DropdownMenuItem
+                  key={branch.id}
+                  onClick={() => {
+                    handleSelectedBranch(branch);
+                  }}>
+                  <span>{branch.name}</span>
+                  <span
+                    className={`ml-auto rounded-full bg-vobb-primary-70 p-1 ${
+                      selectedBranch?.name === branch.name ? "inline" : "hidden"
+                    }`}></span>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuGroup>
             {userDetails?.role === "Super Admin" && (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <button className="font-medium flex items-center" onClick={handleAddBranch}>
+                  <button className="font-medium flex items-center" onClick={handleAddBranchModal}>
                     New Branch
                     <PlusCircledIcon className="ml-2" />
                   </button>

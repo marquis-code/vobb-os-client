@@ -153,4 +153,5 @@ export interface activityParamsProps {
 export interface PaginationProps {
   page?: number;
   limit?: number;
+  search?: string;
 }

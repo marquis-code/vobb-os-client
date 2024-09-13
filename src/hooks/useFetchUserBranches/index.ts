@@ -1,3 +1,4 @@
+import { fetchUserBranchesService } from "api";
 import { useCountriesContext } from "context";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
@@ -13,12 +14,12 @@ const defaultBranchesData: UserBranchesDataProps = {
   }
 };
 
-export const useFetchUserBranches = ({ limit }: { limit?: number }) => {
+export const useFetchUserBranches = ({ limit, search }: { limit?: number; search?: string }) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const { countries } = useCountriesContext();
 
-  const fetchUserBranches = ({ page, limit }: PaginationProps) => {
-    //run(fetchUserBranchesService(id, { page, limit }));
+  const fetchUserBranches = ({ page, limit, search }: PaginationProps) => {
+    run(fetchUserBranchesService({ page, limit, search }));
   };
 
   const userBranches = useMemo<UserBranchesDataProps>(() => {
@@ -29,8 +30,8 @@ export const useFetchUserBranches = ({ limit }: { limit?: number }) => {
         country: countries.find((country) => country.value === item.country)?.label,
         province: item.state,
         city: item.city,
-        time: item.time,
-        dateAdded: item.date_added
+        date: item.time,
+        time: item.date_added
       }));
       const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
       const branchesMetaData = {

@@ -219,13 +219,14 @@ export const fetchOrgActivitiesURL = ({
  * @returns url string
  *
  */
-export const fetchUserBranchesURL = (id: string, { page, limit }: PaginationProps) => {
+export const fetchUserBranchesURL = ({ page, limit, search }: PaginationProps) => {
   const queryParams = new URLSearchParams();
 
   if (page !== undefined) queryParams.append("page", page.toString());
   if (limit !== undefined) queryParams.append("limit", limit.toString());
+  if (search !== undefined) queryParams.append("search", search);
 
   const queryString = queryParams.toString();
 
-  return `/user/branches/${id}${queryString ? `?${queryString}` : ""}`;
+  return `/user/branches/${queryString ? `?${queryString}` : ""}`;
 };
