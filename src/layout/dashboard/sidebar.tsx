@@ -8,10 +8,10 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "context";
 import { useFetchBranches, useFetchUserBranches } from "hooks";
-import { LoadingSpinner } from "components";
+import { Input, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
 
@@ -63,6 +63,8 @@ export function BranchMenu() {
   const [userBranchesSearchQuery, setUserBranchesSearchQuery] = useState("");
   const [allBranchesSearchQuery, setAllBranchesSearchQuery] = useState("");
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const handleSelectedBranch = (branch: BranchType) => {
     setSelectedBranch(branch);
   };
@@ -76,8 +78,8 @@ export function BranchMenu() {
   };
 
   useEffect(() => {
-    fetchOrgBranches({ limit: 4, search: allBranchesSearchQuery });
-    if (!isAdmin) fetchUserBranches({ limit: 4, search: userBranchesSearchQuery });
+    fetchOrgBranches({ limit: 8, search: allBranchesSearchQuery });
+    if (!isAdmin) fetchUserBranches({ limit: 8, search: userBranchesSearchQuery });
   }, [userBranchesSearchQuery, allBranchesSearchQuery]);
 
   useEffect(() => {
@@ -102,50 +104,57 @@ export function BranchMenu() {
         setSelectedBranch(branches[0]);
       }
     }
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, [loadingUser, userBranches, loadingBranches, orgBranches]);
 
   return (
     <DropdownMenu>
-      {loadingBranches || loadingUser ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          {" "}
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 p-0 font-workSans font-bold text-lg text-vobb-neutral-100">
-              {selectedBranch?.name} <ChevronDownIcon />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 ml-4 mt-1">
-            <DropdownMenuGroup>
-              {allBranches?.map((branch) => (
-                <DropdownMenuItem
-                  key={branch.id}
-                  onClick={() => {
-                    handleSelectedBranch(branch);
-                  }}>
-                  <span>{branch.name}</span>
-                  <span
-                    className={`ml-auto rounded-full bg-vobb-primary-70 p-1 ${
-                      selectedBranch?.name === branch.name ? "inline" : "hidden"
-                    }`}></span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-            {userDetails?.role === "Super Admin" && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <button className="font-medium flex items-center" onClick={handleAddBranchModal}>
-                    New Branch
-                    <PlusCircledIcon className="ml-2" />
-                  </button>
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </>
-      )}
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center gap-2 p-0 font-workSans font-bold text-lg text-vobb-neutral-100">
+          {selectedBranch?.name} <ChevronDownIcon />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56 ml-4 mt-1">
+        <Input
+          placeholder="search"
+          value={isAdmin ? allBranchesSearchQuery : userBranchesSearchQuery}
+          onChange={(e) => handleAllBranchSearch(e.target.value)}
+          ref={inputRef}
+        />
+        <DropdownMenuGroup>
+          {loadingBranches || loadingUser ? (
+            <LoadingSpinner />
+          ) : (
+            allBranches?.map((branch) => (
+              <DropdownMenuItem
+                key={branch.id}
+                onClick={() => {
+                  handleSelectedBranch(branch);
+                }}>
+                <span>{branch.name}</span>
+                <span
+                  className={`ml-auto rounded-full bg-vobb-primary-70 p-1 ${
+                    selectedBranch?.name === branch.name ? "inline" : "hidden"
+                  }`}></span>
+              </DropdownMenuItem>
+            ))
+          )}
+        </DropdownMenuGroup>
+        {userDetails?.role === "Super Admin" && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <button className="font-medium flex items-center" onClick={handleAddBranchModal}>
+                New Branch
+                <PlusCircledIcon className="ml-2" />
+              </button>
+            </DropdownMenuItem>
+          </>
+        )}
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 }

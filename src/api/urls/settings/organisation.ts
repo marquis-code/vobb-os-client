@@ -69,11 +69,12 @@ export const updateOrgSusNotifyURL = () => `${prefixOrg}/suspension`;
  * @returns url string
  *
  */
-export const fetchOrgBranchesURL = ({ page, limit }: PaginationProps) => {
+export const fetchOrgBranchesURL = ({ page, limit, search }: PaginationProps) => {
   const queryParams = new URLSearchParams();
 
   if (page !== undefined) queryParams.append("page", page.toString());
   if (limit !== undefined) queryParams.append("limit", limit.toString());
+  if (search !== undefined) queryParams.append("search", search);
 
   const queryString = queryParams.toString();
 
