@@ -4,7 +4,7 @@ import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { toast } from "components";
 import { useApiRequest } from "hooks";
-import { useCountriesContext } from "context";
+import { useCountriesContext, useModalContext } from "context";
 import { BranchesDataProps, OrganisationBranchesData } from "types";
 import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
 import { PreventDeleteBranch } from "./preventDeleteBranch";
@@ -44,12 +44,12 @@ const OrgBranches = () => {
     error: fetchError
   } = useApiRequest({});
   const { countries } = useCountriesContext();
+  const { addBranch, setAddBranch } = useModalContext();
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(8);
   const [confirm, setConfirm] = useState(false);
   const [preventDelete, setPreventDelete] = useState(false);
-  const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
 
   const [deleteBranch, setDeleteBranch] = useState({

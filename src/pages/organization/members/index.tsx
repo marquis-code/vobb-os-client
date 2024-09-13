@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { ChangeRole } from "./changeRole";
 import { UndoSuspension } from "./undoSuspension";
+import { useModalContext } from "context";
 
 const Members = () => {
   const navigate = useNavigate();
-  const [inviteMember, setInviteMember] = useState(false);
+  const { inviteMember, setInviteMember } = useModalContext();
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
   const [resendInvite, setResendInvite] = useState({ show: false, id: "", email: "" });
   const [cancelInvite, setCancelInvite] = useState({ show: false, id: "", email: "" });
@@ -81,9 +82,9 @@ const Members = () => {
         close={handleCloseSuspend}
       />
       <UndoSuspension
-       {...suspension}
-       show={suspension.show && !suspension.suspend}
-       close={handleCloseSuspend}
+        {...suspension}
+        show={suspension.show && !suspension.suspend}
+        close={handleCloseSuspend}
       />
       <ChangeRole {...changeRole} close={handleCloseChangeRole} />
       <CancelInvitation {...cancelInvite} close={handleCloseCancellation} />

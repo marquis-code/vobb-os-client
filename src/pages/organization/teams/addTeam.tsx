@@ -4,7 +4,7 @@ import { Routes } from "router";
 import { ModalProps } from "types";
 
 interface AddTeamProps extends ModalProps {
-  callback: () => void;
+  callback?: () => void;
 }
 
 const AddTeam = (props: AddTeamProps) => {
