@@ -9,10 +9,11 @@ import {
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { ChevronLeftDoubleIcon } from "assets";
 import { useUserContext } from "context";
 import { useFetchBranches } from "hooks";
 import { LoadingSpinner } from "components";
+import { ChevronLeftDoubleIcon } from "assets";
+import { useModalContext } from "context";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -75,6 +76,11 @@ export function BranchMenu() {
   const handleSelectedBranch = (branch: BranchType) => {
     setSelectedBranch(branch);
   };
+
+  const { setAddBranch } = useModalContext();
+  const handleAddBranch = () => {
+    setAddBranch(true);
+  };
   return (
     <DropdownMenu>
       {loadingBranches ? (
@@ -115,7 +121,7 @@ export function BranchMenu() {
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <button className="font-medium flex items-center">
+                  <button className="font-medium flex items-center" onClick={handleAddBranch}>
                     New Branch
                     <PlusCircledIcon className="ml-2" />
                   </button>

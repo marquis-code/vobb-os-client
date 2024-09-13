@@ -5,12 +5,11 @@ import { useMemo } from "react";
 import { ModalProps } from "types";
 
 interface AddBranchProps extends ModalProps {
-  callback: () => void;
+  callback?: () => void;
 }
 
 const AddBranch: React.FC<AddBranchProps> = ({ show, close, callback }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-
   const submit = (data: AddBranchData) => {
     const requestBody: organisationBranchRequestBody = {
       name: data.name,
@@ -36,7 +35,7 @@ const AddBranch: React.FC<AddBranchProps> = ({ show, close, callback }) => {
       toast({
         description: response?.data?.message
       });
-      callback();
+      callback?.();
       close();
     } else if (error) {
       toast({
