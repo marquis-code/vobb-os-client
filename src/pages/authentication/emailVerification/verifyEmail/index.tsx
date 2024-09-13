@@ -30,7 +30,7 @@ const VerifyEmail = () => {
 
   useMemo(() => {
     if (verifyResponse?.status === 200) {
-      localStorage.removeItem("vobbOSAccess");
+      localStorage.setItem("vobbOSAccess", verifyResponse?.data?.data?.token);
       navigate(Routes.completed_email_verify);
       toast({
         description: verifyResponse?.data?.message
