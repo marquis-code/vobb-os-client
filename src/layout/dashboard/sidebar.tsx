@@ -78,12 +78,12 @@ export function BranchMenu() {
   };
 
   useEffect(() => {
-    fetchOrgBranches({ limit: 8, search: allBranchesSearchQuery });
+    if (isAdmin) fetchOrgBranches({ limit: 8, search: allBranchesSearchQuery });
     if (!isAdmin) fetchUserBranches({ limit: 8, search: userBranchesSearchQuery });
   }, [userBranchesSearchQuery, allBranchesSearchQuery]);
 
   useEffect(() => {
-    if (!loadingBranches && orgBranches?.branchesArray) {
+    if (isAdmin && !loadingBranches && orgBranches?.branchesArray) {
       const branches = orgBranches.branchesArray.map((branch) => ({
         id: branch.id,
         name: branch.name
@@ -109,7 +109,6 @@ export function BranchMenu() {
       inputRef.current.focus();
     }
   }, [loadingUser, userBranches, loadingBranches, orgBranches]);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -127,6 +126,8 @@ export function BranchMenu() {
         <DropdownMenuGroup>
           {loadingBranches || loadingUser ? (
             <LoadingSpinner />
+          ) : !allBranches.length ? (
+            <p className="p-2">No matches found.</p>
           ) : (
             allBranches?.map((branch) => (
               <DropdownMenuItem
