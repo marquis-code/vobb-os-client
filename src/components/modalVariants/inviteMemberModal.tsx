@@ -1,12 +1,11 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, CheckboxWithText, CustomInput, Modal, SelectInput } from "components";
-import { ModalProps, optionType } from "types";
+import { BranchesDataProps, ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import { getOptionTypeValidationMsg } from "lib";
-import { roleOptions } from "lib/constants";
 
 interface InviteMemberData {
   email: string;
@@ -38,22 +37,61 @@ const schema = yup.object({
 
 interface InviteMemberModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
+  loadingBranches: boolean;
+  orgBranches: BranchesDataProps;
+  handleBranchTeams: {
+    loading: boolean;
+    handleSetId: (id: string) => void;
+    options: optionType[] | [];
+  };
+  handleTeamRoles: {
+    loading: boolean;
+    handleSetId: (id: string) => void;
+    options: optionType[] | [];
+  };
 }
 
-const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ submit, close, show }) => {
+const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
+  submit,
+  close,
+  show,
+  loading,
+  loadingBranches,
+  orgBranches,
+  handleBranchTeams,
+  handleTeamRoles
+}) => {
+  const {
+    loading: loadingTeams,
+    options: teamsOptions,
+    handleSetId: handleSetBranchId
+  } = handleBranchTeams;
+  const {
+    loading: loadingRoles,
+    options: teamRolesOptions,
+    handleSetId: handleSetTeamId
+  } = handleTeamRoles;
+
   const [inviteNew, setInviteNew] = useState(false);
+  const branchesOptions = orgBranches?.branchesArray.map((branch) => ({
+    label: branch.name,
+    value: branch.id
+  }));
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-    setValue
+    setValue,
+    reset
   } = useForm<InviteMemberData>({
     resolver: yupResolver(schema)
   });
   const onSubmit: SubmitHandler<InviteMemberData> = (data) => {
-    submit(data);
+    submit({ ...data, inviteNew });
+    reset();
   };
 
   const branch: optionType = {
@@ -65,13 +103,12 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ submit, close, sh
     label: watch("team")?.label ?? "",
     value: watch("team")?.value ?? ""
   };
-
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
+      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="invite-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Invite Member</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
@@ -83,33 +120,50 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ submit, close, sh
             register={register}
             validatorMessage={errors.email?.message}
           />
-          <SelectInput
-            label="Role"
-            options={roleOptions}
-            value={watch("role")?.value === "" ? null : watch("role")}
-            onChange={(val) => val && setValue("role", val)}
-            validatorMessage={getOptionTypeValidationMsg(errors.role)}
-          />
-          {watch("role")?.value !== "admin" ? (
+
+          {watch("role")?.label !== "Super Admin" ? (
             <>
               <SelectInput
                 label="Branch"
-                options={[]}
+                options={branchesOptions}
                 value={watch("branch")?.value === "" ? null : branch}
-                onChange={(val) => val && setValue("branch", val)}
+                onChange={(val) => {
+                  if (val) {
+                    setValue("branch", val);
+                    handleSetBranchId(val.value);
+                    setValue("team", { label: "", value: "" });
+                    setValue("role", { label: "", value: "" });
+                  }
+                }}
                 validatorMessage={getOptionTypeValidationMsg(errors.branch)}
+                loading={loadingBranches}
               />
               <SelectInput
                 label="Team"
-                options={[]}
+                options={teamsOptions}
                 value={watch("team")?.value === "" ? null : team}
-                onChange={(val) => val && setValue("team", val)}
+                onChange={(val) => {
+                  if (val) {
+                    setValue("team", val);
+                    handleSetTeamId(val.value);
+                    setValue("role", { label: "", value: "" });
+                  }
+                }}
                 validatorMessage={getOptionTypeValidationMsg(errors.team)}
+                loading={loadingTeams}
               />
             </>
           ) : (
             ""
           )}
+          <SelectInput
+            label="Role"
+            options={teamRolesOptions}
+            value={watch("role")?.value === "" ? null : watch("role")}
+            onChange={(val) => val && setValue("role", val)}
+            validatorMessage={getOptionTypeValidationMsg(errors.role)}
+            loading={loadingRoles}
+          />
           <CustomInput
             label="Job Title"
             type="text"
@@ -129,10 +183,15 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ submit, close, sh
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            loading={loading}>
             Send invitation
           </Button>
         </div>

@@ -40,11 +40,11 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit, loading }) => {
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
-        <KeyIcon className="mb-12 mt-2 mx-auto w-8 h-8" data-cy="logo" />
+        <KeyIcon className="mb-12 mt-2 mx-auto w-8 h-8" data-testid="logo" />
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Forgot Password?
         </h1>
-        <p className="text-center mb-8" data-cy="subtitle">
+        <p className="text-center mb-8" data-testid="subtitle">
           No worries, we’ll send you reset instructions.
         </p>
 
@@ -55,7 +55,7 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit, loading }) => {
             placeholder="Enter your email address"
             register={register}
             validatorMessage={errors.email?.message}
-            data-cy="email"
+            data-testid="email"
           />
 
           <Button
@@ -63,7 +63,7 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit, loading }) => {
             className="w-full mt-6"
             size={"default"}
             variant="fill"
-            data-cy="continue-btn">
+            data-testid="continue-btn">
             Continue
           </Button>
         </form>
@@ -75,8 +75,8 @@ const EmailUI: React.FC<ForgotPasswordProps> = ({ submit, loading }) => {
           variant="ghost"
           disabled={loading}
           loading={loading}
-          data-cy="back-btn">
-          <ArrowLeftIcon data-cy="arrow-icon" /> Back to log in
+          data-testid="back-btn">
+          <ArrowLeftIcon data-testid="arrow-icon" /> Back to log in
         </Button>
       </section>
     </main>

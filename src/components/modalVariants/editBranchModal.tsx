@@ -181,7 +181,7 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!hasChangedFields || loading}
+            disabled={!hasChangedFields}
             loading={loading}
             size={"default"}
             variant={"fill"}>

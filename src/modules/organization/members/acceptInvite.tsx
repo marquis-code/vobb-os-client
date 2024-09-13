@@ -55,7 +55,7 @@ const AcceptInviteUI: React.FC<AcceptInviteProps> = ({ submit, loading, organiza
         <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
           <LogoIcon className="mb-12 m-auto" />
           <h1 className="text-xl sm:text-2xl font-bold mb-2 text-vobb-neutral-100 text-center">
-            Join {organization} on Vobb
+            Join <span className="capitalize">{organization}</span> on Vobb
           </h1>
           <p className="mb-8 text-center">Access all Vobb's tools with just one account.</p>
           <form>

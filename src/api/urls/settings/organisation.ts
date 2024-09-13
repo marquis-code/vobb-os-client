@@ -190,8 +190,15 @@ export const transferAllMembersToBranchURL = () => `${prefixOrg}/transfer/member
  * @returns url string
  *
  */
-export const fetchTeamsPerBranchURL = ({ id, page, limit }) =>
-  `${prefixOrg}/teams/${id}?page=${page}&limit=${limit}`;
+export const fetchTeamsPerBranchURL = (id: string, { page, limit }: PaginationProps) => {
+  const queryParams = new URLSearchParams();
+
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+
+  const queryString = queryParams.toString();
+  return `${prefixOrg}/teams/${id}${queryString ? `?${queryString}` : ""}`;
+};
 
 /**
  * Fetch org's activities URL

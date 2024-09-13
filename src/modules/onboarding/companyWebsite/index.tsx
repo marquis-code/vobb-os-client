@@ -41,15 +41,15 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
           navigate(Routes.onboarding_company_details);
           handleFormChange("companyWeb", ["fullname", "companyInfo"]);
         }}
-        data-cy="arrow-icon"
+        data-testid="arrow-icon"
       />
       <div className="hidden lg:grid">
-        <WeblinkIcon className="mb-6 m-auto" data-cy="logo" />
+        <WeblinkIcon className="mb-6 m-auto" data-testid="logo" />
         <div className="mb-8 text-center mx-auto">
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Company Website
           </h1>
-          <p data-cy="subtitle">Enter the website url of your organisation</p>
+          <p data-testid="subtitle">Enter the website url of your organisation</p>
         </div>
       </div>
       <form>
@@ -59,7 +59,7 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
           placeholder="https://travelspace.ng"
           register={register}
           validatorMessage={errors.website?.message}
-          data-cy="website-input"
+          data-testid="website-input"
         />
 
         <Button
@@ -69,7 +69,7 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
           className="w-full mt-6"
           size={"default"}
           variant="fill"
-          data-cy="continue-btn">
+          data-testid="continue-btn">
           Continue
         </Button>
       </form>
@@ -79,7 +79,7 @@ const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loa
         className="w-full mt-6 no-underline"
         size={"default"}
         variant="ghost"
-        data-cy="skip-btn">
+        data-testid="skip-btn">
         Skip
       </Button>
     </div>

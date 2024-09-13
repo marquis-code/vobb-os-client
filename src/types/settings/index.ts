@@ -1,3 +1,4 @@
+import { SortOrderType } from "components";
 import { MetaDataProps } from "types/interfaces";
 
 export interface UserProfileProps {
@@ -108,8 +109,67 @@ export interface BranchTeamsProps {
   teamsMetaData: MetaDataProps;
 }
 
+export interface fetchMemberQueryParams {
+  search?: string;
+  page?: number;
+  limit?: number;
+  status?: string;
+  branch?: string;
+  team?: string;
+}
+
+export type TeamTableData = {
+  id: string;
+  icon: string;
+  name: string;
+  teamLeads: string[];
+  teamManagers: string[];
+  date: string;
+  numberOfMembers: number;
+  numberOfBranches: number;
+};
+export interface inviteMemberProperties {
+  email: string;
+  branch?: string;
+  team?: string;
+  role: string;
+  title: string;
+}
+
+export interface TeamDataProps {
+  teamsData: TeamTableData[];
+  metaData: MetaDataProps;
+}
+export interface SingleTeamResponseProps {
+  id: string;
+  icon: string;
+  name: string;
+  description: string;
+  isGeneral: boolean;
+}
+
+export type statuses = "invited" | "expired" | "active" | "suspended";
+
+export type MemberTableData = {
+  id: string;
+  avatar: string;
+  name: string;
+  branch: string[];
+  teams: string[];
+  role: string;
+  email: string;
+  date: string;
+  lastActive: string;
+  initial: string;
+  status: statuses;
+};
+
 type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
 
+export interface MemberDataProps {
+  membersArray: MemberTableData[];
+  metaData: MetaDataProps;
+}
 interface filterParamsStructure {
   value: string;
   cond: conditions;
@@ -129,7 +189,7 @@ export interface branchQueryParamsProps {
 export interface activityParamsProps {
   page: number;
   limit: number;
-  sort: string;
+  sort: SortOrderType;
   start?: string;
   end?: string;
   start_date?: string;
@@ -139,4 +199,12 @@ export interface activityParamsProps {
 export interface PaginationProps {
   page?: number;
   limit?: number;
+}
+
+export interface QueryParamProps {
+  page: number;
+  limit: number;
+  order: SortOrderType;
+  startDate: string;
+  endDate: string;
 }

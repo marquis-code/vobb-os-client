@@ -7,7 +7,7 @@ import {
   SettingsPageTitle,
   SortBy
 } from "components";
-import { QueryParamProps } from "pages";
+import { QueryParamProps } from "types";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";
@@ -36,7 +36,7 @@ const OrgActivityUI: React.FC<OrgActivityProps> = ({
   loading
 }) => {
   const { order: sortOrder, startDate, endDate } = queryParams;
-  const { currentPage, totalCount, totalPages, pageLimit = 20 } = metaData;
+  const { currentPage, totalCount, totalPages, pageLimit = 8 } = metaData;
 
   const [date, setDate] = useState<DateRange | undefined>(undefined);
   const [sortBy, setSortBy] = useState<optionType | undefined>(sortOptions[0]);

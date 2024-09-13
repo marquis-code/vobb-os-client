@@ -1,15 +1,35 @@
-import { ConfirmationModal } from "components";
+import { unsuspendMemberService } from "api";
+import { ConfirmationModal, toast } from "components";
+import { useApiRequest } from "hooks";
+import { useMemo } from "react";
 import { ModalProps } from "types";
 
 interface UndoSuspensionProps extends ModalProps {
   id: string;
   name: string;
+  fetchMembers?: () => void;
 }
 
-const UndoSuspension = ({ show, close, id, name }: UndoSuspensionProps) => {
+const UndoSuspension = ({ show, close, id, name, fetchMembers }: UndoSuspensionProps) => {
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = () => {
-    console.log(id, name);
+    run(unsuspendMemberService({ member: id }));
   };
+
+  useMemo(() => {
+    if (response?.status === 200) {
+      toast({
+        description: response?.data?.message
+      });
+      close();
+      fetchMembers?.();
+    } else if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
+    }
+  }, [response, error]);
 
   return (
     <>
@@ -22,7 +42,7 @@ const UndoSuspension = ({ show, close, id, name }: UndoSuspensionProps) => {
         handleContinue={handleContinue}
         close={close}
         show={show}
-        loading={false}
+        loading={requestStatus.isPending}
       />
     </>
   );

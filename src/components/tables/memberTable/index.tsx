@@ -36,7 +36,8 @@ const MemberTable = <TData, TValue>({ columns, data }: MemberTableProps<TData, T
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  //@ts-ignore
+                  <TableCell key={cell.id} testId={cell.getValue()}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

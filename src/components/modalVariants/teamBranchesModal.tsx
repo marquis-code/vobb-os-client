@@ -1,13 +1,26 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button, Pagination } from "components";
+import { Button, LoadingSpinner, Pagination } from "components";
 import { Modal } from "components/modal";
+import { teamBranchDataProps } from "pages/organization/teams/teamBranches";
 import { Link } from "react-router-dom";
 import { Routes } from "router";
 import { ModalProps } from "types";
 
-interface TeamBranchesModalProps extends ModalProps {}
+interface TeamBranchesModalProps extends ModalProps {
+  branchesDetails: {
+    loading: boolean;
+    teamBranches: teamBranchDataProps;
+    handlePagination: (val: number) => void;
+  };
+}
 
-const TeamBranchesModal = ({ show, close }: TeamBranchesModalProps) => {
+const TeamBranchesModal = ({
+  show,
+  close,
+  branchesDetails: { loading, teamBranches, handlePagination }
+}: TeamBranchesModalProps) => {
+  const { teamBranchData, metaData } = teamBranches;
+  const { currentPage, totalCount, totalPages, pageLimit = 8 } = metaData;
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -19,36 +32,32 @@ const TeamBranchesModal = ({ show, close }: TeamBranchesModalProps) => {
         </div>
         <p className="mb-4">This shows the branches in which this team has been activated</p>
         <section className="max-h-[calc(100vh-220px)] overflow-auto -mr-4 pr-4">
-          <p className="border-b pb-1 mb-2 flex items-center gap-1">
-            <Link target="blank" to={Routes.branch("123")} className="font-medium">
-              Headquarters -
-            </Link>
-            <span className="text-xs">(Ketu, Lagos, Nigeria)</span>
-            <span className="text-xs ml-auto">on 13/12/2024</span>
-          </p>
-          <p className="border-b pb-1 mb-2 flex items-center gap-1">
-            <Link target="blank" to={Routes.branch("123")} className="font-medium">
-              Lagos LI -
-            </Link>
-            <span className="text-xs">(Ketu, Lagos, Nigeria)</span>
-            <span className="text-xs ml-auto">on 13/12/2024</span>
-          </p>
-          <p className="border-b pb-1 mb-2 flex items-center gap-1">
-            <Link target="blank" to={Routes.branch("123")} className="font-medium">
-              Branch Two -
-            </Link>
-            <span className="text-xs">(Ketu, Lagos, Nigeria)</span>
-            <span className="text-xs ml-auto">on 13/12/2024</span>
-          </p>
+          {loading ? (
+            <LoadingSpinner />
+          ) : !teamBranchData.length ? (
+            <p>No activated branches.</p>
+          ) : (
+            teamBranchData?.map((branch) => (
+              <p className="border-b pb-1 mb-2 flex items-center gap-1" key={branch.id}>
+                <Link target="blank" to={Routes.branch(branch.id)} className="font-medium">
+                  {branch.name} -
+                </Link>
+                <span className="text-xs">
+                  ({branch.city}, {branch.state}, {branch.country})
+                </span>
+                <span className="text-xs ml-auto">on {branch.date}</span>
+              </p>
+            ))
+          )}
         </section>
         <Pagination
           hidePageLimit
-          handleChange={console.log}
+          handleChange={(val) => handlePagination(val)}
           handlePageLimit={console.log}
-          totalCount={3}
-          pageLimit={3}
-          totalPages={1}
-          currentPage={1}
+          totalCount={totalCount}
+          pageLimit={pageLimit}
+          totalPages={totalPages}
+          currentPage={currentPage}
           className="mt-2"
         />
       </Modal>

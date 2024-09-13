@@ -171,6 +171,7 @@ const CompanyAddress = () => {
   if (loadingOnboard || loadingCountries) {
     return <LoadingSpinner />;
   }
+
   return (
     <>
       <CompanyAddressUI

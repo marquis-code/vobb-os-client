@@ -16,7 +16,7 @@ const InvitationSuccessfulUI = () => {
         <p className="text-center">You've officially set sail with us.</p>
 
         <Button
-          onClick={() => navigate(Routes.login)}
+          onClick={() => navigate(Routes.overview)}
           className="w-full mt-6"
           size={"default"}
           variant="fill">

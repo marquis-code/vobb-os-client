@@ -44,7 +44,7 @@ const Zipcode: React.FC<ZipcodeProps> = ({
         name="zipCode"
         register={register}
         validatorMessage={errors.zipCode?.message}
-        data-cy="zipcode-input"
+        data-testid="zipcode-input"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
@@ -53,7 +53,7 @@ const Zipcode: React.FC<ZipcodeProps> = ({
         className="w-full mt-6"
         size={"default"}
         variant="fill"
-        data-cy="continue-btn">
+        data-testid="continue-btn">
         Continue
       </Button>
     </form>
