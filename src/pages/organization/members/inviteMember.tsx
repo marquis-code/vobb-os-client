@@ -5,10 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { inviteMemberProperties, ModalProps } from "types";
 
 interface InviteProps extends ModalProps {
-  fetchMembers: () => void;
+  callback?: () => void;
 }
 const InviteMember: React.FC<InviteProps> = (props) => {
-  const { close, fetchMembers } = props;
+  const { close, callback } = props;
   const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({});
   const [branchTeam, setBranchTeam] = useState({ id: "", teams: [] });
   const [teamRoles, setTeamRoles] = useState({ id: "", roles: [] });
@@ -103,7 +103,7 @@ const InviteMember: React.FC<InviteProps> = (props) => {
         description: inviteResponse?.data?.message
       });
       closeModal && close();
-      fetchMembers();
+      callback?.();
     } else if (inviteError) {
       toast({
         variant: "destructive",

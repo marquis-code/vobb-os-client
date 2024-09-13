@@ -12,7 +12,7 @@ import { MemberDataProps } from "types";
 import { getInitials } from "lib";
 import { ChangeRole } from "./changeRole";
 import { UndoSuspension } from "./undoSuspension";
-
+import { useModalContext } from "context";
 import { toast } from "components";
 
 const initMembersData: MemberDataProps = {
@@ -24,8 +24,6 @@ const initMembersData: MemberDataProps = {
     totalPages: 0
   }
 };
-
-import { useModalContext } from "context";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -189,7 +187,11 @@ const Members = () => {
         close={handleCloseResend}
         fetchMembers={fetchOrgMembers}
       />
-      <InviteMember show={inviteMember} close={closeInviteMember} fetchMembers={fetchOrgMembers} />
+      <InviteMember
+        show={inviteMember}
+        close={closeInviteMember}
+        callback={() => fetchOrgMembers()}
+      />
       <UndoSuspension
         {...undoSuspension}
         show={undoSuspension.show && !suspension.suspend}

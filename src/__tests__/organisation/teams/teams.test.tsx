@@ -211,7 +211,7 @@ describe("Team UI tests", () => {
     customRender(mockedData);
     const menuButtons = screen.getAllByTestId("menu-team");
     await userEvent.click(menuButtons[0]);
-    const teamHistoryOption = await screen.findByText(/view team history/i);
+    const teamHistoryOption = await screen.findByText(/team history/i);
     await userEvent.click(teamHistoryOption);
     await waitFor(() => {
       expect(mockHandleTeamHistory).toHaveBeenCalled();

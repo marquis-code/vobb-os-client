@@ -4,9 +4,9 @@ import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { toast } from "components";
 import { useApiRequest } from "hooks";
-import { useCountriesContext, useModalContext } from "context";
-import { BranchesDataProps, OrganisationBranchesData } from "types";
-import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
+import { useModalContext } from "context";
+import { OrganisationBranchesData } from "types";
+import { markBranchAsPrimaryService } from "api";
 import { PreventDeleteBranch } from "./preventDeleteBranch";
 import { DeleteBranch } from "./deleteBranch";
 import { useNavigate } from "react-router-dom";
@@ -31,19 +31,8 @@ const OrgBranches = () => {
   const [branchesQueryParams, setBranchesQueryParams] = useState({ page: 1, limit: 20 });
   const { page, limit } = branchesQueryParams;
   const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({ limit });
-
   const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
-  const {
-    run: runFetchBranches,
-    data: fetchResponse,
-    requestStatus: fetchBranchStatus,
-    error: fetchError
-  } = useApiRequest({});
-  const { countries } = useCountriesContext();
   const { addBranch, setAddBranch } = useModalContext();
-
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8);
   const [confirm, setConfirm] = useState(false);
   const [preventDelete, setPreventDelete] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
