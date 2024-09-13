@@ -558,7 +558,7 @@ export const TeamTableMock: TeamTableData[] = [
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
     numberOfMembers: 12,
-    numberOfBranches: 15
+    numberOfBranches: 45
   },
   {
     id: "728ed52f",

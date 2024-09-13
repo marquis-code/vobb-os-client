@@ -32,7 +32,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
         <button
           onClick={() => handleCollapse(!collapse)}
           className={collapse ? "ml-[24px]" : "ml-auto"}>
-          <span className="sr-only">{collapse ? "Expand menu" :"Collapse menu"}</span>
+          <span className="sr-only">{collapse ? "Expand menu" : "Collapse menu"}</span>
           <ChevronLeftDoubleIcon className={collapse ? "rotate-180" : undefined} />
         </button>
       </div>

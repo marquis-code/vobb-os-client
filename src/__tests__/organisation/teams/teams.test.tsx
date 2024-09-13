@@ -1,12 +1,39 @@
-import { render, RenderResult, screen, within } from "@testing-library/react";
+import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { initTeamsData } from "hooks";
 import { TeamTableMock } from "lib";
 import { TeamsUI } from "modules";
 
+const mockHandlePagination = vi.fn();
+const mockHandleAddTeam = vi.fn();
+const mockHandleEditTeam = vi.fn();
+const mockHandleViewTeam = vi.fn();
+const mockHandleTeamHistory = vi.fn();
+const mockHandleViewBranches = vi.fn();
+
+const mockedData = {
+  teams: {
+    orgTeams: {
+      teamsData: TeamTableMock,
+      metaData: {
+        currentPage: 1,
+        pageLimit: 8,
+        totalCount: 5,
+        totalPages: 1
+      }
+    },
+    handlePagination: mockHandlePagination,
+    loading: false
+  },
+  handleEditTeam: mockHandleEditTeam,
+  handleViewBranches: mockHandleViewBranches,
+  handleTeamHistory: mockHandleTeamHistory,
+  handleViewTeam: mockHandleViewTeam,
+  handleAddTeam: mockHandleAddTeam
+};
+
 describe("Team UI tests", () => {
   let renderResult: RenderResult;
-  const mockHandlePagination = vi.fn();
+
   const defaultProps = {
     teams: {
       orgTeams: {
@@ -21,11 +48,11 @@ describe("Team UI tests", () => {
       handlePagination: mockHandlePagination,
       loading: false
     },
-    handleEditTeam: vi.fn(),
-    handleViewBranches: vi.fn(),
-    handleTeamHistory: vi.fn(),
-    handleViewTeam: vi.fn(),
-    handleAddTeam: vi.fn()
+    handleEditTeam: mockHandleEditTeam,
+    handleViewBranches: mockHandleViewBranches,
+    handleTeamHistory: mockHandleTeamHistory,
+    handleViewTeam: mockHandleViewTeam,
+    handleAddTeam: mockHandleAddTeam
   };
 
   const customRender = (props = {}) => {
@@ -103,21 +130,6 @@ describe("Team UI tests", () => {
   });
 
   it("should render with mocked data", () => {
-    const mockedData = {
-      teams: {
-        orgTeams: {
-          teamsData: TeamTableMock,
-          metaData: {
-            currentPage: 1,
-            pageLimit: 8,
-            totalCount: 5,
-            totalPages: 1
-          }
-        },
-        handlePagination: vi.fn(),
-        loading: false
-      }
-    };
     renderResult = customRender(mockedData);
     expect(renderResult.container).toBeTruthy();
     const mockedTeam = screen.getByText("Support");
@@ -153,5 +165,56 @@ describe("Team UI tests", () => {
     await userEvent.click(option);
 
     expect(mockHandlePagination).toHaveBeenCalledWith("limit", 50);
+  });
+
+  it("calls handleAddteam when add team button is clicked", () => {
+    customRender(mockedData);
+    const addTeamBtns = screen.getAllByTestId("add-team");
+    const addTeamBtn = addTeamBtns[0];
+    expect(addTeamBtn).toBeInTheDocument();
+    fireEvent.click(addTeamBtn);
+    expect(mockHandleAddTeam).toHaveBeenCalled();
+  });
+
+  it("calls handleViewBranches when branch number is clicked", () => {
+    customRender(mockedData);
+    const branchesCell = screen.getByRole("cell", { name: /45/i });
+    expect(branchesCell).toBeInTheDocument();
+    const branchesButton = within(branchesCell).getByRole("button");
+    expect(branchesButton).toBeInTheDocument();
+    userEvent.click(branchesButton);
+    expect(mockHandleViewBranches).toHaveBeenCalled();
+  });
+
+  it("calls handleEditTeam when edit team button is clicked", async () => {
+    customRender(mockedData);
+    const menuButtons = screen.getAllByTestId("menu-team");
+    await userEvent.click(menuButtons[0]);
+    const editOption = await screen.findByText(/Edit team/i);
+    await userEvent.click(editOption);
+    await waitFor(() => {
+      expect(mockHandleEditTeam).toHaveBeenCalled();
+    });
+  });
+
+  it("calls handleViewTeam when view team button is clicked", async () => {
+    customRender(mockedData);
+    const menuButtons = screen.getAllByTestId("menu-team");
+    await userEvent.click(menuButtons[0]);
+    const viewOption = await screen.findByText(/view team/i);
+    await userEvent.click(viewOption);
+    await waitFor(() => {
+      expect(mockHandleViewTeam).toHaveBeenCalled();
+    });
+  });
+  it("calls handleTeamHistory when teamHistory button is clicked", async () => {
+    customRender(mockedData);
+    const menuButtons = screen.getAllByTestId("menu-team");
+    await userEvent.click(menuButtons[0]);
+    const teamHistoryOption = await screen.findByText(/view team history/i);
+    await userEvent.click(teamHistoryOption);
+    await waitFor(() => {
+      expect(mockHandleTeamHistory).toHaveBeenCalled();
+    });
   });
 });
