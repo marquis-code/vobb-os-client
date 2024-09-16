@@ -6,6 +6,7 @@ import { ModalProps } from "types";
 
 interface TeamPermissionsModalProps extends ModalProps {
   submit: (data) => void;
+  loading?: boolean;
   hideSkip?: boolean;
 }
 
@@ -30,7 +31,9 @@ const TeamPermissionsModal = ({ show, close, hideSkip }: TeamPermissionsModalPro
   ];
 
   const [permissions, setPermissions] = useState(permissionList);
-
+  const handleSubmit = () => {
+    console.log(permissions);
+  };
   return (
     <>
       <Modal contentClassName="max-w-[600px]" show={show} close={close}>
@@ -42,7 +45,7 @@ const TeamPermissionsModal = ({ show, close, hideSkip }: TeamPermissionsModalPro
         </div>
         <section className="max-h-[calc(100vh-200px)] overflow-auto -mr-4 pr-4">
           {permissions.map((permission) => (
-            <PermissionItem
+            <PermissionItemComponent
               {...permission}
               handleMembers={({ id, members }) =>
                 setPermissions((prev) =>
@@ -64,7 +67,7 @@ const TeamPermissionsModal = ({ show, close, hideSkip }: TeamPermissionsModalPro
           ) : (
             ""
           )}
-          <Button onClick={console.log} size={"default"} variant={"fill"}>
+          <Button onClick={handleSubmit} size={"default"} variant={"fill"}>
             Save
           </Button>
         </div>
@@ -85,7 +88,12 @@ interface PermissionProps extends PermissionItem {
   handleMembers: ({ id, members }: { id: string; members: role[] }) => void;
 }
 
-export const PermissionItem: React.FC<PermissionProps> = ({ title, id, members, handleMembers }) => {
+export const PermissionItemComponent: React.FC<PermissionProps> = ({
+  title,
+  id,
+  members,
+  handleMembers
+}) => {
   const [show, setShow] = useState(false);
 
   const handleCheck = (role: role) => {

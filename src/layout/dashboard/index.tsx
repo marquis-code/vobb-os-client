@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
 import { useMobile } from "hooks";
-import { AddBranchModal, UnsupportedScreenSize } from "components";
+import { UnsupportedScreenSize } from "components";
 import { AddBranch } from "pages/organization/branches/addBranch";
 import { useModalContext } from "context";
 import { AddTeam } from "pages/organization/teams/addTeam";

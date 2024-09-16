@@ -12,6 +12,7 @@ export interface PaginationProps {
   totalPages: number;
   currentPage: number;
   hidePageLimit?: boolean;
+  testId?: string;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -22,7 +23,8 @@ const Pagination: React.FC<PaginationProps> = ({
   totalCount = 1,
   currentPage = 1,
   totalPages = 1,
-  hidePageLimit
+  hidePageLimit,
+  testId
 }) => {
   const handleIncrease = () => {
     if (currentPage < totalPages) handleChange(currentPage + 1);
@@ -52,7 +54,8 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <>
       <section
-        className={cn("flex items-center justify-between gap-4 text-vobb-neutral-90", className)}>
+        className={cn("flex items-center justify-between gap-4 text-vobb-neutral-90", className)}
+        data-testid={testId}>
         {hidePageLimit ? (
           ""
         ) : (
@@ -66,6 +69,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 name={""}
                 parentClassName="w-[5rem] mb-0 !text-xs"
                 className="!text-xs"
+                testId="select-limit"
               />
             </div>
           </div>
@@ -78,14 +82,16 @@ const Pagination: React.FC<PaginationProps> = ({
             disabled={currentPage === 1 || totalPages === 1}
             variant={"outline"}
             size={"icon"}
-            onClick={handleDecrease}>
+            onClick={handleDecrease}
+            data-testid="move-left">
             <ChevronLeftIcon />
           </Button>
           <Button
             size={"icon"}
             disabled={currentPage >= totalPages}
             variant={"outline"}
-            onClick={handleIncrease}>
+            onClick={handleIncrease}
+            data-testid="move-right">
             <ChevronRightIcon />
           </Button>
         </div>

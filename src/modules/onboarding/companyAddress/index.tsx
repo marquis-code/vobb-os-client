@@ -50,15 +50,15 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
               break;
           }
         }}
-        data-cy="arrow-icon"
+        data-testid="arrow-icon"
       />
       <div className="hidden lg:grid">
-        <LocationIcon className="mb-6 m-auto" data-cy="logo" />
+        <LocationIcon className="mb-6 m-auto" data-testid="logo" />
         <div className="mb-8 text-center mx-auto">
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Company Address
           </h1>
-          <p data-cy="subtitle">Where are you operating from?</p>
+          <p data-testid="subtitle">Where are you operating from?</p>
         </div>
       </div>
       {activeCompanyAddress === "country" ? (
@@ -92,25 +92,25 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
             "country" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("country")}
-          data-cy="country-state"></div>
+          data-testid="country-state"></div>
         <div
           className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
             "zipcode" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("zipcode")}
-          data-cy="zipcode-state"></div>
+          data-testid="zipcode-state"></div>
         <div
           className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
             "province" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("province")}
-          data-cy="province-state"></div>
+          data-testid="province-state"></div>
         <div
           className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
             "city" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("city")}
-          data-cy="city-state"></div>
+          data-testid="city-state"></div>
       </div>
     </div>
   );

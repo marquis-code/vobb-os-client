@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useForm, SubmitHandler, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
 import { dynamicValidationSchema, renderFormFields } from "lib";
-import { useCountriesContext, useUserContext } from "context";
+import { useCountriesContext } from "context";
+import { LoadingSpinner } from "components";
 
 export interface CustomAttributesProps {
   submit: (data: { name: string; value: string | optionType; orgRefId: string }) => void;
   orgProperties: OrganisationAttributesData[];
   memberProperties: MemberPropertiesData[];
+  loading: boolean;
 }
 
 const CustomAttributes: React.FC<CustomAttributesProps> = ({
   submit,
   orgProperties,
-  memberProperties
+  memberProperties,
+  loading
 }) => {
   const { countries } = useCountriesContext();
   const [date, setDate] = useState<Date>();
@@ -53,7 +55,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
   const schema = yup.object().shape(schemaFields);
 
   const {
-    handleSubmit,
     reset,
     register,
     formState: { errors },
@@ -73,7 +74,7 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
 
       memberProperties.forEach((memberProp) => {
         const fieldName = `${memberProp.type}_${memberProp.id}`;
-        const resetValue = memberProp.values[0];
+        const resetValue = memberProp.values;
 
         resetValues[fieldName] = resetValue;
       });
@@ -112,9 +113,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
     return () => subscription.unsubscribe();
   }, [watch, getValues, memberProperties]);
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data);
-  };
   return (
     <>
       <section className="grid grid-cols-[1fr,2fr] gap-8 border-b border-vobb-neutral-20 pb-8 mb-12 max-w-[800px]">
@@ -124,46 +122,49 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
             These are the properties your organization administrator has defined for all members
           </p>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {orgProperties?.map((fieldData) => {
-            const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
-            const id = memberProp ? memberProp.id : fieldData.id;
-            return renderFormFields({
-              fieldData,
-              id,
-              register,
-              errors,
-              setValue,
-              longTextCount: calculateTotalWordCount()[`long-text_${id}`] ?? 0,
-              countries,
-              radio: {
-                value: selectedRadioValue,
-                handleChange: handleRadioChange
-              },
-              checkbox: {
-                value: selectedCheckboxValues,
-                handleChange: handleCheckboxChange
-              },
-              date: {
-                value: date,
-                handleChange: setDate
-              },
-              file: {
-                value: file,
-                handleChange: setFile
-              },
-              watch
-            });
-          })}
-          <div className="flex gap-2 justify-end max-w-[800px] pt-4">
-            <Button onClick={() => reset()} variant={"outline"}>
-              Cancel
-            </Button>
-            <Button type="submit" variant={"fill"}>
-              Save
-            </Button>
-          </div>
-        </form>
+        <div className="relative">
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+              <LoadingSpinner />
+            </div>
+          )}
+          {!loading && orgProperties.length === 0 ? (
+            <p>No properties set by organisation for now.</p>
+          ) : (
+            <form className="relative z-0">
+              {orgProperties?.map((fieldData) => {
+                const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
+                const id = memberProp ? memberProp.id : fieldData.id;
+                return renderFormFields({
+                  fieldData,
+                  id,
+                  register,
+                  errors,
+                  setValue,
+                  longTextCount: calculateTotalWordCount()[`long-text_${id}`] ?? 0,
+                  countries,
+                  radio: {
+                    value: selectedRadioValue,
+                    handleChange: handleRadioChange
+                  },
+                  checkbox: {
+                    value: selectedCheckboxValues,
+                    handleChange: handleCheckboxChange
+                  },
+                  date: {
+                    value: date,
+                    handleChange: setDate
+                  },
+                  file: {
+                    value: file,
+                    handleChange: setFile
+                  },
+                  watch
+                });
+              })}
+            </form>
+          )}
+        </div>
       </section>
     </>
   );

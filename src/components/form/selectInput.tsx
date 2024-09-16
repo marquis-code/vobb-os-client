@@ -19,10 +19,21 @@ interface SelectInputProps {
   required?: boolean;
   styles?: CSSObjectWithLabel;
   loading?: boolean;
+  testId?: string;
 }
 
 const SelectInput: React.FC<SelectInputProps> = (props) => {
-  const { label, validatorMessage, parentClassName, hint, icon, required, styles, loading } = props;
+  const {
+    label,
+    validatorMessage,
+    parentClassName,
+    hint,
+    icon,
+    required,
+    styles,
+    loading,
+    testId
+  } = props;
 
   return (
     <div className={cn("mb-4", parentClassName)}>
@@ -32,7 +43,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
           {required ? <span className={"text-error-50"}>*</span> : ""}
         </label>
       )}
-      <div className="relative">
+      <div className="relative" data-testid={testId}>
         {icon ? <span className="absolute left-2 top-[10px] z-[1]">{icon}</span> : ""}
         <Select
           {...props}
@@ -149,8 +160,12 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = (props) => {
           option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected ? "var(--vobb-primary-40)" : "#fff",
+            color: state.isDisabled ? "gray" : base.color,
+            cursor: state.isDisabled ? "not-allowed" : "default",
             "&:hover": {
-              backgroundColor: state.isSelected
+              backgroundColor: state.isDisabled
+                ? "#fff"
+                : state.isSelected
                 ? "var(--vobb-primary-40)"
                 : "var(--vobb-primary-20)"
             }

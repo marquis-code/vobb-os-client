@@ -1,4 +1,4 @@
-import { CheckIcon, Cross2Icon, Pencil1Icon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
   SettingsPageTitle,
   Button,
@@ -9,14 +9,16 @@ import {
   getTeamMemberTableColumns,
   TeamMemberTable,
   TeamMemberTableActions,
+  LoadingSpinner,
   Badge,
   PermissionItem
 } from "components";
-import { TeamMemberTableMock } from "lib";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
+import { TeamActivityResponse, TeamMembersDataProps } from "pages";
 import { TeamPermissionsUI } from "./teamPermissions";
 import { TeamActivity } from "./teamActivity";
+import { QueryParamProps } from "types";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -58,9 +60,29 @@ const permissions: PermissionItem[] = [
 
 interface TeamUIProps extends TeamMemberTableActions {
   handleAddMember: () => void;
+  teamName: string;
+  // loading: boolean;
+  // teamsMembersData:
+  memberData: {
+    loading: boolean;
+    teamsMembersData: TeamMembersDataProps;
+    handlePagination: (param: string, value: number) => void;
+  };
+  teamActivities: {
+    loading: boolean;
+    data: TeamActivityResponse;
+    params: QueryParamProps;
+    handleFilter: (param: string, value: Date | string | number) => void;
+  };
 }
 
-const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
+const TeamUI = ({
+  handleViewMember,
+  handleAddMember,
+  teamName,
+  memberData: { loading, teamsMembersData, handlePagination },
+  teamActivities
+}: TeamUIProps) => {
   const teamColumns = useMemo(
     () =>
       getTeamMemberTableColumns({
@@ -69,6 +91,8 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
     [handleViewMember]
   );
   const [filters, setFilters] = useState<FilterData[]>([]);
+  const { membersArray, metaData } = teamsMembersData;
+  const { currentPage, totalCount, totalPages, pageLimit } = metaData;
 
   return (
     <>
@@ -82,7 +106,7 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
         action={console.log}
         className="max-w-[800px]"
       />
-      <SettingsPageTitle title="Team Name" />
+      <SettingsPageTitle title={teamName} />
       <Tabs className="max-w-[800px]" defaultValue="member">
         <TabsList defaultValue={"permissions"} className="mb-2">
           <TabsTrigger
@@ -97,7 +121,8 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
           </TabsTrigger>
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-            value="history">
+            value="history"
+            testId="team-history">
             Team History
           </TabsTrigger>
         </TabsList>
@@ -115,14 +140,18 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
               <PlusCircledIcon /> Add member
             </Button>
           </section>
-          <TeamMemberTable columns={teamColumns} data={TeamMemberTableMock} />
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <TeamMemberTable columns={teamColumns} data={membersArray} />
+          )}
           <Pagination
-            handleChange={console.log}
-            handlePageLimit={console.log}
-            totalCount={3}
-            pageLimit={3}
-            totalPages={1}
-            currentPage={1}
+            handleChange={(val) => handlePagination("page", val)}
+            handlePageLimit={(val) => handlePagination("limit", val)}
+            totalCount={totalCount}
+            pageLimit={pageLimit ?? 20}
+            totalPages={totalPages}
+            currentPage={currentPage}
             className="mt-4"
           />
         </TabsContent>
@@ -130,7 +159,7 @@ const TeamUI = ({ handleViewMember, handleAddMember }: TeamUIProps) => {
           <TeamPermissionsUI />
         </TabsContent>
         <TabsContent className="pb-8 mb-12" value="history">
-          <TeamActivity />
+          <TeamActivity teamActivities={teamActivities} />
         </TabsContent>
       </Tabs>
     </>

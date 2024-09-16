@@ -21,12 +21,14 @@ interface DateRangeProps extends React.HTMLAttributes<HTMLDivElement> {
   value: DateRange | undefined;
   handleChange: (date: DateRange | undefined) => void;
   showPreset?: boolean;
+  testId?: string;
 }
 
 export function DateFilter({
   className,
   value: date,
   handleChange: setDate,
+  testId,
   showPreset
 }: DateRangeProps) {
   return (
@@ -39,7 +41,8 @@ export function DateFilter({
             className={cn(
               "w-full justify-start text-left font-normal text-xs h-7 py-1 px-2 gap-2",
               !date && "text-muted-foreground"
-            )}>
+            )}
+            data-testid={testId}>
             <CalendarIcon className="text-vobb-neutral-60 h-4 w-4" />
             {date?.from ? (
               date.to ? (

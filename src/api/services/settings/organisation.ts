@@ -208,6 +208,7 @@ export const fetchOrgBranchesService = (query: PaginationProps = {}) => {
  * @param id of branch requested
  * @returns axios promise
  */
+
 export const fetchABranchService = ({ id }) => {
   return getRequest({
     url: fetchABranchURL({ id })
@@ -361,9 +362,9 @@ export const transferAllMembersToBranchService = (data: transferMembersRequestBo
  * @param id of branch
  * @returns axios promise
  */
-export const fetchTeamsPerBranchService = ({ id, page, limit }) => {
+export const fetchTeamsPerBranchService = (id: string, query: PaginationProps = {}) => {
   return getRequest({
-    url: fetchTeamsPerBranchURL({ id, page, limit })
+    url: fetchTeamsPerBranchURL(id, { ...query })
   });
 };
 

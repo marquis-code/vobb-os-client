@@ -147,7 +147,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty || loading}
+            disabled={!isDirty}
             loading={loading}
             size={"default"}
             variant={"fill"}>

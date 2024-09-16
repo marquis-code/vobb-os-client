@@ -14,9 +14,9 @@ describe("Onboarding - fullname flow", () => {
     cy.url().should("include", "/onboarding/user_details");
   });
   it("displays the fullname page", () => {
-    cy.get('[data-cy="logo"]').should("exist");
+    cy.get('[data-testid="logo"]').should("exist");
     cy.get("h1").should("contain", "Enter your name");
-    cy.get('[data-cy="subtitle"]').should("contain", "As shown on a government issued ID");
+    cy.get('[data-testid="subtitle"]').should("contain", "As shown on a government issued ID");
     cy.get('input[name="firstName"]').should("be.visible").and("be.enabled");
     cy.get('input[name="lastName"]').should("be.visible").and("be.enabled");
     cy.contains("button", "Continue").should("be.visible").and("be.enabled");
@@ -30,7 +30,7 @@ describe("Onboarding - fullname flow", () => {
   it("fills in fullname, submits successfully and shows toast notification", () => {
     cy.get('input[name="firstName"]').clear().type("Poseph");
     cy.get('input[name="lastName"]').clear().type("Dewbottom");
-    cy.get('[data-cy="continue-btn"]').click();
+    cy.get('[data-testid="continue-btn"]').click();
 
     cy.checkAndCloseToastNotification("First name and Last name saved sucessfully");
   });
