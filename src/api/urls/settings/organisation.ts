@@ -231,7 +231,7 @@ export const fetchUserBranchesURL = ({ page, limit, search }: PaginationProps) =
 
   if (page !== undefined) queryParams.append("page", page.toString());
   if (limit !== undefined) queryParams.append("limit", limit.toString());
-  if (search !== undefined) queryParams.append("search", search);
+  if (search && search !== "") queryParams.append("search", search);
 
   const queryString = queryParams.toString();
 

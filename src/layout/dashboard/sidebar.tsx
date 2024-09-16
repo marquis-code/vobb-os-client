@@ -72,7 +72,7 @@ export function BranchMenu() {
   };
 
   useEffect(() => {
-    fetchUserBranches({ limit: 8, search: branchSearchQuery });
+    fetchUserBranches({ limit: 8, search: branchSearchQuery.trim() });
   }, [branchSearchQuery]);
 
   useEffect(() => {
