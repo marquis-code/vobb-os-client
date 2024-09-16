@@ -14,12 +14,12 @@ const defaultBranchesData: BranchesDataProps = {
   }
 };
 
-export const useFetchBranches = ({ limit, search }: { limit?: number; search?: string }) => {
+export const useFetchBranches = ({ limit }: { limit?: number }) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const { countries } = useCountriesContext();
 
-  const fetchOrgBranches = ({ page, limit, search }: PaginationProps) =>
-    run(fetchOrgBranchesService({ page, limit, search }));
+  const fetchOrgBranches = ({ page, limit }: PaginationProps) =>
+    run(fetchOrgBranchesService({ page, limit }));
 
   const orgBranches = useMemo<BranchesDataProps>(() => {
     if (response?.status === 200) {

@@ -10,7 +10,7 @@ import {
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "context";
-import { useFetchBranches, useFetchUserBranches } from "hooks";
+import { useFetchUserBranches } from "hooks";
 import { Input, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
@@ -50,21 +50,19 @@ interface BranchType {
 }
 
 export function BranchMenu() {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { setAddBranch } = useModalContext();
   const { userDetails } = useUserContext();
-  const { fetchOrgBranches, orgBranches, loadingBranches } = useFetchBranches({});
   const { fetchUserBranches, userBranches, loading: loadingUser } = useFetchUserBranches({});
-
-  const isAdmin = userDetails?.role === "Super Admin";
 
   const [allBranches, setAllBranches] = useState<BranchType[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<BranchType>({ id: "", name: "" });
 
-  const [userBranchesSearchQuery, setUserBranchesSearchQuery] = useState("");
-  const [allBranchesSearchQuery, setAllBranchesSearchQuery] = useState("");
+  const [branchSearchQuery, setBranchSearchQuery] = useState("");
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const handleBranchSearch = (value: string) => {
+    setBranchSearchQuery(value);
+  };
   const handleSelectedBranch = (branch: BranchType) => {
     setSelectedBranch(branch);
   };
@@ -73,27 +71,12 @@ export function BranchMenu() {
     setAddBranch(true);
   };
 
-  const handleAllBranchSearch = (value: string) => {
-    isAdmin ? setAllBranchesSearchQuery(value) : setUserBranchesSearchQuery(value);
-  };
+  useEffect(() => {
+    fetchUserBranches({ limit: 8, search: branchSearchQuery });
+  }, [branchSearchQuery]);
 
   useEffect(() => {
-    if (isAdmin) fetchOrgBranches({ limit: 8, search: allBranchesSearchQuery });
-    if (!isAdmin) fetchUserBranches({ limit: 8, search: userBranchesSearchQuery });
-  }, [userBranchesSearchQuery, allBranchesSearchQuery]);
-
-  useEffect(() => {
-    if (isAdmin && !loadingBranches && orgBranches?.branchesArray) {
-      const branches = orgBranches.branchesArray.map((branch) => ({
-        id: branch.id,
-        name: branch.name
-      }));
-      setAllBranches(branches);
-
-      if (branches.length > 0) {
-        setSelectedBranch(branches[0]);
-      }
-    } else if (!loadingUser && userBranches?.branchesArray) {
+    if (!loadingUser && userBranches?.branchesArray) {
       const branches = userBranches.branchesArray.map((branch) => ({
         id: branch.id,
         name: branch.branch
@@ -104,11 +87,11 @@ export function BranchMenu() {
         setSelectedBranch(branches[0]);
       }
     }
-
+    //
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [loadingUser, userBranches, loadingBranches, orgBranches]);
+  }, [loadingUser, userBranches]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -119,12 +102,12 @@ export function BranchMenu() {
       <DropdownMenuContent className="w-56 ml-4 mt-1">
         <Input
           placeholder="search"
-          value={isAdmin ? allBranchesSearchQuery : userBranchesSearchQuery}
-          onChange={(e) => handleAllBranchSearch(e.target.value)}
+          value={branchSearchQuery}
+          onChange={(e) => handleBranchSearch(e.target.value)}
           ref={inputRef}
         />
         <DropdownMenuGroup>
-          {loadingBranches || loadingUser ? (
+          {loadingUser ? (
             <LoadingSpinner />
           ) : !allBranches.length ? (
             <p className="p-2">No matches found.</p>
