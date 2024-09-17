@@ -33,7 +33,7 @@ export const useFetchUserBranches = ({ limit, search }: { limit?: number; search
         date: item.time,
         time: item.date_added
       }));
-      const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
+      const branchesArray = data;
       const branchesMetaData = {
         currentPage: response?.data?.data?.page ?? 1,
         totalPages: response?.data?.data?.total_pages,

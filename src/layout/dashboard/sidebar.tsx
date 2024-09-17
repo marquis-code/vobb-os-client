@@ -10,10 +10,10 @@ import {
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "context";
-import { useFetchUserBranches } from "hooks";
 import { Input, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
+import { useFetchUserBranches } from "hooks";
 
 interface SideBarProps {
   sideBarWidth: string;
