@@ -5,6 +5,8 @@ import { VerifyEmail } from "./verify-email";
 import { useApiRequest, useFetchUser } from "hooks";
 import { toast } from "components";
 import { personalAccountUpdateService, personalEmailResendVerifyService } from "api";
+import { useModalContext } from "context";
+import { UpdateJobTitle } from "./update-jobTitle";
 
 const AccountProfile = () => {
   const [changeEmail, setChangeEmail] = useState(false);
@@ -17,6 +19,7 @@ const AccountProfile = () => {
     requestStatus: updateStatus
   } = useApiRequest({});
   const { run: runResend, data: resendResponse, error: resendError } = useApiRequest({});
+  const { updateJobTitle, setUpdateJobTitle } = useModalContext();
 
   const updateProfile = (formData: FormData) => {
     runUpdate(personalAccountUpdateService(formData));
@@ -57,9 +60,20 @@ const AccountProfile = () => {
   return (
     <>
       <ChangeEmail
-        callback={() => setEmailOTP(true)}
+        callback={() => {
+          setEmailOTP(true);
+          fetchUserDetails();
+        }}
         show={changeEmail}
         close={() => setChangeEmail(false)}
+      />
+      <UpdateJobTitle
+        callback={() => {
+          fetchUserDetails();
+          setUpdateJobTitle(false);
+        }}
+        show={updateJobTitle}
+        close={() => setUpdateJobTitle(false)}
       />
       <VerifyEmail show={emailOTP} close={() => setEmailOTP(false)} />
       <AccountProfileUI
@@ -67,6 +81,7 @@ const AccountProfile = () => {
         loadingUpdate={updateStatus.isPending}
         handleChangeEmail={() => setChangeEmail(true)}
         handleResendEmail={handleResendEmailVerify}
+        handleUpdateJobTitle={() => setUpdateJobTitle(true)}
       />
     </>
   );

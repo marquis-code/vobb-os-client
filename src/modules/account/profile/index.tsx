@@ -32,12 +32,14 @@ interface AccountProfileProps {
   loadingUpdate: boolean;
   handleChangeEmail: () => void;
   handleResendEmail: () => void;
+  handleUpdateJobTitle: () => void;
 }
 const AccountProfileUI: React.FC<AccountProfileProps> = ({
   handleChangeEmail,
   handleResendEmail,
   updateProfile,
-  loadingUpdate
+  loadingUpdate,
+  handleUpdateJobTitle
 }) => {
   const { userDetails: profile } = useUserContext();
   const [validateAvatar, setValidateAvatar] = useState(false);
@@ -87,7 +89,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
         firstName: profile.firstName,
         lastName: profile.lastName,
         phoneNumber: profile.phoneNumber,
-        jobTitle: profile.role,
+        jobTitle: profile.jobTitle,
         email: profile.pendingEmail ?? profile.email,
         avatarFile: profile.avatar
       });
@@ -192,15 +194,55 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             }}
             parentClassName="mb-2"
           />
-          <CustomInput
-            label="Job Title"
-            type="text"
-            name="jobTitle"
-            register={register}
-            validatorMessage={errors.jobTitle?.message}
-            disabled
-            parentClassName="mb-2"
-          />
+          <div className="relative">
+            <CustomInput
+              label="Job Title"
+              type="text"
+              name="jobTitle"
+              register={register}
+              validatorMessage={errors.jobTitle?.message}
+              disabled
+              parentClassName="mb-2"
+            />
+            {profile?.role === "Super Admin" && (
+              <div>
+                <div className="absolute -right-8 top-7">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                        {!profile?.jobTitle ? (
+                          <QuestionMarkCircledIcon
+                            width={20}
+                            height={20}
+                            color="var(--warning-50)"
+                          />
+                        ) : (
+                          <CheckCircledIcon width={20} height={20} color="var(--success-50)" />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {!profile?.jobTitle
+                            ? "Job title has not been set, please update it."
+                            : "Job title is set"}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleUpdateJobTitle();
+                  }}
+                  className="p-0 underline"
+                  size={"sm"}
+                  variant={"link"}>
+                  Update job title
+                </Button>
+              </div>
+            )}
+          </div>
           <div className="mb-2">
             <div className="relative">
               <CustomInput
