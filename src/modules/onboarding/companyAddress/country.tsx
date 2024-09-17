@@ -56,7 +56,7 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
           errors.country?.value?.message ??
           errors.country?.label?.message
         }
-        data-cy="country"
+        data-testid="country"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
@@ -65,7 +65,7 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
         className="w-full mt-6"
         size={"default"}
         variant="fill"
-        data-cy="continue-btn">
+        data-testid="continue-btn">
         Continue
       </Button>
     </form>

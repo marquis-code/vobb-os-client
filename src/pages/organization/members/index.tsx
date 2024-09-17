@@ -10,9 +10,10 @@ import { ChangeRole } from "./changeRole";
 import { UndoSuspension } from "./undoSuspension";
 import { useApiRequest } from "hooks";
 import { fetchOrgMembersService } from "api";
-import { toast } from "components";
 import { getInitials } from "lib";
 import { MemberDataProps } from "types";
+import { useModalContext } from "context";
+import { toast } from "components";
 
 const initMembersData: MemberDataProps = {
   membersArray: [],
@@ -26,12 +27,17 @@ const initMembersData: MemberDataProps = {
 
 const Members = () => {
   const navigate = useNavigate();
-  const [inviteMember, setInviteMember] = useState(false);
+  const { inviteMember, setInviteMember } = useModalContext();
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
+  const [undoSuspension, setUndoSuspension] = useState({
+    show: false,
+    id: "",
+    name: "",
+    suspend: false
+  });
+
   const [resendInvite, setResendInvite] = useState({ show: false, id: "", email: "" });
   const [cancelInvite, setCancelInvite] = useState({ show: false, id: "", email: "" });
-  const [changeRole, setChangeRole] = useState({ show: false, name: "", id: "", currentRole: "" });
-
   const [membersQueryParams, setMembersQueryParams] = useState({
     page: 1,
     limit: 20,
@@ -49,19 +55,24 @@ const Members = () => {
     error: fetchError,
     requestStatus: fetchStatus
   } = useApiRequest({});
+  const [changeRole, setChangeRole] = useState({ show: false, name: "", id: "", currentRole: "" });
 
   const fetchOrgMembers = () => {
     runFetchMembers(fetchOrgMembersService(membersQueryParams));
   };
-
   const handleInviteMember = () => setInviteMember(true);
   const closeInviteMember = () => setInviteMember(false);
 
   const handleSuspension = (props: { id: string; suspend: boolean; name: string }) => {
-    setSuspension({
-      ...props,
-      show: true
-    });
+    props.suspend
+      ? setSuspension({
+          ...props,
+          show: true
+        })
+      : setUndoSuspension({
+          ...props,
+          show: true
+        });
   };
 
   const handleResendInvite = (props: { id: string; email: string }) => {
@@ -98,16 +109,12 @@ const Members = () => {
     setSuspension({ show: false, id: "", name: "", suspend: false });
   };
 
+  const handleCloseUnsuspend = () => {
+    setUndoSuspension({ show: false, id: "", name: "", suspend: false });
+  };
+
   const handleViewMember = (id) => {
     navigate(Routes.member(id, "activity"));
-  };
-
-  const handleChangeRole = ({ id, name, role }) => {
-    setChangeRole({ show: true, id, name, currentRole: role });
-  };
-
-  const handleCloseChangeRole = () => {
-    setChangeRole({ show: false, id: "", name: "", currentRole: "" });
   };
 
   const orgMembersData = useMemo<MemberDataProps>(() => {
@@ -154,22 +161,54 @@ const Members = () => {
     fetchOrgMembers();
   }, [membersQueryParams]);
 
+  const handleChangeRole = ({ id, name, role }) => {
+    setChangeRole({ show: true, id, name, currentRole: role });
+  };
+
+  const handleCloseChangeRole = () => {
+    setChangeRole({ show: false, id: "", name: "", currentRole: "" });
+  };
+
+  useEffect(() => {
+    fetchOrgMembers();
+  }, [membersQueryParams]);
+
   return (
     <>
       <SuspendMember
         {...suspension}
         show={suspension.show && suspension.suspend}
         close={handleCloseSuspend}
+        fetchMembers={fetchOrgMembers}
+      />
+      <InviteMember
+        show={inviteMember}
+        close={closeInviteMember}
+        callback={() => fetchOrgMembers()}
       />
       <UndoSuspension
-        {...suspension}
-        show={suspension.show && !suspension.suspend}
-        close={handleCloseSuspend}
+        {...undoSuspension}
+        show={undoSuspension.show && !suspension.suspend}
+        close={handleCloseUnsuspend}
+        fetchMembers={fetchOrgMembers}
       />
       <ChangeRole {...changeRole} close={handleCloseChangeRole} handleFetch={fetchOrgMembers} />
-      <CancelInvitation {...cancelInvite} close={handleCloseCancellation} />
-      <ResendInvitation {...resendInvite} close={handleCloseResend} />
-      <InviteMember show={inviteMember} close={closeInviteMember} />
+      <CancelInvitation
+        {...cancelInvite}
+        close={handleCloseCancellation}
+        callback={() => {
+          fetchOrgMembers();
+          handleCloseCancellation();
+        }}
+      />
+      <ResendInvitation
+        {...resendInvite}
+        close={handleCloseResend}
+        callback={() => {
+          fetchOrgMembers();
+          handleCloseResend();
+        }}
+      />
       <MembersUI
         handleViewMembers={{
           loading: fetchStatus.isPending,

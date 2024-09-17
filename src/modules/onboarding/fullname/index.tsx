@@ -24,12 +24,12 @@ const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) 
   return (
     <div className="max-w-[400px] m-auto">
       <div className="hidden lg:grid">
-        <PersonalIcon className="mb-6 m-auto" data-cy="logo" />
+        <PersonalIcon className="mb-6 m-auto" data-testid="logo" />
         <div className="mb-8 text-center mx-auto">
           <h1 className="text-xl sm:text-3xl font-bold mb-4 text-vobb-neutral-100 text-center">
             Enter your name
           </h1>
-          <p data-cy="subtitle">As shown on a government issued ID</p>
+          <p data-testid="subtitle">As shown on a government issued ID</p>
         </div>
       </div>
       <form>
@@ -39,7 +39,7 @@ const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) 
           placeholder="First name"
           register={register}
           validatorMessage={errors.firstName?.message}
-          data-cy="firstname"
+          data-testid="firstname"
         />
 
         <CustomInput
@@ -48,7 +48,7 @@ const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) 
           placeholder="Last name"
           register={register}
           validatorMessage={errors.lastName?.message}
-          data-cy="lastname"
+          data-testid="lastname"
         />
 
         <Button
@@ -58,7 +58,7 @@ const FullnameUI: React.FC<FullnameFormProps> = ({ initData, submit, loading }) 
           onClick={handleSubmit(onSubmit)}
           disabled={loading}
           loading={loading}
-          data-cy="continue-btn">
+          data-testid="continue-btn">
           Continue
         </Button>
       </form>

@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { optionType } from "types/interfaces";
 
 export type companySizeTypes = "0-5" | "6-10" | "11-20" | "21-50" | "51+";
-export type companySectorTypes = "Education" | "Health" | "Tourism";
+export type companySectorTypes = "Education" | "Medical and Health" | "Tourism";
 export interface StepsType {
   icon: ReactElement<SVGElement>;
   name: string;

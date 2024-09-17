@@ -262,8 +262,8 @@ export const renderFormFields = ({
         <CustomCheckboxGroup
           key={id}
           label={fieldData.title}
-          value={fieldValue?.map((option) => ({ label: option, value: option }))}
-          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
+          value={fieldValue?.map((option) => ({ label: option, value: option })) || []}
+          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
           onChange={(newValue) =>
             checkbox?.handleChange ? checkbox.handleChange(newValue, id) : () => {}
           }

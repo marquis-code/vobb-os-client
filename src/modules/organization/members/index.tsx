@@ -96,7 +96,11 @@ const MembersUI: React.FC<MembersUIProps> = ({
       <SettingsPageTitle title="Members" className="max-w-none" />
       <section className="mb-6 flex justify-between gap-4 items-center">
         <Filter className="mb-0" filters={filters} setFilter={setFilters} attributes={attributes} />
-        <Button onClick={handleInviteMember} className="flex gap-2 ml-auto" variant={"fill"}>
+        <Button
+          onClick={handleInviteMember}
+          className="flex gap-2 ml-auto"
+          variant={"fill"}
+          data-testid="invite-member">
           <PlusCircledIcon /> Invite member
         </Button>
       </section>
@@ -109,7 +113,8 @@ const MembersUI: React.FC<MembersUIProps> = ({
         pageLimit={pageLimit}
         totalPages={totalPages}
         currentPage={currentPage}
-        className="mt-4"
+        className="mt-4 mb-28"
+        testId="pagination"
       />
     </>
   );

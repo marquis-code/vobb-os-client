@@ -7,7 +7,7 @@ import {
   DateFilter,
   LoadingSpinner
 } from "components";
-import { QueryParamProps } from "pages";
+import { QueryParamProps } from "types";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";

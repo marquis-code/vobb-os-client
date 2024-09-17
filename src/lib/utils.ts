@@ -25,7 +25,6 @@ export const arraysHaveSameElements = (arr1: string[], arr2: string[]): boolean 
 export const getOptionTypeValidationMsg = (error) => {
   return error?.message ?? error?.value?.message?.toString() ?? error?.label?.message?.toString();
 };
-
 export const getInitials = (fullName: string) => {
   const names = fullName.split(" ");
 

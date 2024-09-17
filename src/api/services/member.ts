@@ -16,7 +16,6 @@ import {
   fetchMemberProfileURL,
   fetchMemberProsBranchesURL,
   fetchMemberTeamsURL,
-  fetchOrgMembersURL,
   removeBranchFromMemberURL,
   removeTeamFromMemberURL,
   changeMemberRoleURL,
@@ -28,7 +27,7 @@ import {
   addMemberToBranchURL,
   verifyMemberEmailURL
 } from "api";
-import { fetchMemberQueryParams, PaginationProps, updatePropertiesRequestBody } from "types";
+import { PaginationProps, updatePropertiesRequestBody } from "types";
 
 interface removeMemberFromBranchRequestBody {
   member: string;
@@ -44,16 +43,6 @@ interface changeMemberRoleRequestBody {
   member: string;
   role: string;
 }
-
-/**
- * Fetch a organisation's members service
- * @returns axios promise
- */
-export const fetchOrgMembersService = (queryParams: fetchMemberQueryParams) => {
-  return getRequest({
-    url: fetchOrgMembersURL(queryParams)
-  });
-};
 
 /**
  * Fetch a member's profile service

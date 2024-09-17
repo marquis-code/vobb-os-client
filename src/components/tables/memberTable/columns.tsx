@@ -196,7 +196,16 @@ const ActionColumn = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button
+          variant="ghost"
+          className="h-6 w-6 p-0"
+          data-testid={
+            status === "active"
+              ? "menu-activeUser"
+              : status === "suspended"
+              ? "menu-suspendedUser"
+              : "menu-inactiveUser"
+          }>
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>
@@ -204,35 +213,50 @@ const ActionColumn = ({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         {status === "active" || status === "suspended" ? (
-          <DropdownMenuItem onClick={viewMember} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={viewMember}
+            className="gap-2 cursor-pointer"
+            testId="view-member">
             <EyeOpenIcon /> View member
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "active" ? (
-          <DropdownMenuItem onClick={changeRole} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={changeRole}
+            className="gap-2 cursor-pointer"
+            testId="change-role">
             <UpdateIcon /> Change role
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "invited" || status === "expired" ? (
-          <DropdownMenuItem onClick={resendInvitation} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={resendInvitation}
+            className="gap-2 cursor-pointer"
+            testId="resend-invite">
             <PaperPlaneIcon /> Resend invitation
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "invited" ? (
-          <DropdownMenuItem onClick={cancelInvitation} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={cancelInvitation}
+            className="gap-2 cursor-pointer"
+            testId="cancel-invite">
             <CircleBackslashIcon /> Cancel invitation
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "active" || status === "suspended" ? (
-          <DropdownMenuItem onClick={suspension} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={suspension}
+            className="gap-2 cursor-pointer"
+            testId={status === "active" ? "suspend-member" : "undo-suspension"}>
             {status === "active" ? <CircleBackslashIcon /> : <ResetIcon />}{" "}
             {status === "active" ? "Suspend member" : "Undo suspension"}
           </DropdownMenuItem>

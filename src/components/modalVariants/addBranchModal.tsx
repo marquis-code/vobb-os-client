@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { useCountriesContext } from "context";
+import { useCountriesContext, useModalContext } from "context";
 import { timeZoneOptions } from "lib/constants";
 
 export interface AddBranchData {
@@ -44,6 +44,7 @@ interface AddBranchModalProps extends ModalProps {
 
 const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, loading }) => {
   const { countries } = useCountriesContext();
+  const { addBranch } = useModalContext();
   const {
     register,
     handleSubmit,
@@ -61,7 +62,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
 
   return (
     <>
-      <Modal contentClassName="max-w-[800px]" show={show} close={close}>
+      <Modal contentClassName="max-w-[800px]" show={addBranch} close={close}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Create New Branch</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"}>
@@ -146,7 +147,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty || loading}
+            disabled={!isDirty}
             loading={loading}
             size={"default"}
             variant={"fill"}>

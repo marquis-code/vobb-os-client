@@ -2,7 +2,7 @@ import { organisationBranchRequestBody, updateOrgBranchService } from "api";
 import { EditBranchModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
-import { BranchesDataProps, ModalProps, OrganisationBranchesData } from "types";
+import { ModalProps, OrganisationBranchesData } from "types";
 
 interface Props extends ModalProps {
   branchData: OrganisationBranchesData;

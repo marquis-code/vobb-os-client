@@ -207,6 +207,7 @@ export const fetchOrgBranchesService = (query: PaginationProps = {}) => {
  * @param id of branch requested
  * @returns axios promise
  */
+
 export const fetchABranchService = ({ id }) => {
   return getRequest({
     url: fetchABranchURL({ id })

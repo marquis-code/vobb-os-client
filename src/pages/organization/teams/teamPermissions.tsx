@@ -1,9 +1,16 @@
-import { TeamPermissionsUI } from "modules";
+import { TeamPermissionsModal } from "components";
+import { ModalProps } from "types";
 
-const TeamPermissions = () => {
+interface TeamPermissionsProps extends ModalProps {
+  teamId: string;
+}
+
+const TeamPermissions: React.FC<TeamPermissionsProps> = (props) => {
+  const submit = () => {};
+
   return (
     <>
-      <TeamPermissionsUI />
+      <TeamPermissionsModal submit={submit} loading={false} {...props} />
     </>
   );
 };

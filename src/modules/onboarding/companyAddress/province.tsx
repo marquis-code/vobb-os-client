@@ -29,7 +29,7 @@ const Province: React.FC<CompanyAddressProps> = ({ initState, submit, loading })
         name="state"
         register={register}
         validatorMessage={errors.state?.message}
-        data-cy="province-input"
+        data-testid="province-input"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
@@ -38,7 +38,7 @@ const Province: React.FC<CompanyAddressProps> = ({ initState, submit, loading })
         className="w-full mt-6"
         size={"default"}
         variant="fill"
-        data-cy="continue-btn">
+        data-testid="continue-btn">
         Continue
       </Button>
     </form>

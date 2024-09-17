@@ -15,37 +15,37 @@ describe("Onboarding - Company info flow", () => {
   });
 
   it("displays the company infomation page", () => {
-    cy.get('[data-cy="arrow-icon"]').should("exist");
-    cy.get('[data-cy="logo"]').should("exist");
+    cy.get('[data-testid="arrow-icon"]').should("exist");
+    cy.get('[data-testid="logo"]').should("exist");
     cy.get("h1").should("contain", "Company information");
-    cy.get('[data-cy="subtitle"]').should("contain", "Enter your company details.");
+    cy.get('[data-testid="subtitle"]').should("contain", "Enter your company details.");
     cy.contains("button", "Continue").should("be.visible").and("be.enabled");
-    cy.get('[data-cy="organisation-name-state"]').should("exist");
-    cy.get('[data-cy="teamsize-state"]').should("exist");
-    cy.get('[data-cy="sector-state"]').should("exist");
+    cy.get('[data-testid="organisation-name-state"]').should("exist");
+    cy.get('[data-testid="teamsize-state"]').should("exist");
+    cy.get('[data-testid="sector-state"]').should("exist");
   });
 
   it("back arrow goes back to user details page", () => {
-    cy.get('[data-cy="organisation-name-state"]').click();
-    cy.get('[data-cy="arrow-icon"]').click();
+    cy.get('[data-testid="organisation-name-state"]').click();
+    cy.get('[data-testid="arrow-icon"]').click();
     cy.url().should("include", "/onboarding/user_details");
   });
 
   it("displays and validates organisation name input", () => {
-    cy.get('[data-cy="organisation-name-state"]').click();
+    cy.get('[data-testid="organisation-name-state"]').click();
     cy.get('input[name="organisation"]').should("be.visible").and("be.enabled");
     cy.checkRequiredFieldError("organisation-name", "continue-btn");
   });
 
   it("submits organisation name successfully", () => {
-    cy.get('[data-cy="organisation-name-state"]').click();
+    cy.get('[data-testid="organisation-name-state"]').click();
     cy.get('input[name="organisation"]').clear().type("Turound");
-    cy.get('[data-cy="continue-btn"]').click();
+    cy.get('[data-testid="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Company name saved sucessfully");
   });
 
   it("displays team size input", () => {
-    cy.get('[data-cy="teamsize-state"]').click();
+    cy.get('[data-testid="teamsize-state"]').click();
     cy.get('input[type="hidden"][name="size"]').should("exist");
     cy.get('input[role="combobox"]').should("be.visible").and("be.enabled");
     cy.get("svg.css-tj5bde-Svg").should("be.visible");
@@ -53,17 +53,17 @@ describe("Onboarding - Company info flow", () => {
   });
 
   it("selects team size and submits successfully", () => {
-    cy.get('[data-cy="teamsize-state"]').click();
+    cy.get('[data-testid="teamsize-state"]').click();
     cy.get("svg.css-tj5bde-Svg").should("be.visible").click();
     cy.get("div.css-1nmdiq5-menu").should("be.visible");
     cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
     cy.get("div#react-select-3-option-3").should("be.visible").click();
-    cy.get('[data-cy="continue-btn"]').click();
+    cy.get('[data-testid="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Company team size saved sucessfully");
   });
 
   it("displays sector input", () => {
-    cy.get('[data-cy="sector-state"]').click();
+    cy.get('[data-testid="sector-state"]').click();
     cy.get('input[type="hidden"][name="sector"]').should("exist");
     cy.get('input[role="combobox"]').should("be.visible").and("be.enabled");
     cy.get("svg.css-tj5bde-Svg").should("be.visible");
@@ -71,12 +71,12 @@ describe("Onboarding - Company info flow", () => {
   });
 
   it("selects sector and submits successfully", () => {
-    cy.get('[data-cy="sector-state"]').click();
+    cy.get('[data-testid="sector-state"]').click();
     cy.get("svg.css-tj5bde-Svg").should("be.visible").click();
     cy.get("div.css-1nmdiq5-menu").should("be.visible");
     cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
     cy.get("div#react-select-3-option-2").should("be.visible").click();
-    cy.get('[data-cy="continue-btn"]').click();
+    cy.get('[data-testid="continue-btn"]').click();
     cy.checkAndCloseToastNotification("Company sector saved sucessfully");
   });
 });

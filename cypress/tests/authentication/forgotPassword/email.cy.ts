@@ -8,9 +8,9 @@ describe("Forgot password page", () => {
   });
 
   it("should display the enter email page", () => {
-    cy.get('[data-cy="logo"]').should("exist");
+    cy.get('[data-testid="logo"]').should("exist");
     cy.get("h1").should("contain", "Forgot Password?");
-    cy.get('[data-cy="subtitle"]').should(
+    cy.get('[data-testid="subtitle"]').should(
       "contain",
       "No worries, we’ll send you reset instructions."
     );
@@ -18,12 +18,12 @@ describe("Forgot password page", () => {
     cy.get('input[name="email"]').should("be.visible").and("be.enabled");
     cy.contains("button", "Continue").should("be.visible").and("be.enabled");
 
-    cy.get('[data-cy="back-btn"]').should("be.visible").and("be.enabled");
-    cy.get("[data-cy='arrow-icon']").should("exist");
+    cy.get('[data-testid="back-btn"]').should("be.visible").and("be.enabled");
+    cy.get("[data-testid='arrow-icon']").should("exist");
   });
 
   it("should successfully go back to sign in page", () => {
-    cy.get('[data-cy="back-btn"]').click();
+    cy.get('[data-testid="back-btn"]').click();
     cy.url().should("include", "/login");
   });
 
@@ -37,7 +37,7 @@ describe("Forgot password page", () => {
 
   it("should send reset code to email and navigate to otp verification page", () => {
     cy.get('input[name="email"]').type("user@gmail.com");
-    cy.get('[data-cy="continue-btn"]').click();
+    cy.get('[data-testid="continue-btn"]').click();
     cy.url().should("includes", "/forgot-password/verify");
     cy.checkAndCloseToastNotification(
       "A password reset email has been sent to your registered address."
