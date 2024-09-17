@@ -15,7 +15,7 @@ import { Button } from "components";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { useModalContext, useUserContext } from "context";
-import { useFetchUser, useLogout } from "hooks";
+import { useLogout } from "hooks";
 
 interface NavBarProps {
   sideBarWidth: string;
@@ -62,8 +62,8 @@ const UserAvatar = () => {
     <Avatar className="w-8 h-8">
       <AvatarImage src={userDetails?.avatar} alt="profile picture" />
       <AvatarFallback>
-        {userDetails?.firstName.charAt(0)}
-        {userDetails?.lastName.charAt(0)}
+        {userDetails?.firstName?.charAt(0)}
+        {userDetails?.lastName?.charAt(0)}
       </AvatarFallback>
     </Avatar>
   );

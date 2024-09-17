@@ -16,7 +16,6 @@ interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const { isMobile } = useMobile({ size: 1024 });
   const { userDetails } = useUserContext();
-  console.log(userDetails?.jobTitle);
   const {
     addBranch,
     setAddBranch,
