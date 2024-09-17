@@ -1,13 +1,10 @@
 import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
-import { useMobile } from "hooks";
-import { UnsupportedScreenSize, UpdateJobTitleModal } from "components";
-import { AddBranch } from "pages/organization/branches/addBranch";
+import { useFetchUser, useMobile } from "hooks";
+import { UnsupportedScreenSize } from "components";
+import { AddBranch, AddTeam, InviteMember, UpdateJobTitle } from "pages";
 import { useModalContext, useUserContext } from "context";
-import { AddTeam } from "pages/organization/teams/addTeam";
-import { InviteMember } from "pages/organization/members/inviteMember";
-
 interface DashboardLayoutProps {
   children: ReactNode;
   title: string;
@@ -27,6 +24,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
     setUpdateJobTitle
   } = useModalContext();
   const [collapse, setCollapse] = useState(false);
+  const { fetchUserDetails } = useFetchUser();
+
   const sideBarWidth = collapse ? "60px" : "275px";
 
   const willSetJobTitle = userDetails?.role === "Super Admin" && !userDetails?.jobTitle;
@@ -34,6 +33,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
   useEffect(() => {
     if (willSetJobTitle) setUpdateJobTitle(true);
   }, [willSetJobTitle]);
+
   return isMobile ? (
     <UnsupportedScreenSize />
   ) : (
@@ -46,11 +46,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       <AddBranch close={() => setAddBranch(false)} show={addBranch} />
       <AddTeam close={() => setAddTeam(false)} show={addTeam} />
       <InviteMember close={() => setInviteMember(false)} show={inviteMember} />
-      <UpdateJobTitleModal
-        loading={false}
-        submit={() => {}}
+      <UpdateJobTitle
         close={() => setUpdateJobTitle(false)}
         show={updateJobTitle}
+        callback={() => {
+          fetchUserDetails();
+          setUpdateJobTitle(false);
+        }}
       />
     </>
   );

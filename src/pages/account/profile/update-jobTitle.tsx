@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { ModalProps } from "types";
 
 interface UpdateJobTitleProps extends ModalProps {
-  callback: () => void;
+  callback?: () => void;
 }
 
 const UpdateJobTitle: React.FC<UpdateJobTitleProps> = ({ show, close, callback }) => {
@@ -20,7 +20,7 @@ const UpdateJobTitle: React.FC<UpdateJobTitleProps> = ({ show, close, callback }
       toast({
         description: response?.data?.message
       });
-      callback();
+      callback?.();
     } else if (error) {
       toast({
         variant: "destructive",

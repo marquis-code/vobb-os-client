@@ -92,3 +92,4 @@ const Teams = () => {
 
 export { Teams };
 export * from "./team";
+export * from "./addTeam";

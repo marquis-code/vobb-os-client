@@ -88,3 +88,5 @@ const AccountProfile = () => {
 };
 
 export { AccountProfile };
+
+export * from "./update-jobTitle";
