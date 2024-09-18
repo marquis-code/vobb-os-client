@@ -359,7 +359,6 @@ export const renderProfileFormFields = ({
           placeholder={fieldData.description}
           validatorMessage={getErrorMessage(errors[fieldName])}
           register={register}
-          disabled={loading}
         />
       );
     case "long-text":
@@ -373,7 +372,6 @@ export const renderProfileFormFields = ({
           hint={`${longTextCount}/${fieldData.metaData ?? 250} words`}
           validatorMessage={getErrorMessage(errors[fieldName])}
           register={register}
-          disabled={loading}
         />
       );
     case "number":
@@ -387,7 +385,6 @@ export const renderProfileFormFields = ({
           placeholder={fieldData.description}
           validatorMessage={getErrorMessage(errors[fieldName])}
           register={register}
-          disabled={loading}
         />
       );
     case "email":
@@ -401,7 +398,6 @@ export const renderProfileFormFields = ({
           name={fieldName}
           validatorMessage={getErrorMessage(errors[fieldName])}
           register={register}
-          disabled={loading}
         />
       );
     case "phone-number":
@@ -416,7 +412,6 @@ export const renderProfileFormFields = ({
           handleChange={(val) => {
             setValue(fieldName, val);
           }}
-          disabled={loading}
         />
       );
     case "country":
@@ -432,7 +427,6 @@ export const renderProfileFormFields = ({
           }))}
           onChange={(val) => val && setValue(fieldName, val)}
           validatorMessage={getErrorMessage(errors[fieldName])}
-          disabled={loading}
         />
       );
     case "multiple-choice":
@@ -447,7 +441,6 @@ export const renderProfileFormFields = ({
             radio?.handleChange ? radio.handleChange(newValue, id) : () => {}
           }
           validatorMessage={getErrorMessage(errors[fieldName])}
-          disabled={loading}
         />
       );
     case "checkbox":
@@ -462,7 +455,6 @@ export const renderProfileFormFields = ({
             checkbox?.handleChange ? checkbox.handleChange(newValue, id) : () => {}
           }
           validatorMessage={getErrorMessage(errors[fieldName])}
-          disabled={loading}
         />
       );
     case "dropdown":
@@ -475,7 +467,6 @@ export const renderProfileFormFields = ({
           options={fieldData?.metaData?.map((option) => ({ label: option, value: option }))}
           onChange={(val) => val && setValue(fieldName, val.value)}
           validatorMessage={getErrorMessage(errors[fieldName])}
-          disabled={loading}
         />
       );
     case "date":
@@ -492,7 +483,6 @@ export const renderProfileFormFields = ({
           }}
           label={fieldData.title}
           validatorMessage={getErrorMessage(errors[fieldName])}
-          disabled={loading}
         />
       );
     case "file":
@@ -506,7 +496,6 @@ export const renderProfileFormFields = ({
           id={fieldName}
           onFileChange={() => (file?.handleChange ? file.handleChange : () => {})}
           validatorMessage={getErrorMessage(errors[fieldName])}
-          disabled={loading}
         />
       );
     default:

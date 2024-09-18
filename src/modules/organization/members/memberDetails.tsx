@@ -158,7 +158,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         name="firstName"
         register={register}
         placeholder="Set first name"
-        disabled={loading}
       />
       <ProfileInput
         label={"Last name"}
@@ -167,7 +166,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         name="lastName"
         register={register}
         placeholder="Set last name"
-        disabled={loading}
       />
       <ProfileInput
         label={"Email address"}
@@ -176,7 +174,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         name="email"
         register={register}
         placeholder="Set email address"
-        disabled={loading}
       />
       <ProfilePhoneInput
         icon={<CalendarIcon />}
@@ -189,7 +186,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         handleChange={(val) => {
           setValue("phoneNumber", val);
         }}
-        disabled={loading}
       />
       <ProfileFileUpload
         icon={<ImageIcon />}
@@ -202,7 +198,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
           setFile(files);
           setValue("avatar", files);
         }}
-        disabled={loading}
       />
       <ProfileSelectInput
         icon={<CalendarIcon />}
@@ -211,7 +206,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         options={[{ label: "English", value: "English" }]}
         value={watch("sysLanguage")?.value === "" ? null : watch("sysLanguage")}
         onChange={(val) => val && setValue("sysLanguage", val)}
-        disabled={loading}
       />
       <ProfileSelectInput
         icon={<CalendarIcon />}
@@ -220,7 +214,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         options={timeZoneOptions}
         value={watch("timeZone")?.value === "" ? null : watch("timeZone")}
         onChange={(val) => val && setValue("timeZone", val)}
-        disabled={loading}
       />
       <ProfileSelectInput
         icon={<CalendarIcon />}
@@ -229,7 +222,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         options={dateFormatOptions}
         value={watch("dateFormat")?.value === "" ? null : watch("dateFormat")}
         onChange={(val) => val && setValue("dateFormat", val)}
-        disabled={loading}
       />
       <ProfileInput
         label={"Job Title"}
@@ -238,7 +230,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         name="jobTitle"
         register={register}
         placeholder="Set Job title"
-        disabled={loading}
       />
       <ProfileCheckboxGroup
         icon={<PersonIcon />}
@@ -249,7 +240,6 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
           const value = val as optionType[];
           setValue("languages", value);
         }}
-        disabled={loading}
       />
       {loadingCustom ? (
         <LoadingSpinner />
