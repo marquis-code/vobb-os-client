@@ -4,14 +4,15 @@ import { AddBranch } from "./addBranch";
 import { EditBranch } from "./editBranch";
 import { toast } from "components";
 import { useApiRequest } from "hooks";
-import { useCountriesContext } from "context";
-import { BranchesDataProps, OrganisationBranchesData } from "types";
-import { fetchOrgBranchesService, markBranchAsPrimaryService } from "api";
+import { useModalContext } from "context";
+import { OrganisationBranchesData } from "types";
+import { markBranchAsPrimaryService } from "api";
 import { PreventDeleteBranch } from "./preventDeleteBranch";
 import { DeleteBranch } from "./deleteBranch";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-export const initBranchData = {
+import { useFetchBranches } from "hooks/useFetchBranches";
+const initBranchData = {
   id: "",
   name: "",
   country: "",
@@ -25,31 +26,15 @@ export const initBranchData = {
   hasMembers: false
 };
 
-const defaultBranchesData: BranchesDataProps = {
-  branchesArray: [],
-  branchesMetaData: {
-    currentPage: 1,
-    totalCount: 0,
-    totalPages: 0,
-    pageLimit: 0
-  }
-};
 const OrgBranches = () => {
   const navigate = useNavigate();
+  const [branchesQueryParams, setBranchesQueryParams] = useState({ page: 1, limit: 20 });
+  const { page, limit } = branchesQueryParams;
+  const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({ limit });
   const { run: runPrimary, data: primaryResponse, error: primaryError } = useApiRequest({});
-  const {
-    run: runFetchBranches,
-    data: fetchResponse,
-    requestStatus: fetchBranchStatus,
-    error: fetchError
-  } = useApiRequest({});
-  const { countries } = useCountriesContext();
-
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8);
+  const { addBranch, setAddBranch } = useModalContext();
   const [confirm, setConfirm] = useState(false);
   const [preventDelete, setPreventDelete] = useState(false);
-  const [addBranch, setAddBranch] = useState(false);
   const [editBranch, setEditBranch] = useState({ show: false, branchData: initBranchData });
 
   const [deleteBranch, setDeleteBranch] = useState({
@@ -57,6 +42,10 @@ const OrgBranches = () => {
     name: "",
     hasMembers: false
   });
+
+  const handleBranchPagination = (param: string, value: number) => {
+    setBranchesQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
 
   const handleEditBranch = (branchData: OrganisationBranchesData) => {
     setEditBranch({ show: true, branchData });
@@ -101,37 +90,6 @@ const OrgBranches = () => {
     }
   }, [primaryResponse, primaryError]);
 
-  const fetchOrgBranches = ({ page, limit }) =>
-    runFetchBranches(fetchOrgBranchesService({ page, limit }));
-
-  const orgBranches = useMemo<BranchesDataProps>(() => {
-    if (fetchResponse?.status === 200) {
-      const data = fetchResponse.data.data.branches.map((item) => ({
-        id: item._id,
-        name: item.name,
-        country: countries.find((country) => country.value === item.country)?.label,
-        zipCode: item.zip_code,
-        province: item.state,
-        isPrimary: item.is_primary,
-        addressLine1: item.address_line_1,
-        addressLine2: item.address_line_2 ?? "",
-        city: item.city,
-        timeZone: item.timezone ?? "",
-        hasMembers: item.member_exists
-      }));
-      const branchesArray = data.sort((a, b) => a.name.localeCompare(b.name));
-      const branchesMetaData = {
-        currentPage: fetchResponse?.data?.data?.page ?? 1,
-        totalPages: fetchResponse?.data?.data?.total_pages,
-        totalCount: fetchResponse?.data?.data?.total_count,
-        pageLimit: limit
-      };
-      return { branchesArray, branchesMetaData };
-    }
-
-    return defaultBranchesData;
-  }, [fetchResponse, fetchError]);
-
   useEffect(() => {
     fetchOrgBranches({ page, limit });
   }, [page, limit]);
@@ -167,16 +125,14 @@ const OrgBranches = () => {
         callback={() => fetchOrgBranches({ page: 1, limit })}
       />
       <OrgBranchesUI
+        orgBranches={orgBranches}
+        loading={loadingBranches}
         handleAddBranch={handleAddBranch}
         handleEditBranch={handleEditBranch}
         handleDeleteBranch={handleInitiateDeleteBranch}
         handlePrimaryBranch={handlePrimaryBranch}
-        limit={limit}
-        setPage={setPage}
-        setLimit={setLimit}
-        loading={fetchBranchStatus.isPending}
+        handlePagination={handleBranchPagination}
         handleViewBranch={handleViewBranch}
-        orgBranches={orgBranches}
       />
     </>
   );

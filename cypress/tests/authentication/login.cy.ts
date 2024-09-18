@@ -9,7 +9,7 @@ describe("Login page", () => {
   });
 
   it("should display the login page", () => {
-    cy.get('[data-cy="logo"]').should("exist");
+    cy.get('[data-testid="logo"]').should("exist");
     cy.get("h1").should("contain", "Sign in to your account");
     cy.contains("label", "Email").should("exist");
     cy.contains("label", "Password").should("exist");
@@ -23,11 +23,11 @@ describe("Login page", () => {
     cy.contains("Forgot password?")
       .invoke("attr", "href")
       .should("match", /^\/forgot-password$/);
-    cy.get('[data-cy="recaptcha"]').should("exist"); //further checks for contents of recaptcha is done in cy.solveGoogleReCAPTCHA() where the iframe is properly accessed;
+    cy.get('[data-testid="recaptcha"]').should("exist"); //further checks for contents of recaptcha is done in cy.solveGoogleReCAPTCHA() where the iframe is properly accessed;
 
     cy.contains("button", "Sign in").should("be.visible").and("be.enabled");
-    cy.get('[data-cy="signin-google-btn"]').should("be.visible").and("be.enabled");
-    cy.get('[data-cy="dont-have-account"]').should("exist");
+    cy.get('[data-testid="signin-google-btn"]').should("be.visible").and("be.enabled");
+    cy.get('[data-testid="dont-have-account"]').should("exist");
     cy.contains("Sign up").should("have.attr", "href").and("not.be.empty");
     cy.contains("Sign up").should("not.have.class", "disabled");
     cy.contains("Sign up").invoke("attr", "href").should("match", /^\/$/);
@@ -38,7 +38,7 @@ describe("Login page", () => {
   });
 
   it("should successfully go to sign up page", () => {
-    cy.get('[data-cy="go-to-signup"]').click();
+    cy.get('[data-testid="go-to-signup"]').click();
     cy.url().should("include", "/");
   });
 

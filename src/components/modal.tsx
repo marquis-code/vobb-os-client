@@ -8,6 +8,7 @@ interface ModalUIProps extends ModalProps {
   position?: "centered" | "left" | "right";
   dialogClassName?: string;
   contentClassName?: string;
+  testId?: string;
 }
 
 const Modal: React.FC<ModalUIProps> = ({
@@ -16,7 +17,8 @@ const Modal: React.FC<ModalUIProps> = ({
   close,
   show,
   dialogClassName,
-  contentClassName
+  contentClassName,
+  testId
 }) => {
   const modalRef = useRef(null);
   useClickOutside(modalRef, close);
@@ -29,7 +31,8 @@ const Modal: React.FC<ModalUIProps> = ({
         className={cn(
           "w-full h-full fixed bg-[#344054]/30 bg-opacity-75 z-[1500] p-4 top-0 left-0 flex",
           dialogClassName
-        )}>
+        )}
+        data-testid={testId}>
         <section
           ref={modalRef}
           className={cn(

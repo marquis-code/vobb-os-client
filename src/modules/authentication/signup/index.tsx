@@ -66,11 +66,11 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }
     <>
       <main>
         <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
-          <LogoIcon className="mb-12 m-auto" data-cy="logo" />
+          <LogoIcon className="mb-12 m-auto" data-testid="logo" />
           <h1 className="text-xl sm:text-2xl font-bold mb-2 text-vobb-neutral-100 text-center">
             Create a Vobb account
           </h1>
-          <p className="mb-8 text-center" data-cy="subtitle">
+          <p className="mb-8 text-center" data-testid="subtitle">
             Access all Vobb's tools with just one account.
           </p>
           <form>
@@ -80,7 +80,7 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }
               name="email"
               register={register}
               validatorMessage={errors.email?.message}
-              data-cy="email"
+              data-testid="email"
             />
             <PasswordInput
               label="Password"
@@ -88,7 +88,7 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }
               name="password"
               register={register}
               validatorMessage={errors.password?.message}
-              data-cy="password"
+              data-testid="password"
             />
             {process.env.REACT_APP_RECAPTCHA_SITE_KEY && (
               <ReCAPTCHA
@@ -98,7 +98,7 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }
                   setValue("recaptcha", token);
                 }}
                 ref={recaptchaRef}
-                data-cy="recaptcha"
+                data-testid="recaptcha"
               />
             )}
             {errors.recaptcha?.message && (
@@ -112,7 +112,7 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }
               className="w-full mt-6"
               size={"default"}
               variant="fill"
-              data-cy="signup-btn">
+              data-testid="signup-btn">
               Get started
             </Button>
           </form>
@@ -121,15 +121,15 @@ const SignupUI: React.FC<SignupProps> = ({ submit, loading, handleGoogleSignup }
             size={"default"}
             variant="outline"
             onClick={handleGoogleSignup}
-            data-cy="signup-google-btn">
+            data-testid="signup-google-btn">
             <GoogleLogoIcon width={20} /> Signup with Google
           </Button>
-          <p className="mt-6 text-center text-[13px]" data-cy="already-have-account">
+          <p className="mt-6 text-center text-[13px]" data-testid="already-have-account">
             Already have an account?{" "}
             <Link
               className="text-vobb-primary-70 font-semibold"
               to={Routes.login}
-              data-cy="go-to-signin">
+              data-testid="go-to-signin">
               Sign in
             </Link>
           </p>

@@ -34,7 +34,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="addressLine1"
         register={register}
         validatorMessage={errors.addressLine1?.message}
-        data-cy="address-input1"
+        data-testid="address-input1"
       />
       <CustomInput
         type="text"
@@ -42,7 +42,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="addressLine2"
         register={register}
         validatorMessage={errors.addressLine2?.message}
-        data-cy="address-input2"
+        data-testid="address-input2"
       />
       <CustomInput
         type="text"
@@ -50,7 +50,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         name="city"
         register={register}
         validatorMessage={errors.city?.message}
-        data-cy="city"
+        data-testid="city"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
@@ -59,7 +59,7 @@ const CityAddress: React.FC<CompanyAddressProps> = ({ initCityAddresses, submit,
         className="w-full mt-6"
         size={"default"}
         variant="fill"
-        data-cy="continue-btn">
+        data-testid="continue-btn">
         Continue
       </Button>
     </form>

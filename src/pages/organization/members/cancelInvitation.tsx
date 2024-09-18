@@ -1,15 +1,35 @@
-import { ConfirmationModal } from "components";
+import { cancelInviteToMemberService } from "api";
+import { ConfirmationModal, toast } from "components";
+import { useApiRequest } from "hooks";
+import { useMemo } from "react";
 import { ModalProps } from "types";
 
 interface CancelInvitationProps extends ModalProps {
   id: string;
   email: string;
+  fetchMembers: () => void;
 }
 
-const CancelInvitation = ({ show, close, id, email }: CancelInvitationProps) => {
+const CancelInvitation = ({ show, close, id, email, fetchMembers }: CancelInvitationProps) => {
+  const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = () => {
-    console.log(id, email);
+    run(cancelInviteToMemberService({ id }));
   };
+
+  useMemo(() => {
+    if (response?.status === 202) {
+      toast({
+        description: response?.data?.message
+      });
+      close();
+      fetchMembers();
+    } else if (error) {
+      toast({
+        variant: "destructive",
+        description: error?.response?.data?.error
+      });
+    }
+  }, [response, error]);
 
   return (
     <>
@@ -22,7 +42,7 @@ const CancelInvitation = ({ show, close, id, email }: CancelInvitationProps) => 
         handleContinue={handleContinue}
         close={close}
         show={show}
-        loading={false}
+        loading={requestStatus.isPending}
       />
     </>
   );

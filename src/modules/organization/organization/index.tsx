@@ -90,9 +90,11 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
       )
       .min(1, "At least one sector must be selected")
       .required("Required"),
-    website: yup.string().required("Required").url("Enter a valid url"),
-    primaryNumber: yup.string().required("Required"),
-    secondaryNumber: yup.string().required("Required")
+    website: yup.string().url("Enter a valid url"),
+    primaryEmail: yup.string().email("Enter a valid email"),
+    secondaryEmail: yup.string().email("Enter a valid email"),
+    primaryNumber: yup.string(),
+    secondaryNumber: yup.string()
   });
 
   const logoSchema = yup
@@ -127,10 +129,10 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
         name: profile.organisation,
         logo: profile.logo,
         website: profile.website,
-        primaryEmail: profile.pendingPrimaryEmail ?? profile.primaryEmail,
-        secondaryEmail: profile.pendingSecondaryEmail ?? profile.secondaryEmail,
-        primaryNumber: profile.primaryPhoneNumber ?? "234",
-        secondaryNumber: profile.secondaryPhoneNumber ?? "234",
+        primaryEmail: profile.pendingPrimaryEmail ?? profile.primaryEmail ?? "",
+        secondaryEmail: profile.pendingSecondaryEmail ?? profile.secondaryEmail ?? "",
+        primaryNumber: profile.primaryPhoneNumber ?? "",
+        secondaryNumber: profile.secondaryPhoneNumber ?? "",
         sector: profile.sector
           ? profile.sector.map(
               (sector) => sectorOptions.find((option) => option.value === sector) || initOptionType
@@ -181,10 +183,10 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     };
 
     const handleNumbersUpdate = () => {
-      if (primaryNumChanged) {
+      if (primaryNumChanged && primaryNumber.trim()) {
         submitUpdateNumbers({ number: data.primaryNumber.replace(/\D/g, ""), action: "primary" });
       }
-      if (secondaryNumChanged) {
+      if (secondaryNumChanged && secondaryNumber.trim()) {
         submitUpdateNumbers({ number: data.secondaryNumber.replace(/\D/g, ""), action: "support" });
       }
     };

@@ -8,9 +8,9 @@ describe("New password page", () => {
   });
 
   it("should display the verify email page", () => {
-    cy.get('[data-cy="logo"]').should("exist");
+    cy.get('[data-testid="logo"]').should("exist");
     cy.get("h1").should("contain", "Set new Password");
-    cy.get('[data-cy="subtitle"]').should(
+    cy.get('[data-testid="subtitle"]').should(
       "contain",
       "Your new password must be different to previously used passwords."
     );
@@ -60,7 +60,7 @@ describe("New password page", () => {
   it("should show error when confirm password is not equal to new password", () => {
     cy.get('input[name="newPassword"]').type("@Vobb123");
     cy.get('input[name="confirmPassword"]').type("obb123");
-    cy.get('[data-cy="reset-btn"]').click();
+    cy.get('[data-testid="reset-btn"]').click();
     cy.contains("small", "Passwords must match").should("exist");
   });
 

@@ -1,22 +1,14 @@
 import { fetchUserActivitiesService } from "api";
-import { SortOrderType } from "components";
 import { useUserContext } from "context";
 import { format, parseISO } from "date-fns";
 import { useApiRequest } from "hooks";
 import { AccountActivityData, AccountActivityUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
-import { MetaDataProps } from "types";
+import { MetaDataProps, QueryParamProps } from "types";
 
 interface AccountActivityResponse {
   activityArray: AccountActivityData[];
   metaData: MetaDataProps;
-}
-export interface QueryParamProps {
-  page: number;
-  limit: number;
-  order: SortOrderType;
-  startDate: string;
-  endDate: string;
 }
 
 const initData = {

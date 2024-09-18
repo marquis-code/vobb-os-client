@@ -18,6 +18,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { cn } from "lib";
+import { MemberTableData, statuses } from "types";
 
 export enum memberStatuses {
   invited = "Invited",
@@ -25,23 +26,6 @@ export enum memberStatuses {
   active = "Active",
   suspended = "Suspended"
 }
-
-type statuses = "invited" | "expired" | "active" | "suspended";
-
-// This type is used to define the shape of our data.
-export type MemberTableData = {
-  id: string;
-  avatar: string;
-  name: string;
-  branch: string;
-  teams: string[];
-  role: string;
-  email: string;
-  date: string;
-  lastActive: string;
-  initial: string;
-  status: statuses;
-};
 
 export interface MemberTableActions {
   handleViewMember: (id: string) => void;
@@ -84,7 +68,20 @@ export const getMemberTableColumns = ({
   },
   {
     accessorKey: "branch",
-    header: "Branch"
+    header: "Branches",
+    cell: ({ row }) => {
+      const { branch } = row.original;
+      return (
+        <div className="flex items-center gap-2 text-left">
+          {branch.slice(0, 2).join(", ")}{" "}
+          {branch.length > 2 ? (
+            <span className="text-vobb-neutral-50 block text-xs">+{branch.length - 2}</span>
+          ) : (
+            ""
+          )}
+        </div>
+      );
+    }
   },
   {
     accessorKey: "teams",
@@ -199,7 +196,16 @@ const ActionColumn = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button
+          variant="ghost"
+          className="h-6 w-6 p-0"
+          data-testid={
+            status === "active"
+              ? "menu-activeUser"
+              : status === "suspended"
+              ? "menu-suspendedUser"
+              : "menu-inactiveUser"
+          }>
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>
@@ -207,35 +213,50 @@ const ActionColumn = ({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         {status === "active" || status === "suspended" ? (
-          <DropdownMenuItem onClick={viewMember} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={viewMember}
+            className="gap-2 cursor-pointer"
+            testId="view-member">
             <EyeOpenIcon /> View member
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "active" ? (
-          <DropdownMenuItem onClick={changeRole} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={changeRole}
+            className="gap-2 cursor-pointer"
+            testId="change-role">
             <UpdateIcon /> Change role
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "invited" || status === "expired" ? (
-          <DropdownMenuItem onClick={resendInvitation} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={resendInvitation}
+            className="gap-2 cursor-pointer"
+            testId="resend-invite">
             <PaperPlaneIcon /> Resend invitation
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "invited" ? (
-          <DropdownMenuItem onClick={cancelInvitation} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={cancelInvitation}
+            className="gap-2 cursor-pointer"
+            testId="cancel-invite">
             <CircleBackslashIcon /> Cancel invitation
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {status === "active" || status === "suspended" ? (
-          <DropdownMenuItem onClick={suspension} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={suspension}
+            className="gap-2 cursor-pointer"
+            testId={status === "active" ? "suspend-member" : "undo-suspension"}>
             {status === "active" ? <CircleBackslashIcon /> : <ResetIcon />}{" "}
             {status === "active" ? "Suspend member" : "Undo suspension"}
           </DropdownMenuItem>

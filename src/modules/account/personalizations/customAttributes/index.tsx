@@ -5,6 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
 import { dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
+import { LoadingSpinner } from "components";
 
 export interface CustomAttributesProps {
   submit: (data: { name: string; value: string | optionType; orgRefId: string }) => void;
@@ -121,38 +122,49 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
             These are the properties your organization administrator has defined for all members
           </p>
         </div>
-        <form>
-          {orgProperties?.map((fieldData) => {
-            const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
-            const id = memberProp ? memberProp.id : fieldData.id;
-            return renderFormFields({
-              fieldData,
-              id,
-              register,
-              errors,
-              setValue,
-              longTextCount: calculateTotalWordCount()[`long-text_${id}`] ?? 0,
-              countries,
-              radio: {
-                value: selectedRadioValue,
-                handleChange: handleRadioChange
-              },
-              checkbox: {
-                value: selectedCheckboxValues,
-                handleChange: handleCheckboxChange
-              },
-              date: {
-                value: date,
-                handleChange: setDate
-              },
-              file: {
-                value: file,
-                handleChange: setFile
-              },
-              watch
-            });
-          })}
-        </form>
+        <div className="relative">
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+              <LoadingSpinner />
+            </div>
+          )}
+          {!loading && orgProperties.length === 0 ? (
+            <p>No properties set by organisation for now.</p>
+          ) : (
+            <form className="relative z-0">
+              {orgProperties?.map((fieldData) => {
+                const memberProp = memberProperties.find((prop) => prop.attribute === fieldData.id);
+                const id = memberProp ? memberProp.id : fieldData.id;
+                return renderFormFields({
+                  fieldData,
+                  id,
+                  register,
+                  errors,
+                  setValue,
+                  longTextCount: calculateTotalWordCount()[`long-text_${id}`] ?? 0,
+                  countries,
+                  radio: {
+                    value: selectedRadioValue,
+                    handleChange: handleRadioChange
+                  },
+                  checkbox: {
+                    value: selectedCheckboxValues,
+                    handleChange: handleCheckboxChange
+                  },
+                  date: {
+                    value: date,
+                    handleChange: setDate
+                  },
+                  file: {
+                    value: file,
+                    handleChange: setFile
+                  },
+                  watch
+                });
+              })}
+            </form>
+          )}
+        </div>
       </section>
     </>
   );

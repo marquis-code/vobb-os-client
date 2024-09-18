@@ -9,19 +9,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { IconPickerItem } from 'react-icons-picker'
-
-// This type is used to define the shape of our data.
-export type TeamTableData = {
-  id: string;
-  icon: string;
-  name: string;
-  teamLeads: string[];
-  teamManagers: string[];
-  date: string;
-  numberOfMembers: number;
-  numberOfBranches: number;
-};
+import { IconPickerItem } from "react-icons-picker";
+import { TeamTableData } from "types";
 
 export interface TeamTableActions {
   handleEditTeam: (id: string) => void;
@@ -122,20 +111,23 @@ const ActionColumn = ({ editTeam, viewHistory, viewTeam }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button variant="ghost" className="h-6 w-6 p-0" data-testid="menu-team">
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={editTeam} className="gap-2 cursor-pointer">
+        <DropdownMenuItem onClick={editTeam} className="gap-2 cursor-pointer" testId="edit-team">
           <Pencil1Icon /> Edit team
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={viewTeam} className="gap-2 cursor-pointer">
+        <DropdownMenuItem onClick={viewTeam} className="gap-2 cursor-pointer" testId="view-team">
           <EyeOpenIcon /> View team
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={viewHistory} className="gap-2 cursor-pointer">
+        <DropdownMenuItem
+          onClick={viewHistory}
+          className="gap-2 cursor-pointer"
+          testId="team-history">
           <EyeOpenIcon /> View team history
         </DropdownMenuItem>
       </DropdownMenuContent>

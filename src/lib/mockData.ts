@@ -1,10 +1,11 @@
 import {
-  AttributeTableData,
+  optionType,
+  formFieldData,
   MemberTableData,
-  TeamMemberTableData,
+  BranchMemberTableData,
+  BranchTeamTableData,
   TeamTableData
-} from "components";
-import { optionType, formFieldData, BranchMemberTableData, BranchTeamTableData } from "types";
+} from "types";
 import { TeamActivityData } from "modules";
 
 export const loginHistoryMock = [
@@ -367,7 +368,7 @@ export const orgActivityMockData = [
   }
 ];
 
-export const AttributesTableMock: AttributeTableData[] = [
+export const AttributesTableMock = [
   {
     id: "1234",
     title: "First name",
@@ -557,7 +558,7 @@ export const TeamTableMock: TeamTableData[] = [
     teamManagers: ["Busayo Cole", "Itune Ajayi"],
     date: "12/12/2023",
     numberOfMembers: 12,
-    numberOfBranches: 15
+    numberOfBranches: 45
   },
   {
     id: "728ed52f",
@@ -591,7 +592,7 @@ export const TeamTableMock: TeamTableData[] = [
   }
 ];
 
-export const TeamMemberTableMock: TeamMemberTableData[] = [
+export const TeamMemberTableMock = [
   {
     id: "728ed52f",
     name: "Jason Derule",
@@ -632,7 +633,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "---",
     lastActive: "---",
     status: "invited",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -645,7 +646,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "12/12/2023",
     lastActive: "07/07/2024",
     status: "expired",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -658,7 +659,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "12/12/2023",
     lastActive: "07/07/2024",
     status: "active",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -671,7 +672,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "12/12/2023",
     lastActive: "07/07/2024",
     status: "suspended",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -684,7 +685,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "---",
     lastActive: "---",
     status: "invited",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   },
@@ -697,7 +698,7 @@ export const MemberTableMock: MemberTableData[] = [
     date: "---",
     lastActive: "---",
     status: "invited",
-    branch: "Headquarters",
+    branch: ["Headquarters"],
     avatar: "",
     initial: "JD"
   }
@@ -705,7 +706,7 @@ export const MemberTableMock: MemberTableData[] = [
 
 export const teamActivityMockData: TeamActivityData[] = [
   {
-    action: "new_member",
+    action: "joined",
     date: "05/05/2024",
     time: "5:05pm",
     initiator: { name: "James Arukpo", id: "james" },

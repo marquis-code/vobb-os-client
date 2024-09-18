@@ -6,10 +6,8 @@ import {
   DropdownMenuIcon,
   EnvelopeClosedIcon,
   FileIcon,
-  FrameIcon,
   LetterCaseCapitalizeIcon,
   ListBulletIcon,
-  MixIcon,
   TextAlignJustifyIcon
 } from "@radix-ui/react-icons";
 import { CheckDoneIcon, FlagIcon, HashIcon, PhoneIcon } from "assets";
@@ -32,7 +30,7 @@ export const sectorOptions: optionTypeSector[] = [
   },
   {
     label: "Medical and Health",
-    value: "Health"
+    value: "Medical and Health"
   },
   {
     label: "Tourism",
@@ -228,5 +226,5 @@ export const roleOptions: optionType[] = [
   {
     label: "Member",
     value: "member"
-  },
-]
+  }
+];
