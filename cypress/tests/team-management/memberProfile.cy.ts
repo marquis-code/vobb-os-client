@@ -37,7 +37,7 @@ describe("Organisation Members", () => {
   });
 
   it("displays the avatar section", () => {
-    cy.get('[data-cy="avatar-section"]')
+    cy.get('[data-testid="avatar-section"]')
       .should("exist")
       .within(() => {
         cy.get("span")
@@ -68,7 +68,7 @@ describe("Organisation Members", () => {
   });
 
   it("displays the tabs section showing job title and role", () => {
-    cy.get('[data-cy="tabs-section"]')
+    cy.get('[data-testid="tabs-section"]')
       .should("exist")
       .within(() => {
         cy.get("button").should("have.length", 2);
@@ -76,7 +76,7 @@ describe("Organisation Members", () => {
   });
 
   it("displays the profile tabs and ensures they're clickable", () => {
-    cy.get('[data-cy="tabs-section2"]')
+    cy.get('[data-testid="tabs-section2"]')
       .should("exist")
       .within(() => {
         cy.get("div")
@@ -147,7 +147,7 @@ describe("Organisation Members", () => {
   });
 
   it("displays member details", () => {
-    cy.get('[data-cy="member-details"]')
+    cy.get('[data-testid="member-details"]')
       .should("exist")
       .within(() => {
         cy.get("p").first().should("contain", "Member Details");

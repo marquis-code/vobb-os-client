@@ -75,7 +75,7 @@ const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
     <>
       <section
         className="grid grid-cols-[2fr,1.25fr] -ml-4 w-[calc(100%+2rem)] items-center"
-        data-cy="tabs-section2">
+        data-testid="tabs-section2">
         <div className="border-b px-4 flex items-center gap-4">
           {mainTabs.map(({ title, key, icon }) => (
             <button

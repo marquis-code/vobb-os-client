@@ -149,7 +149,7 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
   }, [watch, getValues, customMemberAttr]);
 
   return (
-    <div data-cy="member-details">
+    <div data-testid="member-details">
       <p className="mb-4 font-medium">Member Details</p>
       <ProfileInput
         label={"First name"}

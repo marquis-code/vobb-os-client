@@ -632,7 +632,7 @@ export const MemberTableMock = [
   },
   {
     id: "728ed52f",
-    name: "Jason Derule",
+    name: "Jason Mamoa",
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",
