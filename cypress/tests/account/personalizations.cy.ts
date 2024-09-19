@@ -43,7 +43,7 @@ describe("Account Personalization Settings", () => {
     cy.get("div.css-1nmdiq5-menu").should("be.visible");
     cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
     cy.get("div#react-select-3-option-0").should("be.visible").click();
-    cy.get('[data-cy="save-btn"]').eq(0).click();
+    cy.get('[data-testid="save-btn"]').eq(0).click();
     cy.checkAndCloseToastNotification("Success");
   });
 
@@ -56,7 +56,7 @@ describe("Account Personalization Settings", () => {
     cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
     cy.get("div#react-select-5-option-2").should("be.visible").click();
 
-    cy.get('[data-cy="save-btn"]').eq(1).click();
+    cy.get('[data-testid="save-btn"]').eq(1).click();
     cy.checkAndCloseToastNotification("Success");
   });
 
@@ -71,7 +71,7 @@ describe("Account Personalization Settings", () => {
     cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
     cy.get("div#react-select-7-option-2").should("be.visible").click();
 
-    cy.get('[data-cy="save-btn"]').eq(2).click();
+    cy.get('[data-testid="save-btn"]').eq(2).click();
     cy.checkAndCloseToastNotification("Success");
   });
 
@@ -84,7 +84,7 @@ describe("Account Personalization Settings", () => {
     cy.get("div.css-1n6sfyn-MenuList").should("be.visible");
     cy.get("div#react-select-9-option-3").should("be.visible").click();
 
-    cy.get('[data-cy="save-btn"]').eq(3).click();
+    cy.get('[data-testid="save-btn"]').eq(3).click();
     cy.checkAndCloseToastNotification("Success");
   });
 

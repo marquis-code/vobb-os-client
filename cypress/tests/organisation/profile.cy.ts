@@ -37,7 +37,7 @@ describe("Organisation Profile", () => {
   });
 
   it("displays the upload avatar section", () => {
-    cy.get('[data-cy="avatar-section"]')
+    cy.get('[data-testid="avatar-section"]')
       .should("exist")
       .within(() => {
         cy.get("span")
@@ -116,8 +116,11 @@ describe("Organisation Profile", () => {
   });
 
   it("should display correct btn text for email buttons and display modal", () => {
-    cy.testAddEmailAddressModal('input[name="primaryEmail"]', '[data-cy="primary-emailBtn"]');
-    cy.testAddEmailAddressModal('input[name="secondaryEmail"]', '[data-cy="secondary-emailBtn"]');
+    cy.testAddEmailAddressModal('input[name="primaryEmail"]', '[data-testid="primary-emailBtn"]');
+    cy.testAddEmailAddressModal(
+      'input[name="secondaryEmail"]',
+      '[data-testid="secondary-emailBtn"]'
+    );
   });
 
   it('should disable the "Save" and "Cancel" button when the form is not dirty', () => {
@@ -209,7 +212,7 @@ describe("Organisation Profile", () => {
   });
 
   it("should update primary email and display otp modal", () => {
-    cy.get("[data-cy='primary-emailBtn']").click();
+    cy.get("[data-testid='primary-emailBtn']").click();
     cy.get("aside.fixed").find('input[name="email"]').clear().type("test4@example.com");
     cy.get("aside.fixed").find("button").contains("Continue").click();
     cy.get("aside.fixed").should("be.visible");
@@ -241,7 +244,7 @@ describe("Organisation Profile", () => {
   });
 
   it("should update secondary email and display otp modal", () => {
-    cy.get("[data-cy='secondary-emailBtn']").click();
+    cy.get("[data-testid='secondary-emailBtn']").click();
     cy.get("aside.fixed").find('input[name="email"]').clear().type("test3@example.com");
     cy.get("aside.fixed").find("button").contains("Continue").click();
     cy.get("aside.fixed").should("be.visible");

@@ -15,25 +15,8 @@ describe("Organisation Branding", () => {
     cy.url().should("include", "/settings/branding");
   });
 
-  it("displays the profile header nav and h1", () => {
-    cy.get("header")
-      .should("exist")
-      .within(() => {
-        cy.get("nav")
-          .should("exist")
-          .within(() => {
-            cy.get("ol")
-              .should("exist")
-              .within(() => {
-                cy.get("li").should("have.length", 3);
-
-                cy.get("li").eq(0).should("contain", "Workspace");
-                cy.get("li").eq(1).find("svg").should("exist");
-                cy.get("li").eq(2).should("contain", "Branding");
-              });
-          });
-      });
-    cy.get("h1").should("contain", "Branding");
+  it("displays the header nav and the h1", () => {
+    cy.verifyHeaderNavAndTitle("Workspace", "Branding");
   });
 
   it("displays enabled buttons and updates branding on save", () => {
@@ -42,7 +25,7 @@ describe("Organisation Branding", () => {
   });
 
   it("displays brand colors and update value", () => {
-    cy.get("[data-cy='primary-color']")
+    cy.get("[data-testid='primary-color']")
       .should("exist")
       .within(() => {
         cy.contains("p", "Primary Brand Color").should("exist").and("be.visible");
@@ -51,7 +34,7 @@ describe("Organisation Branding", () => {
         cy.get('input[spellcheck="false"]').should("exist").and("be.enabled");
         cy.get('input[spellcheck="false"]').clear().type("#feddff");
       });
-    cy.get("[data-cy='secondary-color']")
+    cy.get("[data-testid='secondary-color']")
       .should("exist")
       .within(() => {
         cy.contains("p", "Secondary Brand Color").should("exist").and("be.visible");
@@ -65,6 +48,6 @@ describe("Organisation Branding", () => {
   });
 
   it("displays preview of brand colors", () => {
-    cy.get("[data-cy='preview']").should("exist");
+    cy.get("[data-testid='preview']").should("exist");
   });
 });

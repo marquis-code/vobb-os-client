@@ -33,11 +33,11 @@ const OrgBrandingUI: React.FC<OrgBrandingProps> = ({ submit, loading }) => {
       <SettingsPageTitle title="Branding" className="max-w-none" />
       <section className="grid grid-cols-[1fr,2fr] gap-4 pt-4">
         <div>
-          <div className="mb-8" data-cy="primary-color">
+          <div className="mb-8" data-testid="primary-color">
             <p className="text-sm font-semibold mb-4">Primary Brand Color</p>
             <ColorPicker value={primary} handleChange={setPrimary} />
           </div>
-          <div data-cy="secondary-color">
+          <div data-testid="secondary-color">
             <p className="text-sm font-semibold mb-4">Secondary Brand Color</p>
             <ColorPicker value={secondary} handleChange={setSecondary} />{" "}
           </div>
@@ -50,7 +50,7 @@ const OrgBrandingUI: React.FC<OrgBrandingProps> = ({ submit, loading }) => {
               variant={"fill"}
               disabled={loading}
               loading={loading}
-              data-cy="save-btn">
+              data-testid="save-btn">
               Save
             </Button>
           </div>
@@ -58,7 +58,7 @@ const OrgBrandingUI: React.FC<OrgBrandingProps> = ({ submit, loading }) => {
         <div
           style={{ background: primary, border: "4px solid", borderColor: secondary }}
           className="rounded-md min-h-[400px] p-4"
-          data-cy="preview">
+          data-testid="preview">
           Invoice Preview, Agent Login Preview
         </div>
       </section>

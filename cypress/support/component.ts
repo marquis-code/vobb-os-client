@@ -15,15 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import "./commands";
-<<<<<<< HEAD
-Cypress.on("uncaught:exception", (err, runnable) => {
-  // returning false here prevents Cypress from failing the test
-  return false;
-});
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-=======
 
 import { MountOptions, MountReturn } from "cypress/react";
 import { MemoryRouterProps } from "react-router-dom";
@@ -64,4 +55,3 @@ Cypress.Commands.add("mount", mount);
 
 // Example use:
 // cy.mount(<MyComponent />)
->>>>>>> 766569b00c72455117e92e5f2ad18e12233c940b

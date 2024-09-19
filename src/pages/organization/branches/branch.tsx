@@ -7,7 +7,7 @@ import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "
 import { useCountriesContext, useUserContext } from "context";
 import { format, parseISO } from "date-fns";
 
-const initBranchData = {
+export const initBranchData = {
   id: "",
   name: "",
   country: "",

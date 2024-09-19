@@ -38,17 +38,17 @@ describe("Account Activities", () => {
     cy.get("h1").should("contain", "Account Activity");
     cy.contains("p", "Monitor your account activities over time").should("exist").and("be.visible");
 
-    cy.get('[data-cy="filter-div"]').should("exist").and("be.visible");
+    cy.get('[data-testid="filter-div"]').should("exist").and("be.visible");
 
     cy.get("body").then(($body) => {
-      if ($body.find('[data-cy="loading-spinner"]').length) {
-        cy.get('[data-cy="loading-spinner"]').should("be.visible");
+      if ($body.find('[data-testid="loading-spinner"]').length) {
+        cy.get('[data-testid="loading-spinner"]').should("be.visible");
       } else if ($body.find("p:contains('No Account activities for this time.')").length) {
         cy.get("p").contains("No Account activities for this time.").should("be.visible");
       } else {
-        cy.get('[data-cy="activity-card"]').should("exist").and("be.visible");
+        cy.get('[data-testid="activity-card"]').should("exist").and("be.visible");
 
-        cy.get('[data-cy="pagination"]').should("exist").and("be.visible");
+        cy.get('[data-testid="pagination"]').should("exist").and("be.visible");
       }
     });
   });

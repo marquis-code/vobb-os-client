@@ -104,6 +104,7 @@ const OrgActivityUI: React.FC<OrgActivityProps> = ({
               pageLimit={pageLimit}
               totalPages={totalPages}
               currentPage={currentPage}
+              testId="pagination"
             />
           </>
         )}
@@ -159,7 +160,7 @@ const getMessage = ({
       message = (
         <>
           {initiator === "self" ? "You" : initiator.name} added a new branch{" "}
-          <span className="font-semibold">{metadata?.branch}</span>
+          <span className="font-semibold">{metadata?.branch?.name}</span>
         </>
       );
       break;

@@ -88,7 +88,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   return (
     <>
       {loadingMembers ? (
-        <LoadingSpinner />
+        <LoadingSpinner testId="loading" />
       ) : (
         <>
           <SettingsPageTitle
@@ -100,12 +100,14 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
             <TabsList className="mb-2">
               <TabsTrigger
                 className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-                value="member">
+                value="member"
+                data-testid="members-tab">
                 Members
               </TabsTrigger>
               <TabsTrigger
                 className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-                value="client">
+                value="client"
+                data-testid="teams-tab">
                 Teams
               </TabsTrigger>
             </TabsList>
@@ -119,7 +121,11 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                   setFilter={setMemberFilter}
                   attributes={attributes}
                 />
-                <Button onClick={console.log} className="flex gap-2 ml-auto" variant={"fill"}>
+                <Button
+                  onClick={console.log}
+                  className="flex gap-2 ml-auto"
+                  variant={"fill"}
+                  data-testid="add-member">
                   <PlusCircledIcon /> Add member
                 </Button>
               </div>
@@ -133,6 +139,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 totalPages={membersMetaData.totalPages}
                 currentPage={membersMetaData.currentPage}
                 className="mt-4"
+                testId="pagination"
               />
             </TabsContent>
             <TabsContent className="pb-8 mb-12" value="client">
@@ -151,6 +158,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 totalPages={teamsMetaData.totalPages}
                 currentPage={teamsMetaData.currentPage}
                 className="mt-4"
+                testId="pagination"
               />
             </TabsContent>
           </Tabs>

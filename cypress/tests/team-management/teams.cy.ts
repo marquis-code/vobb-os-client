@@ -92,6 +92,8 @@ describe("Organisation teams", () => {
   });
 
   it("closes add team modal when cancel button is clicked", () => {
+    cy.get("[data-testid='add-team']").click(); //open modal
+
     cy.get('[data-testid="close-btn"]').click();
     cy.get("[data-testid='addTeam-modal']").should("not.exist");
   });

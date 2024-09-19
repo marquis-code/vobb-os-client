@@ -78,7 +78,7 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) =>
               variant={"fill"}
               loading={loadingDateFormat}
               disabled={loadingDateFormat}
-              data-cy="save-btn">
+              data-testid="save-btn">
               Save
             </Button>
           </div>

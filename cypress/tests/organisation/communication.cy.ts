@@ -14,24 +14,8 @@ describe("Communication", () => {
     cy.url().should("include", "/settings/communication");
   });
 
-  it("displays the header nav and it's elements", () => {
-    cy.get("header")
-      .should("exist")
-      .within(() => {
-        cy.get("nav")
-          .should("exist")
-          .within(() => {
-            cy.get("ol")
-              .should("exist")
-              .within(() => {
-                cy.get("li").should("have.length", 3);
-
-                cy.get("li").eq(0).should("contain", "Workspace");
-                cy.get("li").eq(1).find("svg").should("exist");
-                cy.get("li").eq(2).should("contain", "Communication");
-              });
-          });
-      });
+  it("displays the header nav and the h1", () => {
+    cy.verifyHeaderNavAndTitle("Workspace", "Communication");
   });
 
   it("displays the title and paragraph", () => {
@@ -86,6 +70,6 @@ describe("Communication", () => {
   });
 
   it("displays the selected email preview", () => {
-    cy.get('[data-cy="preview"]').should("exist");
+    cy.get('[data-testid="preview"]').should("exist");
   });
 });

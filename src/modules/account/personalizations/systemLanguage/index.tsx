@@ -73,7 +73,7 @@ const SystemLanguage: React.FC<SystemLanguageProps> = ({ submit, loadingSytemLan
               variant={"fill"}
               disabled={loadingSytemLang}
               loading={loadingSytemLang}
-              data-cy="save-btn">
+              data-testid="save-btn">
               Save
             </Button>
           </div>

@@ -121,10 +121,10 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
   }, [initData, reset]);
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
+      <Modal contentClassName="max-w-[600px]" show={show} close={close} data-testid="addAttr-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Create Attribute</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>

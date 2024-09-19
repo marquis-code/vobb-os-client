@@ -34,7 +34,7 @@ const TwoFactor: React.FC<TwoFactorProps> = ({ handle2FA }) => {
         </div>
         <div className="flex items-start justify-between text-sm">
           <p>Enable Two-Factor Authentication</p>
-          <span className="flex items-center gap-4" data-cy="2fa-switch">
+          <span className="flex items-center gap-4" data-testid="2fa-switch">
             <Button
               size={"sm"}
               className="p-0 h-[fit-content]"

@@ -206,7 +206,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     <>
       <SettingsPageTitle title="Organization Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
-        <div className="flex gap-4 mb-8" data-cy="avatar-section">
+        <div className="flex gap-4 mb-8" data-testid="avatar-section">
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={
@@ -253,7 +253,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             register={register}
             validatorMessage={errors.name?.message}
             parentClassName="mb-2"
-            data-cy="name"
+            data-testid="name"
           />
           <CustomInput
             label="Company Website"
@@ -262,7 +262,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             register={register}
             validatorMessage={errors.website?.message}
             parentClassName="mb-2"
-            data-cy="website"
+            data-testid="website"
           />
           <MultiSelectInput
             label="Sectors"
@@ -337,7 +337,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 className="p-0 underline"
                 size={"sm"}
                 variant={"link"}
-                data-cy="primary-emailBtn">
+                data-testid="primary-emailBtn">
                 {profile?.primaryEmail || profile?.pendingPrimaryEmail
                   ? "Change email address"
                   : "Add email address"}
@@ -401,7 +401,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 className="p-0 underline"
                 size={"sm"}
                 variant={"link"}
-                data-cy="secondary-emailBtn">
+                data-testid="secondary-emailBtn">
                 {profile?.secondaryEmail || profile?.pendingSecondaryEmail
                   ? "Change email address"
                   : "Add email address"}
@@ -433,7 +433,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           loading={submitLoading || numbersLoading}
           onClick={handleSubmit(onSubmit)}
           variant={"fill"}
-          data-cy="save-btn">
+          data-testid="save-btn">
           Save
         </Button>
       </div>

@@ -14,24 +14,8 @@ describe("Organisation Activities", () => {
     cy.url().should("include", "/settings/organization-activity");
   });
 
-  it("displays the header nav and it's elements", () => {
-    cy.get("header")
-      .should("exist")
-      .within(() => {
-        cy.get("nav")
-          .should("exist")
-          .within(() => {
-            cy.get("ol")
-              .should("exist")
-              .within(() => {
-                cy.get("li").should("have.length", 3);
-
-                cy.get("li").eq(0).should("contain", "Workspace");
-                cy.get("li").eq(1).find("svg").should("exist");
-                cy.get("li").eq(2).should("contain", "Activity");
-              });
-          });
-      });
+  it("displays the header nav and the h1", () => {
+    cy.verifyHeaderNavAndTitle("Workspace", "Activity");
   });
 
   it("displays the titles and account activities if any", () => {
@@ -40,18 +24,36 @@ describe("Organisation Activities", () => {
       .should("exist")
       .and("be.visible");
 
-    cy.get('[data-cy="filter-div"]').should("exist").and("be.visible");
+    cy.get('[data-testid="filter-div"]').should("exist").and("be.visible");
 
     cy.get("body").then(($body) => {
-      if ($body.find('[data-cy="loading-spinner"]').length) {
-        cy.get('[data-cy="loading-spinner"]').should("be.visible");
+      if ($body.find('[data-testid="loading-spinner"]').length) {
+        cy.get('[data-testid="loading-spinner"]').should("be.visible");
       } else if ($body.find("p:contains('No Account activities for this time.')").length) {
         cy.get("p").contains("No Account activities for this time.").should("be.visible");
       } else {
-        cy.get('[data-cy="activity-card"]').eq(0).should("exist").and("be.visible");
+        cy.get('[data-testid="activity-card"]').eq(0).should("exist").and("be.visible");
 
-        cy.get('[data-cy="pagination"]').should("exist").and("be.visible");
+        cy.get('[data-testid="pagination"]').should("exist").and("be.visible");
       }
     });
+  });
+
+  it("displays the pagination component and triggers API call on limit change", () => {
+    cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/activity/*", (req) => {
+      req.continue((res) => {});
+    }).as("fetchData");
+
+    cy.get("[data-testid='pagination']").should("exist");
+    cy.get("[data-testid='select-limit']").should("be.visible").click();
+
+    cy.get("div.css-1nmdiq5-menu").should("exist");
+
+    cy.get("div#react-select-3-option-1").should("be.visible").click();
+
+    cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
+
+    cy.get("[data-testid='move-left']").should("be.visible");
+    cy.get("[data-testid='move-right']").should("be.visible");
   });
 });

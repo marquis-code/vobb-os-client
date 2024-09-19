@@ -57,10 +57,18 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
     <>
       <SettingsPageTitle title="Branches" />
       <section className="pb-8 mb-12 max-w-[800px]">
-        <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
+        <Button
+          onClick={handleAddBranch}
+          className="flex mt-8 mb-6 gap-2 ml-auto"
+          variant={"fill"}
+          data-testid="add-branch">
           <PlusCircledIcon /> New branch
         </Button>
-        {loading ? <LoadingSpinner /> : <BranchesTable columns={columns} data={tableData} />}
+        {loading ? (
+          <LoadingSpinner testId="loading" />
+        ) : (
+          <BranchesTable columns={columns} data={tableData} />
+        )}
         <Pagination
           // hidePageLimit
           handleChange={(val) => handlePagination("page", val)}
@@ -70,6 +78,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-4"
+          testId="pagination"
         />
       </section>
     </>

@@ -146,14 +146,14 @@ describe("Account Security Settings", () => {
       "be.visible"
     );
     cy.contains("p", "Enable Two-Factor Authentication").should("be.visible");
-    cy.get('span[data-cy="2fa-switch"]').within(() => {
+    cy.get('span[data-testid="2fa-switch"]').within(() => {
       cy.get("button").contains("Learn more").should("be.visible").and("be.enabled");
       cy.get('button[role="switch"]').should("be.visible").and("be.enabled");
     });
   });
 
   it("two-factor 'learn more' button should display info modal", () => {
-    cy.get('span[data-cy="2fa-switch"]').within(() => {
+    cy.get('span[data-testid="2fa-switch"]').within(() => {
       cy.get("button").contains("Learn more").click();
     });
     cy.get("aside.fixed").find("h2").should("contain.text", "About 2FA");
@@ -178,7 +178,7 @@ describe("Account Security Settings", () => {
   });
 
   it("two-factor switch button should display otp modal", () => {
-    cy.get('span[data-cy="2fa-switch"]').within(() => {
+    cy.get('span[data-testid="2fa-switch"]').within(() => {
       cy.get('button[role="switch"]').click();
     });
 
@@ -217,19 +217,19 @@ describe("Account Security Settings", () => {
     );
     cy.contains("p", "Enable Two-Factor Authentication").should("be.visible");
 
-    cy.get('[data-cy="google-connection"]').within(() => {
+    cy.get('[data-testid="google-connection"]').within(() => {
       cy.get("svg").should("be.visible");
       cy.contains("p", "Enable Google Authentication").should("be.visible");
     });
 
-    cy.get('span[data-cy="connect-switch"]').within(() => {
+    cy.get('span[data-testid="connect-switch"]').within(() => {
       cy.get("button").contains("Learn more").should("be.visible").and("be.enabled");
       cy.get('button[role="switch"]').should("be.visible").and("be.enabled");
     });
   });
 
   it("connected account 'learn more' button should display info modal", () => {
-    cy.get('span[data-cy="connect-switch"]').within(() => {
+    cy.get('span[data-testid="connect-switch"]').within(() => {
       cy.get("button").contains("Learn more").click();
     });
     cy.get("aside.fixed").find("h2").should("contain.text", "About Google Authentication");
@@ -252,11 +252,11 @@ describe("Account Security Settings", () => {
 
   it("should display login history section", () => {
     cy.get("h2").eq(3).should("contain", "Who logged in?");
-    cy.get("[data-cy='history-section']").within(() => {
+    cy.get("[data-testid='history-section']").within(() => {
       cy.contains("We’ll alert you via").should("be.visible");
       cy.get("b").should("contain.text", "alt.d2-3o7w9412@yopmail.com");
       cy.contains("if there is any unusual activity on your account").should("be.visible");
     });
-    cy.get("[data-cy='history-data']").should("exist");
+    cy.get("[data-testid='history-data']").should("exist");
   });
 });

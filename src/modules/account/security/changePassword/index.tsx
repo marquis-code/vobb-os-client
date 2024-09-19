@@ -68,7 +68,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
             name="currentPassword"
             register={register}
             validatorMessage={errors.currentPassword?.message}
-            data-cy="currentPassword"
+            data-testid="currentPassword"
           />
           <PasswordInput
             label="New Password"
@@ -76,7 +76,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
             name="password"
             register={register}
             validatorMessage={errors.password?.message}
-            data-cy="newPassword"
+            data-testid="newPassword"
           />
           <PasswordInput
             label="Confirm Password"
@@ -84,14 +84,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
             name="confirmPassword"
             register={register}
             validatorMessage={errors.confirmPassword?.message}
-            data-cy="confirmPassword"
+            data-testid="confirmPassword"
           />
           <div className="flex gap-2 justify-end max-w-[800px] pt-4">
             <Button
               disabled={!isDirty}
               onClick={handleReset}
               variant={"outline"}
-              data-cy="cancel-btn">
+              data-testid="cancel-btn">
               {" "}
               Cancel
             </Button>
@@ -100,7 +100,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ submit, loadingPassword
               loading={loadingPasswordChange}
               onClick={handleSubmit(onSubmit)}
               variant={"fill"}
-              data-cy="save-btn">
+              data-testid="save-btn">
               {" "}
               Save
             </Button>

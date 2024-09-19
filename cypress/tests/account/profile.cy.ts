@@ -37,7 +37,7 @@ describe("Account Profile", () => {
   });
 
   it("displays the upload avatar section", () => {
-    cy.get('[data-cy="avatar-section"]')
+    cy.get('[data-testid="avatar-section"]')
       .should("exist")
       .within(() => {
         cy.get("span")
@@ -89,15 +89,15 @@ describe("Account Profile", () => {
   });
 
   it("should display the correct tooltip for the email status icon", () => {
-    cy.get('[data-cy="tooltip-trigger"]').trigger("mouseover");
+    cy.get('[data-testid="tooltip-trigger"]').trigger("mouseover");
 
-    cy.get('[data-cy="tooltip-content"]', { timeout: 10000 })
+    cy.get('[data-testid="tooltip-content"]', { timeout: 10000 })
       .should("be.visible")
       .then(($tooltip) => {
         if ($tooltip.text().includes("Email is verified!")) {
-          cy.get('[data-cy="tooltip-content"]').should("contain.text", "Email is verified!");
+          cy.get('[data-testid="tooltip-content"]').should("contain.text", "Email is verified!");
         } else if ($tooltip.text().includes("Email is unverified")) {
-          cy.get('[data-cy="tooltip-content"]').should(
+          cy.get('[data-testid="tooltip-content"]').should(
             "contain.text",
             "Email is unverified, please request a new verification email"
           );

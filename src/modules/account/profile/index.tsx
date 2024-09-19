@@ -123,7 +123,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
     <>
       <SettingsPageTitle title="Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
-        <div className="flex gap-4 mb-8" data-cy="avatar-section">
+        <div className="flex gap-4 mb-8" data-testid="avatar-section">
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={
@@ -175,7 +175,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             register={register}
             validatorMessage={errors.firstName?.message}
             parentClassName="mb-2"
-            data-cy="firstName"
+            data-testid="firstName"
           />
           <CustomInput
             label="Last Name"
@@ -184,7 +184,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             register={register}
             validatorMessage={errors.lastName?.message}
             parentClassName="mb-2"
-            data-cy="lastName"
+            data-testid="lastName"
           />
           <CustomPhoneInput
             label="Phone Number"
@@ -217,10 +217,12 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                 parentClassName="mb-0"
               />
 
-              <div className="absolute -right-8 top-7" data-cy="email-tooltip">
+              <div className="absolute -right-8 top-7" data-testid="email-tooltip">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger onClick={(e) => e.preventDefault()} data-cy="tooltip-trigger">
+                    <TooltipTrigger
+                      onClick={(e) => e.preventDefault()}
+                      data-testid="tooltip-trigger">
                       {profile?.pendingEmail ? (
                         <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
                       ) : (
@@ -228,7 +230,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                       )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p data-cy="tooltip-content">
+                      <p data-testid="tooltip-content">
                         {profile?.pendingEmail
                           ? "Email is unverified, please request a new verification email"
                           : "Email is verified!"}
@@ -274,7 +276,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
           onClick={handleSubmit(onSubmit)}
           variant={"fill"}
           loading={loading}
-          data-cy="save-btn">
+          data-testid="save-btn">
           Save
         </Button>
       </div>
