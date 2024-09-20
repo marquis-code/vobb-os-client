@@ -6,7 +6,7 @@ import { useApiRequest, useFetchUser } from "hooks";
 import { toast } from "components";
 import { personalAccountUpdateService, personalEmailResendVerifyService } from "api";
 import { useModalContext } from "context";
-import { UpdateJobTitle } from "./update-jobTitle";
+import { UpdateJobTitle } from "./update-job-title";
 
 const AccountProfile = () => {
   const [changeEmail, setChangeEmail] = useState(false);
@@ -89,4 +89,4 @@ const AccountProfile = () => {
 
 export { AccountProfile };
 
-export * from "./update-jobTitle";
+export * from "./update-job-title";

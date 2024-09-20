@@ -50,7 +50,7 @@ const UpdateJobTitleModal: React.FC<UpdateJobTitleModalProps> = ({
         </div>
         <form className="mb-16">
           <CustomInput
-            label="Set Job title"
+            label="Job title"
             name="jobTitle"
             register={register}
             validatorMessage={errors.jobTitle?.message}
