@@ -1,3 +1,5 @@
+import { useFetchUser } from "hooks";
+import { AddBranch, AddTeam, InviteMember, UpdateJobTitle } from "pages";
 import { createContext, ReactNode, useContext, useState, ReactElement } from "react";
 
 interface ModalContextType {
@@ -37,6 +39,7 @@ export const ModalProvider = ({ children }: ModalProviderProps): ReactElement =>
   const [addTeam, setAddTeam] = useState<boolean>(false);
   const [inviteMember, setInviteMember] = useState<boolean>(false);
   const [updateJobTitle, setUpdateJobTitle] = useState<boolean>(false);
+  const { fetchUserDetails } = useFetchUser();
   return (
     <ModalContext.Provider
       value={{
@@ -50,6 +53,17 @@ export const ModalProvider = ({ children }: ModalProviderProps): ReactElement =>
         setInviteMember
       }}>
       {children}
+      <AddBranch close={() => setAddBranch(false)} show={addBranch} />
+      <AddTeam close={() => setAddTeam(false)} show={addTeam} />
+      <InviteMember close={() => setInviteMember(false)} show={inviteMember} />
+      <UpdateJobTitle
+        close={() => setUpdateJobTitle(false)}
+        show={updateJobTitle}
+        callback={() => {
+          fetchUserDetails();
+          setUpdateJobTitle(false);
+        }}
+      />
     </ModalContext.Provider>
   );
 };

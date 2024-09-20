@@ -108,11 +108,6 @@ const OrgBranches = () => {
         handleOpen={() => setPreventDelete(true)}
         callback={() => fetchOrgBranches({ page: 1, limit })}
       />
-      <AddBranch
-        show={addBranch}
-        close={() => setAddBranch(false)}
-        callback={() => fetchOrgBranches({ page: 1, limit })}
-      />
       <EditBranch
         {...editBranch}
         close={() => setEditBranch({ show: false, branchData: initBranchData })}

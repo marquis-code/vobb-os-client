@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { cn, isEmptyObj, isFile } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import React, { useEffect, useState } from "react";
-import { useUserContext } from "context";
+import { useModalContext, useUserContext } from "context";
 
 export interface ProfileFormData {
   firstName: string;
@@ -32,16 +32,15 @@ interface AccountProfileProps {
   loadingUpdate: boolean;
   handleChangeEmail: () => void;
   handleResendEmail: () => void;
-  handleUpdateJobTitle: () => void;
 }
 const AccountProfileUI: React.FC<AccountProfileProps> = ({
   handleChangeEmail,
   handleResendEmail,
   updateProfile,
-  loadingUpdate,
-  handleUpdateJobTitle
+  loadingUpdate
 }) => {
   const { userDetails: profile } = useUserContext();
+  const { setUpdateJobTitle } = useModalContext();
   const [validateAvatar, setValidateAvatar] = useState(false);
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -118,6 +117,9 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   };
 
   const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
+  const handleUpdateJobTitle = () => {
+    setUpdateJobTitle(true);
+  };
 
   return (
     <>
