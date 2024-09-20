@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, useWatch } from "react-hook-form";
 import { MemberPropertiesData, optionType, OrganisationAttributesData } from "types";
-import { dynamicValidationSchema, renderFormFields } from "lib";
+import { debounce, dynamicValidationSchema, renderFormFields } from "lib";
 import { useCountriesContext } from "context";
 import { LoadingSpinner } from "components";
 
@@ -25,16 +25,6 @@ const CustomAttributes: React.FC<CustomAttributesProps> = ({
   const [file, setFile] = useState<File | null>(null);
   const [selectedCheckboxValues, setSelectedCheckboxValues] = useState<optionType[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState<optionType>();
-
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-  };
 
   const handleCheckboxChange = (newValues: optionType[], id: string) => {
     setSelectedCheckboxValues(newValues);

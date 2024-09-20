@@ -8,12 +8,13 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useUserContext } from "context";
 import { Input, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
 import { useFetchUserBranches } from "hooks";
+import { debounce } from "lib";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -57,12 +58,12 @@ export function BranchMenu() {
 
   const [allBranches, setAllBranches] = useState<BranchType[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<BranchType>({ id: "", name: "" });
-
   const [branchSearchQuery, setBranchSearchQuery] = useState("");
 
   const handleBranchSearch = (value: string) => {
     setBranchSearchQuery(value);
   };
+
   const handleSelectedBranch = (branch: BranchType) => {
     setSelectedBranch(branch);
   };
@@ -71,9 +72,9 @@ export function BranchMenu() {
     setAddBranch(true);
   };
 
-  useEffect(() => {
+  const handleFetchBranches = () => {
     fetchUserBranches({ limit: 8, search: branchSearchQuery.trim() });
-  }, [branchSearchQuery]);
+  };
 
   useEffect(() => {
     if (!loadingUser && userBranches?.branchesArray) {
@@ -82,16 +83,30 @@ export function BranchMenu() {
         name: branch.branch
       }));
       setAllBranches(branches);
-
       if (branches.length > 0) {
         setSelectedBranch(branches[0]);
       }
     }
-    //
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, [loadingUser, userBranches]);
+
+  //initial load
+  useEffect(() => {
+    handleFetchBranches();
+  }, []);
+
+  //debounced fetch
+  const debouncedFetch = debounce(() => {
+    handleFetchBranches();
+  }, 1000);
+  useEffect(() => {
+    if (branchSearchQuery.trim()) {
+      debouncedFetch();
+    }
+  }, [branchSearchQuery]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

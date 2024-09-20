@@ -37,3 +37,13 @@ export const getInitials = (fullName: string) => {
     return names[0].slice(0, 2).toUpperCase();
   }
 };
+
+export const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
