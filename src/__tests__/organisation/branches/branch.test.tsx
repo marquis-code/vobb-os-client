@@ -1,4 +1,4 @@
-import { render, RenderResult, screen, within } from "@testing-library/react";
+import { render, RenderResult, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BranchMemberTableMock, BranchTeamTableMock } from "lib";
 import { OrgBranchUI } from "modules";
@@ -184,5 +184,62 @@ describe("Branch UI tests", () => {
     await userEvent.click(option);
 
     expect(mockHandleMemberPagination).toHaveBeenCalledWith("limit", 50);
+  });
+
+  it("calls handleViewMember when view member button is clicked", async () => {
+    customRender(mockedData);
+    const menuButtons = screen.getAllByTestId("menu-branch");
+    await userEvent.click(menuButtons[0]);
+    const viewOption = await screen.findByText(/view member/i);
+    await userEvent.click(viewOption);
+    await waitFor(() => {
+      expect(mockHandleViewMember).toHaveBeenCalled();
+    });
+  });
+
+  it("calls Transfer member when transfer member button is clicked", async () => {
+    customRender(mockedData);
+    const menuButtons = screen.getAllByTestId("menu-branch");
+    await userEvent.click(menuButtons[0]);
+    const transferOption = await screen.findByText(/transfer member/i);
+    await userEvent.click(transferOption);
+    await waitFor(() => {
+      expect(mockHandleTransferMember).toHaveBeenCalled();
+    });
+  });
+
+  it("renders the teams pagination component with correct initial values", () => {
+    customRender();
+    const teamsTab = screen.getByTestId("teams-tab");
+    userEvent.click(teamsTab);
+    const paginationComponents = screen.getAllByTestId("pagination");
+    expect(paginationComponents.length).toBeGreaterThan(0);
+    const paginationComponent = paginationComponents[0];
+    expect(paginationComponent).toBeInTheDocument();
+
+    const limitSelector = within(paginationComponent).getByTestId("select-limit");
+    expect(limitSelector).toHaveTextContent("20");
+
+    const pageInfo = within(paginationComponent).getByText(/Items per page/i);
+    expect(pageInfo).toBeInTheDocument();
+  });
+
+  it("calls handlePagination for teams when a new limit is selected", async () => {
+    customRender();
+    const teamsTab = screen.getByTestId("teams-tab");
+    userEvent.click(teamsTab);
+
+    const selectContainer = screen.getAllByTestId("select-limit");
+    const selectLimit = selectContainer[0];
+    expect(selectLimit).toBeInTheDocument();
+
+    const selectButton = within(selectLimit).getByRole("combobox");
+    await userEvent.click(selectButton);
+
+    const options = await screen.findAllByText("50");
+    const option = options[0];
+    await userEvent.click(option);
+
+    expect(mockHandleTeamPagination).toHaveBeenCalledWith("limit", 50);
   });
 });
