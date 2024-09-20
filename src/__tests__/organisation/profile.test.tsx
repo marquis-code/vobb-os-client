@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { useUserContext } from "context";
-import { sectorOptions } from "lib/constants";
 import { OrgProfileUI } from "modules";
 
 vi.mock("react-router-dom", () => ({
