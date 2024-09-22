@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
-import { useMobile } from "hooks";
+import { useFetchBranches, useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
 import { AddBranch } from "pages/organization/branches/addBranch";
 import { useModalContext } from "context";
@@ -15,6 +15,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const { isMobile } = useMobile({ size: 1024 });
+  const { fetchOrgBranches } = useFetchBranches({});
   const { addBranch, setAddBranch, addTeam, setAddTeam, inviteMember, setInviteMember } =
     useModalContext();
   const [collapse, setCollapse] = useState(false);
@@ -28,7 +29,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       <main style={{ marginLeft: sideBarWidth }} className="mt-[55px]">
         {children}
       </main>
-      <AddBranch close={() => setAddBranch(false)} show={addBranch} />
+      <AddBranch
+        close={() => setAddBranch(false)}
+        show={addBranch}
+        callback={() => {
+          fetchOrgBranches({});
+          setAddBranch(false);
+        }}
+      />
       <AddTeam close={() => setAddTeam(false)} show={addTeam} />
       <InviteMember close={() => setInviteMember(false)} show={inviteMember} />
     </>

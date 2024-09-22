@@ -17,6 +17,7 @@ import {
   fetchOrgBranchMembersURL,
   fetchOrgDetailsURL,
   fetchTeamsPerBranchURL,
+  fetchUserBranchesURL,
   getRequest,
   patchRequest,
   postRequest,
@@ -379,5 +380,17 @@ export const fetchOrgActivitiesService = ({
 }: activityParamsProps) => {
   return getRequest({
     url: fetchOrgActivitiesURL({ page, limit, sort, ...queryParams })
+  });
+};
+/**
+ * Fetch user's branches service
+ * @param page showing page number requested,
+ * @param limit showing number of items per page
+ * @param search fetches branch from user input
+ * @returns axios promise
+ */
+export const fetchUserBranchesService = (query: PaginationProps = {}) => {
+  return getRequest({
+    url: fetchUserBranchesURL(query)
   });
 };

@@ -220,3 +220,20 @@ export const fetchOrgActivitiesURL = ({
     queryString ? `&${queryString}` : ""
   }`;
 };
+
+/**
+ * Fetch user's branches URL
+ * @returns url string
+ *
+ */
+export const fetchUserBranchesURL = ({ page, limit, search }: PaginationProps) => {
+  const queryParams = new URLSearchParams();
+
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+  if (search && search !== "") queryParams.append("search", search);
+
+  const queryString = queryParams.toString();
+
+  return `/user/branches/${queryString ? `?${queryString}` : ""}`;
+};
