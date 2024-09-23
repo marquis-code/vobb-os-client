@@ -23,7 +23,34 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Refresh access token if token has expired
+export const refreshToken = async (): Promise<string | null> => {
+  try {
+    const refreshToken = localStorage.getItem("vobbOSRefresh");
+    if (!refreshToken) throw new Error("No refresh token available");
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`
+      }
+    };
+
+    const response = await axiosInstanceUnauth.get(refreshTokenURL(), config);
+
+    const newAccessToken = response.data?.data?.access_token;
+    if (newAccessToken) {
+      localStorage.setItem("vobbOSAccess", newAccessToken);
+      return newAccessToken;
+    } else {
+      throw new Error("No access token received");
+    }
+  } catch (error) {
+    localStorage.clear();
+    window.location.assign(Routes.home);
+    return null;
+  }
+};
+
+// Modify the response interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -35,8 +62,11 @@ axiosInstance.interceptors.response.use(
       window.location.pathname !== "/"
     ) {
       originalRequest._retry = true;
-      const accessToken = await refreshToken();
-      if (accessToken) {
+
+      const newAccessToken = await refreshToken();
+      if (newAccessToken) {
+        // Update the authorization header and retry the request
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } else {
         localStorage.clear();
@@ -46,29 +76,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export const refreshToken = async (): Promise<string> => {
-  let token = "";
-  const refreshToken = localStorage.getItem("vobbOSRefresh");
-  const config = {
-    headers: {
-      Authorization: `Bearer ${refreshToken}`
-    }
-  };
-  axiosInstance
-    .get(refreshTokenURL(), config)
-    .then((response) => {
-      if (response.data) {
-        token = response.data?.data?.access_token;
-        localStorage.setItem("vobbOSAccess", token);
-      }
-    })
-    .catch(() => {
-      localStorage.clear();
-      window.location.assign(Routes.home);
-    });
-  return token;
-};
 
 // API Request Functions
 interface ApiRequestProps {

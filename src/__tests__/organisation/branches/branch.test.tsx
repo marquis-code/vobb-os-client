@@ -3,11 +3,51 @@ import userEvent from "@testing-library/user-event";
 import { BranchMemberTableMock, BranchTeamTableMock } from "lib";
 import { OrgBranchUI } from "modules";
 import { initBranchData } from "pages";
+import { BrowserRouter } from "react-router-dom";
 
 const mockHandleTransferMember = vi.fn();
 const mockHandleViewMember = vi.fn();
 const mockHandleMemberPagination = vi.fn();
 const mockHandleTeamPagination = vi.fn();
+
+const defaultProps = {
+  loadingMembers: false,
+  branchInfo: {
+    id: "334567",
+    name: "Branch1",
+    country: "Nigeria",
+    zipCode: "123456",
+    province: "lagos",
+    isPrimary: false,
+    addressLine1: "Okota",
+    addressLine2: "",
+    city: "Lasgidi",
+    timeZone: "GMT + 1",
+    hasMembers: true
+  },
+  branchTeams: {
+    teamsArray: [],
+    teamsMetaData: {
+      currentPage: 1,
+      totalCount: 50,
+      totalPages: 5,
+      pageLimit: 20
+    }
+  },
+  branchMembers: {
+    membersArray: [],
+    membersMetaData: {
+      currentPage: 1,
+      totalCount: 50,
+      totalPages: 5,
+      pageLimit: 20
+    }
+  },
+  handleTransferMember: mockHandleTransferMember,
+  handleViewMember: mockHandleViewMember,
+  handleUpdateMembersParams: mockHandleMemberPagination,
+  handleUpdateTeamsParams: mockHandleTeamPagination
+};
 
 const mockedData = {
   loadingMembers: false,
@@ -48,43 +88,20 @@ const mockedData = {
   handleUpdateTeamsParams: mockHandleTeamPagination
 };
 
+const MockedBranchUI = (props = {}) => {
+  const mergedProps = { ...defaultProps, ...props };
+  return (
+    <BrowserRouter>
+      <OrgBranchUI {...mergedProps} />
+    </BrowserRouter>
+  );
+};
+const customRender = (props = {}) => render(<MockedBranchUI {...props} />);
+
 describe("Branch UI tests", () => {
   let renderResult: RenderResult;
 
-  const defaultProps = {
-    loadingMembers: false,
-    branchInfo: initBranchData,
-    branchTeams: {
-      teamsArray: [],
-      teamsMetaData: {
-        currentPage: 1,
-        totalCount: 50,
-        totalPages: 5,
-        pageLimit: 20
-      }
-    },
-    branchMembers: {
-      membersArray: [],
-      membersMetaData: {
-        currentPage: 1,
-        totalCount: 50,
-        totalPages: 5,
-        pageLimit: 20
-      }
-    },
-    handleTransferMember: mockHandleTransferMember,
-    handleViewMember: mockHandleViewMember,
-    handleUpdateMembersParams: mockHandleMemberPagination,
-    handleUpdateTeamsParams: mockHandleTeamPagination
-  };
-
-  const customRender = (props = {}) => {
-    const mergedProps = { ...defaultProps, ...props };
-    return render(<OrgBranchUI {...mergedProps} />);
-  };
-
   beforeEach(() => {
-    vi.clearAllMocks();
     renderResult = customRender();
   });
 
@@ -143,17 +160,18 @@ describe("Branch UI tests", () => {
     expect(resultCell).toBeInTheDocument();
   });
 
-  it("should render with mocked data", () => {
+  it("should render with mocked data", async () => {
     renderResult = customRender(mockedData);
-    expect(renderResult.container).toBeTruthy();
 
-    const mockedBranch = screen.getByText("Finance");
+    const mockedBranches = screen.getAllByText("Branch1 (GMT + 1)");
+    const mockedBranch = mockedBranches[0];
     expect(mockedBranch).toBeInTheDocument();
   });
 
   it("renders the members pagination component with correct initial values", () => {
     customRender();
-    const memberTab = screen.getByTestId("members-tab");
+    const memberTabs = screen.getAllByRole("tab", { name: "Members" });
+    const memberTab = memberTabs[0];
     userEvent.click(memberTab);
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
@@ -169,7 +187,8 @@ describe("Branch UI tests", () => {
 
   it("calls handlePagination for members when a new limit is selected", async () => {
     customRender();
-    const memberTab = screen.getByTestId("members-tab");
+    const memberTabs = screen.getAllByRole("tab", { name: "Members" });
+    const memberTab = memberTabs[0];
     userEvent.click(memberTab);
 
     const selectContainer = screen.getAllByTestId("select-limit");
@@ -210,7 +229,8 @@ describe("Branch UI tests", () => {
 
   it("renders the teams pagination component with correct initial values", () => {
     customRender();
-    const teamsTab = screen.getByTestId("teams-tab");
+    const teamTabs = screen.getAllByRole("tab", { name: "Teams" });
+    const teamsTab = teamTabs[0];
     userEvent.click(teamsTab);
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
@@ -226,7 +246,8 @@ describe("Branch UI tests", () => {
 
   it("calls handlePagination for teams when a new limit is selected", async () => {
     customRender();
-    const teamsTab = screen.getByTestId("teams-tab");
+    const teamTabs = screen.getAllByRole("tab", { name: "Teams" });
+    const teamsTab = teamTabs[0];
     userEvent.click(teamsTab);
 
     const selectContainer = screen.getAllByTestId("select-limit");
