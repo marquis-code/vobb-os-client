@@ -221,3 +221,4 @@ export * from "./member";
 export * from "./acceptInvite";
 export * from "./invitationSuccessful";
 export * from "./invitationFailed";
+export * from "./inviteMember";

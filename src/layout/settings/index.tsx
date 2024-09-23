@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
-import { useFetchUser, useMobile } from "hooks";
+import { useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
 
 export interface SettingsLayoutProps {
