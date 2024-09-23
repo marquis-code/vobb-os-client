@@ -1,9 +1,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
-import { useFetchUser, useMobile } from "hooks";
+import { useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
-import { ModalProvider } from "context";
 
 export interface SettingsLayoutProps {
   children: ReactNode;
@@ -18,13 +17,13 @@ const SettingsLayout: React.FC<SettingsLayoutProps> = ({ children, title, items 
   return isMobile ? (
     <UnsupportedScreenSize />
   ) : (
-    <ModalProvider>
+    <>
       <NavBar items={items} sideBarWidth={sideBarWidth} />
       <SideBar active={title.toLowerCase()} sideBarWidth={sideBarWidth} />
       <main style={{ marginLeft: sideBarWidth }} className="mt-[55px] p-4">
         {children}
       </main>
-    </ModalProvider>
+    </>
   );
 };
 

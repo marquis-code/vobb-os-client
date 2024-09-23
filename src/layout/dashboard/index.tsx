@@ -3,7 +3,7 @@ import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
 import { useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
-import { ModalProvider, useModalContext, useUserContext } from "context";
+import { useModalContext, useUserContext } from "context";
 interface DashboardLayoutProps {
   children: ReactNode;
   title: string;
@@ -26,13 +26,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
   return isMobile ? (
     <UnsupportedScreenSize />
   ) : (
-    <ModalProvider>
+    <>
       <NavBar title={title} collapse={collapse} sideBarWidth={sideBarWidth} />
       <SideBar collapse={collapse} handleCollapse={setCollapse} sideBarWidth={sideBarWidth} />
       <main style={{ marginLeft: sideBarWidth }} className="mt-[55px]">
         {children}
       </main>
-    </ModalProvider>
+    </>
   );
 };
 
