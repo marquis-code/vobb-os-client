@@ -4,45 +4,68 @@ import { SortOrderType } from "components";
 import { teamActivityMockData } from "lib";
 import { TeamActivity } from "modules";
 import { initActivityData } from "pages";
+import { BrowserRouter } from "react-router-dom";
+
+const mockHandlePagination = vi.fn();
+
+const defaultProps = {
+  teamActivities: {
+    loading: false,
+    data: {
+      activityArray: teamActivityMockData,
+      metaData: {
+        currentPage: 1,
+        totalCount: 50,
+        totalPages: 5,
+        pageLimit: 20
+      }
+    },
+    params: {
+      page: 1,
+      limit: 20,
+      order: "desc" as SortOrderType,
+      startDate: "",
+      endDate: ""
+    },
+    handleFilter: mockHandlePagination
+  }
+};
+
+const mockedData = {
+  teamActivities: {
+    loading: false,
+    data: initActivityData,
+    params: {
+      page: 1,
+      limit: 20,
+      order: "desc" as SortOrderType,
+      startDate: "",
+      endDate: ""
+    },
+    handleFilter: vi.fn()
+  }
+};
+
+const MockedTeamActivities = (props = {}) => {
+  const mergedProps = { ...defaultProps, ...props };
+  return (
+    <BrowserRouter>
+      <TeamActivity {...mergedProps} />
+    </BrowserRouter>
+  );
+};
+
+const customRender = (props = {}) => render(<MockedTeamActivities {...props} />);
 
 describe("Team Activities", () => {
   let renderResult: RenderResult;
-  const mockHandlePagination = vi.fn();
-
-  const defaultProps = {
-    teamActivities: {
-      loading: false,
-      data: {
-        activityArray: teamActivityMockData,
-        metaData: {
-          currentPage: 1,
-          totalCount: 50,
-          totalPages: 5,
-          pageLimit: 20
-        }
-      },
-      params: {
-        page: 1,
-        limit: 20,
-        order: "desc" as SortOrderType,
-        startDate: "",
-        endDate: ""
-      },
-      handleFilter: mockHandlePagination
-    }
-  };
-
-  const customRender = (props = {}) => {
-    const mergedProps = { ...defaultProps, ...props };
-    return render(<TeamActivity {...mergedProps} />);
-  };
 
   beforeEach(() => {
     vi.clearAllMocks();
     renderResult = customRender();
   });
 
-  it("should render teams ui page", () => {
+  it("should render the team activities UI page", () => {
     expect(renderResult.container).toBeTruthy();
   });
 
@@ -73,35 +96,18 @@ describe("Team Activities", () => {
       }
     });
 
-    expect(renderResult.container).toBeTruthy();
-
     const loading = screen.getByTestId("loading");
     expect(loading).toBeInTheDocument();
   });
 
   it("should display paragraph with 'no activities' when there is no history", () => {
-    const mockedData = {
-      teamActivities: {
-        loading: false,
-        data: initActivityData,
-        params: {
-          page: 1,
-          limit: 20,
-          order: "desc" as SortOrderType,
-          startDate: "",
-          endDate: ""
-        },
-        handleFilter: vi.fn()
-      }
-    };
     renderResult = customRender(mockedData);
-    expect(renderResult.container).toBeTruthy();
     const paragraph = screen.getByTestId("no-activities");
     expect(paragraph).toBeInTheDocument();
   });
 
   it("should render with mocked data", () => {
-    const mockedData = {
+    renderResult = customRender({
       teamActivities: {
         loading: false,
         data: {
@@ -122,19 +128,18 @@ describe("Team Activities", () => {
         },
         handleFilter: vi.fn()
       }
-    };
-    renderResult = customRender(mockedData);
-    expect(renderResult.container).toBeTruthy();
+    });
+
     const mockedActivities = screen.getAllByTestId("activity-card");
     expect(mockedActivities.length).toBeGreaterThan(0);
-    const mockedActivity = mockedActivities[0];
-    expect(mockedActivity).toBeInTheDocument();
+    expect(mockedActivities[0]).toBeInTheDocument();
   });
 
   it("renders the pagination component with correct initial values", () => {
     customRender();
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
+
     const paginationComponent = paginationComponents[0];
     expect(paginationComponent).toBeInTheDocument();
 
@@ -143,8 +148,6 @@ describe("Team Activities", () => {
 
     const pageInfo = within(paginationComponent).getByText(/Items per page/i);
     expect(pageInfo).toBeInTheDocument();
-
-    screen.debug();
   });
 
   it("calls handlePagination when a new limit is selected", async () => {
