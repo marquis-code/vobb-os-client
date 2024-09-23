@@ -69,7 +69,7 @@ const VerifyEmailUI: React.FC<VerifyEmailProps> = ({ handleVerify, handleResend,
             onClick={submitResend}
             disabled={countdown > 0}
             variant="link"
-            data-cy="resend-btn">
+            data-testid="resend-btn">
             {countdown > 0 ? countdown : "Resend code"}
           </Button>
         </p>
