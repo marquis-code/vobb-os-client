@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { Routes } from "router";
 
 // Create an axios instance
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
@@ -57,7 +57,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      error?.response?.status === 400 &&
+      error?.response?.status === 401 &&
       !originalRequest._retry &&
       window.location.pathname !== "/"
     ) {
