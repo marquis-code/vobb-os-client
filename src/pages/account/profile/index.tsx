@@ -57,7 +57,10 @@ const AccountProfile = () => {
   return (
     <>
       <ChangeEmail
-        callback={() => setEmailOTP(true)}
+        callback={() => {
+          setEmailOTP(true);
+          fetchUserDetails();
+        }}
         show={changeEmail}
         close={() => setChangeEmail(false)}
       />
@@ -73,3 +76,5 @@ const AccountProfile = () => {
 };
 
 export { AccountProfile };
+
+export * from "./update-job-title";

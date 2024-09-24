@@ -151,3 +151,11 @@ export const fetchUserActivitiesURL = ({
     queryString ? `&${queryString}` : ""
   }`;
 };
+
+/**
+ * Update admin's job title URL
+ * @returns url string
+ *
+ */
+
+export const updateJobTitleURL = () => `/user/edit-job-title`;

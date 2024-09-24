@@ -16,16 +16,16 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>
     <UserDetailsProvider>
-      <ModalProvider>
-        <MemberProfileProvider>
-          <CountriesProvider>
-            <BrowserRouter>
+      <MemberProfileProvider>
+        <CountriesProvider>
+          <BrowserRouter>
+            <ModalProvider>
               <App />
-              <Toaster />
-            </BrowserRouter>
-          </CountriesProvider>
-        </MemberProfileProvider>
-      </ModalProvider>
+            </ModalProvider>
+            <Toaster />
+          </BrowserRouter>
+        </CountriesProvider>
+      </MemberProfileProvider>
     </UserDetailsProvider>
   </React.StrictMode>
 );

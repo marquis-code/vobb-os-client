@@ -100,14 +100,12 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
             <TabsList className="mb-2">
               <TabsTrigger
                 className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-                value="member"
-                data-testid="members-tab">
+                value="member">
                 Members
               </TabsTrigger>
               <TabsTrigger
                 className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-                value="client"
-                data-testid="teams-tab">
+                value="client">
                 Teams
               </TabsTrigger>
             </TabsList>

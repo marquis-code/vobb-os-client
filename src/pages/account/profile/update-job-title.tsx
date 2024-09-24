@@ -1,18 +1,18 @@
-import { personalEmailUpdateService } from "api";
-import { ChangeEmailModal, toast } from "components";
-import { useApiRequest, useFetchUser } from "hooks";
+import { updateJobTitleService } from "api";
+import { UpdateJobTitleModal, toast } from "components";
+import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { ModalProps } from "types";
 
-interface ChangeEmailProps extends ModalProps {
-  callback: () => void;
+interface UpdateJobTitleProps extends ModalProps {
+  callback?: () => void;
 }
 
-const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
+const UpdateJobTitle: React.FC<UpdateJobTitleProps> = ({ show, close, callback }) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
-  const handleSubmit = (data: { email: string }) => {
-    run(personalEmailUpdateService(data));
+  const handleSubmit = ({ jobTitle }) => {
+    run(updateJobTitleService({ job_title: jobTitle }));
   };
 
   useMemo(() => {
@@ -20,7 +20,7 @@ const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
       toast({
         description: response?.data?.message
       });
-      callback();
+      callback?.();
     } else if (error) {
       toast({
         variant: "destructive",
@@ -31,7 +31,7 @@ const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
 
   return (
     <>
-      <ChangeEmailModal
+      <UpdateJobTitleModal
         show={show}
         close={close}
         submit={handleSubmit}
@@ -41,4 +41,4 @@ const ChangeEmail: React.FC<ChangeEmailProps> = ({ show, close, callback }) => {
   );
 };
 
-export { ChangeEmail };
+export { UpdateJobTitle };

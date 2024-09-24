@@ -30,7 +30,7 @@ export const sectorOptions: optionTypeSector[] = [
   },
   {
     label: "Medical and Health",
-    value: "Medical and Health"
+    value: "Health"
   },
   {
     label: "Tourism",

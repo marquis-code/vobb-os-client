@@ -4,6 +4,7 @@ import { MetaDataProps } from "types/interfaces";
 export interface UserProfileProps {
   firstName: string;
   lastName: string;
+  jobTitle: string;
   email: string;
   role: string;
   avatar: string;

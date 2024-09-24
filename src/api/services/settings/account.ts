@@ -24,6 +24,7 @@ import {
   send2faCodeURL,
   toggle2faStatusURL,
   toggleGoogleAuthURL,
+  updateJobTitleURL,
   updateOrgPropertiesURL
 } from "api";
 import { activityParamsProps } from "types";
@@ -245,4 +246,13 @@ export const fetchUserActivitiesService = ({
   return getRequest({
     url: fetchUserActivitiesURL({ page, limit, sort, ...queryParams })
   });
+};
+
+/**
+ * Update admin's job title Service
+ * @returns axios promise
+ */
+
+export const updateJobTitleService = (data: { job_title: string }) => {
+  return patchRequest({ url: updateJobTitleURL(), data });
 };

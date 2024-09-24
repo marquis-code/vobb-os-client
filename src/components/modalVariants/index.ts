@@ -18,3 +18,4 @@ export * from "./changeBranchModal";
 export * from "./changeTeamModal";
 export * from "./memberBranchesModal";
 export * from "./memberTeamsModal";
+export * from "./updateJobTitleModal";
