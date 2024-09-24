@@ -1,0 +1,70 @@
+{
+  "data": {
+    "attributes": [
+      {
+        "label": "First name",
+        "type": "text",
+        "is_required": true,
+        "is_system_prop": true
+      },
+      {
+        "label": "Last name",
+        "type": "text",
+        "is_required": true,
+        "is_system_prop": true
+      },
+      {
+        "label": "Job title",
+        "type": "text",
+        "is_required": false,
+        "is_system_prop": true
+      },
+      {
+        "label": "Email address",
+        "type": "email",
+        "is_required": true,
+        "is_system_prop": true
+      },
+      {
+        "label": "Phone number",
+        "type": "text",
+        "is_required": false,
+        "is_system_prop": true
+      },
+      {
+        "label": "Profile picture",
+        "type": "file",
+        "is_required": false,
+        "is_system_prop": true
+      },
+      {
+        "label": "Role",
+        "type": "text",
+        "is_required": true,
+        "is_system_prop": true
+      },
+      {
+        "label": "System Language",
+        "type": "text",
+        "is_required": false,
+        "is_system_prop": true
+      },
+      {
+        "label": "Time zone",
+        "type": "text",
+        "is_required": false,
+        "is_system_prop": true
+      },
+      {
+        "label": "Date format",
+        "type": "text",
+        "is_required": false,
+        "is_system_prop": true
+      }
+    ],
+    "page": 1,
+    "total_pages": 3,
+    "total_count": 30,
+    "limit": 10
+  }
+}

@@ -79,7 +79,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         </TabsContent>
         <TabsContent value="client">
           {clientLoading ? (
-            <LoadingSpinner />
+            <LoadingSpinner testId="pagination" />
           ) : (
             <ClientAttributes
               handleAddAttribute={handleAddClientAttr}

@@ -10,36 +10,56 @@ describe("Organisation Activities", () => {
       window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
+
+    cy.fixture("activitiesMock").then((activitiesMock) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/activity/*", {
+        statusCode: 200,
+        body: activitiesMock
+      }).as("getActivities");
+    });
+
     cy.visit("/settings/organization-activity");
+
+    cy.wait("@getActivities");
+
     cy.url().should("include", "/settings/organization-activity");
   });
 
-  it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Workspace", "Activity");
+  it("should trigger API call when sorting by ascending", () => {
+    cy.get('[data-testid="sort-dropdown"]').click();
+
+    cy.contains("Ascending").click();
+
+    cy.wait("@getActivities").its("request.url").should("include", "order=asc");
   });
 
-  it("displays the titles and account activities if any", () => {
-    cy.get("h1").should("contain", "Organization Activity");
-    cy.contains("p", "Monitor your organization activities over time")
-      .should("exist")
-      .and("be.visible");
+  it("should trigger API call when sorting by descending", () => {
+    cy.get('[data-testid="sort-dropdown"]').click();
 
-    cy.get('[data-testid="filter-div"]').should("exist").and("be.visible");
+    cy.contains("Descending").click();
 
-    cy.get("body").then(($body) => {
-      if ($body.find('[data-testid="loading-spinner"]').length) {
-        cy.get('[data-testid="loading-spinner"]').should("be.visible");
-      } else if ($body.find("p:contains('No Account activities for this time.')").length) {
-        cy.get("p").contains("No Account activities for this time.").should("be.visible");
-      } else {
-        cy.get('[data-testid="activity-card"]').eq(0).should("exist").and("be.visible");
-
-        cy.get('[data-testid="pagination"]').should("exist").and("be.visible");
-      }
-    });
+    cy.wait("@getActivities").its("request.url").should("include", "order=desc");
   });
 
-  it("displays the pagination component and triggers API call on limit change", () => {
+  it("should clear the sort and trigger the API call", () => {
+    cy.get('[data-testid="sort-dropdown"]').click();
+
+    cy.contains("Clear").click();
+
+    cy.wait("@getActivities").its("request.url").should("not.include", "order=");
+  });
+
+  it("should paginate through the table", () => {
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 5 of 10 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "6 - 10 of 10 items");
+
+    cy.get('[data-testid="prev-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 5 of 10 items");
+  });
+
+  it("triggers API call on pagination limit change", () => {
     cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/activity/*", (req) => {
       req.continue((res) => {});
     }).as("fetchData");

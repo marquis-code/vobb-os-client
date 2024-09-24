@@ -96,11 +96,7 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
 
   return (
     <>
-      <Modal
-        contentClassName="max-w-[800px]"
-        show={show}
-        close={close}
-        data-testid="editBranch-modal">
+      <Modal contentClassName="max-w-[800px]" show={show} close={close} testId="editBranch-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Edit Branch Information</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">

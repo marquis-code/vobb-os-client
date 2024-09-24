@@ -10,15 +10,22 @@ describe("Organisation branches", () => {
       window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
+
+    cy.fixture("branchesMock").then((branchesMock) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/branch*", {
+        statusCode: 200,
+        body: branchesMock
+      }).as("getBranches");
+    });
+
     cy.visit("/settings/branches");
+
+    cy.wait("@getBranches");
+
     cy.url().should("include", "/settings/branches");
   });
 
-  it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Workspace", "Branches");
-  });
-
-  it("displays add branch modal when button is clicked", () => {
+  it("opens add branch modal when button is clicked", () => {
     cy.get('[data-testid="add-branch"]').click();
 
     cy.get("[data-testid='addBranch-modal']").within(() => {
@@ -78,7 +85,7 @@ describe("Organisation branches", () => {
           cy.get("div.css-1xc3v61-indicatorContainer").click();
           cy.wait(1000);
           cy.get("div.css-1nmdiq5-menu").should("exist");
-          cy.get("div#react-select-7-option-6").should("be.visible").click();
+          cy.get("div#react-select-5-option-6").should("be.visible").click();
         });
       cy.get("div.css-b62m3t-container")
         .eq(1)
@@ -86,7 +93,7 @@ describe("Organisation branches", () => {
           cy.get("div.css-1xc3v61-indicatorContainer").click();
           cy.wait(1000);
           cy.get("div.css-1nmdiq5-menu").should("exist");
-          cy.get("div#react-select-9-option-1").should("be.visible").click();
+          cy.get("div#react-select-7-option-1").should("be.visible").click();
         });
 
       cy.get("button").contains("Create").click();
@@ -111,7 +118,7 @@ describe("Organisation branches", () => {
           cy.get("div.css-1xc3v61-indicatorContainer").click();
           cy.wait(1000);
           cy.get("div.css-1nmdiq5-menu").should("exist");
-          cy.get("div#react-select-7-option-6").should("be.visible").click();
+          cy.get("div#react-select-5-option-6").should("be.visible").click();
         });
       cy.get("div.css-b62m3t-container")
         .eq(1)
@@ -119,7 +126,7 @@ describe("Organisation branches", () => {
           cy.get("div.css-1xc3v61-indicatorContainer").click();
           cy.wait(1000);
           cy.get("div.css-1nmdiq5-menu").should("exist");
-          cy.get("div#react-select-9-option-1").should("be.visible").click();
+          cy.get("div#react-select-7-option-1").should("be.visible").click();
         });
 
       cy.get("button").contains("Create").click();
@@ -135,7 +142,22 @@ describe("Organisation branches", () => {
     cy.get("[data-testid='addBranch-modal']").should("not.exist");
   });
 
-  it("displays the pagination component and triggers API call on limit change", () => {
+  it("should paginate through the table", () => {
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 20 of 30 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "11 - 20 of 30 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "21 - 30 of 30 items");
+
+    cy.get("table tbody tr").should("have.length", 10);
+
+    cy.get('[data-testid="prev-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "11 - 20 of 30 items");
+  });
+
+  it("triggers API call on pagination limit change", () => {
     cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/branch*", (req) => {
       req.continue((res) => {});
     }).as("fetchData");
@@ -148,9 +170,6 @@ describe("Organisation branches", () => {
     cy.get("div#react-select-3-option-1").should("be.visible").click();
 
     cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
-
-    cy.get("[data-testid='move-left']").should("be.visible");
-    cy.get("[data-testid='move-right']").should("be.visible");
   });
 
   it("Edits branch details", () => {

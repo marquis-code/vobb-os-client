@@ -19,6 +19,7 @@ export interface AddAttributesData {
   options?: string[];
   fileType?: any | optionType | null;
   wordLimit?: string;
+  createNew?: boolean;
 }
 
 const optionTypeSchema = yup.object({
@@ -115,13 +116,14 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
         description: initData?.description ?? "",
         wordLimit: Array.isArray(initData?.metaData) ? "" : initData?.metaData,
         required: initData?.required,
-        options: Array.isArray(initData?.metaData) ? initData?.metaData : []
+        options: Array.isArray(initData?.metaData) ? initData?.metaData : [],
+        createNew: false
       });
     }
   }, [initData, reset]);
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close} data-testid="addAttr-modal">
+      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="addAttr-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Create Attribute</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
@@ -196,7 +198,10 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
         <div className="flex justify-end gap-2 items-center">
           <CheckboxWithText
             label={"Create another attribute"}
-            handleChecked={setCreateNew}
+            handleChecked={() => {
+              setValue("createNew", createNew);
+              setCreateNew(!createNew);
+            }}
             checked={createNew}
             className="mr-auto"
           />

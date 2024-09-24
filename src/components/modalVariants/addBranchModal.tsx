@@ -66,7 +66,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
         contentClassName="max-w-[800px]"
         show={addBranch}
         close={close}
-        data-testid="addBranch-modal">
+        testId="addBranch-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Create New Branch</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">

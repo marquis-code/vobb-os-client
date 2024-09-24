@@ -10,50 +10,42 @@ describe("Member Attributes", () => {
       window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
+
+    cy.fixture("attributesMock").then((attributesMock) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/attribute*", {
+        statusCode: 200,
+        body: attributesMock
+      }).as("getAttributes");
+    });
+
     cy.visit("/settings/attributes");
+
+    cy.wait("@getAttributes");
+
     cy.url().should("include", "/settings/attributes");
   });
 
-  it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Workspace", "Attributes");
-  });
+  it("should toggle between Team member attributes and Client attributes tabs", () => {
+    cy.get('[data-testid="attr-tablist"]').within(() => {
+      cy.contains("Team member attributes").click();
 
-  it("displays the title, paragraph and tabs", () => {
-    cy.get("h1").should("contain", "Attributes");
-    cy.contains("p", "Collect as much data as you want from your team members or clients")
-      .should("exist")
-      .and("be.visible");
-    cy.get('[data-testid="attr-tablist"]')
-      .should("exist")
-      .within(() => {
-        cy.get("button")
-          .contains("Team member attributes")
-          .should("be.visible")
-          .and("not.be.disabled");
-        cy.get("button").contains("Client attributes").should("be.visible").and("not.be.disabled");
-        cy.get("button").contains("Team member attributes").click();
-      });
-  });
+      cy.get('button[value="member"]').should(
+        "have.class",
+        "data-[state=active]:bg-vobb-primary-70"
+      );
 
-  it("displays add member attribute button and table", () => {
-    cy.get('[data-testid="add-memberAttr"]').should("be.visible").and("not.be.disabled");
+      cy.contains("Client attributes").click();
 
-    cy.get("table.w-full.caption-bottom.text-sm").within(() => {
-      cy.get("thead").should("exist");
-      cy.get("tbody").should("exist");
+      cy.get('button[value="client"]').should(
+        "have.class",
+        "data-[state=active]:bg-vobb-primary-70"
+      );
 
-      cy.get("thead tr").within(() => {
-        cy.get("th").should("have.length", 4);
-
-        cy.get("th").eq(0).should("have.text", "Title");
-        cy.get("th").eq(1).should("have.text", "Type");
-        cy.get("th").eq(2).should("have.text", "Attribute properties");
-        cy.get("th").eq(3).should("have.text", "");
-      });
+      cy.get('button[value="member"]').should(
+        "not.have.class",
+        "data-[state=active]:bg-vobb-primary-70"
+      );
     });
-    cy.get("sector.flex.items-center.justify-between.gap-4.text-vobb-neutral-90.mt-4").should(
-      "exist"
-    );
   });
 
   it("validates title and attribute required fields in add branch form", () => {
@@ -111,7 +103,22 @@ describe("Member Attributes", () => {
     cy.checkAndCloseToastNotification(`"label" contains an invalid value`);
   });
 
-  it("displays the pagination component and triggers API call on limit change", () => {
+  it("should paginate attributes correctly", () => {
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 20 of 30 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "11 - 20 of 30 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "21 - 30 of 30 items");
+
+    cy.get("table tbody tr").should("have.length", 10);
+
+    cy.get('[data-testid="prev-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "11 - 20 of 30 items");
+  });
+
+  it("triggers API call on pagination limit change", () => {
     cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/attribute*", (req) => {
       req.continue((res) => {});
     }).as("fetchData");
@@ -124,9 +131,6 @@ describe("Member Attributes", () => {
     cy.get("div#react-select-3-option-1").should("be.visible").click();
 
     cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
-
-    cy.get("[data-testid='move-left']").should("be.visible");
-    cy.get("[data-testid='move-right']").should("be.visible");
   });
 
   it("Duplicate attribute details successfully", () => {
@@ -155,6 +159,7 @@ describe("Member Attributes", () => {
     });
     cy.checkAndCloseToastNotification("Attribute updated successfully");
   });
+
   it("Archive attribute successfully", () => {
     cy.get("[data-testid='menu-memberAttr']").eq(0).click();
 

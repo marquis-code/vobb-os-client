@@ -13,12 +13,13 @@ import {
   Badge,
   PermissionItem
 } from "components";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { TeamActivityResponse, TeamMembersDataProps } from "pages";
 import { TeamPermissionsUI } from "./teamPermissions";
 import { TeamActivity } from "./teamActivity";
 import { QueryParamProps } from "types";
+import { useSearchParams } from "react-router-dom";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -93,7 +94,17 @@ const TeamUI = ({
   const [filters, setFilters] = useState<FilterData[]>([]);
   const { membersArray, metaData } = teamsMembersData;
   const { currentPage, totalCount, totalPages, pageLimit } = metaData;
+  const [searchParams] = useSearchParams();
+  const justAddedTeam = searchParams.get("new");
+  const isNewTeam = justAddedTeam ? decodeURIComponent(justAddedTeam) : null;
 
+  const [activeTab, setActiveTab] = useState("member");
+
+  useEffect(() => {
+    if (isNewTeam) {
+      setActiveTab("permissions");
+    }
+  }, [isNewTeam]);
   return (
     <>
       <Badge
@@ -103,11 +114,11 @@ const TeamUI = ({
         type={"warning"}
         badge={"trailing"}
         size={"md"}
-        action={console.log}
+        action={() => setActiveTab("permissions")}
         className="max-w-[800px]"
       />
       <SettingsPageTitle title={teamName} />
-      <Tabs className="max-w-[800px]" defaultValue="member">
+      <Tabs className="max-w-[800px]" value={activeTab} onValueChange={setActiveTab}>
         <TabsList defaultValue={"permissions"} className="mb-2">
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
