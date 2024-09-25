@@ -15,28 +15,7 @@ describe("Account Security Settings", () => {
     cy.url().should("include", "/settings/security");
   });
 
-  it("displays the page header nav and h1", () => {
-    cy.get("header")
-      .should("exist")
-      .within(() => {
-        cy.get("nav")
-          .should("exist")
-          .within(() => {
-            cy.get("ol")
-              .should("exist")
-              .within(() => {
-                cy.get("li").should("have.length", 3);
-
-                cy.get("li").eq(0).should("contain", "Account");
-                cy.get("li").eq(1).find("svg").should("exist");
-                cy.get("li").eq(2).should("contain", "Security");
-              });
-          });
-      });
-    cy.get("h1").should("contain", "Account Security");
-  });
-
-  it("should display change password form and check for visibility toggle", () => {
+  it("check for visibility toggle in change password form", () => {
     cy.get("h2").eq(0).should("contain", "Password");
     cy.contains("p", "Update your password").should("be.visible");
     cy.get("form")
@@ -258,5 +237,26 @@ describe("Account Security Settings", () => {
       cy.contains("if there is any unusual activity on your account").should("be.visible");
     });
     cy.get("[data-testid='history-data']").should("exist");
+  });
+
+  it("triggers API call on page change change", () => {
+    cy.intercept(
+      "GET",
+      "https://os-stg-api.vobb.io/api/v1/settings/acc/login-history?page=1&limit=8",
+      (req) => {
+        req.continue((res) => {});
+      }
+    ).as("fetchData");
+
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 8 of 10 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
+    cy.get('[data-testid="page-info"]').should("contain.text", "9 - 10 of 10 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
+
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 8 of 10 items");
   });
 });

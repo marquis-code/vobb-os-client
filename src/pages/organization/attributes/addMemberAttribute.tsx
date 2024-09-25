@@ -19,6 +19,9 @@ const AddMemberAttribute = ({
   const [createNew, setCreateNew] = useState(false);
 
   const submit = (data: AddAttributesData) => {
+    const willAcceptMetadata =
+      data.type.value === "checkbox" || data.type.value === "multiple-choice";
+
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
       label: data.title,
@@ -30,7 +33,7 @@ const AddMemberAttribute = ({
     if (data.wordLimit && data.type.value === "long-text") {
       requestBody.meta = +data.wordLimit;
     }
-    if (data.options?.length) {
+    if (data.options?.length && willAcceptMetadata) {
       requestBody.meta = data.options;
     }
     if (data.createNew) setCreateNew(true);
@@ -43,7 +46,7 @@ const AddMemberAttribute = ({
         description: response?.data?.message
       });
       callback();
-      createNew && close();
+      !createNew && close();
     } else if (error) {
       toast({
         variant: "destructive",

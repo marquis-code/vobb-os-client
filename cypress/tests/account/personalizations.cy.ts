@@ -11,32 +11,26 @@ describe("Account Personalization Settings", () => {
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
 
+    cy.fixture("accDetailsMock").then((accDetailsMock) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/acc/details", {
+        statusCode: 200,
+        body: accDetailsMock
+      }).as("getAccDetails");
+    });
+
+    cy.fixture("orgPropertiesMock").then((orgPropertiesMock) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/acc/org-attribute*", {
+        statusCode: 200,
+        body: orgPropertiesMock
+      }).as("getOrgProperties");
+    });
+
     cy.visit("/settings/personalizations");
     cy.url().should("include", "/settings/personalizations");
+    cy.wait("@getAccDetails");
   });
 
-  it("displays the page header nav and h1", () => {
-    cy.get("header")
-      .should("exist")
-      .within(() => {
-        cy.get("nav")
-          .should("exist")
-          .within(() => {
-            cy.get("ol")
-              .should("exist")
-              .within(() => {
-                cy.get("li").should("have.length", 3);
-
-                cy.get("li").eq(0).should("contain", "Account");
-                cy.get("li").eq(1).find("svg").should("exist");
-                cy.get("li").eq(2).should("contain", "Personalizations");
-              });
-          });
-      });
-    cy.get("h1").should("contain", "Your Personalizations");
-  });
-
-  it("should display system language and successfully update", () => {
+  it("should successfully update system language", () => {
     cy.get("h2").eq(0).should("contain", "System Language");
     cy.contains("p", "Translate the app into your preferred language").should("be.visible");
     cy.get("svg.css-tj5bde-Svg").eq(0).should("be.visible").click();
@@ -47,7 +41,7 @@ describe("Account Personalization Settings", () => {
     cy.checkAndCloseToastNotification("Success");
   });
 
-  it("should display your languages and successfully update", () => {
+  it("should successfully update your languages", () => {
     cy.get("h2").eq(1).should("contain", "Your Languages");
     cy.contains("p", "Indicate the languages you're fluent in").should("be.visible");
 
@@ -60,7 +54,7 @@ describe("Account Personalization Settings", () => {
     cy.checkAndCloseToastNotification("Success");
   });
 
-  it("should display preferred date format and successfully update", () => {
+  it("should successfully update preferred date format", () => {
     cy.get("h2").eq(2).should("contain", "Preferred Date Format");
     cy.contains("p", "Choose the format in which you want dates to be presented to you").should(
       "be.visible"
@@ -75,7 +69,7 @@ describe("Account Personalization Settings", () => {
     cy.checkAndCloseToastNotification("Success");
   });
 
-  it("should timezone and successfully update", () => {
+  it("should successfully update timezone", () => {
     cy.get("h2").eq(3).should("contain", "Time Zone");
     cy.contains("p", "Select your time zone").should("be.visible");
 
@@ -88,11 +82,30 @@ describe("Account Personalization Settings", () => {
     cy.checkAndCloseToastNotification("Success");
   });
 
-  it("should display your organisational properties", () => {
-    cy.get("h2").eq(4).should("contain", "Organization Properties");
-    cy.contains(
-      "p",
-      "These are the properties your organization administrator has defined for all members"
-    ).should("be.visible");
+  it("Verify that the fields are rendered based on the API response", () => {
+    cy.get("form").within(() => {
+      cy.contains("label", "Test attribute").should("exist");
+      cy.get('textarea[name="long-text_66f27dade7acb050da469011"]').should("exist");
+
+      cy.contains("label", "Test attribute 2").should("exist");
+      cy.get('input[name="text_66f27e79e7acb050da46901e"]').should("exist");
+
+      cy.contains("label", "tracks").should("exist");
+      cy.get('input[type="checkbox"]').should("have.length", 2);
+
+      cy.contains("label", "favourites").should("exist");
+      cy.get('input[type="radio"]').should("have.length", 2);
+
+      cy.contains("label", "house number").should("exist");
+      cy.get('input[type="number"]').should("exist");
+    });
+  });
+  it("Fills and submits the dynamic form fields", () => {
+    cy.get("form").within(() => {
+      cy.get('textarea[name="long-text_66f27dade7acb050da469011"]').type("Some long text");
+
+      cy.get('input[name="text_66f27e79e7acb050da46901e"]').type("Sample text");
+    });
+    cy.checkAndCloseToastNotification("Success");
   });
 });

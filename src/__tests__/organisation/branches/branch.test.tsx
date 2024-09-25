@@ -105,6 +105,14 @@ describe("Branch UI tests", () => {
     renderResult = customRender();
   });
 
+  it("should render with mocked data", async () => {
+    renderResult = customRender(mockedData);
+
+    const mockedBranches = screen.getAllByText("Branch1 (GMT + 1)");
+    const mockedBranch = mockedBranches[0];
+    expect(mockedBranch).toBeInTheDocument();
+  });
+
   it("should check for filter button", () => {
     expect(renderResult.container).toBeTruthy();
 
@@ -158,14 +166,6 @@ describe("Branch UI tests", () => {
     expect(renderResult.container).toBeTruthy();
     const resultCell = screen.getByRole("cell", { name: /no results/i });
     expect(resultCell).toBeInTheDocument();
-  });
-
-  it("should render with mocked data", async () => {
-    renderResult = customRender(mockedData);
-
-    const mockedBranches = screen.getAllByText("Branch1 (GMT + 1)");
-    const mockedBranch = mockedBranches[0];
-    expect(mockedBranch).toBeInTheDocument();
   });
 
   it("renders the members pagination component with correct initial values", () => {

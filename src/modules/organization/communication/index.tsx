@@ -76,7 +76,12 @@ const OrgCommunicationUI: React.FC<OrgCommProps> = ({
                   onClick={() => setPreview(key)}>
                   Preview mail
                 </Button>
-                <Switch checked={isEnabled} onCheckedChange={onCheckedChange} disabled={loading} />
+                <Switch
+                  checked={isEnabled}
+                  onCheckedChange={onCheckedChange}
+                  disabled={loading}
+                  testId={key}
+                />
               </span>
             </div>
           ))}

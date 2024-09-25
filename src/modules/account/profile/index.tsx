@@ -219,7 +219,8 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                 }}
                 className="p-0 underline"
                 size={"sm"}
-                variant={"link"}>
+                variant={"link"}
+                data-testid="job-title-btn">
                 Update job title
               </Button>
             )}

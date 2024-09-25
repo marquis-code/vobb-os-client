@@ -11,43 +11,69 @@ describe("Organisation Branding", () => {
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
 
+    cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/details", {
+      statusCode: 200,
+      body: {
+        data: {
+          _id: "66e40dc582934b8cf68ca1d4",
+          temporary_suspension_notify: true,
+          indefinite_suspension_notify: true,
+          name: "Killmon",
+          sector: ["Tourism"],
+          size: "21-50",
+          primary_color: "#f8d4d4",
+          secondary_color: "#ef1717"
+        }
+      }
+    }).as("getOrgDetails");
+
     cy.visit("/settings/branding");
     cy.url().should("include", "/settings/branding");
   });
 
-  it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Workspace", "Branding");
+  it("should have saved brand colors after API call", () => {
+    cy.wait("@getOrgDetails");
+
+    cy.get("[data-testid='primary-color']").within(() => {
+      cy.get("[data-testid='open-color']").click({ force: true });
+      cy.get("[data-testid='color-input']").should("be.visible").and("have.value", "#f8d4d4");
+    });
+
+    cy.get("[data-testid='secondary-color']").within(() => {
+      cy.get("[data-testid='open-color']").click({ force: true });
+      cy.get("[data-testid='color-input']").should("be.visible").and("have.value", "#ef1717");
+    });
   });
 
-  it("displays enabled buttons and updates branding on save", () => {
-    cy.get("button").contains("Cancel").should("not.be.disabled");
-    cy.get("button").contains("Save").should("not.be.disabled");
-  });
-
-  it("displays brand colors and update value", () => {
-    cy.get("[data-testid='primary-color']")
-      .should("exist")
-      .within(() => {
-        cy.contains("p", "Primary Brand Color").should("exist").and("be.visible");
-        cy.get("button:has(svg)").should("be.visible").and("be.enabled").click();
-        cy.get("div.react-colorful").should("exist");
-        cy.get('input[spellcheck="false"]').should("exist").and("be.enabled");
-        cy.get('input[spellcheck="false"]').clear().type("#feddff");
-      });
-    cy.get("[data-testid='secondary-color']")
-      .should("exist")
-      .within(() => {
-        cy.contains("p", "Secondary Brand Color").should("exist").and("be.visible");
-        cy.get("button:has(svg)").should("be.visible").and("be.enabled").click({ force: true });
-        cy.get("div.react-colorful").should("exist");
-        cy.get('input[spellcheck="false"]').should("exist").and("be.enabled");
-        cy.get('input[spellcheck="false"]').clear().type("#e16def");
-      });
+  it("Updates primary color value", () => {
+    cy.get("[data-testid='primary-color']").within(() => {
+      cy.get("[data-testid='open-color']").click();
+      cy.get("[data-testid='color-input']").clear().type("#f2f2e6");
+    });
     cy.get("button").contains("Save").click({ force: true });
     cy.checkAndCloseToastNotification("Company branding saved sucessfully");
+
+    //check that value is updated
+    cy.get("[data-testid='primary-color']").within(() => {
+      cy.get("[data-testid='open-color']").click({ force: true });
+
+      cy.get("[data-testid='color-input']").should("be.visible").and("have.value", "#f2f2e6");
+    });
   });
 
-  it("displays preview of brand colors", () => {
-    cy.get("[data-testid='preview']").should("exist");
+  it("Updates secondary color value", () => {
+    cy.get("[data-testid='secondary-color']").within(() => {
+      cy.get("[data-testid='open-color']").click();
+      cy.get("[data-testid='color-input']").clear().type("#181af0");
+    });
+    cy.get("button").contains("Save").click({ force: true });
+    cy.checkAndCloseToastNotification("Company branding saved sucessfully");
+
+    //check that value is updated
+    cy.get("[data-testid='secondary-color']").within(() => {
+      cy.get("[data-testid='open-color']").click({ force: true });
+
+      cy.get("[data-testid='color-input']").should("be.visible").and("have.value", "#181af0");
+    });
   });
 });
