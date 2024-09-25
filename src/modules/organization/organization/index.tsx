@@ -201,7 +201,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     secondaryNumChanged ||
     logoChanged ||
     sectorChanged;
-  console.log(errors.sector);
+
   return (
     <>
       <SettingsPageTitle title="Organization Profile" />

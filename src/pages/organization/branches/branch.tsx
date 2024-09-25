@@ -52,13 +52,20 @@ const OrgBranch = () => {
       : "MM-dd-yyyy";
   const [memberQueryParams, setMemberQueryParams] = useState({
     page: 1,
-    limit: 20,
-    name: undefined,
-    team: undefined,
-    role: undefined,
-    email: undefined,
+    limit: 20
+  });
+
+  const [memberFilters, setMemberFilters] = useState({
+    name: [], // [{value:'nancy', cond: 'starts_with'}]
+    team: [],
+    role: [],
+    email: [],
     operation: undefined
   });
+
+  const handleUpdateMemberFilters = (transformedArray) => {
+    setMemberFilters(transformedArray);
+  };
 
   const [teamQueryParams, setTeamsQueryParams] = useState({
     page: 1,
@@ -90,11 +97,11 @@ const OrgBranch = () => {
       fetchOrgBranchMembersService(branchId, {
         page: memberQueryParams.page,
         limit: memberQueryParams.limit,
-        name: memberQueryParams.name,
-        team: memberQueryParams.team,
-        role: memberQueryParams.role,
-        email: memberQueryParams.email,
-        operation: memberQueryParams.operation
+        name: memberFilters.name,
+        team: memberFilters.team,
+        role: memberFilters.role,
+        email: memberFilters.email,
+        operation: memberFilters.operation
       })
     );
   };
@@ -184,7 +191,7 @@ const OrgBranch = () => {
   useEffect(() => {
     fetchBranch();
     fetchBranchMembers();
-  }, [branchId, memberQueryParams]);
+  }, [branchId, memberQueryParams, memberFilters]);
 
   useEffect(() => {
     fetchBranchTeams();
@@ -197,6 +204,7 @@ const OrgBranch = () => {
   const handleUpdateTeamsParams = (param: string, value: number) => {
     setTeamsQueryParams((prev) => ({ ...prev, [param]: value }));
   };
+
   return (
     <>
       <TransferMember
@@ -212,6 +220,7 @@ const OrgBranch = () => {
         handleTransferMember={handleTransferMember}
         handleUpdateMembersParams={handleUpdateMembersParams}
         handleUpdateTeamsParams={handleUpdateTeamsParams}
+        handleUpdateMemberFilters={handleUpdateMemberFilters}
         loadingMembers={membersStatus.isPending || branchStatus.isPending}
         branchInfo={branchInfo}
         branchMembers={branchMembers}

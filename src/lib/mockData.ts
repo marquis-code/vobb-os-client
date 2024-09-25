@@ -479,7 +479,7 @@ export const AttributesTableMock: OrganisationAttributesData[] = [
 export const BranchMemberTableMock: BranchMemberTableData[] = [
   {
     id: "728ed52f",
-    name: "Jason Derule",
+    name: "Garnacho Derulo",
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",

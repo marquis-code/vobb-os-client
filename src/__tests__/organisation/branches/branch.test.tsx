@@ -108,9 +108,41 @@ describe("Branch UI tests", () => {
   it("should render with mocked data", async () => {
     renderResult = customRender(mockedData);
 
-    const mockedBranches = screen.getAllByText("Branch1 (GMT + 1)");
-    const mockedBranch = mockedBranches[0];
+    const mockedBranch = screen.getByRole("cell", { name: "Garnacho Derulo" });
     expect(mockedBranch).toBeInTheDocument();
+  });
+
+  it("should display the branch name with timezone if it exists", () => {
+    const heading = screen.getByRole("heading");
+    expect(heading).toHaveTextContent("Branch1 (GMT + 1)");
+  });
+
+  it("should display the branch name without timezone if none is provided", () => {
+    customRender({ ...defaultProps, branchInfo: { ...defaultProps.branchInfo, timeZone: null } });
+    const heading = screen.getByRole("heading");
+    expect(heading).toHaveTextContent("Branch1");
+    expect(heading).not.toHaveTextContent(/\(GMT \+\d\)/);
+  });
+
+  it("should display the correct branch address", () => {
+    const description = screen.getByText(/Okota, Lasgidi, lagos, Nigeria, 123456/i);
+    expect(description).toBeInTheDocument();
+  });
+
+  it("should display the Members tab and load member table on click", () => {
+    const memberTab = screen.getByRole("tab", { name: /Members/i });
+    expect(memberTab).toBeInTheDocument();
+    userEvent.click(memberTab);
+    const table = screen.getByRole("table");
+    expect(table).toBeInTheDocument();
+  });
+
+  it("should display the Teams tab and load team table on click", () => {
+    const teamsTab = screen.getByRole("tab", { name: /Teams/i });
+    expect(teamsTab).toBeInTheDocument();
+    userEvent.click(teamsTab);
+    const table = screen.getByRole("table");
+    expect(table).toBeInTheDocument();
   });
 
   it("should check for filter button", () => {
@@ -162,10 +194,46 @@ describe("Branch UI tests", () => {
     expect(loading).toBeInTheDocument();
   });
 
-  it("should display cell with 'no results' when there are no members", () => {
-    expect(renderResult.container).toBeTruthy();
-    const resultCell = screen.getByRole("cell", { name: /no results/i });
-    expect(resultCell).toBeInTheDocument();
+  it("should display 'no results' message when there are no members", () => {
+    customRender({
+      branchMembers: {
+        membersArray: [],
+        membersMetaData: {
+          currentPage: 1,
+          totalCount: 0,
+          totalPages: 0,
+          pageLimit: 20
+        }
+      }
+    });
+
+    // Select the 'Members' tab
+    const memberTab = screen.getByRole("tab", { name: "Members" });
+    userEvent.click(memberTab);
+
+    const noResultsMessage = screen.getByRole("cell", { name: /no results/i });
+    expect(noResultsMessage).toBeInTheDocument();
+  });
+
+  it("should display 'no results' message when there are no teams", () => {
+    customRender({
+      branchTeams: {
+        teamsArray: [],
+        teamsMetaData: {
+          currentPage: 1,
+          totalCount: 0,
+          totalPages: 0,
+          pageLimit: 20
+        }
+      }
+    });
+
+    // Select the 'Teams' tab
+    const teamsTab = screen.getByRole("tab", { name: "Teams" });
+    userEvent.click(teamsTab);
+
+    const noResultsMessage = screen.getByRole("cell", { name: /no results/i });
+    expect(noResultsMessage).toBeInTheDocument();
   });
 
   it("renders the members pagination component with correct initial values", () => {
