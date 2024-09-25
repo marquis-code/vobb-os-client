@@ -1,4 +1,4 @@
-import { render, RenderResult, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BranchMemberTableMock, BranchTeamTableMock } from "lib";
 import { OrgBranchUI } from "modules";
@@ -9,6 +9,7 @@ const mockHandleTransferMember = vi.fn();
 const mockHandleViewMember = vi.fn();
 const mockHandleMemberPagination = vi.fn();
 const mockHandleTeamPagination = vi.fn();
+const mockHandleMemberFilter = vi.fn();
 
 const defaultProps = {
   loadingMembers: false,
@@ -46,7 +47,8 @@ const defaultProps = {
   handleTransferMember: mockHandleTransferMember,
   handleViewMember: mockHandleViewMember,
   handleUpdateMembersParams: mockHandleMemberPagination,
-  handleUpdateTeamsParams: mockHandleTeamPagination
+  handleUpdateTeamsParams: mockHandleTeamPagination,
+  handleUpdateMemberFilters: mockHandleMemberFilter
 };
 
 const mockedData = {
@@ -85,7 +87,8 @@ const mockedData = {
   handleTransferMember: mockHandleTransferMember,
   handleViewMember: mockHandleViewMember,
   handleUpdateMembersParams: mockHandleMemberPagination,
-  handleUpdateTeamsParams: mockHandleTeamPagination
+  handleUpdateTeamsParams: mockHandleTeamPagination,
+  handleUpdateMemberFilters: mockHandleMemberFilter
 };
 
 const MockedBranchUI = (props = {}) => {
@@ -157,6 +160,27 @@ describe("Branch UI tests", () => {
 
     expect(filterButton).toHaveAttribute("aria-haspopup", "dialog");
     expect(filterButton).toHaveAttribute("role", "combobox");
+  });
+
+  it("updates filters when an attribute is selected", () => {
+    const filterButtons = screen.getAllByRole("combobox");
+    const filterButton = filterButtons[0];
+    fireEvent.click(filterButton);
+
+    const attributeToSelect = screen.getByText(/name/i);
+    fireEvent.click(attributeToSelect);
+
+    expect(filterButton).toHaveTextContent(/name/i);
+  });
+
+  it("removes a filter when delete button is clicked", () => {
+    const filterMenuButton = screen.getByRole("button", { name: /dots vertical/i });
+    fireEvent.click(filterMenuButton);
+
+    const deleteButton = screen.getByRole("button", { name: /delete filter/i });
+    fireEvent.click(deleteButton);
+
+    expect(screen.queryByText(/name/i)).not.toBeInTheDocument();
   });
 
   it("should check for Add member button", () => {
