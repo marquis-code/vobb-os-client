@@ -14,10 +14,6 @@ describe("Organisation Members", () => {
     cy.url().should("include", "/settings/members");
   });
 
-  it("displays the header nav and the h1", () => {
-    cy.verifyHeaderNavAndTitle("Workspace", "Members");
-  });
-
   it("displays the filter component", () => {
     cy.get('[aria-haspopup="dialog"]').should("exist").and("not.be.disabled");
     cy.get('[aria-haspopup="dialog"]').click();

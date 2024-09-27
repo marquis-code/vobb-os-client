@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { cn, isEmptyObj, isFile } from "lib";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import React, { useEffect, useState } from "react";
-import { useUserContext } from "context";
+import { useModalContext, useUserContext } from "context";
 
 export interface ProfileFormData {
   firstName: string;
@@ -40,6 +40,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   loadingUpdate
 }) => {
   const { userDetails: profile } = useUserContext();
+  const { setUpdateJobTitle } = useModalContext();
   const [validateAvatar, setValidateAvatar] = useState(false);
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -87,7 +88,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
         firstName: profile.firstName,
         lastName: profile.lastName,
         phoneNumber: profile.phoneNumber,
-        jobTitle: profile.role,
+        jobTitle: profile.jobTitle,
         email: profile.pendingEmail ?? profile.email,
         avatarFile: profile.avatar
       });
@@ -116,6 +117,9 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   };
 
   const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
+  const handleUpdateJobTitle = () => {
+    setUpdateJobTitle(true);
+  };
 
   return (
     <>
@@ -192,15 +196,29 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             }}
             parentClassName="mb-2"
           />
-          <CustomInput
-            label="Job Title"
-            type="text"
-            name="jobTitle"
-            register={register}
-            validatorMessage={errors.jobTitle?.message}
-            disabled
-            parentClassName="mb-2"
-          />
+          <div className="relative">
+            <CustomInput
+              label="Job Title"
+              type="text"
+              name="jobTitle"
+              register={register}
+              validatorMessage={errors.jobTitle?.message}
+              disabled
+              parentClassName="mb-0"
+            />
+            {profile?.role === "Super Admin" && (
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUpdateJobTitle();
+                }}
+                className="p-0 underline"
+                size={"sm"}
+                variant={"link"}>
+                Update job title
+              </Button>
+            )}
+          </div>
           <div className="mb-2">
             <div className="relative">
               <CustomInput

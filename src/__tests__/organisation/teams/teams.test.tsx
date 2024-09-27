@@ -2,6 +2,7 @@ import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testi
 import userEvent from "@testing-library/user-event";
 import { TeamTableMock } from "lib";
 import { TeamsUI } from "modules";
+import { BrowserRouter } from "react-router-dom";
 
 const mockHandlePagination = vi.fn();
 const mockHandleAddTeam = vi.fn();
@@ -9,6 +10,27 @@ const mockHandleEditTeam = vi.fn();
 const mockHandleViewTeam = vi.fn();
 const mockHandleTeamHistory = vi.fn();
 const mockHandleViewBranches = vi.fn();
+
+const defaultProps = {
+  teams: {
+    orgTeams: {
+      teamsData: [],
+      metaData: {
+        currentPage: 1,
+        totalCount: 50,
+        totalPages: 5,
+        pageLimit: 20
+      }
+    },
+    handlePagination: mockHandlePagination,
+    loading: false
+  },
+  handleEditTeam: mockHandleEditTeam,
+  handleViewBranches: mockHandleViewBranches,
+  handleTeamHistory: mockHandleTeamHistory,
+  handleViewTeam: mockHandleViewTeam,
+  handleAddTeam: mockHandleAddTeam
+};
 
 const mockedData = {
   teams: {
@@ -31,34 +53,19 @@ const mockedData = {
   handleAddTeam: mockHandleAddTeam
 };
 
+const MockedTeams = (props = {}) => {
+  const mergedProps = { ...defaultProps, ...props };
+  return (
+    <BrowserRouter>
+      <TeamsUI {...mergedProps} />
+    </BrowserRouter>
+  );
+};
+
+const customRender = (props = {}) => render(<MockedTeams {...props} />);
+
 describe("Team UI tests", () => {
   let renderResult: RenderResult;
-
-  const defaultProps = {
-    teams: {
-      orgTeams: {
-        teamsData: [],
-        metaData: {
-          currentPage: 1,
-          totalCount: 50,
-          totalPages: 5,
-          pageLimit: 20
-        }
-      },
-      handlePagination: mockHandlePagination,
-      loading: false
-    },
-    handleEditTeam: mockHandleEditTeam,
-    handleViewBranches: mockHandleViewBranches,
-    handleTeamHistory: mockHandleTeamHistory,
-    handleViewTeam: mockHandleViewTeam,
-    handleAddTeam: mockHandleAddTeam
-  };
-
-  const customRender = (props = {}) => {
-    const mergedProps = { ...defaultProps, ...props };
-    return render(<TeamsUI {...mergedProps} />);
-  };
 
   beforeEach(() => {
     vi.clearAllMocks();

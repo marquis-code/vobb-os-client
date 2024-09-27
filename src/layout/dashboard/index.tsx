@@ -1,13 +1,9 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
 import { SideBar } from "./sidebar";
 import { useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
-import { AddBranch } from "pages/organization/branches/addBranch";
-import { useModalContext } from "context";
-import { AddTeam } from "pages/organization/teams/addTeam";
-import { InviteMember } from "pages/organization/members/inviteMember";
-
+import { useModalContext, useUserContext } from "context";
 interface DashboardLayoutProps {
   children: ReactNode;
   title: string;
@@ -15,10 +11,18 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const { isMobile } = useMobile({ size: 1024 });
-  const { addBranch, setAddBranch, addTeam, setAddTeam, inviteMember, setInviteMember } =
-    useModalContext();
+  const { userDetails } = useUserContext();
+  const { setUpdateJobTitle } = useModalContext();
   const [collapse, setCollapse] = useState(false);
+
   const sideBarWidth = collapse ? "60px" : "275px";
+
+  const willSetJobTitle = userDetails?.role === "Super Admin" && !userDetails?.jobTitle;
+
+  useEffect(() => {
+    if (willSetJobTitle) setUpdateJobTitle(true);
+  }, [willSetJobTitle]);
+
   return isMobile ? (
     <UnsupportedScreenSize />
   ) : (
@@ -28,9 +32,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       <main style={{ marginLeft: sideBarWidth }} className="mt-[55px]">
         {children}
       </main>
-      <AddBranch close={() => setAddBranch(false)} show={addBranch} />
-      <AddTeam close={() => setAddTeam(false)} show={addTeam} />
-      <InviteMember close={() => setInviteMember(false)} show={inviteMember} />
     </>
   );
 };

@@ -232,3 +232,4 @@ export * from "./acceptInvite";
 export * from "./invitationSuccessful";
 export * from "./invitationFailed";
 export * from "./memberEmailVerify";
+export * from "./inviteMember";

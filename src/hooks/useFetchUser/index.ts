@@ -18,6 +18,7 @@ export const useFetchUser = () => {
       const profile = {
         firstName: user.first_name,
         lastName: user.last_name,
+        jobTitle: user.title,
         email: user.email,
         role: user.role ?? "",
         avatar: user.avatar ?? "",
