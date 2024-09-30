@@ -51,7 +51,7 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
           </div>
 
           <div className="ml-auto">
-            <Menu {...props} isSuspended={isSuspended} />
+            <Menu {...props} isSuspended={isSuspended} testId="member-menu" />
           </div>
         </div>
       </section>
@@ -92,12 +92,13 @@ const Menu = ({
   handleChangeTeam,
   handleSuspension,
   handleComposeEmail,
-  isSuspended
-}: MenuProps & { isSuspended: boolean }) => {
+  isSuspended,
+  testId
+}: MenuProps & { isSuspended: boolean; testId: string }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="px-3">
+        <Button variant="outline" className="px-3" data-testId={testId}>
           <span className="sr-only">Open menu</span>
           <DotsVerticalIcon />
         </Button>

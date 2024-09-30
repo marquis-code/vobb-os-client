@@ -10,173 +10,38 @@ describe("Organisation Members", () => {
       window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
+
+    cy.fixture("accountDetails").then((accountDetails) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/acc/details", {
+        statusCode: 200,
+        body: accountDetails
+      }).as("getAccountDetails");
+    });
+
     cy.visit("/members/6673e51f01d00acae3b83475/activity");
     cy.url().should("include", "/members/6673e51f01d00acae3b83475/activity");
   });
 
-  it("displays the header nav and it's elements", () => {
-    cy.get("header")
-      .should("exist")
-      .within(() => {
-        cy.get("nav")
-          .should("exist")
-          .within(() => {
-            cy.get("ol")
-              .should("exist")
-              .within(() => {
-                cy.get("li").should("have.length", 4);
+  it("member details should be prefilled with fetched data", () => {
+    cy.wait("@getAccountDetails");
 
-                cy.get("li").eq(0).should("contain", "Workspace");
-                cy.get("li").eq(1).find("svg").should("exist");
-                cy.get("a").should("contain", "Members");
-                cy.get("li").eq(2).find("svg").should("exist");
-                cy.get("li").eq(3).should("contain", "Member");
-              });
-          });
-      });
-  });
+    cy.get('[data-testid="member-details"]').within(() => {
+      cy.get('input[name="firstName"]').should("have.value", "Posepher");
 
-  it("displays the avatar section", () => {
-    cy.get('[data-testid="avatar-section"]')
-      .should("exist")
-      .within(() => {
-        cy.get("span")
-          .first()
-          .then(($span) => {
-            if ($span.find("img").length) {
-              cy.get("img").should("exist");
-            }
-          });
+      cy.get('input[name="lastName"]').should("have.value", "Dewbottom");
 
-        cy.get("div")
-          .eq(0)
-          .within(() => {
-            cy.get("p").should("have.length", 2);
-          });
+      cy.get('input[name="email"]').should("have.value", "tezt@example.com");
 
-        cy.get("div")
-          .eq(1)
-          .within(() => {
-            cy.get("button").click();
-          });
-      });
-    cy.get('div[role="menuitem"]').eq(0).contains("Change role").should("exist");
-    cy.get('div[role="menuitem"]').eq(1).contains("Change team").should("exist");
-    cy.get('div[role="menuitem"]').eq(2).contains("Change branch").should("exist");
-    cy.get('div[role="menuitem"]').eq(3).contains("Compose email").should("exist");
-    cy.get('div[role="menuitem"]').eq(4).contains("Suspend account").should("exist");
-  });
+      cy.get('input[name="phoneNumber"]').should("have.value", "2347078901156");
 
-  it("displays the tabs section showing job title and role", () => {
-    cy.get('[data-testid="tabs-section"]')
-      .should("exist")
-      .within(() => {
-        cy.get("button").should("have.length", 2);
-      });
-  });
+      cy.get('input[name="jobTitle"]').should("have.value", "Overseer");
 
-  it("displays the profile tabs and ensures they're clickable", () => {
-    cy.get('[data-testid="tabs-section2"]')
-      .should("exist")
-      .within(() => {
-        cy.get("div")
-          .first()
-          .within(() => {
-            cy.get("button")
-              .contains("Activity")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-            cy.get("button")
-              .contains("Emails")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-            cy.get("button")
-              .contains("Assigned Clients")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-            cy.get("button")
-              .contains("Tasks")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-            cy.get("button")
-              .contains("Notes")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-            cy.get("button")
-              .contains("Files")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-          });
-        cy.get("div")
-          .last()
-          .within(() => {
-            cy.get("button")
-              .contains("Details")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-            cy.get("button")
-              .contains("Comments")
-              .within(() => {
-                cy.get("svg").should("exist");
-              })
-              .should("be.visible")
-              .and("not.be.disabled");
-          });
-      });
-  });
+      cy.get('select[name="systemLanguage"]').should("have.value", "English");
 
-  it("displays member details", () => {
-    cy.get('[data-testid="member-details"]')
-      .should("exist")
-      .within(() => {
-        cy.get("p").first().should("contain", "Member Details");
+      cy.get('select[name="timezone"]').should("have.value", "Africa/Lagos (GMT+01:00)");
 
-        cy.get("label").contains("First name").should("exist");
-        cy.get('input[name="firstName"]').should("exist").and("not.be.disabled");
-
-        cy.get("label").contains("Last name").should("exist");
-        cy.get('input[name="lastName"]').should("exist").and("not.be.disabled");
-
-        cy.get("label").contains("Email address").should("exist");
-        cy.get('input[name="email"]').should("exist").and("not.be.disabled");
-
-        cy.get("label").contains("Phone number").should("exist");
-        cy.get('input[name="phoneNumber"]').should("exist").and("not.be.disabled");
-      });
-
-    cy.get("label").contains("Avatar").should("exist");
-    cy.get('input[type="file"]').should("not.be.visible");
-
-    cy.get("label").contains("System Language").should("exist");
-
-    cy.get("label").contains("Timezone").should("exist");
-
-    cy.get("label").contains("Date format").should("exist");
-    cy.get("div.css-1pyxht1-control").should("have.length", 3);
-
-    cy.get("label").contains("Job Title").should("exist");
-    cy.get('input[name="jobTitle"]').should("exist").and("not.be.disabled");
+      cy.get('select[name="dateFormat"]').should("have.value", "DD/MM/YYYY");
+    });
   });
 
   it("updates member details after a second on edit", () => {

@@ -242,6 +242,7 @@ describe("Member Page Integration", () => {
 
     const systemLanguageSelect = screen.getAllByRole("combobox")[0];
     await selectEvent.select(systemLanguageSelect, ["English"]);
+    expect(systemLanguageSelect).toHaveValue("English");
   });
 
   it("allows selecting a timezone", async () => {

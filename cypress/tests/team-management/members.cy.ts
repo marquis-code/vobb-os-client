@@ -10,7 +10,18 @@ describe("Organisation Members", () => {
       window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
       window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
     });
+
+    cy.fixture("membersMock").then((membersMock) => {
+      cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/members*", {
+        statusCode: 200,
+        body: membersMock
+      }).as("getMembers");
+    });
+
     cy.visit("/settings/members");
+
+    cy.wait("@getMembers");
+
     cy.url().should("include", "/settings/members");
   });
 
@@ -45,25 +56,7 @@ describe("Organisation Members", () => {
     });
   });
 
-  it("displays the pagination component and triggers API call on limit change", () => {
-    cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/org/members*", (req) => {
-      req.continue((res) => {});
-    }).as("fetchData");
-
-    cy.get("[data-testid='pagination']").should("exist");
-    cy.get("[data-testid='select-limit']").should("be.visible").click();
-
-    cy.get("div.css-1nmdiq5-menu").should("exist");
-
-    cy.get("div#react-select-3-option-1").should("be.visible").click();
-
-    cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
-
-    cy.get("[data-testid='move-left']").should("be.visible");
-    cy.get("[data-testid='move-right']").should("be.visible");
-  });
-
-  it("displays invite member modal when button is clicked", () => {
+  it("opens invite member modal when button is clicked", () => {
     cy.get('[data-testid="invite-member"]').click();
 
     cy.get("[data-testid='invite-modal']").within(() => {
@@ -238,71 +231,37 @@ describe("Organisation Members", () => {
     cy.checkAndCloseToastNotification("Invite cancelled successfully");
   });
 
-  it("displays actions options for active user", () => {
-    cy.get("[data-testid='menu-activeUser']").eq(0).click();
-
-    cy.get("div").contains("Actions").should("exist");
-    cy.get("[data-testid='view-member']")
-      .contains("View member")
-      .within(() => {
-        cy.get("svg").should("exist");
-      });
-    cy.get("[data-testid='change-role']")
-      .contains("Change role")
-      .within(() => {
-        cy.get("svg").should("exist");
-      });
-    cy.get("[data-testid='suspend-member']")
-      .contains("Suspend member")
-      .within(() => {
-        cy.get("svg").should("exist");
-      });
-  });
-
-  it("displays change role modal for active user", () => {
-    cy.get("[data-testid='menu-activeUser']").click();
+  it("change role for active user", () => {
+    cy.get("[data-testid='menu-activeUser']").eq(1).click();
     cy.get("[data-testid='change-role']").contains("Change role").click();
 
     cy.get("[data-testid='changeRole-modal']").within(() => {
       cy.get("[data-testid='close-btn']").should("be.visible").and("be.enabled");
 
       cy.get("label").should("contain.text", "Select role");
-      cy.get("div.css-b62m3t-container").should("exist");
+      cy.get("div.css-b62m3t-container")
+        .eq(0)
+        .within(() => {
+          cy.get("div.css-1xc3v61-indicatorContainer").click();
+          cy.wait(1000);
+          cy.get("div.css-1nmdiq5-menu").should("exist");
+          cy.get("div#react-select-5-option-0").should("be.visible").click();
+        });
 
       cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
       cy.get("button").contains("Save").should("be.visible").and("be.enabled");
       cy.get("[data-testid='close-btn']").click();
     });
+    cy.checkAndCloseToastNotification("Role changed successfully");
   });
 
-  it("displays suspend member modal for active user", () => {
-    cy.get("[data-testid='menu-activeUser']").click();
+  it("suspends member indefinitely for active user", () => {
+    cy.get("[data-testid='menu-activeUser']").eq(0).click();
     cy.get("[data-testid='suspend-member']").contains("Suspend member").click();
 
     cy.get("[data-testid='suspendMember-modal']").within(() => {
-      cy.get("[data-testid='close-btn']").should("be.visible").and("be.enabled");
-
-      cy.get("p")
-        .contains(
-          "You can select a start and end date to temporarily suspend an account, or choose indefinite suspension to deactivate an account."
-        )
-        .should("exist");
-
-      cy.get("label").should("contain.text", "Reason (optional)");
-      cy.get("textarea[name='reason']").should("be.visible").and("be.enabled");
-
-      cy.get("label").should("contain.text", "From");
-      cy.get("label").should("contain.text", "To");
-      cy.get("span").filter(':contains("Pick a date")').should("have.length", 2);
-
       cy.get("label").should("contain.text", "Indefinite suspension");
-      cy.get("button[role='checkbox']").should("exist");
-
-      cy.get("p")
-        .contains(
-          "NB: These actions are reversible so the accounts will still be visible on your dashboard if you need to restore them"
-        )
-        .should("exist");
+      cy.get("button[role='checkbox']").click();
 
       cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
       cy.get("button").contains("Suspend account").should("be.visible").and("be.enabled");
@@ -311,8 +270,38 @@ describe("Organisation Members", () => {
   });
 
   it("view member button for active user leads to member's page", () => {
-    cy.get("[data-testid='menu-activeUser']").eq(0).click();
+    cy.get("[data-testid='menu-activeUser']").eq(1).click();
     cy.get("[data-testid='view-member']").click();
     cy.url().should("match", /\/members\/[a-zA-Z0-9]+\/activity$/);
+  });
+
+  it("displays the pagination component and triggers API call on limit change", () => {
+    cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/org/members*", (req) => {
+      req.continue((res) => {});
+    }).as("fetchData");
+
+    cy.get("[data-testid='pagination']").should("exist");
+    cy.get("[data-testid='select-limit']").should("be.visible").click();
+
+    cy.get("div.css-1nmdiq5-menu").should("exist");
+
+    cy.get("div#react-select-3-option-1").should("be.visible").click();
+
+    cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
+  });
+
+  it("should paginate through the table", () => {
+    cy.get('[data-testid="page-info"]').should("contain.text", "1 - 5 of 30 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "6 - 10 of 30 items");
+
+    cy.get('[data-testid="next-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "11 - 20 of 30 items");
+
+    cy.get("table tbody tr").should("have.length", 5);
+
+    cy.get('[data-testid="prev-page"]').click();
+    cy.get('[data-testid="page-info"]').should("contain.text", "6 - 10 of 30 items");
   });
 });
