@@ -152,7 +152,7 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
     <div data-testid="member-details">
       <p className="mb-4 font-medium">Member Details</p>
       <ProfileInput
-        label={"First name"}
+        label="First name"
         icon={<PersonIcon />}
         type="text"
         name="firstName"
@@ -160,7 +160,7 @@ const MemberProfileDetailsUI: React.FC<MemberProfileDetailsUIProps> = ({
         placeholder="Set first name"
       />
       <ProfileInput
-        label={"Last name"}
+        label="Last name"
         icon={<PersonIcon />}
         type="text"
         name="lastName"

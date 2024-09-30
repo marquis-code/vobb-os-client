@@ -347,7 +347,6 @@ const Member = () => {
         handleComposeEmail={function (): void {
           throw new Error("Function not implemented.");
         }}
-        isSuspended
       />
       <MemberProfileTabs
         handleMainTabChange={handleMainTabChange}

@@ -84,7 +84,6 @@ interface MenuProps {
   handleChangeTeam: () => void;
   handleSuspension: () => void;
   handleComposeEmail: () => void;
-  isSuspended: boolean;
 }
 
 const Menu = ({
@@ -94,7 +93,7 @@ const Menu = ({
   handleSuspension,
   handleComposeEmail,
   isSuspended
-}: MenuProps) => {
+}: MenuProps & { isSuspended: boolean }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

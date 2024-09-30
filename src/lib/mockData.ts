@@ -1,4 +1,10 @@
-import { optionType, formFieldData, BranchMemberTableData, BranchTeamTableData } from "types";
+import {
+  optionType,
+  formFieldData,
+  BranchMemberTableData,
+  BranchTeamTableData,
+  MemberTableData
+} from "types";
 import { TeamActivityData } from "modules";
 
 export const loginHistoryMock = [
@@ -616,7 +622,7 @@ export const TeamMemberTableMock = [
   }
 ];
 
-export const MemberTableMock = [
+export const MemberTableMock: MemberTableData[] = [
   {
     id: "728ed52f",
     name: "Jason Derule",
