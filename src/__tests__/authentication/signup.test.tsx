@@ -128,6 +128,50 @@ describe("Signup UI", () => {
     expect(screen.getAllByText("Required")).toHaveLength(3); // Email, Password, and ReCAPTCHA
   });
 
+  it("should display password errors when password does not meet criteria", async () => {
+    renderComponent();
+    const passwordInput = screen.getByTestId("password");
+
+    // Test case: Password is too short
+    fireEvent.change(passwordInput, { target: { value: "short" } });
+    fireEvent.click(screen.getByTestId("signup-btn"));
+    await waitFor(() => {
+      expect(screen.getByText("Password should be at least 8 characters long")).toBeInTheDocument();
+    });
+
+    // Test case: Password lacks uppercase
+    fireEvent.change(passwordInput, { target: { value: "alllowercase1!" } });
+    fireEvent.click(screen.getByTestId("signup-btn"));
+    await waitFor(() => {
+      expect(
+        screen.getByText("Password should contain an uppercase character")
+      ).toBeInTheDocument();
+    });
+
+    // Test case: Password lacks lowercase
+    fireEvent.change(passwordInput, { target: { value: "ALLUPPERCASE1!" } });
+    fireEvent.click(screen.getByTestId("signup-btn"));
+    await waitFor(() => {
+      expect(screen.getByText("Password should contain a lowercase character")).toBeInTheDocument();
+    });
+
+    // Test case: Password lacks number
+    fireEvent.change(passwordInput, { target: { value: "NoNumber!" } });
+    fireEvent.click(screen.getByTestId("signup-btn"));
+    await waitFor(() => {
+      expect(screen.getByText("Password should contain at least one number")).toBeInTheDocument();
+    });
+
+    // Test case: Password lacks special character
+    fireEvent.change(passwordInput, { target: { value: "NoSpecialChar1" } });
+    fireEvent.click(screen.getByTestId("signup-btn"));
+    await waitFor(() => {
+      expect(
+        screen.getByText("Password should contain at least one special character (e.g. @, #, &, $)")
+      ).toBeInTheDocument();
+    });
+  });
+
   it("should enable sign-up button on load", () => {
     renderComponent();
     const signupBtn = screen.getByTestId("signup-btn");
