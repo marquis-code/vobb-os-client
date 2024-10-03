@@ -73,7 +73,9 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
         <UnsupportedScreenSize />
       ) : (
         <main>
-          <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
+          <section
+            className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4"
+            data-testid="login-component">
             <LogoIcon className="mb-12 m-auto" data-testid="logo" />
             <h1 className="text-xl sm:text-2xl font-bold mb-8 text-vobb-neutral-100 text-center">
               Sign in to your account

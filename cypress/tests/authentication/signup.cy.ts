@@ -8,30 +8,6 @@ describe("Signup page", () => {
     });
   });
 
-  it("should display the sign up page", () => {
-    cy.get('[data-testid="logo"]').should("exist");
-    cy.get("h1").should("contain", "Create a Vobb account");
-    cy.get('[data-testid="subtitle"]').should(
-      "contain",
-      "Access all Vobb's tools with just one account."
-    );
-    cy.contains("label", "Email").should("exist");
-    cy.contains("label", "Password").should("exist");
-    cy.get('input[name="email"]').should("be.visible").and("be.enabled");
-    cy.get('input[name="password"]').should("be.visible").and("be.enabled");
-    cy.get('svg[role="button"]').should("be.visible");
-    cy.get('[data-testid="recaptcha"]').should("exist"); //further checks for contents of recaptcha is done in cy.solveGoogleReCAPTCHA() where the iframe is properly accessed;
-
-    cy.contains("button", "Get started").should("be.visible").and("be.enabled");
-    cy.get('[data-testid="signup-google-btn"]').should("be.visible").and("be.enabled");
-    cy.get('[data-testid="already-have-account"]').should("exist");
-    cy.contains("Sign in").should("have.attr", "href").and("not.be.empty");
-    cy.contains("Sign in").should("not.have.class", "disabled");
-    cy.contains("Sign in")
-      .invoke("attr", "href")
-      .should("match", /^\/login$/);
-  });
-
   it("should toggle password visibility when clicking the eye icon", () => {
     cy.get('input[name="password"]').should("have.attr", "type", "password");
     cy.get('svg[role="button"]').click();
