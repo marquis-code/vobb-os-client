@@ -166,7 +166,7 @@ describe("Login UI", () => {
   });
 
   it("should display recaptcha when site key is set", () => {
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-site-key";
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
     renderComponent();
     expect(screen.getByTestId("recaptcha")).toBeInTheDocument();
   });
@@ -184,14 +184,12 @@ describe("Login UI", () => {
   });
 
   it('should trigger Google sign-in when "Sign in with Google" button is clicked', () => {
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-site-key";
     renderComponent();
     fireEvent.click(screen.getByTestId("signin-google-btn"));
     expect(defaultProps.handleGoogleSignin).toHaveBeenCalled();
   });
 
   it("should trigger submit when sign-in button is clicked and remember me unchecked", async () => {
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-site-key";
     renderComponent();
     const emailInput = screen.getByTestId("email");
     const passwordInput = screen.getByTestId("password");
@@ -213,16 +211,16 @@ describe("Login UI", () => {
     );
   });
   it("should trigger submit when sign-in button is clicked and remember me checked", async () => {
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-site-key";
-
     renderComponent();
     const emailInput = screen.getByTestId("email");
     const passwordInput = screen.getByTestId("password");
     const recaptcha = screen.getByTestId("recaptcha");
+    const checkbox = screen.getByTestId("stay-signed-in-checkbox");
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(recaptcha); // Simulate ReCAPTCHA verification
+    fireEvent.click(checkbox);
 
     fireEvent.click(screen.getByTestId("signin-btn"));
 
