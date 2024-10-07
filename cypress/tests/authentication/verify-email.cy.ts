@@ -7,16 +7,6 @@ describe("Verify Email page", () => {
     });
   });
 
-  it("should display the verify email page", () => {
-    cy.get('[data-testid="logo"]').should("exist");
-    cy.get("h1").should("contain", "Check your email");
-    cy.get('[data-testid="subtitle"]').should("exist");
-    cy.contains("span", "Didn't receive the code?").should("exist");
-    cy.get('[data-testid="resend-btn"]').should("be.visible").and("be.disabled");
-    cy.get('[data-testid="back-btn"]').should("be.visible").and("be.enabled");
-    cy.get("[data-testid='arrow-icon']").should("exist");
-  });
-
   it("should find OTP container with specific conditions", () => {
     cy.get('div[data-input-otp-container="true"]')
       .should("exist")

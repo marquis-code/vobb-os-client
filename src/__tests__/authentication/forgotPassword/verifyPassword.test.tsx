@@ -1,7 +1,8 @@
-import React from "react";
+import React, { act } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { VerifyPasswordUI } from "modules";
+import userEvent from "@testing-library/user-event";
 
 // Mock the components
 vi.mock("components", () => ({
@@ -31,8 +32,13 @@ describe("VerifyPasswordUI", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
+  afterEach(() => {
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+  });
   it("should have empty OTP input on load", () => {
     renderComponent();
     const otpInput = screen.getByTestId("otp-input");
@@ -43,15 +49,6 @@ describe("VerifyPasswordUI", () => {
     renderComponent();
     const resendButton = screen.getByTestId("resend-btn");
     expect(resendButton).toBeDisabled();
-  });
-
-  it("should call handleResend after 30 seconds when resend button is clicked", async () => {
-    renderComponent();
-    const resendButton = screen.getByTestId("resend-btn");
-
-    fireEvent.click(resendButton);
-
-    expect(defaultProps.handleResend).toHaveBeenCalled();
   });
 
   it("should disable buttons when loading is true", () => {
@@ -95,11 +92,25 @@ describe("VerifyPasswordUI", () => {
     });
   });
 
-  it("should call handleResend when the resend button is clicked", () => {
+  it("should call handleResend when the resend button is clicked", async () => {
     renderComponent();
-
     const resendButton = screen.getByTestId("resend-btn");
-    fireEvent.click(resendButton);
+
+    expect(resendButton).toBeDisabled();
+    await act(() => vi.runAllTimers());
+    expect(resendButton).toBeEnabled();
+  });
+
+  it("should call handleResend when resend button is clicked", async () => {
+    const user = userEvent.setup({
+      advanceTimers: (ms) => vi.advanceTimersByTime(ms)
+    });
+    renderComponent();
+    const resendButton = screen.getByTestId("resend-btn");
+
+    await act(() => vi.runAllTimers());
+
+    user.click(resendButton);
 
     expect(defaultProps.handleResend).toHaveBeenCalled();
   });
