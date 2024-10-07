@@ -190,7 +190,8 @@ describe("Login UI", () => {
     expect(defaultProps.handleGoogleSignin).toHaveBeenCalled();
   });
 
-  it("should trigger submit when sign-in button is clicked", async () => {
+  it("should trigger submit when sign-in button is clicked and remember me unchecked", async () => {
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-site-key";
     renderComponent();
     const emailInput = screen.getByTestId("email");
     const passwordInput = screen.getByTestId("password");
@@ -207,6 +208,29 @@ describe("Login UI", () => {
         email: "test@example.com",
         password: "password123",
         rememberMe: false,
+        recaptcha: "fake-recaptcha-token"
+      })
+    );
+  });
+  it("should trigger submit when sign-in button is clicked and remember me checked", async () => {
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-site-key";
+
+    renderComponent();
+    const emailInput = screen.getByTestId("email");
+    const passwordInput = screen.getByTestId("password");
+    const recaptcha = screen.getByTestId("recaptcha");
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(recaptcha); // Simulate ReCAPTCHA verification
+
+    fireEvent.click(screen.getByTestId("signin-btn"));
+
+    await waitFor(() =>
+      expect(defaultProps.submit).toHaveBeenCalledWith({
+        email: "test@example.com",
+        password: "password123",
+        rememberMe: true,
         recaptcha: "fake-recaptcha-token"
       })
     );
