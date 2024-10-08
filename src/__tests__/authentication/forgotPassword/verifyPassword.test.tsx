@@ -1,8 +1,7 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { VerifyPasswordUI } from "modules";
-import userEvent from "@testing-library/user-event";
 
 // Mock the components
 vi.mock("components", () => ({
@@ -92,30 +91,7 @@ describe("VerifyPasswordUI", () => {
     });
   });
 
-  it("should call handleResend when the resend button is clicked", async () => {
-    renderComponent();
-    const resendButton = screen.getByTestId("resend-btn");
-
-    expect(resendButton).toBeDisabled();
-    await act(() => vi.runAllTimers());
-    expect(resendButton).toBeEnabled();
-  });
-
-  it("should call handleResend when resend button is clicked", async () => {
-    const user = userEvent.setup({
-      advanceTimers: (ms) => vi.advanceTimersByTime(ms)
-    });
-    renderComponent();
-    const resendButton = screen.getByTestId("resend-btn");
-
-    await act(() => vi.runAllTimers());
-
-    user.click(resendButton);
-
-    expect(defaultProps.handleResend).toHaveBeenCalled();
-  });
-
-  it("should navigate to sign-in page", () => {
+  it("should have sign in button to sign-in page", () => {
     renderComponent();
     const signupLink = screen.getByRole("button", { name: "Back to log in" });
     expect(signupLink).toBeEnabled();

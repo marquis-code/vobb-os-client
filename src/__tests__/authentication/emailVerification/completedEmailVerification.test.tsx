@@ -1,11 +1,7 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { CompletedEmailVerifyUI } from "modules";
-import { Routes } from "router";
-
-// Mock useNavigate from react-router-dom
-const mockNavigate = vi.fn();
 
 vi.mock("components", () => ({
   Button: ({ children, onClick, className, size, variant }) => (
@@ -19,14 +15,6 @@ vi.mock("components", () => ({
     </button>
   )
 }));
-
-vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate
-  };
-});
 
 describe("CompletedPasswordResetUI", () => {
   const defaultProps = {
@@ -66,13 +54,8 @@ describe("CompletedPasswordResetUI", () => {
   it("should render the 'Continue' button", () => {
     renderComponent();
     const continueButton = screen.getByRole("button", { name: "Continue" });
-    expect(continueButton).toBeInTheDocument();
-  });
 
-  it("should navigate to onboarding when 'Continue' button is clicked", () => {
-    renderComponent();
-    const continueButton = screen.getByRole("button", { name: "Continue" });
-    fireEvent.click(continueButton);
-    expect(mockNavigate).toHaveBeenCalledWith(Routes.onboarding_user_details);
+    expect(continueButton).toBeInTheDocument();
+    expect(continueButton).toBeEnabled();
   });
 });

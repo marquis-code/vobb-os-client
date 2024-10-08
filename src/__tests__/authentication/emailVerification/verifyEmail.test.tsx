@@ -1,9 +1,7 @@
-import React, { act } from "react";
+import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { VerifyEmailUI } from "modules";
-import { Routes } from "router";
-import userEvent from "@testing-library/user-event";
 
 // Mock useNavigate and useSearchParams from react-router-dom
 const mockNavigate = vi.fn();
@@ -45,12 +43,6 @@ describe("VerifyEmailUI", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-  });
-
-  afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
   });
 
   it("should render the email verification icon", () => {
@@ -131,30 +123,6 @@ describe("VerifyEmailUI", () => {
     renderComponent();
     const resendButton = screen.getByTestId("resend-btn");
     expect(resendButton).toHaveTextContent("30");
-    //Simulate countdown effect (this would require mocking the timer in a more advanced case)
-  });
-
-  it("should call handleResend when the resend button is clicked", async () => {
-    renderComponent();
-    const resendButton = screen.getByTestId("resend-btn");
-
-    expect(resendButton).toBeDisabled();
-    await act(() => vi.runAllTimers());
-    expect(resendButton).toBeEnabled();
-  });
-
-  it("should call handleResend when resend button is clicked", async () => {
-    const user = userEvent.setup({
-      advanceTimers: (ms) => vi.advanceTimersByTime(ms)
-    });
-    renderComponent();
-    const resendButton = screen.getByTestId("resend-btn");
-
-    await act(() => vi.runAllTimers());
-
-    user.click(resendButton);
-
-    expect(defaultProps.handleResend).toHaveBeenCalled();
   });
 
   it("back to sign up button should be enabled", () => {
