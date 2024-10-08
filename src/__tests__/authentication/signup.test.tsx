@@ -47,30 +47,41 @@ vi.mock("react-google-recaptcha", () => {
 });
 
 // Mock react-hook-form
-vi.mock("react-hook-form", () => ({
-  useForm: () => ({
-    register: vi.fn(),
-    handleSubmit: vi.fn(),
-    formState: {
-      errors: {
-        email: {
-          type: "required",
-          message: "Required"
-        },
-        password: {
-          type: "required",
-          message: "Required"
-        },
-        recaptcha: {
-          type: "required",
-          message: "Required"
-        }
-      }
-    },
-    setValue: vi.fn(),
-    getValues: vi.fn(),
-    watch: vi.fn()
+let mockUseForm = () => ({
+  register: vi.fn(),
+  handleSubmit: vi.fn((callback) => (e) => {
+    e.preventDefault();
+    callback({
+      email: "test@example.com",
+      password: "password123",
+      recaptcha: "fake-recaptcha-token"
+    });
   }),
+  formState: {
+    errors: {
+      email: {
+        type: "required",
+        message: "Required"
+      },
+      password: {
+        type: "required",
+        message: "Required"
+      },
+      recaptcha: {
+        type: "required",
+        message: "Required"
+      }
+    }
+  },
+  setValue: vi.fn(),
+  getValues: vi.fn(() => ({
+    recaptcha: "fake-recaptcha-token"
+  })),
+  watch: vi.fn(() => false)
+});
+
+vi.mock("react-hook-form", () => ({
+  useForm: () => mockUseForm(),
   SubmitHandler: vi.fn()
 }));
 
@@ -128,7 +139,34 @@ describe("Signup UI", () => {
     expect(screen.getAllByText("Required")).toHaveLength(3); // Email, Password, and ReCAPTCHA
   });
 
-  it("should display password errors when password does not meet criteria", async () => {
+  it("should display password length error if password is too short", async () => {
+    mockUseForm = () => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn((callback) => (e) => {
+        e.preventDefault();
+        callback({
+          email: "test@example.com",
+          password: "password123",
+          recaptcha: "fake-recaptcha-token"
+        });
+      }),
+      formState: {
+        errors: {
+          email: {
+            type: "required",
+            message: "Required"
+          },
+          password: { type: "", message: "Password should be at least 8 characters long" },
+          recaptcha: {
+            type: "required",
+            message: "Required"
+          }
+        }
+      },
+      setValue: vi.fn(),
+      getValues: vi.fn(),
+      watch: vi.fn()
+    });
     renderComponent();
     const passwordInput = screen.getByTestId("password");
 
@@ -138,8 +176,39 @@ describe("Signup UI", () => {
     await waitFor(() => {
       expect(screen.getByText("Password should be at least 8 characters long")).toBeInTheDocument();
     });
+  });
 
-    // Test case: Password lacks uppercase
+  it("should display error if password doesn't contain uppercase characters", async () => {
+    mockUseForm = () => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn((callback) => (e) => {
+        e.preventDefault();
+        callback({
+          email: "test@example.com",
+          password: "password123",
+          recaptcha: "fake-recaptcha-token"
+        });
+      }),
+      formState: {
+        errors: {
+          email: {
+            type: "required",
+            message: "Required"
+          },
+          password: { type: "", message: "Password should contain an uppercase character" },
+          recaptcha: {
+            type: "required",
+            message: "Required"
+          }
+        }
+      },
+      setValue: vi.fn(),
+      getValues: vi.fn(),
+      watch: vi.fn()
+    });
+    renderComponent();
+    const passwordInput = screen.getByTestId("password");
+
     fireEvent.change(passwordInput, { target: { value: "alllowercase1!" } });
     fireEvent.click(screen.getByTestId("signup-btn"));
     await waitFor(() => {
@@ -147,22 +216,115 @@ describe("Signup UI", () => {
         screen.getByText("Password should contain an uppercase character")
       ).toBeInTheDocument();
     });
+  });
 
+  it("should display error if password doesn't contain lowercase characters", async () => {
+    mockUseForm = () => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn((callback) => (e) => {
+        e.preventDefault();
+        callback({
+          email: "test@example.com",
+          password: "password123",
+          recaptcha: "fake-recaptcha-token"
+        });
+      }),
+      formState: {
+        errors: {
+          email: {
+            type: "required",
+            message: "Required"
+          },
+          password: { type: "", message: "Password should contain a lowercase character" },
+          recaptcha: {
+            type: "required",
+            message: "Required"
+          }
+        }
+      },
+      setValue: vi.fn(),
+      getValues: vi.fn(),
+      watch: vi.fn()
+    });
+    renderComponent();
+    const passwordInput = screen.getByTestId("password");
     // Test case: Password lacks lowercase
     fireEvent.change(passwordInput, { target: { value: "ALLUPPERCASE1!" } });
     fireEvent.click(screen.getByTestId("signup-btn"));
     await waitFor(() => {
       expect(screen.getByText("Password should contain a lowercase character")).toBeInTheDocument();
     });
-
-    // Test case: Password lacks number
+  });
+  it("should display error if password doesn't contain atleast one number", async () => {
+    mockUseForm = () => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn((callback) => (e) => {
+        e.preventDefault();
+        callback({
+          email: "test@example.com",
+          password: "password123",
+          recaptcha: "fake-recaptcha-token"
+        });
+      }),
+      formState: {
+        errors: {
+          email: {
+            type: "required",
+            message: "Required"
+          },
+          password: { type: "", message: "Password should contain at least one number" },
+          recaptcha: {
+            type: "required",
+            message: "Required"
+          }
+        }
+      },
+      setValue: vi.fn(),
+      getValues: vi.fn(),
+      watch: vi.fn()
+    });
+    renderComponent();
+    const passwordInput = screen.getByTestId("password");
     fireEvent.change(passwordInput, { target: { value: "NoNumber!" } });
     fireEvent.click(screen.getByTestId("signup-btn"));
     await waitFor(() => {
       expect(screen.getByText("Password should contain at least one number")).toBeInTheDocument();
     });
+  });
 
-    // Test case: Password lacks special character
+  it("should display error if password doesn't contain any special character", async () => {
+    mockUseForm = () => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn((callback) => (e) => {
+        e.preventDefault();
+        callback({
+          email: "test@example.com",
+          password: "password123",
+          recaptcha: "fake-recaptcha-token"
+        });
+      }),
+      formState: {
+        errors: {
+          email: {
+            type: "required",
+            message: "Required"
+          },
+          password: {
+            type: "",
+            message: "Password should contain at least one special character (e.g. @, #, &, $)"
+          },
+          recaptcha: {
+            type: "required",
+            message: "Required"
+          }
+        }
+      },
+      setValue: vi.fn(),
+      getValues: vi.fn(),
+      watch: vi.fn()
+    });
+    renderComponent();
+    const passwordInput = screen.getByTestId("password");
     fireEvent.change(passwordInput, { target: { value: "NoSpecialChar1" } });
     fireEvent.click(screen.getByTestId("signup-btn"));
     await waitFor(() => {

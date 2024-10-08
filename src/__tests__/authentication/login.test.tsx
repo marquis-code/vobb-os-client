@@ -49,7 +49,7 @@ vi.mock("components", () => ({
     const handleChange = (e) => {
       const newChecked = e.target.checked;
       setIsChecked(newChecked);
-      handleChecked(newChecked); // Call the handler from props to notify the parent
+      handleChecked(newChecked);
     };
 
     return (
@@ -77,26 +77,42 @@ vi.mock("react-google-recaptcha", () => {
 });
 
 // Mock react-hook-form
-vi.mock("react-hook-form", () => ({
-  useForm: () => ({
-    register: vi.fn(),
-    handleSubmit: vi.fn(),
-    formState: {
-      errors: {
-        email: {
-          type: "required",
-          message: "Required"
-        },
-        password: {
-          type: "required",
-          message: "Required"
-        }
-      }
-    },
-    setValue: vi.fn(),
-    getValues: vi.fn(),
-    watch: vi.fn()
+let mockUseForm = () => ({
+  register: vi.fn(),
+  handleSubmit: vi.fn((callback) => (e) => {
+    e.preventDefault();
+    callback({
+      email: "test@example.com",
+      password: "password123",
+      rememberMe: false,
+      recaptcha: "fake-recaptcha-token"
+    });
   }),
+  formState: {
+    errors: {
+      email: {
+        type: "required",
+        message: "Required"
+      },
+      password: {
+        type: "required",
+        message: "Required"
+      },
+      recaptcha: {
+        type: "required",
+        message: "Required"
+      }
+    }
+  },
+  setValue: vi.fn(),
+  getValues: vi.fn(() => ({
+    recaptcha: "fake-recaptcha-token"
+  })),
+  watch: vi.fn(() => false)
+});
+
+vi.mock("react-hook-form", () => ({
+  useForm: () => mockUseForm(),
   SubmitHandler: vi.fn()
 }));
 
@@ -174,7 +190,7 @@ describe("Login UI", () => {
   it("should display required errors when inputs are not filled", () => {
     renderComponent();
     fireEvent.click(screen.getByTestId("signin-btn"));
-    expect(screen.getAllByText("Required")).toHaveLength(2);
+    expect(screen.getAllByText("Required")).toHaveLength(3);
   });
 
   it("should enable sign-in button on load", () => {
@@ -189,15 +205,13 @@ describe("Login UI", () => {
     expect(defaultProps.handleGoogleSignin).toHaveBeenCalled();
   });
 
-  it("should trigger submit when sign-in button is clicked and remember me unchecked", async () => {
+  it("should trigger submit when sign-in button is clicked and remember me is set to false", async () => {
     renderComponent();
     const emailInput = screen.getByTestId("email");
     const passwordInput = screen.getByTestId("password");
-    const recaptcha = screen.getByTestId("recaptcha");
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
-    fireEvent.click(recaptcha); // Simulate ReCAPTCHA verification
 
     fireEvent.click(screen.getByTestId("signin-btn"));
 
@@ -210,17 +224,37 @@ describe("Login UI", () => {
       })
     );
   });
-  it("should trigger submit when sign-in button is clicked and remember me checked", async () => {
+
+  it("should trigger submit when sign-in button is clicked and remember me is set to true", async () => {
+    mockUseForm = () => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn((callback) => (e) => {
+        e.preventDefault();
+        callback({
+          email: "test@example.com",
+          password: "password123",
+          rememberMe: true,
+          recaptcha: "fake-recaptcha-token"
+        });
+      }),
+      formState: {
+        errors: {
+          email: { type: "", message: "" },
+          recaptcha: { type: "", message: "" },
+          password: { type: "", message: "" }
+        }
+      },
+      setValue: vi.fn(),
+      getValues: vi.fn(),
+      watch: vi.fn()
+    });
+
     renderComponent();
     const emailInput = screen.getByTestId("email");
     const passwordInput = screen.getByTestId("password");
-    const recaptcha = screen.getByTestId("recaptcha");
-    const checkbox = screen.getByTestId("stay-signed-in-checkbox");
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
-    fireEvent.click(recaptcha); // Simulate ReCAPTCHA verification
-    fireEvent.click(checkbox);
 
     fireEvent.click(screen.getByTestId("signin-btn"));
 

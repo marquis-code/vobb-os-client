@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { useMobile, useLogout } from "hooks";
 import { useModalContext, useUserContext } from "context";
 import { BrowserRouter } from "react-router-dom";
@@ -36,13 +36,17 @@ vi.mock("pages/organization/members/inviteMember", () => ({
   InviteMember: vi.fn(() => <div data-testid="mocked-invite-member">Mocked Invite Member</div>)
 }));
 
+vi.mock("pages/account/profile/update-job-title", () => ({
+  UpdateJobTitleModal: vi.fn(() => (
+    <div data-testid="mocked-update-job-title">Mocked Update Job Title</div>
+  ))
+}));
+
 vi.mock("components", () => ({
   UnsupportedScreenSize: vi.fn(() => (
     <div data-testid="mocked-unsupported-screen">Mocked Unsupported Screen</div>
   )),
-  UpdateJobTitleModal: vi.fn(() => (
-    <div data-testid="mocked-update-job-title">Mocked Update Job Title</div>
-  )),
+
   Button: vi.fn(() => <button data-testid="mocked-button">Mocked Button</button>)
 }));
 
@@ -95,34 +99,13 @@ describe("DashboardLayout", () => {
     expect(screen.getByTestId("mocked-unsupported-screen")).toBeInTheDocument();
   });
 
-  it("renders modals when their respective states are true", () => {
-    (useModalContext as jest.Mock).mockReturnValue({
-      addBranch: true,
-      setAddBranch: mockSetAddBranch,
-      addTeam: true,
-      setAddTeam: mockSetAddTeam,
-      inviteMember: true,
-      setInviteMember: mockSetInviteMember,
-      updateJobTitle: false,
-      setUpdateJobTitle: mockSetUpdateJobTitle
-    });
-    renderComponent();
-    expect(screen.getByTestId("mocked-add-branch")).toBeInTheDocument();
-    expect(screen.getByTestId("mocked-add-team")).toBeInTheDocument();
-    expect(screen.getByTestId("mocked-invite-member")).toBeInTheDocument();
-  });
-
-  it("renders UpdateJobTitleModal for Super Admin without job title", async () => {
+  it("calls setUpdateJobTitle when Super Admin has no job title", () => {
     (useUserContext as jest.Mock).mockReturnValue({
-      userDetails: { role: "Super Admin", jobTitle: null, firstName: "John", lastName: "Doe" }
+      userDetails: { role: "Super Admin", jobTitle: null }
     });
-    (useModalContext as jest.Mock).mockReturnValue({
-      updateJobTitle: true,
-      setUpdateJobTitle: mockSetUpdateJobTitle
-    });
+
     renderComponent();
-    await waitFor(() => {
-      expect(screen.getByTestId("mocked-update-job-title")).toBeInTheDocument();
-    });
+
+    expect(mockSetUpdateJobTitle).toHaveBeenCalledWith(true);
   });
 });

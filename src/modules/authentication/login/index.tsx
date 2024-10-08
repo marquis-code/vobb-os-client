@@ -106,6 +106,7 @@ const LoginUI: React.FC<LoginProps> = ({ submit, loading, handleGoogleSignin }) 
                     setValue("rememberMe", checked);
                   }}
                   checked={watch("rememberMe") ?? false}
+                  data-testid="stay-signed-in"
                 />
 
                 <Link
