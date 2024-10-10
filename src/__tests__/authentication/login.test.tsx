@@ -182,7 +182,7 @@ describe("Login UI", () => {
   });
 
   it("should display recaptcha when site key is set", () => {
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY = "test-recaptcha-key";
     renderComponent();
     expect(screen.getByTestId("recaptcha")).toBeInTheDocument();
   });
