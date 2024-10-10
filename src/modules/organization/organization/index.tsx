@@ -350,7 +350,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                   onClick={() => {
                     submitResendEmails({ action: "primary" });
                     handleSetParams("primary");
-                  }}>
+                  }}
+                  data-testid="primary-resend-button">
                   Resend verification mail
                 </Button>
               )}
@@ -416,7 +417,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                     submitResendEmails({ action: "support" });
                     searchParams.set("action", "support");
                     handleSetParams("support");
-                  }}>
+                  }}
+                  data-testid="secondary-resend-button">
                   Resend verification mail
                 </Button>
               )}

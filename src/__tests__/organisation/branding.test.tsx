@@ -1,7 +1,6 @@
 //@ts-nocheck
 import { render, screen, waitFor } from "@testing-library/react";
 import { useUserContext } from "context";
-import { Button } from "components";
 import { OrgBrandingUI } from "modules";
 
 vi.mock("context", () => ({

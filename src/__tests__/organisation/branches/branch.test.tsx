@@ -237,7 +237,7 @@ describe("Branch UI tests", () => {
     expect(addMemberBtn).toHaveTextContent(/add member/i);
   });
 
-  it("should display table and table heads for members", async () => {
+  it("should display table heads for members", async () => {
     const user = userEvent.setup();
     renderComponent();
 

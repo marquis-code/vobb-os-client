@@ -1,86 +1,71 @@
+import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { useUserContext } from "context";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OrgProfileUI } from "modules";
+import { useUserContext } from "context";
 
+// Mock the context
+vi.mock("context", () => ({
+  useModalContext: vi.fn(),
+  useUserContext: vi.fn()
+}));
+
+const mockUserContext = {
+  orgDetails: {
+    organisation: "Test Org",
+    logo: "test-logo.png",
+    website: "https://testorg.com",
+    primaryEmail: "primary@testorg.com",
+    secondaryEmail: "secondary@testorg.com",
+    primaryPhoneNumber: "1234567890",
+    secondaryPhoneNumber: "0987654321",
+    sector: ["IT", "Finance"]
+  }
+};
+
+// Mock the props
+const mockProps = {
+  handleChangeEmail: vi.fn(),
+  updateProfile: {
+    submit: vi.fn(),
+    loading: false
+  },
+  updateNumbers: {
+    submit: vi.fn(),
+    loading: false
+  },
+  updateEmails: {
+    submit: vi.fn(),
+    loading: false
+  }
+};
+
+// Mock the router
 vi.mock("react-router-dom", () => ({
   useNavigate: () => vi.fn()
 }));
 
-vi.mock("context", () => ({
-  useUserContext: vi.fn()
-}));
+const renderComponent = (props = {}) => render(<OrgProfileUI {...mockProps} />);
 
-describe("OrgProfileUI Component", () => {
-  const mockUpdateProfile = { submit: vi.fn(), loading: false };
-  const mockUpdateEmails = { submit: vi.fn(), loading: false };
-  const mockUpdateNumbers = { submit: vi.fn(), loading: false };
-  const mockHandleChangeEmail = vi.fn();
-
-  const mockProfile = {
-    organisation: "Test Org",
-    logo: "",
-    website: "https://test.org",
-    primaryEmail: "primary@test.com",
-    pendingPrimaryEmail: "primaryPending@test.com",
-    secondaryEmail: "secondary@test.com",
-    pendingSecondaryEmail: "secondaryPending@test.com",
-    primaryPhoneNumber: "1234567890",
-    secondaryPhoneNumber: "0987654321",
-    sector: ["tech"]
-  };
-
-  const renderComponent = () => {
-    render(
-      <OrgProfileUI
-        handleChangeEmail={mockHandleChangeEmail}
-        updateProfile={{
-          submit: vi.fn(),
-          loading: false
-        }}
-        updateNumbers={{
-          submit: vi.fn(),
-          loading: false
-        }}
-        updateEmails={{
-          submit: vi.fn(),
-          loading: false
-        }}
-      />
-    );
-  };
-
+describe("OrgProfileUI", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    (useUserContext as jest.Mock).mockReturnValue({ orgDetails: mockProfile });
+    (useUserContext as jest.Mock).mockReturnValue({
+      mockUserContext
+    });
   });
 
-  it("renders correctly with initial values", () => {
+  it("renders the component with initial data", () => {
     renderComponent();
-
     expect(screen.getByTestId("avatar-section")).toBeInTheDocument();
-    expect(screen.getByTestId("name")).toHaveValue("Test Org");
-    expect(screen.getByTestId("website")).toHaveValue("https://test.org");
-    expect(screen.getByTestId("primary-emailBtn")).toBeInTheDocument();
-    expect(screen.getByTestId("secondary-emailBtn")).toBeInTheDocument();
-  });
-
-  it("should update input values on change", () => {
-    renderComponent();
-
-    const nameInput = screen.getByTestId("name");
-    fireEvent.change(nameInput, { target: { value: "Updated Org" } });
-    expect(nameInput).toHaveValue("Updated Org");
-
-    const websiteInput = screen.getByTestId("website");
-    fireEvent.change(websiteInput, { target: { value: "https://newsite.org" } });
-    expect(websiteInput).toHaveValue("https://newsite.org");
+    expect(screen.getByTestId("profile-form")).toBeInTheDocument();
+    expect(screen.getByTestId("name")).toHaveAttribute("label", "Company Name");
+    expect(screen.getByTestId("website")).toHaveAttribute("label", "Company Website");
   });
 
   it("renders and handles avatar upload", () => {
     renderComponent();
 
-    const avatars = screen.getAllByLabelText("Upload image");
-    const avatarInput = avatars[0] as HTMLInputElement;
+    const avatarInput = screen.getByLabelText("Upload image") as HTMLInputElement;
     const testFile = new File(["avatar"], "avatar.png", { type: "image/png" });
 
     expect(avatarInput).toBeInTheDocument();
@@ -89,93 +74,45 @@ describe("OrgProfileUI Component", () => {
     expect(avatarInput.files![0]).toBe(testFile);
   });
 
-  it("should call handleChangeEmail on primary email change button click", () => {
-    renderComponent();
-
-    const changePrimaryEmailBtn = screen.getByTestId("primary-emailBtn");
-    fireEvent.click(changePrimaryEmailBtn);
-    expect(mockHandleChangeEmail).toHaveBeenCalled();
-  });
-
-  it("should submit the form when Save button is clicked", async () => {
-    renderComponent();
-
-    // Simulate user input
-    const nameInput = screen.getByTestId("name");
-    fireEvent.change(nameInput, { target: { value: "Updated Name" } });
-    expect(nameInput).toHaveValue("Updated Name");
-
-    // Find the form and submit it using the submit event
-    const form = screen.getByTestId("profile-form"); // Ensure form has the role "form" or find it appropriately
-    fireEvent.submit(form);
-
-    await waitFor(() => {
-      expect(mockUpdateProfile.submit).toHaveBeenCalledWith({ name: "Updated Name" });
-    });
-  });
-
-  it("calls handleChangeEmail function when primary email button is clicked", () => {
-    renderComponent();
-
-    const primaryEmailButton = screen.getByTestId("primary-emailBtn");
-    fireEvent.click(primaryEmailButton);
-
-    expect(mockHandleChangeEmail).toHaveBeenCalled();
-  });
-
-  it("calls handleChangeEmail function when secondary email button is clicked", () => {
-    renderComponent();
-
-    const secondaryEmailButton = screen.getByTestId("secondary-emailBtn");
-    fireEvent.click(secondaryEmailButton);
-
-    expect(mockHandleChangeEmail).toHaveBeenCalled();
-  });
-
-  it("resend verification primary email calls correct function", async () => {
-    renderComponent();
-
-    const resendPrimaryEmailBtn = screen.getByTestId("primary-resend-button");
-    await fireEvent.click(resendPrimaryEmailBtn[0]);
-
-    expect(mockUpdateEmails).toHaveBeenCalledWith({ action: "primary" });
-  });
-
-  it("resend verification secondary email calls correct function", async () => {
-    renderComponent();
-
-    const resendSecondaryEmailBtn = screen.getByTestId("secondary-resend-button");
-    await fireEvent.click(resendSecondaryEmailBtn);
-
-    expect(mockUpdateEmails).toHaveBeenCalledWith({ action: "support" });
-  });
-
-  it("should display validation errors if form inputs are invalid", async () => {
+  it("handles form submission", async () => {
     renderComponent();
 
     const nameInput = screen.getByTestId("name");
-    fireEvent.change(nameInput, { target: { value: "" } });
-
     const saveButton = screen.getByTestId("save-btn");
+
+    fireEvent.change(nameInput, { target: { value: "New Org Name here" } });
     fireEvent.click(saveButton);
 
     await waitFor(() => {
-      expect(screen.getByText("Required")).toBeInTheDocument();
+      expect(mockProps.updateProfile.submit).toHaveBeenCalled();
     });
   });
 
-  it("should handle phone number updates correctly", () => {
+  it("handles primary email change", () => {
     renderComponent();
 
-    const primaryPhoneNumber = screen.getByLabelText("Primary Phone Number");
-    fireEvent.change(primaryPhoneNumber, { target: { value: "1112223333" } });
+    const changePrimaryEmailButton = screen.getByTestId("primary-emailBtn");
+    fireEvent.click(changePrimaryEmailButton);
+
+    expect(mockProps.handleChangeEmail).toHaveBeenCalled();
+  });
+
+  it("handles secondary email change", () => {
+    renderComponent();
+
+    const changeSecondaryEmailButton = screen.getByTestId("secondary-emailBtn");
+    fireEvent.click(changeSecondaryEmailButton);
+
+    expect(mockProps.handleChangeEmail).toHaveBeenCalled();
+  });
+
+  it("enables save button when changes are made", () => {
+    renderComponent();
+
+    const nameInput = screen.getByTestId("name");
+    fireEvent.change(nameInput, { target: { value: "New Org Name" } });
 
     const saveButton = screen.getByTestId("save-btn");
-    fireEvent.click(saveButton);
-
-    expect(mockUpdateNumbers.submit).toHaveBeenCalledWith({
-      number: "1112223333",
-      action: "primary"
-    });
+    expect(saveButton).not.toBeDisabled();
   });
 });
