@@ -189,7 +189,11 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
             <TabsContent className="pb-8 mb-12" value="client">
               {/* Add team */}
               {/* Search, sort, filter by teams */}
-              <Button onClick={console.log} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
+              <Button
+                onClick={console.log}
+                className="flex mb-6 gap-2 ml-auto"
+                variant={"fill"}
+                data-testid="add-team">
                 <PlusCircledIcon /> New team
               </Button>
               <BranchTeamTable columns={teamColumns} data={teamsData} />

@@ -245,7 +245,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             <p className="text-[11px]">We support PNGs and JPEGs under 10MB</p>
           </div>
         </div>
-        <form className="grid grid-cols-2 gap-4">
+        <form className="grid grid-cols-2 gap-4" data-testid="profile-form">
           <CustomInput
             label="Company Name"
             type="text"

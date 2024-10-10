@@ -1,16 +1,37 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useUserContext } from "context";
 import { OrgCommunicationUI } from "modules";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// Mock the context globally
+vi.mock("context", () => ({
+  useUserContext: vi.fn()
+}));
+
+const mockHandleTempSuspend = vi.fn();
+const mockHandleIndefSuspend = vi.fn();
+
+const mockProps = {
+  submitTempSuspend: { loadingTemp: false, handleTempSuspend: mockHandleTempSuspend },
+  submitIndefiniteSuspend: { loadingIndef: false, handleIndefSuspend: mockHandleIndefSuspend }
+};
 
 describe("OrgCommunicationUI", () => {
-  const mockProps = {
-    submitTempSuspend: { loadingTemp: false, handleTempSuspend: vi.fn() },
-    submitIndefiniteSuspend: { loadingIndef: false, handleIndefSuspend: vi.fn() }
-  };
+  const renderComponent = (props = {}) => render(<OrgCommunicationUI {...mockProps} {...props} />);
+
+  beforeEach(() => {
+    (useUserContext as jest.Mock).mockReturnValue({
+      orgDetails: {
+        tempSuspensionNotice: true,
+        indefiniteSuspensionNotice: false,
+        organisation: "Bloom Berg",
+        primaryEmail: "test@mail.com"
+      }
+    });
+  });
 
   it("renders default OrgCommunicationUI with notices", () => {
-    render(<OrgCommunicationUI {...mockProps} />);
+    renderComponent();
 
     const heading = screen.getByRole("heading");
 
@@ -31,37 +52,35 @@ describe("OrgCommunicationUI", () => {
   });
 
   it("toggles the temporary suspension switch to call handler", () => {
-    const handleTempSuspend = vi.fn();
-    const mockProps = {
-      submitTempSuspend: { loadingTemp: false, handleTempSuspend },
-      submitIndefiniteSuspend: { loadingIndef: false, handleIndefSuspend: vi.fn() }
-    };
-
-    render(<OrgCommunicationUI {...mockProps} />);
+    renderComponent();
 
     const tempSwitch = screen.getByTestId("temporary-suspension");
     fireEvent.click(tempSwitch);
 
-    expect(handleTempSuspend).toHaveBeenCalledWith({ suspend: true });
+    expect(mockHandleTempSuspend).toHaveBeenCalledWith({ suspend: false });
   });
 
-  it("clicks Preview mail button to show correct preview", () => {
-    const mockProps = {
-      submitTempSuspend: { loadingTemp: false, handleTempSuspend: vi.fn() },
-      submitIndefiniteSuspend: { loadingIndef: false, handleIndefSuspend: vi.fn() }
-    };
-    render(<OrgCommunicationUI {...mockProps} />);
+  it("clicks temporary suspension Preview button to show preview", () => {
+    renderComponent();
+    const tempPreview = screen.getByTestId("temporary-suspension-preview");
+    const previewBody = screen.getByTestId("preview");
 
-    fireEvent.click(
-      screen.getByText("Preview mail", { selector: '[data-testid="temporary-suspension"]' })
-    );
-    expect(screen.getByTestId("preview")).toContainElement(
-      screen.getByText("TemporarySuspensionPreview content")
-    );
+    fireEvent.click(tempPreview);
 
-    fireEvent.click(screen.getByText("Preview mail", { selector: '[data-testid="deactivation"]' }));
-    expect(screen.getByTestId("preview")).toContainElement(
-      screen.getByText("IndefiniteSuspensionPreview content")
+    expect(previewBody).toContainElement(
+      screen.getByText("Temporary suspension of Bloom Berg's Vobb Workspace")
+    );
+  });
+
+  it("clicks indefinite suspension Preview button to show preview", () => {
+    renderComponent();
+    const tempPreview = screen.getByTestId("deactivation-preview");
+    const previewBody = screen.getByTestId("preview");
+
+    fireEvent.click(tempPreview);
+
+    expect(previewBody).toContainElement(
+      screen.getByText("Indefinite suspension of Bloom Berg's Vobb Workspace")
     );
   });
 
@@ -71,29 +90,14 @@ describe("OrgCommunicationUI", () => {
       submitIndefiniteSuspend: { loadingIndef: true, handleIndefSuspend: vi.fn() }
     };
 
-    render(<OrgCommunicationUI {...mockProps} />);
+    renderComponent(mockProps);
 
     expect(screen.getByTestId("temporary-suspension")).toBeDisabled();
     expect(screen.getByTestId("deactivation")).toBeDisabled();
   });
 
   it("sets switches based on orgDetails", () => {
-    vi.mock("context", () => ({
-      useUserContext: vi.fn()
-    }));
-
-    const mockOrgDetails = {
-      tempSuspensionNotice: true,
-      indefiniteSuspensionNotice: false
-    };
-    (useUserContext as jest.Mock).mockReturnValue({ orgDetails: mockOrgDetails });
-
-    const mockProps = {
-      submitTempSuspend: { loadingTemp: false, handleTempSuspend: vi.fn() },
-      submitIndefiniteSuspend: { loadingIndef: false, handleIndefSuspend: vi.fn() }
-    };
-
-    render(<OrgCommunicationUI {...mockProps} />);
+    renderComponent();
 
     expect(screen.getByTestId("temporary-suspension")).toBeChecked();
     expect(screen.getByTestId("deactivation")).not.toBeChecked();

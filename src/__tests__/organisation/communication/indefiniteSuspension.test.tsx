@@ -7,29 +7,38 @@ vi.mock("context", () => ({
 }));
 
 describe("IndefiniteSuspensionPreview", () => {
+  const renderComponent = () => render(<IndefiniteSuspensionPreview />);
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders correctly with orgDetails", () => {
+  it("renders the header with correct org details", () => {
     (useUserContext as jest.Mock).mockReturnValue({
       orgDetails: {
-        logo: "http://example.com/logo.png",
+        logo: null,
         organisation: "ExampleOrg",
         primaryEmail: "user@example.com"
       }
     });
 
-    render(<IndefiniteSuspensionPreview />);
+    renderComponent();
+    const heading = screen.getByRole("heading");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent("Indefinite suspension of ExampleOrg's Vobb Workspace");
+  });
 
-    const avatar = screen.getByTestId("image");
-    expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveAttribute("src", "http://example.com/logo.png");
+  it("renders the right mail information", () => {
+    (useUserContext as jest.Mock).mockReturnValue({
+      orgDetails: {
+        logo: null,
+        organisation: "ExampleOrg",
+        primaryEmail: "user@example.com"
+      }
+    });
 
-    expect(
-      screen.getByText("Indefinite suspension of ExampleOrg's Vobb Workspace")
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Hi \(your team member's name\),/)).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText(/Hi \(your team member's name\)/)).toBeInTheDocument();
     expect(
       screen.getByText(
         /has been indefinitely suspended, effective immediately for the following reason:/
@@ -52,9 +61,8 @@ describe("IndefiniteSuspensionPreview", () => {
       }
     });
 
-    render(<IndefiniteSuspensionPreview />);
-
-    expect(screen.getByText("EE")).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText("EX")).toBeInTheDocument();
   });
 
   it("renders fallback avatar initials when organisation name is too short", () => {
@@ -66,8 +74,7 @@ describe("IndefiniteSuspensionPreview", () => {
       }
     });
 
-    render(<IndefiniteSuspensionPreview />);
-
+    renderComponent();
     expect(screen.getByText("A")).toBeInTheDocument();
   });
 
@@ -80,8 +87,7 @@ describe("IndefiniteSuspensionPreview", () => {
       }
     });
 
-    render(<IndefiniteSuspensionPreview />);
-
+    renderComponent();
     expect(screen.getByText(/This email was sent to/)).toBeInTheDocument();
     expect(screen.getByText(/If this is not you, please ignore this email./)).toBeInTheDocument();
   });

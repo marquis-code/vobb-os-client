@@ -73,7 +73,8 @@ const OrgCommunicationUI: React.FC<OrgCommProps> = ({
                   size={"sm"}
                   className="p-0 h-[fit-content] text-vobb-neutral-80"
                   variant={"link"}
-                  onClick={() => setPreview(key)}>
+                  onClick={() => setPreview(key)}
+                  data-testid={`${key}-preview`}>
                   Preview mail
                 </Button>
                 <Switch

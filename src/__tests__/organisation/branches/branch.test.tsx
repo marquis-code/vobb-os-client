@@ -1,8 +1,7 @@
-import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BranchMemberTableMock, BranchTeamTableMock } from "lib";
 import { OrgBranchUI } from "modules";
-import { initBranchData } from "pages";
 import { BrowserRouter } from "react-router-dom";
 
 const mockHandleTransferMember = vi.fn();
@@ -91,65 +90,84 @@ const mockedData = {
   handleUpdateMemberFilters: mockHandleMemberFilter
 };
 
-const MockedBranchUI = (props = {}) => {
-  const mergedProps = { ...defaultProps, ...props };
-  return (
-    <BrowserRouter>
-      <OrgBranchUI {...mergedProps} />
-    </BrowserRouter>
-  );
-};
-const customRender = (props = {}) => render(<MockedBranchUI {...props} />);
-
 describe("Branch UI tests", () => {
-  let renderResult: RenderResult;
+  const renderComponent = (props = {}) =>
+    render(
+      <BrowserRouter>
+        <OrgBranchUI {...defaultProps} {...props} />{" "}
+      </BrowserRouter>
+    );
 
   beforeEach(() => {
-    renderResult = customRender();
+    vi.clearAllMocks();
   });
 
   it("should render with mocked data", async () => {
-    renderResult = customRender(mockedData);
+    renderComponent(mockedData);
 
     const mockedBranch = screen.getByRole("cell", { name: "Garnacho Derulo" });
     expect(mockedBranch).toBeInTheDocument();
   });
 
   it("should display the branch name with timezone if it exists", () => {
+    renderComponent();
+
     const heading = screen.getByRole("heading");
     expect(heading).toHaveTextContent("Branch1 (GMT + 1)");
   });
 
   it("should display the branch name without timezone if none is provided", () => {
-    customRender({ ...defaultProps, branchInfo: { ...defaultProps.branchInfo, timeZone: null } });
+    renderComponent({ ...defaultProps, branchInfo: { ...defaultProps.branchInfo, timeZone: "" } });
     const heading = screen.getByRole("heading");
-    expect(heading).toHaveTextContent("Branch1");
+
+    expect(heading).toHaveTextContent(/branch1 ()/i);
     expect(heading).not.toHaveTextContent(/\(GMT \+\d\)/);
   });
 
   it("should display the correct branch address", () => {
+    renderComponent();
+
     const description = screen.getByText(/Okota, Lasgidi, lagos, Nigeria, 123456/i);
     expect(description).toBeInTheDocument();
   });
 
-  it("should display the Members tab and load member table on click", () => {
+  it("should render member and teams tabs", () => {
+    renderComponent();
+
     const memberTab = screen.getByRole("tab", { name: /Members/i });
+    const teamsTab = screen.getByRole("tab", { name: /Teams/i });
+
     expect(memberTab).toBeInTheDocument();
-    userEvent.click(memberTab);
-    const table = screen.getByRole("table");
-    expect(table).toBeInTheDocument();
+    expect(teamsTab).toBeInTheDocument();
   });
 
-  it("should display the Teams tab and load team table on click", () => {
+  it("renders the member tab tab as active by default, while teams is inactive", () => {
+    renderComponent();
+
+    const memberTab = screen.getByRole("tab", { name: /Members/i });
     const teamsTab = screen.getByRole("tab", { name: /Teams/i });
-    expect(teamsTab).toBeInTheDocument();
-    userEvent.click(teamsTab);
-    const table = screen.getByRole("table");
-    expect(table).toBeInTheDocument();
+
+    expect(memberTab).toHaveAttribute("data-state", "active");
+    expect(teamsTab).toHaveAttribute("data-state", "inactive");
+  });
+
+  it("renders the teams attributes tab as active when tab is clicked, while member is inactive", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
+    const teamsTab = screen.getByRole("tab", { name: /Teams/i });
+    const memberTab = screen.getByRole("tab", { name: /Members/i });
+
+    await user.pointer({ keys: "[MouseLeft]", target: teamsTab });
+
+    await waitFor(() => {
+      expect(teamsTab).toHaveAttribute("data-state", "active");
+    });
+    expect(memberTab).toHaveAttribute("data-state", "inactive");
   });
 
   it("should check for filter button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const filterButtons = screen.getAllByRole("combobox");
     expect(filterButtons.length).toBeGreaterThan(0);
@@ -162,39 +180,70 @@ describe("Branch UI tests", () => {
     expect(filterButton).toHaveAttribute("role", "combobox");
   });
 
-  it("updates filters when an attribute is selected", () => {
+  it("updates filters when name attribute is selected", () => {
+    renderComponent();
+
     const filterButtons = screen.getAllByRole("combobox");
     const filterButton = filterButtons[0];
     fireEvent.click(filterButton);
 
-    const attributeToSelect = screen.getByText(/name/i);
+    const attributeToSelect = screen.getByRole("option", { name: "Name" });
     fireEvent.click(attributeToSelect);
 
-    expect(filterButton).toHaveTextContent(/name/i);
+    const nameFilters = screen.getAllByRole("combobox");
+    const nameFilter = nameFilters[0];
+
+    expect(nameFilter).toBeInTheDocument();
+    expect(nameFilter).toHaveTextContent(/name/i);
   });
 
   it("removes a filter when delete button is clicked", () => {
-    const filterMenuButton = screen.getByRole("button", { name: /dots vertical/i });
-    fireEvent.click(filterMenuButton);
+    renderComponent();
 
-    const deleteButton = screen.getByRole("button", { name: /delete filter/i });
+    const filterButtons = screen.getAllByRole("combobox");
+    const filterButton = filterButtons[0];
+    fireEvent.click(filterButton);
+
+    const attributesToSelect = screen.getAllByText(/name/i);
+    const attributeToSelect = attributesToSelect[0];
+    fireEvent.click(attributeToSelect);
+
+    const filterMenuButtons = screen.getAllByRole("button");
+    const deleteBtn = filterMenuButtons[1];
+    fireEvent.click(deleteBtn);
+
+    const deleteButton = screen.getByRole("button", { name: /delete condition/i });
     fireEvent.click(deleteButton);
 
-    expect(screen.queryByText(/name/i)).not.toBeInTheDocument();
+    const nameFilters = screen.getAllByRole("combobox");
+    const nameFilter = nameFilters[0];
+
+    expect(nameFilter).toBeInTheDocument();
+    expect(nameFilter).not.toHaveTextContent(/name/i);
+  });
+
+  it("should show loading spinner when loading is true", () => {
+    renderComponent({ ...defaultProps, loadingMembers: true });
+
+    const loading = screen.getByTestId("loading");
+    expect(loading).toBeInTheDocument();
   });
 
   it("should check for Add member button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
-    const addTeamBtn = screen.getByTestId("add-member");
-    expect(addTeamBtn).toBeInTheDocument();
-    expect(addTeamBtn).toHaveTextContent(/add member/i);
+    const addMemberBtn = screen.getByTestId("add-member");
+    expect(addMemberBtn).toBeInTheDocument();
+    expect(addMemberBtn).toHaveTextContent(/add member/i);
   });
 
-  it("should display table and table heads for members", () => {
-    expect(renderResult.container).toBeTruthy();
+  it("should display table and table heads for members", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
     const memberTab = screen.getByRole("tab", { name: "Members" });
-    userEvent.click(memberTab);
+    await user.pointer({ keys: "[MouseLeft]", target: memberTab });
+
     const table = screen.getByRole("table");
     const nameColumn = screen.getByRole("columnheader", { name: /name/i });
     const emailColumn = screen.getByRole("columnheader", { name: /email/i });
@@ -210,16 +259,9 @@ describe("Branch UI tests", () => {
     expect(dateColumn).toBeInTheDocument();
   });
 
-  it("should show loading spinner when loading is true", () => {
-    renderResult = customRender({ ...defaultProps, loadingMembers: true });
-    expect(renderResult.container).toBeTruthy();
-
-    const loading = screen.getByTestId("loading");
-    expect(loading).toBeInTheDocument();
-  });
-
-  it("should display 'no results' message when there are no members", () => {
-    customRender({
+  it("should display 'no results' message when there are no members", async () => {
+    const user = userEvent.setup();
+    renderComponent({
       branchMembers: {
         membersArray: [],
         membersMetaData: {
@@ -231,16 +273,54 @@ describe("Branch UI tests", () => {
       }
     });
 
-    // Select the 'Members' tab
-    const memberTab = screen.getByRole("tab", { name: "Members" });
-    userEvent.click(memberTab);
+    const memberTabs = screen.getAllByRole("tab", { name: "Members" });
+    const memberTab = memberTabs[0];
+    await user.pointer({ keys: "[MouseLeft]", target: memberTab });
 
-    const noResultsMessage = screen.getByRole("cell", { name: /no results/i });
-    expect(noResultsMessage).toBeInTheDocument();
+    const noResultsMessageCells = screen.getAllByRole("cell", { name: /no results/i });
+    const noResultsMessageCell = noResultsMessageCells[0];
+
+    expect(noResultsMessageCell).toBeInTheDocument();
   });
 
-  it("should display 'no results' message when there are no teams", () => {
-    customRender({
+  it("should check for Add Team button", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
+    const teamsTab = screen.getByRole("tab", { name: /teams/i });
+
+    await user.pointer({ keys: "[MouseLeft]", target: teamsTab });
+
+    const addTeamBtn = screen.getByTestId("add-team");
+    expect(addTeamBtn).toBeInTheDocument();
+    expect(addTeamBtn).toHaveTextContent(/new team/i);
+  });
+
+  it("should display table and table heads for teams", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
+    const teamsTab = screen.getByRole("tab", { name: "Teams" });
+    await user.pointer({ keys: "[MouseLeft]", target: teamsTab });
+
+    const table = screen.getByRole("table");
+    const nameColumn = screen.getByRole("columnheader", { name: /name/i });
+    const managerColumn = screen.getByRole("columnheader", { name: /team manager/i });
+    const leadColumn = screen.getByRole("columnheader", { name: /team lead/i });
+    const memebersColumn = screen.getByRole("columnheader", { name: /members/i });
+    const dateColumn = screen.getByRole("columnheader", { name: /date added/i });
+
+    expect(table).toBeInTheDocument();
+    expect(nameColumn).toBeInTheDocument();
+    expect(managerColumn).toBeInTheDocument();
+    expect(leadColumn).toBeInTheDocument();
+    expect(memebersColumn).toBeInTheDocument();
+    expect(dateColumn).toBeInTheDocument();
+  });
+
+  it("should display 'no results' message when there are no teams", async () => {
+    const user = userEvent.setup();
+    renderComponent({
       branchTeams: {
         teamsArray: [],
         teamsMetaData: {
@@ -252,33 +332,37 @@ describe("Branch UI tests", () => {
       }
     });
 
-    // Select the 'Teams' tab
-    const teamsTab = screen.getByRole("tab", { name: "Teams" });
-    userEvent.click(teamsTab);
+    const teamsTabs = screen.getAllByRole("tab", { name: "Teams" });
+    const teamsTab = teamsTabs[0];
+    await user.pointer({ keys: "[MouseLeft]", target: teamsTab });
 
-    const noResultsMessage = screen.getByRole("cell", { name: /no results/i });
-    expect(noResultsMessage).toBeInTheDocument();
+    const noResultsMessageCells = screen.getAllByRole("cell", { name: /no results/i });
+    const noResultsMessageCell = noResultsMessageCells[0];
+
+    expect(noResultsMessageCell).toBeInTheDocument();
   });
 
-  it("renders the members pagination component with correct initial values", () => {
-    customRender();
+  it("renders the members pagination component with correct initial values", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
     const memberTabs = screen.getAllByRole("tab", { name: "Members" });
     const memberTab = memberTabs[0];
-    userEvent.click(memberTab);
+
+    await user.pointer({ keys: "[MouseLeft]", target: memberTab });
     const paginationComponents = screen.getAllByTestId("pagination");
-    expect(paginationComponents.length).toBeGreaterThan(0);
     const paginationComponent = paginationComponents[0];
-    expect(paginationComponent).toBeInTheDocument();
-
     const limitSelector = within(paginationComponent).getByTestId("select-limit");
-    expect(limitSelector).toHaveTextContent("20");
-
     const pageInfo = within(paginationComponent).getByText(/Items per page/i);
+
+    expect(paginationComponent).toBeInTheDocument();
+    expect(limitSelector).toHaveTextContent("20");
     expect(pageInfo).toBeInTheDocument();
   });
 
   it("calls handlePagination for members when a new limit is selected", async () => {
-    customRender();
+    renderComponent();
+
     const memberTabs = screen.getAllByRole("tab", { name: "Members" });
     const memberTab = memberTabs[0];
     userEvent.click(memberTab);
@@ -298,8 +382,9 @@ describe("Branch UI tests", () => {
   });
 
   it("calls handleViewMember when view member button is clicked", async () => {
-    customRender(mockedData);
-    const menuButtons = screen.getAllByTestId("menu-branch");
+    renderComponent(mockedData);
+
+    const menuButtons = screen.getAllByRole("button", { name: "Open menu" });
     await userEvent.click(menuButtons[0]);
     const viewOption = await screen.findByText(/view member/i);
     await userEvent.click(viewOption);
@@ -309,46 +394,52 @@ describe("Branch UI tests", () => {
   });
 
   it("calls Transfer member when transfer member button is clicked", async () => {
-    customRender(mockedData);
-    const menuButtons = screen.getAllByTestId("menu-branch");
+    renderComponent(mockedData);
+
+    const menuButtons = screen.getAllByRole("button", { name: "Open menu" });
     await userEvent.click(menuButtons[0]);
-    const transferOption = await screen.findByText(/transfer member/i);
+
+    const transferOption = await screen.findByText(/transfer to new branch/i);
     await userEvent.click(transferOption);
+
     await waitFor(() => {
       expect(mockHandleTransferMember).toHaveBeenCalled();
     });
   });
 
-  it("renders the teams pagination component with correct initial values", () => {
-    customRender();
+  it("renders the teams pagination component with correct initial values", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
     const teamTabs = screen.getAllByRole("tab", { name: "Teams" });
     const teamsTab = teamTabs[0];
-    userEvent.click(teamsTab);
+    await user.pointer({ keys: "[MouseLeft]", target: teamsTab });
+
     const paginationComponents = screen.getAllByTestId("pagination");
-    expect(paginationComponents.length).toBeGreaterThan(0);
     const paginationComponent = paginationComponents[0];
-    expect(paginationComponent).toBeInTheDocument();
-
     const limitSelector = within(paginationComponent).getByTestId("select-limit");
-    expect(limitSelector).toHaveTextContent("20");
-
     const pageInfo = within(paginationComponent).getByText(/Items per page/i);
+
+    expect(paginationComponent).toBeInTheDocument();
+    expect(limitSelector).toHaveTextContent("20");
     expect(pageInfo).toBeInTheDocument();
   });
 
   it("calls handlePagination for teams when a new limit is selected", async () => {
-    customRender();
+    const user = userEvent.setup();
+    renderComponent();
+
     const teamTabs = screen.getAllByRole("tab", { name: "Teams" });
     const teamsTab = teamTabs[0];
-    userEvent.click(teamsTab);
+    await user.pointer({ keys: "[MouseLeft]", target: teamsTab });
 
     const selectContainer = screen.getAllByTestId("select-limit");
     const selectLimit = selectContainer[0];
+    const selectButton = within(selectLimit).getByRole("combobox");
+
     expect(selectLimit).toBeInTheDocument();
 
-    const selectButton = within(selectLimit).getByRole("combobox");
     await userEvent.click(selectButton);
-
     const options = await screen.findAllByText("50");
     const option = options[0];
     await userEvent.click(option);

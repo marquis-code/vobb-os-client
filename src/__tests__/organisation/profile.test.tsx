@@ -21,15 +21,15 @@ describe("OrgProfileUI Component", () => {
     logo: "",
     website: "https://test.org",
     primaryEmail: "primary@test.com",
-    pendingPrimaryEmail: null,
+    pendingPrimaryEmail: "primaryPending@test.com",
     secondaryEmail: "secondary@test.com",
-    pendingSecondaryEmail: null,
+    pendingSecondaryEmail: "secondaryPending@test.com",
     primaryPhoneNumber: "1234567890",
     secondaryPhoneNumber: "0987654321",
     sector: ["tech"]
   };
 
-  const setup = () => {
+  const renderComponent = () => {
     render(
       <OrgProfileUI
         handleChangeEmail={mockHandleChangeEmail}
@@ -52,10 +52,11 @@ describe("OrgProfileUI Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useUserContext as jest.Mock).mockReturnValue({ orgDetails: mockProfile });
-    setup();
   });
 
   it("renders correctly with initial values", () => {
+    renderComponent();
+
     expect(screen.getByTestId("avatar-section")).toBeInTheDocument();
     expect(screen.getByTestId("name")).toHaveValue("Test Org");
     expect(screen.getByTestId("website")).toHaveValue("https://test.org");
@@ -64,6 +65,8 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("should update input values on change", () => {
+    renderComponent();
+
     const nameInput = screen.getByTestId("name");
     fireEvent.change(nameInput, { target: { value: "Updated Org" } });
     expect(nameInput).toHaveValue("Updated Org");
@@ -74,9 +77,10 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("renders and handles avatar upload", () => {
-    setup();
+    renderComponent();
 
-    const avatarInput = screen.getByLabelText("Upload image") as HTMLInputElement;
+    const avatars = screen.getAllByLabelText("Upload image");
+    const avatarInput = avatars[0] as HTMLInputElement;
     const testFile = new File(["avatar"], "avatar.png", { type: "image/png" });
 
     expect(avatarInput).toBeInTheDocument();
@@ -86,25 +90,33 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("should call handleChangeEmail on primary email change button click", () => {
+    renderComponent();
+
     const changePrimaryEmailBtn = screen.getByTestId("primary-emailBtn");
     fireEvent.click(changePrimaryEmailBtn);
     expect(mockHandleChangeEmail).toHaveBeenCalled();
   });
 
   it("should submit the form when Save button is clicked", async () => {
-    const nameInput = screen.getByTestId("name");
-    fireEvent.change(nameInput, { target: { value: "Updated Org" } });
-    expect(nameInput).toHaveValue("Updated Org");
+    renderComponent();
 
-    const saveButton = screen.getByTestId("save-btn");
-    fireEvent.click(saveButton);
+    // Simulate user input
+    const nameInput = screen.getByTestId("name");
+    fireEvent.change(nameInput, { target: { value: "Updated Name" } });
+    expect(nameInput).toHaveValue("Updated Name");
+
+    // Find the form and submit it using the submit event
+    const form = screen.getByTestId("profile-form"); // Ensure form has the role "form" or find it appropriately
+    fireEvent.submit(form);
 
     await waitFor(() => {
-      expect(mockUpdateProfile.submit).toHaveBeenCalled();
+      expect(mockUpdateProfile.submit).toHaveBeenCalledWith({ name: "Updated Name" });
     });
   });
 
   it("calls handleChangeEmail function when primary email button is clicked", () => {
+    renderComponent();
+
     const primaryEmailButton = screen.getByTestId("primary-emailBtn");
     fireEvent.click(primaryEmailButton);
 
@@ -112,6 +124,8 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("calls handleChangeEmail function when secondary email button is clicked", () => {
+    renderComponent();
+
     const secondaryEmailButton = screen.getByTestId("secondary-emailBtn");
     fireEvent.click(secondaryEmailButton);
 
@@ -119,6 +133,8 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("resend verification primary email calls correct function", async () => {
+    renderComponent();
+
     const resendPrimaryEmailBtn = screen.getByTestId("primary-resend-button");
     await fireEvent.click(resendPrimaryEmailBtn[0]);
 
@@ -126,6 +142,8 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("resend verification secondary email calls correct function", async () => {
+    renderComponent();
+
     const resendSecondaryEmailBtn = screen.getByTestId("secondary-resend-button");
     await fireEvent.click(resendSecondaryEmailBtn);
 
@@ -133,6 +151,8 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("should display validation errors if form inputs are invalid", async () => {
+    renderComponent();
+
     const nameInput = screen.getByTestId("name");
     fireEvent.change(nameInput, { target: { value: "" } });
 
@@ -145,6 +165,8 @@ describe("OrgProfileUI Component", () => {
   });
 
   it("should handle phone number updates correctly", () => {
+    renderComponent();
+
     const primaryPhoneNumber = screen.getByLabelText("Primary Phone Number");
     fireEvent.change(primaryPhoneNumber, { target: { value: "1112223333" } });
 

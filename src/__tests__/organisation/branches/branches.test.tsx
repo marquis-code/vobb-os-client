@@ -1,4 +1,4 @@
-import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BranchTableMock } from "lib";
 import { OrgBranchesUI } from "modules";
@@ -29,40 +29,34 @@ const mockedData = {
   handleDeleteBranch: mockHandleDeleteBranch
 };
 
+const defaultProps = {
+  loading: false,
+  orgBranches: {
+    branchesArray: [],
+    branchesMetaData: {
+      currentPage: 1,
+      totalCount: 50,
+      totalPages: 5,
+      pageLimit: 20
+    }
+  },
+  handleAddBranch: mockHandleAddBranch,
+  handleViewBranch: mockHandleViewBranch,
+  handleEditBranch: mockHandleEditBranch,
+  handlePrimaryBranch: mockHandlePrimaryBranch,
+  handlePagination: mockHandlePagination,
+  handleDeleteBranch: mockHandleDeleteBranch
+};
+
 describe("Organisational Branches UI tests", () => {
-  let renderResult: RenderResult;
-
-  const defaultProps = {
-    loading: false,
-    orgBranches: {
-      branchesArray: [],
-      branchesMetaData: {
-        currentPage: 1,
-        totalCount: 50,
-        totalPages: 5,
-        pageLimit: 20
-      }
-    },
-    handleAddBranch: mockHandleAddBranch,
-    handleViewBranch: mockHandleViewBranch,
-    handleEditBranch: mockHandleEditBranch,
-    handlePrimaryBranch: mockHandlePrimaryBranch,
-    handlePagination: mockHandlePagination,
-    handleDeleteBranch: mockHandleDeleteBranch
-  };
-
-  const customRender = (props = {}) => {
-    const mergedProps = { ...defaultProps, ...props };
-    return render(<OrgBranchesUI {...mergedProps} />);
-  };
+  const renderComponent = (props = {}) => render(<OrgBranchesUI {...defaultProps} {...props} />);
 
   beforeEach(() => {
     vi.clearAllMocks();
-    renderResult = customRender();
   });
 
   it("should check for heading content", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const heading = screen.getByRole("heading");
     expect(heading).toBeInTheDocument();
@@ -70,7 +64,7 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("should check for add Branch button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const addTeamBtn = screen.getByTestId("add-branch");
     expect(addTeamBtn).toBeInTheDocument();
@@ -78,7 +72,7 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("should display table and table heads", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const table = screen.getByRole("table");
     const nameColumn = screen.getByRole("columnheader", { name: /name/i });
@@ -96,28 +90,28 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("should show loading spinner when loading is true", () => {
-    renderResult = customRender({ ...defaultProps.orgBranches, loading: true });
-    expect(renderResult.container).toBeTruthy();
+    renderComponent({ ...defaultProps.orgBranches, loading: true });
+    renderComponent();
 
     const loading = screen.getByTestId("loading");
     expect(loading).toBeInTheDocument();
   });
 
   it("should display cell with 'no results' when there are no teams", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
     const resultCell = screen.getByRole("cell", { name: /no results/i });
     expect(resultCell).toBeInTheDocument();
   });
 
   it("should render with mocked data", () => {
-    renderResult = customRender(mockedData);
-    expect(renderResult.container).toBeTruthy();
+    renderComponent(mockedData);
+    renderComponent();
     const mockedTeam = screen.getByText("Headquarters");
     expect(mockedTeam).toBeInTheDocument();
   });
 
   it("renders the pagination component with correct initial values", () => {
-    customRender();
+    renderComponent();
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
     const paginationComponent = paginationComponents[0];
@@ -131,7 +125,7 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("calls handlePagination when a new limit is selected", async () => {
-    customRender();
+    renderComponent();
 
     const selectContainer = screen.getAllByTestId("select-limit");
     const selectLimit = selectContainer[0];
@@ -148,7 +142,7 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("calls handleAddBranch when add branch button is clicked", () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const addBranchBtns = screen.getAllByTestId("add-branch");
     const addBranchBtn = addBranchBtns[0];
     expect(addBranchBtn).toBeInTheDocument();
@@ -157,9 +151,9 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("calls handlePrimaryBranch when mark as primary button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-branch");
-    await userEvent.click(menuButtons[0]);
+    await userEvent.click(menuButtons[1]);
     const primaryOption = await screen.findByText(/mark as primary/i);
     await userEvent.click(primaryOption);
     await waitFor(() => {
@@ -168,7 +162,7 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("calls handleViewBranch when view branch button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-branch");
     await userEvent.click(menuButtons[0]);
     const viewBranchOption = await screen.findByText(/view branch/i);
@@ -179,7 +173,7 @@ describe("Organisational Branches UI tests", () => {
   });
 
   it("calls handleEditBranch when edit  button isbranch clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-branch");
     await userEvent.click(menuButtons[0]);
     const editOption = await screen.findByText(/edit branch/i);
@@ -189,9 +183,9 @@ describe("Organisational Branches UI tests", () => {
     });
   });
   it("calls handleDeleteBranch when delete button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-branch");
-    await userEvent.click(menuButtons[0]);
+    await userEvent.click(menuButtons[1]);
     const deleteOption = await screen.findByText(/delete/i);
     await userEvent.click(deleteOption);
     await waitFor(() => {

@@ -66,7 +66,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         </TabsList>
         <TabsContent value="member">
           {memberLoading ? (
-            <LoadingSpinner testId="pagination" />
+            <LoadingSpinner testId="loading-spinner" />
           ) : (
             <MemberAttributes
               handleAddAttribute={handleAddMemberAttr}
@@ -81,7 +81,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         </TabsContent>
         <TabsContent value="client">
           {clientLoading ? (
-            <LoadingSpinner testId="pagination" />
+            <LoadingSpinner testId="loading-spinner" />
           ) : (
             <ClientAttributes
               handleAddAttribute={handleAddClientAttr}

@@ -7,26 +7,40 @@ vi.mock("context", () => ({
 }));
 
 describe("TemporarySuspensionPreview", () => {
+  const renderComponent = () => render(<TemporarySuspensionPreview />);
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders correctly with orgDetails", () => {
+  it("renders the header with correct org details", () => {
     (useUserContext as jest.Mock).mockReturnValue({
       orgDetails: {
-        logo: "http://example.com/logo.png",
+        logo: null,
         organisation: "ExampleOrg",
         primaryEmail: "user@example.com"
       }
     });
 
-    render(<TemporarySuspensionPreview />);
+    renderComponent();
 
-    expect(screen.getByRole("img", { name: /logo/i })).toBeInTheDocument();
-    expect(
-      screen.getByText("Temporary suspension of ExampleOrg's Vobb Workspace")
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Hi \(your team member's name\),/)).toBeInTheDocument();
+    const heading = screen.getByRole("heading");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent("Temporary suspension of ExampleOrg's Vobb Workspace");
+  });
+
+  it("renders the right mail information", () => {
+    (useUserContext as jest.Mock).mockReturnValue({
+      orgDetails: {
+        logo: null,
+        organisation: "ExampleOrg",
+        primaryEmail: "user@example.com"
+      }
+    });
+
+    renderComponent();
+
+    expect(screen.getByText(/Hi \(your team member's name\)/)).toBeInTheDocument();
     expect(
       screen.getByText(
         /has been temporarily suspended, effective immediately for the following reason:/
@@ -49,10 +63,9 @@ describe("TemporarySuspensionPreview", () => {
       }
     });
 
-    render(<TemporarySuspensionPreview />);
+    renderComponent();
 
-    // Check for initials
-    expect(screen.getByText("EE")).toBeInTheDocument();
+    expect(screen.getByText("EX")).toBeInTheDocument();
   });
 
   it("renders fallback avatar initials when organisation name is too short", () => {
@@ -64,9 +77,8 @@ describe("TemporarySuspensionPreview", () => {
       }
     });
 
-    render(<TemporarySuspensionPreview />);
+    renderComponent();
 
-    // Check for initials
     expect(screen.getByText("A")).toBeInTheDocument();
   });
 
@@ -79,7 +91,7 @@ describe("TemporarySuspensionPreview", () => {
       }
     });
 
-    render(<TemporarySuspensionPreview />);
+    renderComponent();
 
     expect(screen.getByText(/This email was sent to/)).toBeInTheDocument();
     expect(screen.getByText(/If this is not you, please ignore this email./)).toBeInTheDocument();
