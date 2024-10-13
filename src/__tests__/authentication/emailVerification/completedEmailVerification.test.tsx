@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { CompletedEmailVerifyUI } from "modules";
 
@@ -57,5 +57,12 @@ describe("CompletedPasswordResetUI", () => {
 
     expect(continueButton).toBeInTheDocument();
     expect(continueButton).toBeEnabled();
+  });
+
+  it("should call submit function when 'Continue' button is clicked", () => {
+    renderComponent();
+    const continueButton = screen.getByRole("button", { name: "Continue" });
+    fireEvent.click(continueButton);
+    expect(defaultProps.submit).toHaveBeenCalled();
   });
 });

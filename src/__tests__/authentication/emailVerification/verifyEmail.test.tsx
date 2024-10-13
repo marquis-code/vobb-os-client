@@ -1,4 +1,4 @@
-import React from "react";
+import { act } from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { VerifyEmailUI } from "modules";
@@ -129,5 +129,67 @@ describe("VerifyEmailUI", () => {
     renderComponent();
     const signupLink = screen.getByRole("button", { name: "Back to sign up" });
     expect(signupLink).toBeEnabled();
+  });
+
+  it("should render resend button as disabled when countdown is more than zero", () => {
+    renderComponent();
+    const resendButton = screen.getByTestId("resend-btn");
+
+    expect(resendButton).toHaveTextContent("30");
+    expect(resendButton).toBeDisabled();
+  });
+
+  it("renders resend button as enabled after 30 seconds, with appropriate text", () => {
+    vi.useFakeTimers();
+    renderComponent();
+    const resendButton = screen.getByTestId("resend-btn");
+
+    for (let i = 0; i < 29; i++) {
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+    }
+
+    // After 29 seconds
+    expect(resendButton).toHaveTextContent("1");
+    expect(resendButton).toBeDisabled();
+
+    // Advance time by 1 more second
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    // After 30 seconds
+    expect(resendButton).toHaveTextContent("Resend code");
+    expect(resendButton).toBeEnabled();
+    fireEvent.click(resendButton);
+    expect(defaultProps.handleResend).toHaveBeenCalledWith({
+      email: "test@email.com"
+    });
+
+    vi.useRealTimers();
+  });
+
+  it("calls handleResend function when resend button is clicked", () => {
+    vi.useFakeTimers();
+    renderComponent();
+    const resendButton = screen.getByTestId("resend-btn");
+
+    for (let i = 0; i < 29; i++) {
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+    }
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    fireEvent.click(resendButton);
+    expect(defaultProps.handleResend).toHaveBeenCalledWith({
+      email: "test@email.com"
+    });
+
+    vi.useRealTimers();
   });
 });

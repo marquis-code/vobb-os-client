@@ -27,7 +27,7 @@ const CompletedPasswordResetUI: React.FC<CompletedProps> = ({ submit }) => {
             className="w-full mt-6"
             size={"default"}
             variant="fill"
-            onClick={() => navigate(Routes.login)}
+            onClick={() => submit()}
             data-testid="continue-btn">
             Continue
           </Button>

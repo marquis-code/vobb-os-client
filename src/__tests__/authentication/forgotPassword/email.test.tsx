@@ -28,11 +28,11 @@ vi.mock("components", () => ({
 }));
 
 // Mock react-hook-form
-let mockUseForm = () => ({
+const defaultMockUseForm = () => ({
   register: vi.fn(),
   handleSubmit: (callback) => (event) => {
     event.preventDefault();
-    callback({});
+    callback({ email: "test@email.com" });
   },
   formState: {
     errors: {}
@@ -41,6 +41,8 @@ let mockUseForm = () => ({
   getValues: vi.fn(),
   watch: vi.fn()
 });
+
+const mockUseForm = vi.fn(defaultMockUseForm);
 
 vi.mock("react-hook-form", () => ({
   useForm: () => mockUseForm(),
@@ -62,6 +64,7 @@ describe("Email UI", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseForm.mockImplementation(defaultMockUseForm);
   });
 
   it("should render the logo", () => {
@@ -90,13 +93,8 @@ describe("Email UI", () => {
   });
 
   it("should display required error when email is not filled", async () => {
-    // Override form state to simulate validation error for required field
-    mockUseForm = () => ({
-      register: vi.fn(),
-      handleSubmit: (callback) => (event) => {
-        event.preventDefault();
-        callback({});
-      },
+    mockUseForm.mockImplementation(() => ({
+      ...defaultMockUseForm(),
       formState: {
         errors: {
           email: {
@@ -104,10 +102,11 @@ describe("Email UI", () => {
           }
         }
       },
-      setValue: vi.fn(),
-      getValues: vi.fn(),
-      watch: vi.fn()
-    });
+      handleSubmit: (callback) => (event) => {
+        event.preventDefault();
+        callback({});
+      }
+    }));
 
     renderComponent();
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
@@ -118,12 +117,8 @@ describe("Email UI", () => {
   });
 
   it("should display invalid email error when an invalid email is provided", async () => {
-    mockUseForm = () => ({
-      register: vi.fn(),
-      handleSubmit: (callback) => (event) => {
-        event.preventDefault();
-        callback({ email: "invalid-email" });
-      },
+    mockUseForm.mockImplementation(() => ({
+      ...defaultMockUseForm(),
       formState: {
         errors: {
           email: {
@@ -131,10 +126,11 @@ describe("Email UI", () => {
           }
         }
       },
-      setValue: vi.fn(),
-      getValues: vi.fn(),
-      watch: vi.fn()
-    });
+      handleSubmit: (callback) => (event) => {
+        event.preventDefault();
+        callback({ email: "invalid-email" });
+      }
+    }));
 
     renderComponent();
     const emailInput = screen.getByTestId("email");
@@ -148,20 +144,14 @@ describe("Email UI", () => {
   });
 
   it("should trigger submit when valid email is provided", async () => {
-    mockUseForm = () => ({
-      register: vi.fn(),
-      handleSubmit: (callback) => async (event) => {
-        event.preventDefault();
-        await waitFor(() => {
-          callback({ email: "test@example.com" });
-        });
-      },
-      formState: {
-        errors: {}
-      },
-      setValue: vi.fn(),
-      getValues: vi.fn(),
-      watch: vi.fn()
+    renderComponent();
+    const emailInput = screen.getByTestId("email");
+    fireEvent.change(emailInput, { target: { value: "test@email.com" } });
+
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    await waitFor(() => {
+      expect(defaultProps.submit).toHaveBeenCalledWith({ email: "test@email.com" });
     });
   });
 

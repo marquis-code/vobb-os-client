@@ -71,11 +71,11 @@ describe("CompletedPasswordResetUI", () => {
     expect(continueButton).toBeInTheDocument();
   });
 
-  it("should navigate to login when 'Continue' button is clicked", () => {
+  it("should call submit function when 'Continue' button is clicked", () => {
     renderComponent();
     const continueButton = screen.getByRole("button", { name: "Continue" });
     fireEvent.click(continueButton);
-    expect(mockNavigate).toHaveBeenCalledWith(Routes.login);
+    expect(defaultProps.submit).toHaveBeenCalled();
   });
 
   it("should render the 'Back to log in' button", () => {

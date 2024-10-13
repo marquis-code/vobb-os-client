@@ -14,12 +14,13 @@ const CompletedEmailVerifyUI: React.FC<CompletedProps> = ({ submit }) => {
         </h1>
         <p className="text-center mb-8">Great news! Your email is now verified.</p>
 
-        <form onSubmit={() => submit()}>
+        <form>
           <Button
             type="submit"
             className="w-full mt-6"
             size={"default"}
             variant="fill"
+            onClick={() => submit()}
             data-testid="continue-btn">
             Continue
           </Button>
