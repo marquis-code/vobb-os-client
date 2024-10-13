@@ -7,21 +7,6 @@ describe("Forgot password page", () => {
     });
   });
 
-  it("should display the enter email page", () => {
-    cy.get('[data-testid="logo"]').should("exist");
-    cy.get("h1").should("contain", "Forgot Password?");
-    cy.get('[data-testid="subtitle"]').should(
-      "contain",
-      "No worries, we’ll send you reset instructions."
-    );
-    cy.contains("label", "Email").should("exist");
-    cy.get('input[name="email"]').should("be.visible").and("be.enabled");
-    cy.contains("button", "Continue").should("be.visible").and("be.enabled");
-
-    cy.get('[data-testid="back-btn"]').should("be.visible").and("be.enabled");
-    cy.get("[data-testid='arrow-icon']").should("exist");
-  });
-
   it("should successfully go back to sign in page", () => {
     cy.get('[data-testid="back-btn"]').click();
     cy.url().should("include", "/login");

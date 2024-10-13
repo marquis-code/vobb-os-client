@@ -1,4 +1,4 @@
-import { render, RenderResult, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SortOrderType } from "components";
 import { teamActivityMockData } from "lib";
@@ -46,42 +46,35 @@ const mockedData = {
   }
 };
 
-const MockedTeamActivities = (props = {}) => {
-  const mergedProps = { ...defaultProps, ...props };
-  return (
-    <BrowserRouter>
-      <TeamActivity {...mergedProps} />
-    </BrowserRouter>
-  );
-};
-
-const customRender = (props = {}) => render(<MockedTeamActivities {...props} />);
-
 describe("Team Activities", () => {
-  let renderResult: RenderResult;
+  const renderComponent = (props = {}) =>
+    render(
+      <BrowserRouter>
+        <TeamActivity {...defaultProps} {...props} />
+      </BrowserRouter>
+    );
 
   beforeEach(() => {
     vi.clearAllMocks();
-    renderResult = customRender();
-  });
-
-  it("should render the team activities UI page", () => {
-    expect(renderResult.container).toBeTruthy();
   });
 
   it("should check for Sort button", () => {
+    renderComponent();
+
     const sortBy = screen.getByTestId("sortBy");
     expect(sortBy).toBeInTheDocument();
     expect(sortBy).toHaveTextContent(/sorted/i);
   });
 
   it("should check for date select button", () => {
+    renderComponent();
+
     const dateFilter = screen.getByTestId("dateFilter");
     expect(dateFilter).toBeInTheDocument();
   });
 
   it("should show loading spinner when loading is true", () => {
-    renderResult = customRender({
+    renderComponent({
       teamActivities: {
         loading: true,
         data: initActivityData,
@@ -101,13 +94,13 @@ describe("Team Activities", () => {
   });
 
   it("should display paragraph with 'no activities' when there is no history", () => {
-    renderResult = customRender(mockedData);
+    renderComponent(mockedData);
     const paragraph = screen.getByTestId("no-activities");
     expect(paragraph).toBeInTheDocument();
   });
 
   it("should render with mocked data", () => {
-    renderResult = customRender({
+    renderComponent({
       teamActivities: {
         loading: false,
         data: {
@@ -136,7 +129,7 @@ describe("Team Activities", () => {
   });
 
   it("renders the pagination component with correct initial values", () => {
-    customRender();
+    renderComponent();
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
 
@@ -151,7 +144,7 @@ describe("Team Activities", () => {
   });
 
   it("calls handlePagination when a new limit is selected", async () => {
-    customRender();
+    renderComponent();
 
     const selectContainer = screen.getAllByTestId("select-limit");
     const selectLimit = selectContainer[0];

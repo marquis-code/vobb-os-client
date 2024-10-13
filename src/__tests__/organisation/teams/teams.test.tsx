@@ -1,4 +1,4 @@
-import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TeamTableMock } from "lib";
 import { TeamsUI } from "modules";
@@ -53,27 +53,20 @@ const mockedData = {
   handleAddTeam: mockHandleAddTeam
 };
 
-const MockedTeams = (props = {}) => {
-  const mergedProps = { ...defaultProps, ...props };
-  return (
-    <BrowserRouter>
-      <TeamsUI {...mergedProps} />
-    </BrowserRouter>
-  );
-};
-
-const customRender = (props = {}) => render(<MockedTeams {...props} />);
-
 describe("Team UI tests", () => {
-  let renderResult: RenderResult;
+  const renderComponent = (props = {}) =>
+    render(
+      <BrowserRouter>
+        <TeamsUI {...defaultProps} {...props} />
+      </BrowserRouter>
+    );
 
   beforeEach(() => {
     vi.clearAllMocks();
-    renderResult = customRender();
   });
 
   it("should check for heading content", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const heading = screen.getByRole("heading");
     expect(heading).toBeInTheDocument();
@@ -81,7 +74,7 @@ describe("Team UI tests", () => {
   });
 
   it("should check for filter button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const filterButtons = screen.getAllByRole("combobox");
     expect(filterButtons.length).toBeGreaterThan(0);
@@ -95,7 +88,7 @@ describe("Team UI tests", () => {
   });
 
   it("should check for Add Team button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const addTeamBtn = screen.getByTestId("add-team");
     expect(addTeamBtn).toBeInTheDocument();
@@ -103,7 +96,7 @@ describe("Team UI tests", () => {
   });
 
   it("should display table and table heads", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const table = screen.getByRole("table");
     const nameColumn = screen.getByRole("columnheader", { name: /name/i });
@@ -123,28 +116,26 @@ describe("Team UI tests", () => {
   });
 
   it("should show loading spinner when loading is true", () => {
-    renderResult = customRender({ teams: { ...defaultProps.teams, loading: true } });
-    expect(renderResult.container).toBeTruthy();
+    renderComponent({ teams: { ...defaultProps.teams, loading: true } });
 
     const loading = screen.getByTestId("loading");
     expect(loading).toBeInTheDocument();
   });
 
   it("should display cell with 'no results' when there are no teams", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
     const resultCell = screen.getByRole("cell", { name: /no results/i });
     expect(resultCell).toBeInTheDocument();
   });
 
   it("should render with mocked data", () => {
-    renderResult = customRender(mockedData);
-    expect(renderResult.container).toBeTruthy();
+    renderComponent(mockedData);
     const mockedTeam = screen.getByText("Support");
     expect(mockedTeam).toBeInTheDocument();
   });
 
   it("renders the pagination component with correct initial values", () => {
-    customRender();
+    renderComponent();
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
     const paginationComponent = paginationComponents[0];
@@ -158,7 +149,7 @@ describe("Team UI tests", () => {
   });
 
   it("calls handlePagination when a new limit is selected", async () => {
-    customRender();
+    renderComponent();
 
     const selectContainer = screen.getAllByTestId("select-limit");
     const selectLimit = selectContainer[0];
@@ -175,7 +166,7 @@ describe("Team UI tests", () => {
   });
 
   it("calls handleAddteam when add team button is clicked", () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const addTeamBtns = screen.getAllByTestId("add-team");
     const addTeamBtn = addTeamBtns[0];
     expect(addTeamBtn).toBeInTheDocument();
@@ -183,21 +174,22 @@ describe("Team UI tests", () => {
     expect(mockHandleAddTeam).toHaveBeenCalled();
   });
 
-  it("calls handleViewBranches when branch number is clicked", () => {
-    customRender(mockedData);
+  it("calls handleViewBranches when branch number is clicked", async () => {
+    renderComponent(mockedData);
     const branchesCell = screen.getByRole("cell", { name: /45/i });
-    expect(branchesCell).toBeInTheDocument();
     const branchesButton = within(branchesCell).getByRole("button");
     expect(branchesButton).toBeInTheDocument();
-    userEvent.click(branchesButton);
-    expect(mockHandleViewBranches).toHaveBeenCalled();
+    await userEvent.click(branchesButton);
+    await waitFor(() => {
+      expect(mockHandleViewBranches).toHaveBeenCalled();
+    });
   });
 
   it("calls handleEditTeam when edit team button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-team");
     await userEvent.click(menuButtons[0]);
-    const editOption = await screen.findByText(/Edit team/i);
+    const editOption = await screen.findByText(/edit team/i);
     await userEvent.click(editOption);
     await waitFor(() => {
       expect(mockHandleEditTeam).toHaveBeenCalled();
@@ -205,17 +197,18 @@ describe("Team UI tests", () => {
   });
 
   it("calls handleViewTeam when view team button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-team");
     await userEvent.click(menuButtons[0]);
-    const viewOption = await screen.findByText(/view team/i);
-    await userEvent.click(viewOption);
+    const viewOptions = await screen.findAllByText(/view team/i);
+    await userEvent.click(viewOptions[0]);
     await waitFor(() => {
       expect(mockHandleViewTeam).toHaveBeenCalled();
     });
   });
+
   it("calls handleTeamHistory when teamHistory button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-team");
     await userEvent.click(menuButtons[0]);
     const teamHistoryOption = await screen.findByText(/team history/i);
