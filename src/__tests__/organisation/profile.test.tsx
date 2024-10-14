@@ -49,9 +49,7 @@ const renderComponent = (props = {}) => render(<OrgProfileUI {...mockProps} />);
 
 describe("OrgProfileUI", () => {
   beforeEach(() => {
-    (useUserContext as jest.Mock).mockReturnValue({
-      mockUserContext
-    });
+    (useUserContext as jest.Mock).mockReturnValue(mockUserContext);
   });
 
   it("renders the component with initial data", () => {
@@ -74,18 +72,26 @@ describe("OrgProfileUI", () => {
     expect(avatarInput.files![0]).toBe(testFile);
   });
 
-  it("handles form submission", async () => {
+  it("handles form submission with some inputs", async () => {
     renderComponent();
 
     const nameInput = screen.getByTestId("name");
-    const saveButton = screen.getByTestId("save-btn");
+    const websiteInput = screen.getByTestId("website");
 
-    fireEvent.change(nameInput, { target: { value: "New Org Name here" } });
+    fireEvent.change(nameInput, { target: { value: "New Org Name" } });
+    fireEvent.change(websiteInput, { target: { value: "https://neworg.com" } });
+
+    const saveButton = screen.getByTestId("save-btn");
+    expect(saveButton).not.toBeDisabled();
+
     fireEvent.click(saveButton);
 
-    await waitFor(() => {
-      expect(mockProps.updateProfile.submit).toHaveBeenCalled();
-    });
+    await waitFor(
+      () => {
+        expect(mockProps.updateProfile.submit).toHaveBeenCalled();
+      },
+      { timeout: 2000 }
+    );
   });
 
   it("handles primary email change", () => {
