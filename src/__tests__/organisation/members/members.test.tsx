@@ -1,4 +1,4 @@
-import { fireEvent, render, RenderResult, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemberTableMock } from "lib";
 import { MembersUI } from "modules";
@@ -58,34 +58,27 @@ const mockedData = {
   handleResendInvitation: mockHandleResendInvitation
 };
 
-const MockedTeams = (props = {}) => {
-  const mergedProps = { ...defaultProps, ...props };
-  return (
-    <BrowserRouter>
-      <MembersUI {...mergedProps} />
-    </BrowserRouter>
-  );
-};
-
-const customRender = (props = {}) => render(<MockedTeams {...props} />);
-
 describe("Members UI tests", () => {
-  let renderResult: RenderResult;
+  const renderComponent = (props = {}) =>
+    render(
+      <BrowserRouter>
+        <MembersUI {...defaultProps} {...props} />
+      </BrowserRouter>
+    );
 
   beforeEach(() => {
     vi.clearAllMocks();
-    renderResult = customRender();
   });
 
   it("should render with mocked data", () => {
-    renderResult = customRender(mockedData);
-    expect(renderResult.container).toBeTruthy();
+    renderComponent(mockedData);
+    renderComponent();
     const mockedMember = screen.getByText("Jason Mamoa");
     expect(mockedMember).toBeInTheDocument();
   });
 
   it("should check for heading content", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const heading = screen.getByRole("heading");
     expect(heading).toBeInTheDocument();
@@ -93,7 +86,7 @@ describe("Members UI tests", () => {
   });
 
   it("should check for filter button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const filterButtons = screen.getAllByRole("combobox");
     expect(filterButtons.length).toBeGreaterThan(0);
@@ -107,7 +100,7 @@ describe("Members UI tests", () => {
   });
 
   it("should check for invite member button", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const addTeamBtn = screen.getByTestId("invite-member");
     expect(addTeamBtn).toBeInTheDocument();
@@ -115,7 +108,7 @@ describe("Members UI tests", () => {
   });
 
   it("should display table and table heads", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
 
     const table = screen.getByRole("table");
     const nameColumn = screen.getByRole("columnheader", { name: /name/i });
@@ -147,21 +140,21 @@ describe("Members UI tests", () => {
       }
     };
 
-    renderResult = customRender(updatedProps);
-    expect(renderResult.container).toBeTruthy();
+    renderComponent(updatedProps);
+    renderComponent();
 
     const loading = screen.getByTestId("loading");
     expect(loading).toBeInTheDocument();
   });
 
   it("should display cell with 'no results' when there are no teams", () => {
-    expect(renderResult.container).toBeTruthy();
+    renderComponent();
     const resultCell = screen.getByRole("cell", { name: /no results/i });
     expect(resultCell).toBeInTheDocument();
   });
 
   it("renders the pagination component with correct initial values", () => {
-    customRender();
+    renderComponent();
     const paginationComponents = screen.getAllByTestId("pagination");
     expect(paginationComponents.length).toBeGreaterThan(0);
     const paginationComponent = paginationComponents[0];
@@ -175,7 +168,7 @@ describe("Members UI tests", () => {
   });
 
   it("calls handlePagination when a new limit is selected", async () => {
-    customRender();
+    renderComponent();
 
     const selectContainer = screen.getAllByTestId("select-limit");
     const selectLimit = selectContainer[0];
@@ -192,7 +185,7 @@ describe("Members UI tests", () => {
   });
 
   it("calls handleInviteMember when invite member button is clicked", () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const inviteMemberBtns = screen.getAllByTestId("invite-member");
     const inviteMemberBtn = inviteMemberBtns[0];
     expect(inviteMemberBtn).toBeInTheDocument();
@@ -201,7 +194,7 @@ describe("Members UI tests", () => {
   });
 
   it("calls handleViewMember when view member button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-activeUser");
     await userEvent.click(menuButtons[0]);
     const viewOption = await screen.findByText(/view member/i);
@@ -212,7 +205,7 @@ describe("Members UI tests", () => {
   });
 
   it("calls handleSuspendMember when suspend member button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-activeUser");
     await userEvent.click(menuButtons[0]);
     const suspendOption = await screen.findByText(/suspend member/i);
@@ -222,7 +215,7 @@ describe("Members UI tests", () => {
     });
   });
   it("calls handleChangeRole when change role for member button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-activeUser");
     await userEvent.click(menuButtons[0]);
     const changeRoleOption = await screen.findByText(/change role/i);
@@ -233,7 +226,7 @@ describe("Members UI tests", () => {
   });
 
   it("calls handleResendInvitation when resend invite button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-inactiveUser");
     await userEvent.click(menuButtons[0]);
     const resendOption = await screen.findByText(/resend invitation/i);
@@ -244,7 +237,7 @@ describe("Members UI tests", () => {
   });
 
   it("calls handleCancelInvitation when cancel invite button is clicked", async () => {
-    customRender(mockedData);
+    renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-inactiveUser");
     await userEvent.click(menuButtons[0]);
     const cancelOption = await screen.findByText(/cancel invitation/i);

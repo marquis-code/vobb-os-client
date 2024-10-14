@@ -54,7 +54,11 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit, handleResend,
             <CustomInputOTP value={otp} onChange={setOtp} />
           </div>
 
-          <Button disabled={otp.length !== 6} size={"default"} variant={"fill"} className="w-full">
+          <Button
+            disabled={otp.length !== 6 || loading}
+            size={"default"}
+            variant={"fill"}
+            className="w-full">
             Continue
           </Button>
         </form>
@@ -63,7 +67,7 @@ const VerifyPasswordUI: React.FC<VerifyPasswordProps> = ({ submit, handleResend,
           <Button
             className="text-vobb-primary-70"
             onClick={submitResend}
-            disabled={countdown > 0}
+            disabled={countdown > 0 || loading}
             variant={"ghost"}
             data-testid="resend-btn">
             {countdown > 0 ? countdown : "Click to resend"}

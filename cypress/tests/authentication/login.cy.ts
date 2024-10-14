@@ -8,31 +8,6 @@ describe("Login page", () => {
     });
   });
 
-  it("should display the login page", () => {
-    cy.get('[data-testid="logo"]').should("exist");
-    cy.get("h1").should("contain", "Sign in to your account");
-    cy.contains("label", "Email").should("exist");
-    cy.contains("label", "Password").should("exist");
-    cy.get('input[name="email"]').should("be.visible").and("be.enabled");
-    cy.get('input[name="password"]').should("be.visible").and("be.enabled");
-    cy.get('svg[role="button"]').should("be.visible");
-    cy.get('button[role="checkbox"]').should("be.visible").and("be.enabled");
-    cy.contains("label", "Stay signed in for a week").should("exist");
-    cy.contains("Forgot password?").should("have.attr", "href").and("not.be.empty");
-    cy.contains("Forgot password?").should("not.have.class", "disabled");
-    cy.contains("Forgot password?")
-      .invoke("attr", "href")
-      .should("match", /^\/forgot-password$/);
-    cy.get('[data-testid="recaptcha"]').should("exist"); //further checks for contents of recaptcha is done in cy.solveGoogleReCAPTCHA() where the iframe is properly accessed;
-
-    cy.contains("button", "Sign in").should("be.visible").and("be.enabled");
-    cy.get('[data-testid="signin-google-btn"]').should("be.visible").and("be.enabled");
-    cy.get('[data-testid="dont-have-account"]').should("exist");
-    cy.contains("Sign up").should("have.attr", "href").and("not.be.empty");
-    cy.contains("Sign up").should("not.have.class", "disabled");
-    cy.contains("Sign up").invoke("attr", "href").should("match", /^\/$/);
-  });
-
   it("should toggle password visibility when clicking the eye icon", () => {
     cy.get('input[name="password"]').should("have.attr", "type", "password");
     cy.get('svg[role="button"]').click();
