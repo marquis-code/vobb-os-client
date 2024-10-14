@@ -48,11 +48,31 @@ describe("FullnameUI Component", () => {
     vi.clearAllMocks();
   });
 
-  it("renders the component correctly with default elements", () => {
+  it("renders the icon", () => {
     renderComponent();
-    expect(screen.getByTestId("logo")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Enter your name/i })).toBeInTheDocument();
-    expect(screen.getByTestId("subtitle").textContent).toBe("As shown on a government issued ID");
+    const icon = screen.getByTestId("logo");
+
+    expect(icon).toBeInTheDocument();
+  });
+
+  it("renders the heading", () => {
+    renderComponent();
+
+    const heading = screen.getByRole("heading");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent("Enter your name");
+  });
+
+  it("renders the paragraph description", () => {
+    renderComponent();
+
+    const subtitle = screen.getByTestId("subtitle");
+    expect(subtitle).toBeInTheDocument();
+    expect(subtitle).toHaveTextContent("As shown on a government issued ID");
+  });
+
+  it("renders the form correctly", () => {
+    renderComponent();
     expect(screen.getByTestId("firstname")).toBeInTheDocument();
     expect(screen.getByTestId("lastname")).toBeInTheDocument();
     expect(screen.getByTestId("continue-btn")).toBeInTheDocument();

@@ -3,6 +3,7 @@ import { describe, it, vi } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { CompanyInfoUI } from "modules/onboarding/index";
 import { Routes } from "router";
+import { CompanyFormProps } from "types";
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
@@ -33,28 +34,51 @@ vi.mock("assets", async () => {
   };
 });
 
-const mockSubmit = vi.fn();
-const mockHandleCompanyChange = vi.fn();
-
-const renderComponent = (props = {}) => {
-  return render(
-    <BrowserRouter>
-      <CompanyInfoUI
-        initName={{ organisation: "" }}
-        initSize={{ size: null }}
-        initSector={{ sector: null }}
-        activeCompanyInfo="organisation"
-        handleCompanyChange={mockHandleCompanyChange}
-        submit={mockSubmit}
-        loading={false}
-      />
-    </BrowserRouter>
-  );
-};
-
 describe("CompanyInfoUI", () => {
+  const mockSubmit = vi.fn();
+  const mockHandleCompanyChange = vi.fn();
+  const initialProps: CompanyFormProps = {
+    initName: { organisation: "" },
+    initSize: { size: null },
+    initSector: { sector: null },
+    activeCompanyInfo: "organisation",
+    handleCompanyChange: mockHandleCompanyChange,
+    submit: mockSubmit,
+    loading: false
+  };
+
+  const renderComponent = (props = {}) => {
+    return render(
+      <BrowserRouter>
+        <CompanyInfoUI {...initialProps} {...props} />
+      </BrowserRouter>
+    );
+  };
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("renders the icon", () => {
+    renderComponent();
+    const icon = screen.getByTestId("logo");
+
+    expect(icon).toBeInTheDocument();
+  });
+
+  it("renders the heading", () => {
+    renderComponent();
+
+    const heading = screen.getByRole("heading");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent("Company information");
+  });
+
+  it("renders the paragraph description", () => {
+    renderComponent();
+
+    const subtitle = screen.getByTestId("subtitle");
+    expect(subtitle).toBeInTheDocument();
+    expect(subtitle).toHaveTextContent("Enter your company details.");
   });
 
   it("renders OrganisationForm by default", () => {
@@ -63,63 +87,47 @@ describe("CompanyInfoUI", () => {
   });
 
   it("renders TeamSizeForm when activeCompanyInfo is 'teamSize'", () => {
-    render(
-      <CompanyInfoUI
-        initName={{ organisation: "" }}
-        initSize={{
-          size: {
-            label: "0-5 Team members",
-            value: "0-5"
-          }
-        }}
-        initSector={{ sector: null }}
-        activeCompanyInfo="teamSize"
-        handleCompanyChange={mockHandleCompanyChange}
-        submit={mockSubmit}
-        loading={false}
-      />
-    );
+    renderComponent({ activeCompanyInfo: "teamSize" });
 
     expect(screen.getByTestId("team-size-form")).toBeInTheDocument();
   });
 
   it("renders SectorForm when activeCompanyInfo is 'sector'", () => {
-    render(
-      <CompanyInfoUI
-        initName={{ organisation: "" }}
-        initSize={{
-          size: {
-            label: "0-5 Team members",
-            value: "0-5"
-          }
-        }}
-        initSector={{ sector: { label: "Tourism", value: "Tourism" } }}
-        activeCompanyInfo="sector"
-        handleCompanyChange={mockHandleCompanyChange}
-        submit={mockSubmit}
-        loading={false}
-      />
-    );
+    renderComponent({ activeCompanyInfo: "sector" });
 
     expect(screen.getByTestId("sector-form")).toBeInTheDocument();
   });
 
   it("navigates back to user details on arrow click", () => {
-    render(
-      <CompanyInfoUI
-        initName={{ organisation: "" }}
-        initSize={{ size: null }}
-        initSector={{ sector: null }}
-        activeCompanyInfo="organisation"
-        handleCompanyChange={mockHandleCompanyChange}
-        submit={mockSubmit}
-        loading={false}
-      />
-    );
+    renderComponent();
 
     const arrow = screen.getByTestId("arrow-icon");
     fireEvent.click(arrow);
 
     expect(mockNavigate).toHaveBeenCalledWith(Routes.onboarding_user_details);
+  });
+
+  it('should call handleCompanyChange function with "organisation" as parameter', () => {
+    renderComponent();
+    const orgBtnState = screen.getByTestId("organisation-name-state");
+    fireEvent.click(orgBtnState);
+
+    expect(mockHandleCompanyChange).toHaveBeenCalledWith("organisation");
+  });
+
+  it('should call handleCompanyChange function with "teamSize" as parameter', () => {
+    renderComponent();
+    const teamSizeBtnState = screen.getByTestId("teamsize-state");
+    fireEvent.click(teamSizeBtnState);
+
+    expect(mockHandleCompanyChange).toHaveBeenCalledWith("teamSize");
+  });
+
+  it('should call handleCompanyChange function with "sector" as parameter', () => {
+    renderComponent();
+    const sectorState = screen.getByTestId("sector-state");
+    fireEvent.click(sectorState);
+
+    expect(mockHandleCompanyChange).toHaveBeenCalledWith("sector");
   });
 });
