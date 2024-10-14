@@ -13,7 +13,7 @@ const CompletedPasswordResetUI: React.FC<CompletedProps> = ({ submit }) => {
   return (
     <main>
       <section className="bg-circle-pattern max-w-[400px] m-auto text-vobb_neutral-100 bg-no-repeat bg-[length:600px_600px] bg-[center_top_-100px] pt-[100px] px-4 pb-4">
-        <CheckCircledIcon className="mb-12 mt-2 mx-auto w-8 h-8" />
+        <CheckCircledIcon className="mb-12 mt-2 mx-auto w-8 h-8" data-testid="logo" />
 
         <h1 className="text-xl sm:text-2xl font-bold mb-4 text-vobb-neutral-100 text-center">
           Password reset
@@ -27,7 +27,8 @@ const CompletedPasswordResetUI: React.FC<CompletedProps> = ({ submit }) => {
             className="w-full mt-6"
             size={"default"}
             variant="fill"
-            onClick={() => navigate(Routes.login)}>
+            onClick={() => submit()}
+            data-testid="continue-btn">
             Continue
           </Button>
         </form>
@@ -36,7 +37,8 @@ const CompletedPasswordResetUI: React.FC<CompletedProps> = ({ submit }) => {
           onClick={() => navigate(Routes.login)}
           className="w-full mt-6 flex gap-4 items-center"
           size={"default"}
-          variant="ghost">
+          variant="ghost"
+          data-testid="back-btn">
           <ArrowLeftIcon /> Back to log in
         </Button>
       </section>
