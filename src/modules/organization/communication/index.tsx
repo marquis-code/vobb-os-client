@@ -73,15 +73,21 @@ const OrgCommunicationUI: React.FC<OrgCommProps> = ({
                   size={"sm"}
                   className="p-0 h-[fit-content] text-vobb-neutral-80"
                   variant={"link"}
-                  onClick={() => setPreview(key)}>
+                  onClick={() => setPreview(key)}
+                  data-testid={`${key}-preview`}>
                   Preview mail
                 </Button>
-                <Switch checked={isEnabled} onCheckedChange={onCheckedChange} disabled={loading} />
+                <Switch
+                  checked={isEnabled}
+                  onCheckedChange={onCheckedChange}
+                  disabled={loading}
+                  testId={key}
+                />
               </span>
             </div>
           ))}
         </div>
-        <div className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20">
+        <div className="rounded-md min-h-[400px] p-4 bg-vobb-neutral-20" data-testid="preview">
           {notices.find((notice) => notice.key === preview)?.preview ||
             "No notice selected for preview"}
         </div>

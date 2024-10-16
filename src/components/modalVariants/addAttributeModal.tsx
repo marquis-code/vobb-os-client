@@ -9,7 +9,7 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { attributeTypeIcons, attributeTypeOptions, fileTypeOptions } from "lib/constants";
 import { Switch } from "components/ui/switch";
 import { getOptionTypeValidationMsg } from "lib";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export interface AddAttributesData {
   title: string;
@@ -19,6 +19,7 @@ export interface AddAttributesData {
   options?: string[];
   fileType?: any | optionType | null;
   wordLimit?: string;
+  createNew: boolean;
 }
 
 const optionTypeSchema = yup.object({
@@ -71,7 +72,8 @@ const schema = yup.object({
             value ? value.length === new Set(value)?.size : true
           ),
       otherwise: (schema) => schema.notRequired()
-    })
+    }),
+  createNew: yup.boolean().required("Required")
 });
 
 interface AddAttributeModalProps extends ModalProps {
@@ -87,7 +89,6 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
   loading,
   initData
 }) => {
-  const [createNew, setCreateNew] = useState(false);
   const {
     register,
     handleSubmit,
@@ -115,16 +116,19 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
         description: initData?.description ?? "",
         wordLimit: Array.isArray(initData?.metaData) ? "" : initData?.metaData,
         required: initData?.required,
-        options: Array.isArray(initData?.metaData) ? initData?.metaData : []
+        options: Array.isArray(initData?.metaData) ? initData?.metaData : [],
+        createNew: false
       });
     }
   }, [initData, reset]);
+
+  const createNew = watch("createNew");
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
+      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="addAttr-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Create Attribute</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
@@ -196,10 +200,13 @@ const AddAttributeModal: React.FC<AddAttributeModalProps> = ({
         <div className="flex justify-end gap-2 items-center">
           <CheckboxWithText
             label={"Create another attribute"}
-            handleChecked={setCreateNew}
+            handleChecked={() => {
+              setValue("createNew", !createNew);
+            }}
             checked={createNew}
             className="mr-auto"
           />
+
           <Button
             onClick={() => close()}
             className="text-error-10"

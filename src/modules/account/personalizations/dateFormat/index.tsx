@@ -77,7 +77,8 @@ const DateFormat: React.FC<DateFormatProps> = ({ submit, loadingDateFormat }) =>
               onClick={handleSubmit(onSubmit)}
               variant={"fill"}
               loading={loadingDateFormat}
-              disabled={loadingDateFormat}>
+              disabled={loadingDateFormat}
+              data-testid="save-btn">
               Save
             </Button>
           </div>

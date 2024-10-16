@@ -50,7 +50,7 @@ const OrgActivity = () => {
       fetchOrgActivitiesService({
         page,
         limit,
-        sort: order,
+        sort: order ?? "desc",
         start_date: startDate,
         end_date: endDate
       })

@@ -235,6 +235,7 @@ export const renderFormFields = ({
         <SelectInput
           key={id}
           label={fieldData.title}
+          placeholder={fieldData.description}
           value={getCountryValue(fieldValue)}
           options={countries?.map((country) => ({
             label: country.label,

@@ -73,6 +73,7 @@ const OrgActivityUI: React.FC<OrgActivityProps> = ({
               active: sortOrder,
               handleChange: (val) => handleFilter("order", val as string)
             }}
+            testId="sort-dropdown"
           />
           <DateFilter
             showPreset
@@ -96,7 +97,11 @@ const OrgActivityUI: React.FC<OrgActivityProps> = ({
         ) : (
           <>
             {activityList.map((item, index) => (
-              <ActivityCard {...item} key={`${index}_${item.date}`} />
+              <ActivityCard
+                {...item}
+                key={`${index}_${item.date}`}
+                testId={`activity-card-${index}`}
+              />
             ))}
             <Pagination
               handleChange={(val) => handleFilter("page", val)}
@@ -105,6 +110,7 @@ const OrgActivityUI: React.FC<OrgActivityProps> = ({
               pageLimit={pageLimit}
               totalPages={totalPages}
               currentPage={currentPage}
+              testId="pagination"
             />
           </>
         )}

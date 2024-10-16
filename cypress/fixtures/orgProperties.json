@@ -1,0 +1,55 @@
+{
+  "data": {
+    "attributes": [
+      {
+        "_id": "66f27dade7acb050da469011",
+        "is_active": true,
+        "label": "Test attribute",
+        "type": "long-text",
+        "is_required": true,
+        "meta": 250
+      },
+      {
+        "_id": "66f27e79e7acb050da46901e",
+        "is_active": true,
+        "label": "Test attribute 2",
+        "type": "text",
+        "is_required": true
+      },
+      {
+        "_id": "66f27f29e7acb050da469054",
+        "is_active": true,
+        "label": "test attribute also",
+        "type": "text",
+        "is_required": true
+      },
+
+      {
+        "_id": "66f34721e7acb050da469a7b",
+        "is_active": true,
+        "label": "tracks",
+        "type": "checkbox",
+        "is_required": false,
+        "meta": ["frontend", "backend"]
+      },
+      {
+        "_id": "66f34c14e7acb050da469ae9",
+        "is_active": true,
+        "label": "favourites",
+        "type": "multiple-choice",
+        "is_required": false,
+        "meta": ["rice", "beans"]
+      },
+      {
+        "_id": "66f34d01e7acb050da469af6",
+        "is_active": true,
+        "label": "house number",
+        "type": "number",
+        "is_required": false
+      }
+    ],
+    "total_count": 6,
+    "total_pages": 1,
+    "page": 1
+  }
+}
