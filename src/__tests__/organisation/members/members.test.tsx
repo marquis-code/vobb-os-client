@@ -72,7 +72,7 @@ describe("Members UI tests", () => {
 
   it("should render with mocked data", () => {
     renderComponent(mockedData);
-    renderComponent();
+
     const mockedMember = screen.getByText("Jason Mamoa");
     expect(mockedMember).toBeInTheDocument();
   });
