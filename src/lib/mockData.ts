@@ -4,7 +4,8 @@ import {
   MemberTableData,
   BranchMemberTableData,
   BranchTeamTableData,
-  TeamTableData
+  TeamTableData,
+  OrganisationAttributesData
 } from "types";
 import { TeamActivityData } from "modules";
 
@@ -368,7 +369,7 @@ export const orgActivityMockData = [
   }
 ];
 
-export const AttributesTableMock = [
+export const AttributesTableMock: OrganisationAttributesData[] = [
   {
     id: "1234",
     title: "First name",
@@ -478,7 +479,7 @@ export const AttributesTableMock = [
 export const BranchMemberTableMock: BranchMemberTableData[] = [
   {
     id: "728ed52f",
-    name: "Jason Derule",
+    name: "Garnacho Derulo",
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",

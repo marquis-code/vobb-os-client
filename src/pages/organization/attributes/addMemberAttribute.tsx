@@ -1,8 +1,8 @@
 import { createAttributeRequestBody, createOrgAttributeService } from "api";
 import { AddAttributeModal, AddAttributesData, toast } from "components";
 import { useApiRequest } from "hooks";
-import { useMemo } from "react";
-import { AttributesDataProps, ModalProps, OrganisationAttributesData } from "types";
+import { useMemo, useState } from "react";
+import { ModalProps, OrganisationAttributesData } from "types";
 
 interface CreateAttributesProps extends ModalProps {
   callback: () => void;
@@ -16,8 +16,12 @@ const AddMemberAttribute = ({
   callback
 }: CreateAttributesProps) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
+  const [createNew, setCreateNew] = useState(false);
 
   const submit = (data: AddAttributesData) => {
+    const willAcceptMetadata =
+      data.type.value === "checkbox" || data.type.value === "multiple-choice";
+
     const requestBody: createAttributeRequestBody = {
       type: data.type.value,
       label: data.title,
@@ -26,13 +30,13 @@ const AddMemberAttribute = ({
     if (data.description) {
       requestBody.description = data.description;
     }
-    if (data.wordLimit) {
+    if (data.wordLimit && data.type.value === "long-text") {
       requestBody.meta = +data.wordLimit;
     }
-    if (data.options?.length) {
+    if (data.options?.length && willAcceptMetadata) {
       requestBody.meta = data.options;
     }
-
+    if (data.createNew) setCreateNew(true);
     run(createOrgAttributeService(requestBody));
   };
 
@@ -42,6 +46,7 @@ const AddMemberAttribute = ({
         description: response?.data?.message
       });
       callback();
+      !createNew && close();
     } else if (error) {
       toast({
         variant: "destructive",

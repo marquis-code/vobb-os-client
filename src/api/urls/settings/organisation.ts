@@ -164,8 +164,13 @@ export const fetchOrgBranchMembersURL = ({
   queryParams?: branchQueryParamsProps;
 }) => {
   const queryString = Object.entries(queryParams)
-    .filter(([_, value]) => value !== undefined && value !== null)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .filter(([_, value]) => value !== undefined && value.length)
+    .map(([key, value]) => {
+      if (Array.isArray(value)) {
+        return `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(value))}`;
+      }
+      return `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`;
+    })
     .join("&");
 
   return `${prefixOrg}/members/${id}${queryString ? `?${queryString}` : ""}`;

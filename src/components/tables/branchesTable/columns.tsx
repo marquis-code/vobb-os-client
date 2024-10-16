@@ -96,7 +96,7 @@ const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch, view
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button variant="ghost" className="h-6 w-6 p-0" data-testid="menu-branch">
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>
@@ -104,20 +104,32 @@ const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch, view
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         {!isPrimary ? (
-          <DropdownMenuItem onClick={primaryBranch} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={primaryBranch}
+            className="gap-2 cursor-pointer"
+            data-testid="mark-primary">
             <StarIcon /> Mark as primary
           </DropdownMenuItem>
         ) : (
           ""
         )}
-        <DropdownMenuItem onClick={viewBranch} className="gap-2 cursor-pointer">
+        <DropdownMenuItem
+          onClick={viewBranch}
+          className="gap-2 cursor-pointer"
+          data-testid="view-branch">
           <EyeOpenIcon /> View branch
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={editBranch} className="gap-2 cursor-pointer">
+        <DropdownMenuItem
+          onClick={editBranch}
+          className="gap-2 cursor-pointer"
+          data-testid="edit-branch">
           <Pencil1Icon /> Edit branch
         </DropdownMenuItem>
         {!isPrimary ? (
-          <DropdownMenuItem onClick={deleteBranch} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={deleteBranch}
+            className="gap-2 cursor-pointer"
+            data-testid="delete-branch">
             <TrashIcon /> Delete branch
           </DropdownMenuItem>
         ) : (

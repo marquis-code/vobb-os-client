@@ -10,8 +10,8 @@ const IndefiniteSuspensionPreview = () => {
         <AvatarImage src={orgDetails?.logo} alt="logo" />
 
         <AvatarFallback>
-          {orgDetails?.organisation.charAt(0).toUpperCase()}
-          {orgDetails?.organisation.charAt(1).toUpperCase()}
+          {orgDetails?.organisation?.charAt(0).toUpperCase()}
+          {orgDetails?.organisation?.charAt(1).toUpperCase()}
         </AvatarFallback>
       </Avatar>
       <div className="py-8">
