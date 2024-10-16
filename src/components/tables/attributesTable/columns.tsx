@@ -126,7 +126,12 @@ const ActionColumn = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0"
+          data-testid={
+            !isSystem && isActive ? "menu-memberAttr" : isSystem ? "menu-sysAttr" : "archived-attr"
+          }>
           <span className="sr-only">Open menu</span>
           <BreadcrumbEllipsis />
         </Button>
@@ -134,14 +139,20 @@ const ActionColumn = ({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         {!isSystem && isActive ? (
-          <DropdownMenuItem onClick={editAttribute} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={editAttribute}
+            className="gap-2 cursor-pointer"
+            data-testid="edit-attr">
             <Pencil1Icon /> Edit attribute
           </DropdownMenuItem>
         ) : (
           ""
         )}
         {isActive ? (
-          <DropdownMenuItem onClick={duplicateAttribute} className="gap-2 cursor-pointer">
+          <DropdownMenuItem
+            onClick={duplicateAttribute}
+            className="gap-2 cursor-pointer"
+            data-testid="duplicate-attr">
             <CopyIcon /> Duplicate attribute
           </DropdownMenuItem>
         ) : (
@@ -151,14 +162,18 @@ const ActionColumn = ({
           isActive ? (
             <DropdownMenuItem
               onClick={archiveAttribute}
-              className="gap-2 cursor-pointer text-vobb-error-20">
+              className="gap-2 cursor-pointer text-vobb-error-20"
+              data-testid="archive-attr">
               <ThickArrowDownIcon />
               Archive attribute
             </DropdownMenuItem>
           ) : (
             <>
               <Separator />
-              <DropdownMenuItem onClick={restoreAttribute} className="gap-2 cursor-pointer">
+              <DropdownMenuItem
+                onClick={restoreAttribute}
+                className="gap-2 cursor-pointer"
+                data-testid="restore-attr">
                 <ThickArrowUpIcon />
                 Restore attribute
               </DropdownMenuItem>

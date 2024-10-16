@@ -71,7 +71,7 @@ const UpdateJobTitleModal: React.FC<UpdateJobTitleModalProps> = ({
             loading={loading}
             size={"default"}
             variant={"fill"}>
-            Continue
+            Save
           </Button>
         </div>
       </Modal>

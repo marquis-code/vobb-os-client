@@ -74,7 +74,7 @@ const Pagination: React.FC<PaginationProps> = ({
             </div>
           </div>
         )}
-        <p>
+        <p data-testid="page-info">
           <b>{start}</b> - <b>{end}</b> of <b>{totalCount}</b> items
         </p>
         <div className="flex gap-2">
@@ -83,7 +83,7 @@ const Pagination: React.FC<PaginationProps> = ({
             variant={"outline"}
             size={"icon"}
             onClick={handleDecrease}
-            data-testid="move-left">
+            data-testid="prev-page">
             <ChevronLeftIcon />
           </Button>
           <Button
@@ -91,7 +91,7 @@ const Pagination: React.FC<PaginationProps> = ({
             disabled={currentPage >= totalPages}
             variant={"outline"}
             onClick={handleIncrease}
-            data-testid="move-right">
+            data-testid="next-page">
             <ChevronRightIcon />
           </Button>
         </div>

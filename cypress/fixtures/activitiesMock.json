@@ -1,0 +1,90 @@
+{
+  "data": {
+    "activities": [
+      {
+        "action": "updated-profile",
+        "initiator": {
+          "_id": "66e40dc582934b8cf68ca1d8",
+          "full_name": "killmon Jenny"
+        },
+        "meta": {
+          "user": {
+            "_id": "66e40dc582934b8cf68ca1d8",
+            "full_name": "killmon Jenny"
+          },
+          "modified_fields": ["Fluent Languages", "Avatar"]
+        },
+        "date": "23/09/2024",
+        "time": "2024-09-23T10:47:04.053Z"
+      },
+      {
+        "action": "updated-profile",
+        "initiator": {
+          "_id": "66e40dc582934b8cf68ca1d8",
+          "full_name": "killmon Jenny"
+        },
+        "meta": {
+          "user": {
+            "_id": "66e40dc582934b8cf68ca1d8",
+            "full_name": "killmon Jenny"
+          },
+          "modified_fields": ["Job Title"]
+        },
+        "date": "20/09/2024",
+        "time": "2024-09-20T16:08:44.539Z"
+      },
+      {
+        "action": "updated-profile",
+        "initiator": {
+          "_id": "66e40dc582934b8cf68ca1d8",
+          "full_name": "killmon Jenny"
+        },
+        "meta": {
+          "user": {
+            "_id": "66e40dc582934b8cf68ca1d8",
+            "full_name": "killmon Jenny"
+          },
+          "modified_fields": ["Job Title"]
+        },
+        "date": "20/09/2024",
+        "time": "2024-09-20T16:08:31.223Z"
+      },
+      {
+        "action": "updated-profile",
+        "initiator": {
+          "_id": "66e40dc582934b8cf68ca1d8",
+          "full_name": "killmon Jenny"
+        },
+        "meta": {
+          "user": {
+            "_id": "66e40dc582934b8cf68ca1d8",
+            "full_name": "killmon Jenny"
+          },
+          "modified_fields": ["Job Title"]
+        },
+        "date": "17/09/2024",
+        "time": "2024-09-17T11:07:59.172Z"
+      },
+      {
+        "action": "updated-profile",
+        "initiator": {
+          "_id": "66e40dc582934b8cf68ca1d8",
+          "full_name": "killmon Jenny"
+        },
+        "meta": {
+          "user": {
+            "_id": "66e40dc582934b8cf68ca1d8",
+            "full_name": "killmon Jenny"
+          },
+          "modified_fields": ["Job Title"]
+        },
+        "date": "17/09/2024",
+        "time": "2024-09-17T01:12:26.088Z"
+      }
+    ],
+    "page": 1,
+    "total_pages": 2,
+    "total_count": 10,
+    "limit": 5
+  }
+}

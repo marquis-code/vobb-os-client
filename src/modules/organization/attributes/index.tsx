@@ -50,21 +50,23 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         className="max-w-none"
       />
       <Tabs defaultValue="member">
-        <TabsList className="mb-2">
+        <TabsList className="mb-2" data-testid="attr-tablist">
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-            value="member">
+            value="member"
+            data-testid="member-attr">
             Team member attributes
           </TabsTrigger>
           <TabsTrigger
             className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-            value="client">
+            value="client"
+            data-testid="client-attr">
             Client attributes
           </TabsTrigger>
         </TabsList>
         <TabsContent value="member">
           {memberLoading ? (
-            <LoadingSpinner />
+            <LoadingSpinner testId="loading-spinner" />
           ) : (
             <MemberAttributes
               handleAddAttribute={handleAddMemberAttr}
@@ -79,7 +81,7 @@ const OrgAttributesUI: React.FC<OrgAttributesUIProps> = ({
         </TabsContent>
         <TabsContent value="client">
           {clientLoading ? (
-            <LoadingSpinner />
+            <LoadingSpinner testId="loading-spinner" />
           ) : (
             <ClientAttributes
               handleAddAttribute={handleAddClientAttr}

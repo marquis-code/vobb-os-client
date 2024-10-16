@@ -3,13 +3,16 @@ import { AddTeamData, AddTeamModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import { useMemo } from "react";
 import { createTeamRequestBody, createTeamService } from "api";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "router";
 
 interface AddTeamProps extends ModalProps {
   callback?: (id: string) => void;
 }
 
 const AddTeam: React.FC<AddTeamProps> = (props) => {
-  const { callback } = props;
+  const { close } = props;
+  const navigate = useNavigate();
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
   const handleSubmit = (data: AddTeamData) => {
@@ -31,7 +34,8 @@ const AddTeam: React.FC<AddTeamProps> = (props) => {
         description: response?.data?.message
       });
       const newTeamId = response?.data?.data?.team;
-      callback?.(newTeamId);
+      navigate(`${Routes.team(newTeamId)}?new=true`);
+      close();
     } else if (error) {
       toast({
         variant: "destructive",

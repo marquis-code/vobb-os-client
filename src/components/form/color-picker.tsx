@@ -23,7 +23,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ value, handleChange }) => {
     <>
       <div className="relative flex gap-4 items-center">
         <div style={{ background: value }} className="w-8 h-8 rounded-full"></div>
-        <Button onClick={() => setShow(true)} variant={"outline"} size={"icon"}>
+        <Button
+          onClick={() => setShow(true)}
+          variant={"outline"}
+          size={"icon"}
+          data-testid="open-color">
           <Pencil1Icon />
         </Button>
         {show ? (
@@ -36,6 +40,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ value, handleChange }) => {
               prefixed
               color={value}
               onChange={handleChange}
+              data-testid="color-input"
             />
           </div>
         ) : (
