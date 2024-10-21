@@ -12,11 +12,12 @@ interface LearnMoreModalProps extends ModalProps {
 const LearnMoreModal: React.FC<LearnMoreModalProps> = ({ show, close, title, text1, text2 }) => {
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
-        <div className="flex items-center justify-between mb-4">
+      <Modal contentClassName="max-w-[944px] p-0" show={show} close={close}>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+          {" "}
           <h2 className="text-lg font-bold">{title}</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+          <Button onClick={close} variant={"ghost"} size={"icon"} className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
         <div className="text-sm text-vobb-neutral-70">

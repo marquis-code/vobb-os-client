@@ -19,3 +19,5 @@ export * from "./changeTeamModal";
 export * from "./memberBranchesModal";
 export * from "./memberTeamsModal";
 export * from "./updateJobTitleModal";
+export * from "./inviteMemberToBranchModal";
+export * from "./addExistingMembersToBranchModal";

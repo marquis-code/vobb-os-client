@@ -35,7 +35,8 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     <>
       <div className={cn("mb-4", parentClassName)}>
         {label && (
-          <label className={cn("block font-inter text-xs mb-1", labelClassName)}>
+          <label
+            className={cn("block font-inter text-xs mb-1 text-vobb-neutral-80", labelClassName)}>
             {label}
             {required ? <span className={"text-error-50"}>*</span> : ""}
           </label>

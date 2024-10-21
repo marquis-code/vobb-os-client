@@ -1,13 +1,13 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, CheckboxWithText, CustomInput, Modal, SelectInput } from "components";
-import { BranchesDataProps, ModalProps, optionType } from "types";
+import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getOptionTypeValidationMsg } from "lib";
 
-interface InviteMemberData {
+interface InviteMemberToBranchData {
   email: string;
   branch: { label?: string | undefined; value?: string | undefined };
   team: { label?: string | undefined; value?: string | undefined };
@@ -35,14 +35,12 @@ const schema = yup.object({
   jobTitle: yup.string().required("Required")
 });
 
-interface InviteMemberModalProps extends ModalProps {
+interface InviteMemberToBranchModalProps extends ModalProps {
   submit: (data) => void;
   loading: boolean;
-  loadingBranches: boolean;
-  orgBranches: BranchesDataProps;
+  currentBranch: optionType;
   handleBranchTeams: {
     loading: boolean;
-    handleSetId: (id: string) => void;
     options: optionType[] | [];
   };
   handleTeamRoles: {
@@ -52,21 +50,16 @@ interface InviteMemberModalProps extends ModalProps {
   };
 }
 
-const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
+const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
   submit,
   close,
   show,
   loading,
-  loadingBranches,
-  orgBranches,
   handleBranchTeams,
-  handleTeamRoles
+  handleTeamRoles,
+  currentBranch
 }) => {
-  const {
-    loading: loadingTeams,
-    options: teamsOptions,
-    handleSetId: handleSetBranchId
-  } = handleBranchTeams;
+  const { loading: loadingTeams, options: teamsOptions } = handleBranchTeams;
   const {
     loading: loadingRoles,
     options: teamRolesOptions,
@@ -74,10 +67,6 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   } = handleTeamRoles;
 
   const [inviteNew, setInviteNew] = useState(false);
-  const branchesOptions = orgBranches?.branchesArray.map((branch) => ({
-    label: branch.name,
-    value: branch.id
-  }));
 
   const {
     register,
@@ -86,17 +75,13 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
     watch,
     setValue,
     reset
-  } = useForm<InviteMemberData>({
+  } = useForm<InviteMemberToBranchData>({
     resolver: yupResolver(schema)
   });
-  const onSubmit: SubmitHandler<InviteMemberData> = (data) => {
+  const onSubmit: SubmitHandler<InviteMemberToBranchData> = (data) => {
     submit({ ...data, inviteNew });
     reset();
-  };
-
-  const branch: optionType = {
-    label: watch("branch")?.label ?? "",
-    value: watch("branch")?.value ?? ""
+    setValue("role", { label: "", value: "" });
   };
 
   const team: optionType = {
@@ -104,20 +89,25 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
     value: watch("team")?.value ?? ""
   };
 
+  useEffect(() => {
+    if (currentBranch) setValue("branch", currentBranch);
+  }, [currentBranch, setValue]);
+
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="invite-modal">
         <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
-          <h2 className="text-lg font-medium text-vobb-neutral-95">Invite Member</h2>
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Invite Member To Branch</h2>
           <Button
             onClick={close}
             variant={"ghost"}
             size={"icon"}
             data-testid="close-btn"
             className="border p-2 shadow-sm">
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+            <Cross1Icon stroke="#101323" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
+
         <form className="p-4 border-b border-vobb-neutral-15">
           <CustomInput
             label="Email address"
@@ -131,25 +121,9 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
           {watch("role")?.label !== "Super Admin" ? (
             <>
               <SelectInput
-                label="Branch"
-                options={branchesOptions}
-                placeholder="Select branch"
-                value={watch("branch")?.value === "" ? null : branch}
-                onChange={(val) => {
-                  if (val) {
-                    setValue("branch", val);
-                    handleSetBranchId(val.value);
-                    setValue("team", { label: "", value: "" });
-                    setValue("role", { label: "", value: "" });
-                  }
-                }}
-                validatorMessage={getOptionTypeValidationMsg(errors.branch)}
-                loading={loadingBranches}
-              />
-              <SelectInput
                 label="Team"
-                options={teamsOptions}
                 placeholder="Select team"
+                options={teamsOptions}
                 value={watch("team")?.value === "" ? null : team}
                 onChange={(val) => {
                   if (val) {
@@ -167,8 +141,8 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
           )}
           <SelectInput
             label="Role"
-            options={teamRolesOptions}
             placeholder="Select role"
+            options={teamRolesOptions}
             value={watch("role")?.value === "" ? null : watch("role")}
             onChange={(val) => val && setValue("role", val)}
             validatorMessage={getOptionTypeValidationMsg(errors.role)}
@@ -176,13 +150,14 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
           />
           <CustomInput
             label="Job Title"
+            placeholder="Enter job title"
             type="text"
             name="jobTitle"
-            placeholder="Enter job title"
             register={register}
             validatorMessage={errors.jobTitle?.message}
           />
         </form>
+
         <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
           <CheckboxWithText
             label={"Invite another member"}
@@ -211,4 +186,4 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   );
 };
 
-export { InviteMemberModal };
+export { InviteMemberToBranchModal };

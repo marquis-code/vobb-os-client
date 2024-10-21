@@ -21,3 +21,10 @@ export interface MetaDataProps {
   totalPages: number;
   pageLimit?: number;
 }
+
+export interface ExistingUserTypes {
+  avatar: any | File;
+  label: string;
+  value: string;
+  isDisabled: boolean;
+}

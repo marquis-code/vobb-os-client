@@ -1,5 +1,5 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button, CheckboxWithText, CustomInput, Modal, SelectInput } from "components";
+import { Button, Modal, SelectInput } from "components";
 import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -47,10 +47,15 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Update member branch</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-vobb-neutral-15">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Update member branch</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
         <p className="text-vobb-neutral-70 mb-4">

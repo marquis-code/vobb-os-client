@@ -60,30 +60,41 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
 
   return (
     <>
-      <Modal show={show} close={close}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Transfer {multiple ? "Members" : "Member"}</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal show={show} close={close} contentClassName="p-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">
+            Transfer {multiple ? "Members" : "Member"}
+          </h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <p className="text-sm text-vobb-neutral-70 mb-4">
-          Select the branch you want to transfer the {multiple ? "members" : "member"} to
-        </p>
+        <div className="p-4">
+          <p className="text-sm text-vobb-neutral-70 mb-4">
+            Select the branch you want to transfer the {multiple ? "members" : "member"} to
+          </p>
 
-        <SelectInput
-          label="Select branch"
-          options={branchesOptions}
-          value={watch("branch")?.value === "" ? null : watch("branch")}
-          onChange={(val) => val && setValue("branch", val)}
-          placeholder="Select a branch"
-          validatorMessage={
-            errors.branch?.message ?? errors.branch?.value?.message ?? errors.branch?.label?.message
-          }
-          loading={loadingBranches}
-        />
+          <SelectInput
+            label="Select branch"
+            options={branchesOptions}
+            value={watch("branch")?.value === "" ? null : watch("branch")}
+            onChange={(val) => val && setValue("branch", val)}
+            placeholder="Select a branch"
+            validatorMessage={
+              errors.branch?.message ??
+              errors.branch?.value?.message ??
+              errors.branch?.label?.message
+            }
+            loading={loadingBranches}
+          />
+        </div>
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25 border-t border-vobb-neutral-15">
           <Button
             onClick={() => close()}
             className="text-error-10"

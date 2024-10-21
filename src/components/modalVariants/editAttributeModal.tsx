@@ -124,17 +124,22 @@ const EditAttributeModal: React.FC<EditAttributeModalProps> = ({
   return (
     <>
       <Modal
-        contentClassName="max-w-[600px]"
+        contentClassName="max-w-[600px] p-0"
         show={show}
         close={close}
         data-testid="editAttr-modal">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Edit Attribute</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Edit Attribute</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <form className="mb-8 grid gap-x-4">
+        <form className="p-4 border-b border-vobb-neutral-15 grid gap-x-4">
           <CustomInput
             label="Title"
             type="text"
@@ -199,7 +204,7 @@ const EditAttributeModal: React.FC<EditAttributeModalProps> = ({
             <span>Required</span>
           </div>
         </form>
-        <div className="flex justify-end gap-2 items-center">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
           <CheckboxWithText
             label={"Create another attribute"}
             handleChecked={setCreateNew}
