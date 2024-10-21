@@ -242,3 +242,11 @@ export const fetchUserBranchesURL = ({ page, limit, search }: PaginationProps) =
 
   return `/user/branches/${queryString ? `?${queryString}` : ""}`;
 };
+
+/**
+ * Add members to a branche URL
+ * @returns url string
+ *
+ */
+
+export const addExistingMembersToBranchURL = ({ branchId }) => `/user/add-branch/${branchId}`;

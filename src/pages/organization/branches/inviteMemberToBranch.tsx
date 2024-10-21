@@ -1,20 +1,19 @@
 import { fetchTeamRolesService, fetchTeamsPerBranchService, inviteMemberService } from "api";
-import { InviteMemberModal, toast } from "components";
-import { useModalContext } from "context";
-import { useApiRequest, useFetchBranches } from "hooks";
+import { InviteMemberToBranchModal, toast } from "components";
+import { useApiRequest } from "hooks";
 import { useEffect, useMemo, useState } from "react";
-import { inviteMemberProperties, ModalProps } from "types";
+import { inviteMemberProperties, ModalProps, optionType } from "types";
 
 interface InviteProps extends ModalProps {
   callback?: () => void;
+  currentBranch: optionType;
 }
-const InviteMember: React.FC<InviteProps> = (props) => {
-  const { callback } = props;
-  const { fetchOrgBranches, loadingBranches, orgBranches } = useFetchBranches({});
-  const [branchTeam, setBranchTeam] = useState({ id: "", teams: [] });
+const InviteMemberToBranch: React.FC<InviteProps> = (props) => {
+  const { callback, close, currentBranch } = props;
+  const { value: id } = currentBranch;
+  const [branchTeams, setBranchTeams] = useState([]);
   const [teamRoles, setTeamRoles] = useState({ id: "", roles: [] });
   const [closeModal, setCloseModal] = useState(true);
-  const { setInviteMember } = useModalContext();
 
   const {
     run: runInvite,
@@ -36,20 +35,15 @@ const InviteMember: React.FC<InviteProps> = (props) => {
     requestStatus: rolesLoading
   } = useApiRequest({});
 
-  const handleSetBranchId = (id: string) => {
-    setBranchTeam((prev) => ({ ...prev, id }));
-    setTeamRoles({ id: "", roles: [] });
-  };
   const handleSetTeamId = (id: string) => setTeamRoles((prev) => ({ ...prev, id }));
 
   const fetchBranchTeams = () => {
-    runFetchTeams(fetchTeamsPerBranchService(branchTeam.id));
+    if (id) runFetchTeams(fetchTeamsPerBranchService(id));
   };
 
   const fetchTeamRoles = () => {
     runFetchRoles(fetchTeamRolesService(teamRoles.id));
   };
-
   const submit = (data) => {
     setCloseModal(!data.inviteNew);
     let requestBody: inviteMemberProperties = {
@@ -75,7 +69,7 @@ const InviteMember: React.FC<InviteProps> = (props) => {
         label: item.name,
         value: item._id
       }));
-      setBranchTeam((prev) => ({ ...prev, teams: teamsArray }));
+      setBranchTeams(teamsArray);
     } else if (teamsError) {
       toast({
         variant: "destructive",
@@ -104,7 +98,7 @@ const InviteMember: React.FC<InviteProps> = (props) => {
       toast({
         description: inviteResponse?.data?.message
       });
-      closeModal && setInviteMember(false);
+      closeModal && close();
       callback?.();
     } else if (inviteError) {
       toast({
@@ -115,25 +109,19 @@ const InviteMember: React.FC<InviteProps> = (props) => {
   }, [inviteResponse, inviteError]);
 
   useEffect(() => {
-    fetchOrgBranches({});
-  }, []);
-
-  useEffect(() => {
-    if (branchTeam.id) fetchBranchTeams();
+    fetchBranchTeams();
     if (teamRoles.id) fetchTeamRoles();
-  }, [teamRoles.id, branchTeam.id]);
+  }, [teamRoles.id, id]);
 
   return (
-    <InviteMemberModal
+    <InviteMemberToBranchModal
       submit={submit}
       loading={inviteStatus.isPending}
       {...props}
-      loadingBranches={loadingBranches}
-      orgBranches={orgBranches}
+      currentBranch={currentBranch}
       handleBranchTeams={{
         loading: teamsLoading.isPending,
-        handleSetId: handleSetBranchId,
-        options: branchTeam.teams
+        options: branchTeams
       }}
       handleTeamRoles={{
         loading: rolesLoading.isPending,
@@ -144,4 +132,4 @@ const InviteMember: React.FC<InviteProps> = (props) => {
   );
 };
 
-export { InviteMember };
+export { InviteMemberToBranch };

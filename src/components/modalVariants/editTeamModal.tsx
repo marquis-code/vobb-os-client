@@ -72,17 +72,22 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
 
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="editTeam-modal">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Edit Team</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="editTeam-modal">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Edit Team</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <form className="mb-8">
+          <form className="p-4 border-b border-vobb-neutral-15">
             <div className="mb-4">
               <IconPicker
                 defaultValue="fas fa-camera"
@@ -201,7 +206,7 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
             />
           </form>
         )}
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
           <Button
             onClick={() => close()}
             className="text-error-10"

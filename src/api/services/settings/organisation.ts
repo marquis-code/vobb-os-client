@@ -5,6 +5,7 @@ SETTINGS SERVICES
 */
 
 import {
+  addExistingMembersToBranchURL,
   addNewOrgBranchURL,
   archiveOrgAttributeURL,
   createOrgAttributeURL,
@@ -89,6 +90,11 @@ interface transferMembersRequestBody {
   oldBranch: string;
   newBranch: string;
   members?: string[];
+}
+
+interface addExistingMembersRequestBody {
+  team?: string;
+  members: string[];
 }
 
 /**
@@ -392,5 +398,21 @@ export const fetchOrgActivitiesService = ({
 export const fetchUserBranchesService = (query: PaginationProps = {}) => {
   return getRequest({
     url: fetchUserBranchesURL(query)
+  });
+};
+
+/**
+ * Add members to a branch Service
+ * @returns url string
+ *
+ */
+
+export const addExistingMembersToBranchService = (
+  branchId: string,
+  data: addExistingMembersRequestBody
+) => {
+  return postRequest({
+    url: addExistingMembersToBranchURL({ branchId }),
+    data
   });
 };

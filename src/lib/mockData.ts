@@ -5,7 +5,8 @@ import {
   BranchMemberTableData,
   BranchTeamTableData,
   TeamTableData,
-  OrganisationAttributesData
+  OrganisationAttributesData,
+  ExistingUserTypes
 } from "types";
 import { TeamActivityData } from "modules";
 
@@ -737,5 +738,37 @@ export const teamActivityMockData: TeamActivityData[] = [
     time: "5:05pm",
     initiator: { name: "Dayo", id: "dayo" },
     metadata: undefined
+  }
+];
+export const users: ExistingUserTypes[] = [
+  {
+    avatar: null,
+    label: "First",
+    value: "1234",
+    isDisabled: true
+  },
+  {
+    avatar: null,
+    label: "Last",
+    value: "1235",
+    isDisabled: false
+  },
+  {
+    avatar: null,
+    label: "Third",
+    value: "1238",
+    isDisabled: false
+  },
+  {
+    avatar: null,
+    label: "Sixth",
+    value: "1246",
+    isDisabled: true
+  },
+  {
+    avatar: null,
+    label: "Seventh",
+    value: "1241",
+    isDisabled: false
   }
 ];

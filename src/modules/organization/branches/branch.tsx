@@ -18,7 +18,12 @@ import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
-
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from "components/ui/dropdown-menu";
 type FilterItem = {
   value: string;
   cond: string;
@@ -59,6 +64,8 @@ interface OrgBranchUIProps extends BranchMemberTableActions {
   handleUpdateMembersParams: (param: string, value: string | number) => void;
   handleUpdateTeamsParams: (param: string, value: number) => void;
   handleUpdateMemberFilters: (filtersArray) => void;
+  handleInviteMemberToBranch: () => void;
+  handleAddExistingMembersToBranch: () => void;
   loadingMembers: boolean;
   branchInfo: OrganisationBranchesData;
   branchTeams: BranchTeamsProps;
@@ -71,6 +78,8 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   handleUpdateMembersParams,
   handleUpdateTeamsParams,
   handleUpdateMemberFilters,
+  handleInviteMemberToBranch,
+  handleAddExistingMembersToBranch,
   loadingMembers,
   branchInfo,
   branchTeams,
@@ -128,6 +137,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
     }
   };
 
+  const [activeTab, setActiveTab] = useState("members");
   return (
     <>
       {loadingMembers ? (
@@ -135,44 +145,54 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
       ) : (
         <>
           <SettingsPageTitle
-            title={`${branchInfo?.name} (${branchInfo?.timeZone})`}
-            description={`${branchInfo?.addressLine1}, ${branchInfo?.city}, ${branchInfo?.province}, ${branchInfo?.country}, ${branchInfo?.zipCode}`}
+            title={branchInfo?.name}
+            city={branchInfo?.city}
+            province={branchInfo?.province}
+            zipcode={branchInfo?.zipCode}
             className="max-w-none"
           />
-          <Tabs defaultValue="member">
-            <TabsList className="mb-2">
-              <TabsTrigger
-                className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-                value="member">
-                Members
-              </TabsTrigger>
-              <TabsTrigger
-                className="data-[state=active]:bg-vobb-primary-70 data-[state=active]:text-white"
-                value="client">
-                Teams
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent className="pb-8 mb-12" value="member">
-              {/* Add member */}
-              {/* Search, sort, filter by  role */}
-              <div className="mb-6 flex justify-between gap-4 items-center">
-                <Filter
-                  className="mb-0"
-                  filters={memberFilters}
-                  setFilter={(val) => {
-                    setMemberFilter(val);
-                    checkAndUpdate();
-                  }}
-                  attributes={attributes}
-                />
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <div className="flex justify-between">
+              <TabsList className="mb-2">
+                <TabsTrigger
+                  className=" data-[state=active]:bg-white data-[state=active]:text-vobb-neutral-70"
+                  value="members">
+                  Members
+                </TabsTrigger>
+                <TabsTrigger
+                  className=" data-[state=active]:bg-white data-[state=active]:text-vobb-neutral-70"
+                  value="teams">
+                  Teams
+                </TabsTrigger>
+              </TabsList>
+              {activeTab === "members" ? (
+                <div className="mb-6 flex justify-between gap-4 items-center">
+                  <Filter
+                    className="mb-0 h-9"
+                    filters={memberFilters}
+                    setFilter={(val) => {
+                      setMemberFilter(val);
+                      checkAndUpdate();
+                    }}
+                    attributes={attributes}
+                  />
+                  <ActionColumn
+                    handleExistingMember={handleAddExistingMembersToBranch}
+                    handleInviteMemberToBranch={handleInviteMemberToBranch}
+                  />
+                </div>
+              ) : (
                 <Button
                   onClick={console.log}
-                  className="flex gap-2 ml-auto"
+                  className="flex mb-6 gap-2 ml-auto"
                   variant={"fill"}
-                  data-testid="add-member">
-                  <PlusCircledIcon /> Add member
+                  data-testid="add-team">
+                  <PlusCircledIcon /> New team
                 </Button>
-              </div>
+              )}
+            </div>
+
+            <TabsContent className="pb-8 mb-12" value="members">
               <BranchMemberTable columns={memberColumns} data={membersData} />
               <Pagination
                 // hidePageLimit
@@ -186,16 +206,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 testId="pagination"
               />
             </TabsContent>
-            <TabsContent className="pb-8 mb-12" value="client">
-              {/* Add team */}
-              {/* Search, sort, filter by teams */}
-              <Button
-                onClick={console.log}
-                className="flex mb-6 gap-2 ml-auto"
-                variant={"fill"}
-                data-testid="add-team">
-                <PlusCircledIcon /> New team
-              </Button>
+            <TabsContent className="pb-8 mb-12" value="teams">
               <BranchTeamTable columns={teamColumns} data={teamsData} />
               <Pagination
                 // hidePageLimit
@@ -217,3 +228,27 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
 };
 
 export { OrgBranchUI };
+
+const ActionColumn = ({ handleExistingMember, handleInviteMemberToBranch }) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="flex gap-2 ml-auto" variant={"fill"} data-testid="add-member">
+          <PlusCircledIcon /> Add member
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="p-4 space-y-2">
+        <DropdownMenuItem
+          onClick={handleInviteMemberToBranch}
+          className="gap-2 cursor-pointer text-vobb-neutral-70">
+          New Team Member
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handleExistingMember}
+          className="gap-2 cursor-pointer text-vobb-neutral-70">
+          Existing Member
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};

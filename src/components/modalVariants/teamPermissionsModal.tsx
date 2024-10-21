@@ -36,11 +36,11 @@ const TeamPermissionsModal = ({ show, close, hideSkip }: TeamPermissionsModalPro
   };
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Set Team Permissions</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal contentClassName="max-w-[944px] p-0" show={show} close={close}>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Set Team Permissions</h2>
+          <Button onClick={close} variant={"ghost"} size={"icon"} className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
         <section className="max-h-[calc(100vh-200px)] overflow-auto -mr-4 pr-4">

@@ -67,12 +67,18 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
         show={addBranch}
         close={close}
         testId="addBranch-modal">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Create New Branch</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-vobb-neutral-15">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Create New Branch</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
+
         <form className="mb-8 grid grid-cols-2 gap-x-4">
           <CustomInput
             label="Branch Name"

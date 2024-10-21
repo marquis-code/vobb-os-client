@@ -20,6 +20,7 @@ interface SelectInputProps {
   styles?: CSSObjectWithLabel;
   loading?: boolean;
   testId?: string;
+  disabled?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = (props) => {
@@ -32,7 +33,8 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
     required,
     styles,
     loading,
-    testId
+    testId,
+    disabled
   } = props;
 
   return (
@@ -91,6 +93,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
           }}
           menuShouldScrollIntoView
           isLoading={loading}
+          isDisabled={disabled}
         />
       </div>
       {validatorMessage && (

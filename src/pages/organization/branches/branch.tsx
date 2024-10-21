@@ -6,6 +6,10 @@ import { fetchABranchService, fetchOrgBranchMembersService, fetchTeamsPerBranchS
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
 import { useCountriesContext, useUserContext } from "context";
 import { format, parseISO } from "date-fns";
+import { useParams } from "react-router-dom";
+import { InviteMemberToBranch } from "./inviteMemberToBranch";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { AddExistingMembers } from "./addExistingMembers";
 
 export const initBranchData = {
   id: "",
@@ -42,6 +46,15 @@ const initTeamsData: BranchTeamsProps = {
 };
 
 const OrgBranch = () => {
+  const [inviteMemberToBranch, setInviteMemberToBranch] = useState(false);
+  const [addExistingMembers, setAddExistingMembers] = useState(false);
+
+  const handleInviteMemberToBranch = () => setInviteMemberToBranch(true);
+  const closeInviteMemberToBranch = () => setInviteMemberToBranch(false);
+
+  const handleAddExistingMembers = () => setAddExistingMembers(true);
+  const closeAddExistingMembers = () => setAddExistingMembers(false);
+
   const { userDetails } = useUserContext();
   const userDateFormat = userDetails?.dateFormat;
   const dateFormatted =
@@ -72,8 +85,8 @@ const OrgBranch = () => {
     limit: 20
   });
   const { countries } = useCountriesContext();
-  const branchPath = window.location.pathname.split("/");
-  const branchId = branchPath[branchPath.length - 1];
+  const { id: branchId = "" } = useParams() || {};
+
   const [transfer, setTransfer] = useState({ show: false, id: "" });
   const handleTransferMember = (id: string) => {
     setTransfer({ show: true, id });
@@ -140,7 +153,7 @@ const OrgBranch = () => {
     }
 
     return initMembersData;
-  }, [membersResponse]);
+  }, [membersResponse, dateFormatted, memberQueryParams.limit]);
 
   const branchTeams = useMemo<BranchTeamsProps>(() => {
     if (teamsResponse?.status === 200) {
@@ -165,7 +178,7 @@ const OrgBranch = () => {
     }
 
     return initTeamsData;
-  }, [teamsResponse]);
+  }, [teamsResponse, teamQueryParams.limit]);
 
   const branchInfo = useMemo<OrganisationBranchesData>(() => {
     if (branchResponse?.status === 200) {
@@ -204,7 +217,6 @@ const OrgBranch = () => {
   const handleUpdateTeamsParams = (param: string, value: number) => {
     setTeamsQueryParams((prev) => ({ ...prev, [param]: value }));
   };
-
   return (
     <>
       <TransferMember
@@ -215,12 +227,26 @@ const OrgBranch = () => {
         fetchBranchMembers={fetchBranchMembers}
         close={() => setTransfer({ show: false, id: "" })}
       />
+      <InviteMemberToBranch
+        show={inviteMemberToBranch}
+        close={closeInviteMemberToBranch}
+        callback={() => fetchBranchMembers()}
+        currentBranch={{ label: branchInfo?.name, value: branchInfo?.id }}
+      />
+      <AddExistingMembers
+        show={addExistingMembers}
+        close={closeAddExistingMembers}
+        callback={() => fetchBranchMembers()}
+        branchMembers={branchMembers.membersArray}
+      />
       <OrgBranchUI
         handleViewMember={console.log}
         handleTransferMember={handleTransferMember}
         handleUpdateMembersParams={handleUpdateMembersParams}
         handleUpdateTeamsParams={handleUpdateTeamsParams}
         handleUpdateMemberFilters={handleUpdateMemberFilters}
+        handleInviteMemberToBranch={handleInviteMemberToBranch}
+        handleAddExistingMembersToBranch={handleAddExistingMembers}
         loadingMembers={membersStatus.isPending || branchStatus.isPending}
         branchInfo={branchInfo}
         branchMembers={branchMembers}
