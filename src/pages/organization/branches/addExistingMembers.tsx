@@ -49,12 +49,15 @@ const AddExistingMembers: React.FC<AddExistingMemberProps> = (props) => {
   }, [debouncedSearchTerm]);
 
   const formattedMembers = orgMembersData.membersArray
-    .filter((member) => member.status === "active")
+    .filter(
+      (member) =>
+        member.status === "active" &&
+        branchMembers.some((branchMember) => branchMember.id === member.id)
+    )
     .map((member) => ({
       avatar: member.avatar,
       label: member.name,
-      value: member.id,
-      isDisabled: branchMembers.some((branchMember) => branchMember.id === member.id)
+      value: member.id
     }));
 
   useMemo(() => {
