@@ -78,17 +78,13 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
                     </AvatarFallback>
                   </Avatar>
 
-                  <p className={member.isDisabled ? "opacity-65" : ""}>
-                    {member.label}{" "}
-                    {member.isDisabled && <span className="text-xs">(already in this branch)</span>}
-                  </p>
+                  <p>{member.label}</p>
                 </div>
 
                 <span className="flex items-center gap-4">
                   <Switch
                     checked={selectedIds.includes(member.value)}
                     onCheckedChange={() => handleSelectMember(member)}
-                    disabled={member.isDisabled}
                     testId={member.label}
                   />
                 </span>

@@ -744,31 +744,26 @@ export const users: ExistingUserTypes[] = [
   {
     avatar: null,
     label: "First",
-    value: "1234",
-    isDisabled: true
+    value: "1234"
   },
   {
     avatar: null,
     label: "Last",
-    value: "1235",
-    isDisabled: false
+    value: "1235"
   },
   {
     avatar: null,
     label: "Third",
-    value: "1238",
-    isDisabled: false
+    value: "1238"
   },
   {
     avatar: null,
     label: "Sixth",
-    value: "1246",
-    isDisabled: true
+    value: "1246"
   },
   {
     avatar: null,
     label: "Seventh",
-    value: "1241",
-    isDisabled: false
+    value: "1241"
   }
 ];

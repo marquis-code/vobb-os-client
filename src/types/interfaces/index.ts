@@ -26,5 +26,4 @@ export interface ExistingUserTypes {
   avatar: any | File;
   label: string;
   value: string;
-  isDisabled: boolean;
 }
