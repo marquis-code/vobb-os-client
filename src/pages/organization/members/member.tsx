@@ -23,11 +23,12 @@ import { MemberBranches } from "./memberBranches";
 import { MemberTeams } from "./memberTeams";
 import { useApiRequest } from "hooks";
 import {
+  fetchMemberAllAccessibleTeamsService,
   fetchMemberBranchesService,
   fetchMemberProfileService,
   fetchMemberTeamsService
 } from "api";
-import { MemberProfileProps, MetaDataProps } from "types";
+import { MemberProfileProps, MetaDataProps, optionType } from "types";
 import { getInitials } from "lib";
 
 export interface MemberTeamsDataProps {
@@ -109,10 +110,19 @@ const Member = () => {
     requestStatus: memberBranchesStatus
   } = useApiRequest({});
 
+  const {
+    run: runFetchAccessibleTeams,
+    data: accessibleTeamsResponse,
+    error: accessibleTeamsError,
+    requestStatus: accessibleTeamsLoading
+  } = useApiRequest({});
+
   const [changeRole, setChangeRole] = useState(false);
   const [changeBranch, setChangeBranch] = useState(false);
   const [changeTeam, setChangeTeam] = useState(false);
-  const [suspension, setSuspension] = useState(false);
+  const [suspend, setSuspend] = useState(false);
+  const [unSuspend, setUnsuspend] = useState(false);
+
   const [showBranches, setShowBranches] = useState(false);
   const [showTeams, setShowTeams] = useState(false);
 
@@ -159,11 +169,19 @@ const Member = () => {
   };
 
   const handleSuspension = () => {
-    setSuspension(true);
+    setSuspend(true);
   };
 
   const handleCloseSuspension = () => {
-    setSuspension(false);
+    setSuspend(false);
+  };
+
+  const handleUnSuspend = () => {
+    setUnsuspend(true);
+  };
+
+  const handleCloseUnSuspend = () => {
+    setUnsuspend(false);
   };
 
   const handleBranches = () => {
@@ -192,6 +210,10 @@ const Member = () => {
 
   const fetchMemberBranches = (page: number) => {
     if (params.id) runFetchMemberBranches(fetchMemberBranchesService(params.id, { page }));
+  };
+
+  const fetchAccessibleTeams = () => {
+    if (params.id) runFetchAccessibleTeams(fetchMemberAllAccessibleTeamsService(params.id));
   };
   const memberProfile = useMemo<MemberProfileProps>(() => {
     if (profileResponse?.status === 200) {
@@ -266,10 +288,34 @@ const Member = () => {
     return initMemberBranches;
   }, [memberBranchesResponse, memberBranchesError]);
 
+  const teamsOptions = useMemo<optionType[]>(() => {
+    if (accessibleTeamsResponse?.status === 200) {
+      const data = accessibleTeamsResponse?.data?.data?.teams?.map((item) => {
+        const isDisabled = memberTeams.teams?.some(
+          (memberTeam) => memberTeam.name === item.name && memberTeam.id === item._id
+        );
+
+        return {
+          label: `${item.name} ${isDisabled ? "(Already a member)" : ""}`,
+          value: item._id,
+          isDisabled
+        };
+      });
+      return data;
+    } else if (accessibleTeamsError) {
+      toast({
+        variant: "destructive",
+        description: accessibleTeamsError?.response?.data?.error
+      });
+    }
+    return [];
+  }, [accessibleTeamsResponse, accessibleTeamsError, memberTeams.teams]);
+
   useEffect(() => {
     handleFetchProfile();
     handleFetchMemberTeams(teamPage);
     fetchMemberBranches(branchesPage);
+    fetchAccessibleTeams();
   }, [params.id]);
 
   return (
@@ -298,13 +344,18 @@ const Member = () => {
         name={memberProfile?.fullName}
         show={changeTeam}
         close={handleCloseChangeTeam}
-        memberTeams={{ data: memberTeams.teams, callback: () => handleFetchMemberTeams(1) }}
+        callback={() => handleFetchMemberTeams(1)}
+        teamsOptions={{
+          loading: accessibleTeamsLoading.isPending,
+          options: teamsOptions
+        }}
       />
       <SuspendMember
         id={params.id ?? ""}
         name={memberProfile?.fullName}
-        show={suspension}
+        show={suspend}
         close={handleCloseSuspension}
+        callback={() => handleFetchProfile()}
       />
       {/* <UndoSuspension
         id={params.id ?? ""}
@@ -312,6 +363,13 @@ const Member = () => {
         show={suspension}
         close={handleCloseSuspension}
       /> */}
+      <UndoSuspension
+        id={params.id ?? ""}
+        name={memberProfile?.fullName}
+        show={unSuspend && !suspend}
+        close={handleCloseUnSuspend}
+        callback={() => handleFetchProfile()}
+      />
       <MemberBranches
         id={params.id ?? ""}
         handleAddBranch={handleChangeBranch}
@@ -343,7 +401,7 @@ const Member = () => {
         handleChangeRole={handleChangeRole}
         handleChangeBranch={handleBranches}
         handleChangeTeam={handleTeams}
-        handleSuspension={handleSuspension}
+        handleSuspension={memberProfile?.status === "active" ? handleSuspension : handleUnSuspend}
         handleComposeEmail={function (): void {
           throw new Error("Function not implemented.");
         }}

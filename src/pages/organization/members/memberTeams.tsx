@@ -27,7 +27,6 @@ const MemberTeams = (props: MemberTeamsProps) => {
   const closeConfirmRemoval = () => {
     setConfirm({ show: false, id: "", team: "" });
   };
-
   return (
     <>
       <RemoveMemberTeam

@@ -52,8 +52,8 @@ const ChangeBranch = (props: ChangeBranchProps) => {
 
   const handleAddToTeam = () => {
     teamId
-      ? runAddToBranch(addMemberToBranchService(id, branchTeams.id, { team: teamId }))
-      : runAddToBranch(addMemberToBranchService(id, branchTeams.id));
+      ? runAddToBranch(addMemberToBranchService(branchTeams.id, { team: teamId, members: [id] }))
+      : runAddToBranch(addMemberToBranchService(branchTeams.id, { members: [id] }));
   };
 
   const branchesOptions = orgBranches?.branchesArray.map((item) => {

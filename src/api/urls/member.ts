@@ -4,6 +4,7 @@ MEMBERS URLS
 =================================
 */
 
+import { removeMemberFromTeamRequestBody } from "api/services";
 import { fetchMemberQueryParams, PaginationProps } from "types";
 const prefixMember = "/user";
 
@@ -89,7 +90,8 @@ export const removeBranchFromMemberURL = () => `teams/remove-member-branch`;
  * @returns url string
  *
  */
-export const removeTeamFromMemberURL = () => `teams/remove-member`;
+export const removeTeamFromMemberURL = (data: removeMemberFromTeamRequestBody) =>
+  `teams/remove-member/${data.team}/${data.member}`;
 
 /**
  * Change Member role URL
@@ -168,5 +170,4 @@ export const addMemberToTeamURL = ({ teamId, memberId }) =>
  *
  */
 
-export const addMemberToBranchURL = ({ memberId, branchId }) =>
-  `${prefixMember}/add-branch/${memberId}/${branchId}`;
+export const addMemberToBranchURL = ({ branchId }) => `${prefixMember}/add-branch/${branchId}`;

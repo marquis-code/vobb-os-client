@@ -7,21 +7,15 @@ import { ModalProps, optionType } from "types";
 interface ChangeTeamProps extends ModalProps {
   name: string;
   id: string;
-  memberTeams: {
-    data: { id: string; name: string; dateAdded: string }[];
-    callback: () => void;
+
+  callback: () => void;
+  teamsOptions: {
+    loading: boolean;
+    options: optionType[];
   };
 }
-
 const ChangeTeam = (props: ChangeTeamProps) => {
-  const { memberTeams, id, close } = props;
-  const { data: teamArray, callback } = memberTeams;
-  const {
-    run: runFetchTeams,
-    data: teamsResponse,
-    error: teamsError,
-    requestStatus: teamsLoading
-  } = useApiRequest({});
+  const { callback, id, close, teamsOptions } = props;
 
   const {
     run: runAddToTeam,
@@ -36,28 +30,6 @@ const ChangeTeam = (props: ChangeTeamProps) => {
   const handleAddToTeam = () => {
     if (teamId) runAddToTeam(addMemberToTeamService({ teamId, memberId: id }));
   };
-  const teamsOptions = useMemo<optionType[]>(() => {
-    if (teamsResponse?.status === 200) {
-      const data = teamsResponse?.data?.data?.teams?.map((item) => {
-        const isDisabled = teamArray.some(
-          (memberTeam) => memberTeam.name === item.name && memberTeam.id === item._id
-        );
-
-        return {
-          label: `${item.name} ${isDisabled ? "(Already a member)" : ""}`,
-          value: item._id,
-          isDisabled
-        };
-      });
-      return data;
-    } else if (teamsError) {
-      toast({
-        variant: "destructive",
-        description: teamsError?.response?.data?.error
-      });
-    }
-    return [];
-  }, [teamsResponse, teamsError]);
 
   useMemo(() => {
     if (addResponse?.status === 200) {
@@ -74,20 +46,13 @@ const ChangeTeam = (props: ChangeTeamProps) => {
     return [];
   }, [addResponse, addError]);
 
-  useEffect(() => {
-    runFetchTeams(fetchMemberAllAccessibleTeamsService(props.id));
-  }, []);
-
   return (
     <ChangeTeamModal
       submit={handleAddToTeam}
       handleSetTeam={handleSetTeam}
       loading={addStatus.isPending}
       {...props}
-      teams={{
-        loading: teamsLoading.isPending,
-        options: teamsOptions
-      }}
+      teams={teamsOptions}
     />
   );
 };

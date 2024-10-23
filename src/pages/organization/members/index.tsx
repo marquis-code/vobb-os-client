@@ -27,7 +27,7 @@ const initMembersData: MemberDataProps = {
 
 const Members = () => {
   const navigate = useNavigate();
-  const { inviteMember, setInviteMember } = useModalContext();
+  const { setInviteMember } = useModalContext();
   const [suspension, setSuspension] = useState({ show: false, id: "", name: "", suspend: false });
   const [undoSuspension, setUndoSuspension] = useState({
     show: false,
@@ -61,7 +61,6 @@ const Members = () => {
     runFetchMembers(fetchOrgMembersService(membersQueryParams));
   };
   const handleInviteMember = () => setInviteMember(true);
-  const closeInviteMember = () => setInviteMember(false);
 
   const handleSuspension = (props: { id: string; suspend: boolean; name: string }) => {
     props.suspend
@@ -181,11 +180,7 @@ const Members = () => {
         close={handleCloseSuspend}
         fetchMembers={fetchOrgMembers}
       />
-      <InviteMember
-        show={inviteMember}
-        close={closeInviteMember}
-        callback={() => fetchOrgMembers()}
-      />
+
       <UndoSuspension
         {...undoSuspension}
         show={undoSuspension.show && !suspension.suspend}

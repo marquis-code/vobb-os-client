@@ -34,7 +34,7 @@ interface removeMemberFromBranchRequestBody {
   branch: string;
 }
 
-interface removeMemberFromTeamRequestBody {
+export interface removeMemberFromTeamRequestBody {
   member: string;
   team: string;
 }
@@ -42,6 +42,11 @@ interface removeMemberFromTeamRequestBody {
 interface changeMemberRoleRequestBody {
   member: string;
   role: string;
+}
+
+interface addMemberToBranchRequestBody {
+  members: string[];
+  team?: string;
 }
 
 /**
@@ -109,8 +114,7 @@ export const removeBranchFromMemberService = (data: removeMemberFromBranchReques
  */
 export const removeTeamFromMemberService = (data: removeMemberFromTeamRequestBody) => {
   return deleteRequest({
-    url: removeTeamFromMemberURL(),
-    data
+    url: removeTeamFromMemberURL(data)
   });
 };
 
@@ -200,13 +204,9 @@ export const fetchMemberTeamsPerBranchService = (id: string) => {
  * Add a member to a branch service
  * @returns axios promise
  */
-export const addMemberToBranchService = (
-  memberId: string,
-  branchId: string,
-  data?: { team: string }
-) => {
+export const addMemberToBranchService = (branchId: string, data: addMemberToBranchRequestBody) => {
   return postRequest({
-    url: addMemberToBranchURL({ memberId, branchId }),
+    url: addMemberToBranchURL({ branchId }),
     data
   });
 };

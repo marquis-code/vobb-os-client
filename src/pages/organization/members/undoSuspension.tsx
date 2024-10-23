@@ -8,9 +8,10 @@ interface UndoSuspensionProps extends ModalProps {
   id: string;
   name: string;
   fetchMembers?: () => void;
+  callback?: () => void;
 }
 
-const UndoSuspension = ({ show, close, id, name, fetchMembers }: UndoSuspensionProps) => {
+const UndoSuspension = ({ show, close, id, name, fetchMembers, callback }: UndoSuspensionProps) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = () => {
     run(unsuspendMemberService({ member: id }));
@@ -23,6 +24,7 @@ const UndoSuspension = ({ show, close, id, name, fetchMembers }: UndoSuspensionP
       });
       close();
       fetchMembers?.();
+      callback?.();
     } else if (error) {
       toast({
         variant: "destructive",
