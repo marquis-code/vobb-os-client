@@ -3,6 +3,7 @@ import {
   BranchMemberTableActions,
   BranchTeamTable,
   Button,
+  EmptyStates,
   Filter,
   FilterData,
   getBranchTeamTableColumns,
@@ -18,6 +19,7 @@ import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
+import { IconHome } from "@tabler/icons-react";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -123,6 +125,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                   <PlusCircledIcon /> Add member
                 </Button>
               </div>
+
               <BranchMemberTable columns={memberColumns} data={membersData} />
               <Pagination
                 // hidePageLimit
