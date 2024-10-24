@@ -4,7 +4,7 @@ MEMBERS URLS
 =================================
 */
 
-import { removeMemberFromTeamRequestBody } from "api/services";
+import { removeMemberFromBranchRequestBody, removeMemberFromTeamRequestBody } from "api/services";
 import { fetchMemberQueryParams, PaginationProps } from "types";
 const prefixMember = "/user";
 
@@ -83,7 +83,8 @@ export const fetchMemberTeamsURL = (id: string, { page, limit }: PaginationProps
  * @returns url string
  *
  */
-export const removeBranchFromMemberURL = () => `teams/remove-member-branch`;
+export const removeBranchFromMemberURL = (data: removeMemberFromBranchRequestBody) =>
+  `user/remove-branch/${data.member}/${data.branch}`;
 
 /**
  * Remove team from member URL

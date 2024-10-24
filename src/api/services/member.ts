@@ -29,7 +29,7 @@ import {
 } from "api";
 import { PaginationProps, updatePropertiesRequestBody } from "types";
 
-interface removeMemberFromBranchRequestBody {
+export interface removeMemberFromBranchRequestBody {
   member: string;
   branch: string;
 }
@@ -101,9 +101,8 @@ export const fetchMemberTeamsService = (id: string, query: PaginationProps = {})
  *
  */
 export const removeBranchFromMemberService = (data: removeMemberFromBranchRequestBody) => {
-  return patchRequest({
-    url: removeBranchFromMemberURL(),
-    data
+  return deleteRequest({
+    url: removeBranchFromMemberURL(data)
   });
 };
 
