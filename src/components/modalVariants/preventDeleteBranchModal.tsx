@@ -53,7 +53,7 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close}>
-        <section className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <section className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">
             Unable to delete branch - {name}
           </h2>
@@ -100,7 +100,7 @@ const PreventDeleteBranchModal: React.FC<PreventDeleteBranchModalProps> = ({
             </div>
           )}
         </section>
-        <section className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <section className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button onClick={close} size={"default"} variant={"outline"}>
             Cancel
           </Button>

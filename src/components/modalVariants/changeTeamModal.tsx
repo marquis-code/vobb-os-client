@@ -43,7 +43,7 @@ const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({ submit, close, show, 
   return (
     <>
       <Modal contentClassName="max-w-[500px] p-0" show={show} close={close}>
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Update member team</h2>
           <Button
             onClick={close}
@@ -58,7 +58,7 @@ const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({ submit, close, show, 
           <p className="text-vobb-neutral-70 mb-4">
             Add <strong>{name}</strong> to a new team
           </p>
-          <form className=" border-b border-vobb-neutral-15 grid gap-x-4">
+          <form className=" border-b border-vobb-neutral-20 grid gap-x-4">
             <SelectInput
               label="Team"
               options={[]}
@@ -71,7 +71,7 @@ const ChangeTeamModal: React.FC<ChangeTeamModalProps> = ({ submit, close, show, 
             NB: This adds the member to a new team within all their current branches
           </p>
         </div>
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={() => close()}
             className="text-error-10"

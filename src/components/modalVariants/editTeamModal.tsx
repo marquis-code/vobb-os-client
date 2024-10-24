@@ -73,7 +73,7 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="editTeam-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Edit Team</h2>
           <Button
             onClick={close}
@@ -87,7 +87,7 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <form className="p-4 border-b border-vobb-neutral-15">
+          <form className="p-4 border-b border-vobb-neutral-20">
             <div className="mb-4">
               <IconPicker
                 defaultValue="fas fa-camera"
@@ -206,7 +206,7 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({
             />
           </form>
         )}
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={() => close()}
             className="text-error-10"

@@ -17,7 +17,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, l
   return (
     <>
       <Modal show={show} close={close} contentClassName="p-0">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">{title}</h2>
           <Button
             onClick={close}
@@ -35,7 +35,7 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, l
           </form>
         </div>
 
-        <div className="border-t border-vobb-neutral-15 flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="border-t border-vobb-neutral-20 flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button className="text-error-10" size={"default"} variant={"outline"}>
             Cancel
           </Button>

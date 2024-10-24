@@ -38,9 +38,10 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
       setSelectedIds((prev) => [...prev, member.value]);
     }
   };
-
+  const reset = () => setSelectedIds([]);
   const handleSubmit = () => {
     submit(selectedIds);
+    reset();
   };
   return (
     <>

@@ -52,7 +52,7 @@ const AddExistingMembers: React.FC<AddExistingMemberProps> = (props) => {
     .filter(
       (member) =>
         member.status === "active" &&
-        branchMembers.some((branchMember) => branchMember.id === member.id)
+        !branchMembers.some((branchMember) => branchMember.id === member.id)
     )
     .map((member) => ({
       avatar: member.avatar,

@@ -96,7 +96,7 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="invite-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Invite Member To Branch</h2>
           <Button
             onClick={close}
@@ -108,7 +108,7 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
           </Button>
         </div>
 
-        <form className="p-4 border-b border-vobb-neutral-15">
+        <form className="p-4 border-b border-vobb-neutral-20">
           <CustomInput
             label="Email address"
             type="email"
@@ -158,7 +158,7 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
           />
         </form>
 
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <CheckboxWithText
             label={"Invite another member"}
             handleChecked={setInviteNew}

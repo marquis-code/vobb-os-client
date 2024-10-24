@@ -61,7 +61,7 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
   return (
     <>
       <Modal show={show} close={close} contentClassName="p-0">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">
             Transfer {multiple ? "Members" : "Member"}
           </h2>
@@ -94,7 +94,7 @@ const TransferMemberModal: React.FC<TransferMemberModalProps> = ({
           />
         </div>
 
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25 border-t border-vobb-neutral-15">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10 border-t border-vobb-neutral-20">
           <Button
             onClick={() => close()}
             className="text-error-10"

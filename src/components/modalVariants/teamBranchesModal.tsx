@@ -24,7 +24,7 @@ const TeamBranchesModal = ({
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close}>
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Team Branches</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"} className="border p-2 shadow-sm">
             <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
