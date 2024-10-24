@@ -21,7 +21,7 @@ const MemberBranchesModal = ({
   return (
     <>
       <Modal contentClassName="max-w-[500px] p-0" show={show} close={close}>
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">{name}'s Branches</h2>
           <Button
             onClick={close}

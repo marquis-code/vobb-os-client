@@ -47,7 +47,7 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
-        <div className="flex items-center justify-between pb-3 mb-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Update member branch</h2>
           <Button
             onClick={close}

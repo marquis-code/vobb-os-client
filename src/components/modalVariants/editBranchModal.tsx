@@ -101,7 +101,7 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
         show={show}
         close={close}
         testId="editBranch-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Edit Branch Information</h2>
           <Button
             onClick={close}
@@ -112,7 +112,7 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
             <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <form className="p-4 border-b border-vobb-neutral-15 grid grid-cols-2 gap-x-4">
+        <form className="p-4 border-b border-vobb-neutral-20 grid grid-cols-2 gap-x-4">
           <CustomInput
             label="Branch Name"
             type="text"
@@ -179,7 +179,7 @@ const EditBranchModal: React.FC<EditBranchModalProps> = ({
             }
           />
         </form>
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={() => close()}
             className="text-error-10"

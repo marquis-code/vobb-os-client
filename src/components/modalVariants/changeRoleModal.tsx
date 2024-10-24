@@ -59,7 +59,7 @@ const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
         show={show}
         close={close}
         testId="changeRole-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Change {name}'s Role</h2>
           <Button
             onClick={close}
@@ -70,7 +70,7 @@ const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
             <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <form className="p-4 border-b border-vobb-neutral-15 grid gap-x-4">
+        <form className="p-4 border-b border-vobb-neutral-20 grid gap-x-4">
           <SelectInput
             label="Select role"
             options={roleOptions}
@@ -81,7 +81,7 @@ const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
             }
           />
         </form>
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={() => close()}
             className="text-error-10"

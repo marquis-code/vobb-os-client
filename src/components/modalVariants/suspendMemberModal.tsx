@@ -62,7 +62,7 @@ const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({
         show={show}
         close={close}
         testId="suspendMember-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Suspend {name}</h2>
           <Button
             onClick={close}
@@ -117,7 +117,7 @@ const SuspendMemberModal: React.FC<SuspendMemberModalProps> = ({
             if you need to restore them
           </p>
         </div>
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25 border-t border-vobb-neutral-15">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10 border-t border-vobb-neutral-20">
           <Button
             onClick={() => close()}
             className="text-error-10"

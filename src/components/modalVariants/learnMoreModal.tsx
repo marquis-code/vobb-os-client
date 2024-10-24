@@ -13,7 +13,7 @@ const LearnMoreModal: React.FC<LearnMoreModalProps> = ({ show, close, title, tex
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close}>
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           {" "}
           <h2 className="text-lg font-bold">{title}</h2>
           <Button onClick={close} variant={"ghost"} size={"icon"} className="border p-2 shadow-sm">

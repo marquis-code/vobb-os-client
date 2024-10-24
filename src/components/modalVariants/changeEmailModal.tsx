@@ -37,7 +37,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit
   return (
     <>
       <Modal show={show} close={close} contentClassName="p-0">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-15">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
           <h2 className="text-lg font-medium text-vobb-neutral-95">Change email address</h2>
           <Button
             onClick={close}
@@ -49,7 +49,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit
           </Button>
         </div>
 
-        <form className="p-4 border-b border-vobb-neutral-15 grid gap-x-4">
+        <form className="p-4 border-b border-vobb-neutral-20 grid gap-x-4">
           <CustomInput
             label="New Email Address"
             type="email"
@@ -58,7 +58,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({ show, close, submit
             validatorMessage={errors.email?.message}
           />
         </form>
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-25">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={() => close()}
             className="text-error-10"
