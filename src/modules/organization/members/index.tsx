@@ -1,5 +1,5 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { IconUsers } from "@tabler/icons-react";
+import { IconUsersGroup } from "@tabler/icons-react";
 import {
   SettingsPageTitle,
   Filter,
@@ -115,7 +115,7 @@ const MembersUI: React.FC<MembersUIProps> = ({
         <LoadingSpinner />
       ) : !membersData.length ? (
         <EmptyStates
-          pageIcon={<IconUsers size={18} color="#101323" />}
+          pageIcon={<IconUsersGroup size={25} color="#101323" />}
           title="No members have been added yet."
           description="Start adding members to manage their profiles, track tasks, and monitor their activities."
           ctaFunction={handleInviteMember}

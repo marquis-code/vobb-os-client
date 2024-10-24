@@ -65,7 +65,7 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
           <LoadingSpinner />
         ) : !tableData.length ? (
           <EmptyStates
-            pageIcon={<IconHome size={18} color="#101323" />}
+            pageIcon={<IconHome size={25} color="#101323" />}
             title="No branches have been created yet."
             description="Create a branch to manage clients, assign staff, and track performance for each location."
             ctaFunction={handleAddBranch}

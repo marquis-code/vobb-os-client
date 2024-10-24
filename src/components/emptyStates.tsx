@@ -22,21 +22,21 @@ const EmptyStates: React.FC<EmptyStateProps> = (props) => {
 
   return (
     <>
-      <section className="bg-circle-pattern w-[300px] h-[396px] m-auto bg-no-repeat bg-[length:400px_400px] bg-[center_50px] relative">
-        <span className="w-6 h-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+      <div className="bg-circle-pattern w-[300px] h-[395px]  m-auto bg-no-repeat bg-[length:600px_600px] bg-[center_top] relative">
+        <span className="w-10 h-10 absolute top-[57%] left-[50.25%] -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
           {pageIcon}
         </span>
-        <div className="text-center flex flex-col justify-center items-center pt-[270px]">
-          <p className="font-semibold text-base my-2">{title}</p>
+      </div>
+      <div className="flex flex-col justify-center items-center max-w-[300px] text-center m-auto">
+        <p className="font-semibold text-base my-2">{title}</p>
 
-          <p className="text-xs">{description}</p>
-          {btnText && (
-            <Button onClick={ctaFunction} className="flex gap-2 mt-5" variant={"fill"}>
-              {btnIcon} {btnText}
-            </Button>
-          )}
-        </div>
-      </section>
+        <p className="text-xs">{description}</p>
+        {btnText && (
+          <Button onClick={ctaFunction} className="flex gap-2 mt-5" variant={"fill"}>
+            {btnIcon} {btnText}
+          </Button>
+        )}
+      </div>
     </>
   );
 };
