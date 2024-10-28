@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Switch } from "components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { ModalEmptyState } from "components";
+import { IconX } from "@tabler/icons-react";
 
 interface AddExistingMembersToBranchProps extends ModalProps {
   submit: (data: string[]) => void;
@@ -45,65 +47,77 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
   };
   return (
     <>
-      <Modal show={show} close={close}>
+      <Modal
+        show={show}
+        close={close}
+        contentClassName="overflow-hidden max-w-[300px]"
+        testId="existing-members-modal">
         <CustomInput
           placeholder="search"
           value={memberSearchQuery}
           onChange={(e) => handleSearch("search", e.target.value)}
+          data-testid="search-members"
         />
-
-        <div className="max-h-60 overflow-scroll border-t border-vobb-neutral-30 mt-2 pt-2">
+        <div>
           {loadingMembers ? (
             <LoadingSpinner />
           ) : !members.length ? (
-            <p className="my-4">No members found</p>
+            <ModalEmptyState
+              title="No members are available to add"
+              description="Please ensure members belong to a team in this branch."
+              pageIcon={<IconX size={20} color="#101323" />}
+            />
           ) : (
-            members.map((member) => (
-              <div
-                key={member.value}
-                className="flex items-center justify-between gap-4 w-full mb-4 pr-2">
-                <div className="flex gap-4 items-center">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage
-                      src={
-                        member.avatar instanceof File
-                          ? URL.createObjectURL(member.avatar)
-                          : member.avatar || ""
-                      }
-                      alt="profile picture"
-                    />
+            <div>
+              <div className="max-h-60 overflow-scroll border-t border-vobb-neutral-30 mt-2 pt-2">
+                {members.map((member, index) => (
+                  <div
+                    key={member.value}
+                    className="flex items-center justify-between gap-4 w-full mb-4 pr-2">
+                    <div className="flex gap-4 items-center">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage
+                          src={
+                            member.avatar instanceof File
+                              ? URL.createObjectURL(member.avatar)
+                              : member.avatar || ""
+                          }
+                          alt="profile picture"
+                        />
 
-                    <AvatarFallback>
-                      {member.label.charAt(0)}
-                      {member.label.charAt(1)}
-                    </AvatarFallback>
-                  </Avatar>
+                        <AvatarFallback>
+                          {member.label.charAt(0)}
+                          {member.label.charAt(1)}
+                        </AvatarFallback>
+                      </Avatar>
 
-                  <p>{member.label}</p>
-                </div>
+                      <p>{member.label}</p>
+                    </div>
 
-                <span className="flex items-center gap-4">
-                  <Switch
-                    checked={selectedIds.includes(member.value)}
-                    onCheckedChange={() => handleSelectMember(member)}
-                    testId={member.label}
-                  />
-                </span>
+                    <span className="flex items-center gap-4">
+                      <Switch
+                        checked={selectedIds.includes(member.value)}
+                        onCheckedChange={() => handleSelectMember(member)}
+                        testId={`member-${index}`}
+                      />
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))
+              <Button
+                onClick={handleSubmit}
+                size={"default"}
+                variant={"fill"}
+                disabled={!selectedIds.length}
+                loading={loadingSubmit}
+                className="flex gap-2 mt-2 w-full"
+                data-testid="add-btn">
+                <PlusCircledIcon />
+                Add Selected Members
+              </Button>
+            </div>
           )}
         </div>
-
-        <Button
-          onClick={handleSubmit}
-          size={"default"}
-          variant={"fill"}
-          disabled={!selectedIds.length}
-          loading={loadingSubmit}
-          className="flex gap-2 mt-2 w-full">
-          <PlusCircledIcon />
-          Add Selected Members
-        </Button>
       </Modal>
     </>
   );

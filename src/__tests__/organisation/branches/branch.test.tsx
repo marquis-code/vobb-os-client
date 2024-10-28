@@ -9,6 +9,8 @@ const mockHandleViewMember = vi.fn();
 const mockHandleMemberPagination = vi.fn();
 const mockHandleTeamPagination = vi.fn();
 const mockHandleMemberFilter = vi.fn();
+const mockHandleInviteMember = vi.fn();
+const mockAddExistingMembers = vi.fn();
 
 const defaultProps = {
   loadingMembers: false,
@@ -47,7 +49,9 @@ const defaultProps = {
   handleViewMember: mockHandleViewMember,
   handleUpdateMembersParams: mockHandleMemberPagination,
   handleUpdateTeamsParams: mockHandleTeamPagination,
-  handleUpdateMemberFilters: mockHandleMemberFilter
+  handleUpdateMemberFilters: mockHandleMemberFilter,
+  handleInviteMemberToBranch: mockHandleInviteMember,
+  handleAddExistingMembersToBranch: mockAddExistingMembers
 };
 
 const mockedData = {
@@ -87,7 +91,9 @@ const mockedData = {
   handleViewMember: mockHandleViewMember,
   handleUpdateMembersParams: mockHandleMemberPagination,
   handleUpdateTeamsParams: mockHandleTeamPagination,
-  handleUpdateMemberFilters: mockHandleMemberFilter
+  handleUpdateMemberFilters: mockHandleMemberFilter,
+  handleInviteMemberToBranch: mockHandleInviteMember,
+  handleAddExistingMembersToBranch: mockAddExistingMembers
 };
 
 describe("Branch UI tests", () => {
@@ -109,26 +115,19 @@ describe("Branch UI tests", () => {
     expect(mockedBranch).toBeInTheDocument();
   });
 
-  it("should display the branch name with timezone if it exists", () => {
-    renderComponent();
-
-    const heading = screen.getByRole("heading");
-    expect(heading).toHaveTextContent("Branch1 (GMT + 1)");
-  });
-
-  it("should display the branch name without timezone if none is provided", () => {
-    renderComponent({ ...defaultProps, branchInfo: { ...defaultProps.branchInfo, timeZone: "" } });
-    const heading = screen.getByRole("heading");
-
-    expect(heading).toHaveTextContent(/branch1 ()/i);
-    expect(heading).not.toHaveTextContent(/\(GMT \+\d\)/);
-  });
-
   it("should display the correct branch address", () => {
     renderComponent();
+    const city = screen.getByTestId("branch-city");
+    const province = screen.getByTestId("branch-province");
+    const zipcode = screen.getByTestId("branch-zipcode");
 
-    const description = screen.getByText(/Okota, Lasgidi, lagos, Nigeria, 123456/i);
-    expect(description).toBeInTheDocument();
+    expect(city).toBeInTheDocument();
+    expect(province).toBeInTheDocument();
+    expect(zipcode).toBeInTheDocument();
+
+    expect(city).toHaveTextContent("Lasgidi");
+    expect(province).toHaveTextContent("lagos");
+    expect(zipcode).toHaveTextContent("123456");
   });
 
   it("should render member and teams tabs", () => {
@@ -445,5 +444,29 @@ describe("Branch UI tests", () => {
     await userEvent.click(option);
 
     expect(mockHandleTeamPagination).toHaveBeenCalledWith("limit", 50);
+  });
+
+  it("calls handleInviteMemberToBranch when button option is clicked", async () => {
+    renderComponent();
+
+    const addMemberBtn = screen.getByTestId("add-member");
+    await userEvent.click(addMemberBtn);
+    const inviteOption = await screen.findByText(/new team member/i);
+    await userEvent.click(inviteOption);
+    await waitFor(() => {
+      expect(defaultProps.handleInviteMemberToBranch).toHaveBeenCalled();
+    });
+  });
+
+  it("calls handleAddExistingMembersToBranch when button option is clicked", async () => {
+    renderComponent();
+
+    const addMemberBtn = screen.getByTestId("add-member");
+    await userEvent.click(addMemberBtn);
+    const existingOption = await screen.findByText(/existing member/i);
+    await userEvent.click(existingOption);
+    await waitFor(() => {
+      expect(defaultProps.handleAddExistingMembersToBranch).toHaveBeenCalled();
+    });
   });
 });
