@@ -30,11 +30,7 @@ const AddExistingMembers: React.FC<AddExistingMemberProps> = (props) => {
   const { search } = allMembersQueryParams;
   const debouncedSearchTerm = useDebounce(search, 1000);
 
-  const {
-    fetchOrgMembers,
-    orgMembersData,
-    loading: loadingMembers
-  } = useFetchOrgMembers({ limit: 5 });
+  const { fetchOrgMembers, orgMembersData, loading: loadingMembers } = useFetchOrgMembers({});
 
   const handleAddMembers = (data: string[]) => {
     runAddExisting(addExistingMembersToBranchService(branchId, { members: data }));
