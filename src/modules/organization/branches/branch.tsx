@@ -149,35 +149,54 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
           <SettingsPageTitle title={branchInfo?.name} className="max-w-none mb-0" />
           <section className=" py-3 px-4 flex text-xs gap-2 ml-0 w-[calc(100%+2rem)] items-center">
             <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                  <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
-                    <IconBuilding color="#667085" size={16} />
-                    {branchInfo.city}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="bg-vobb-neutral-70">city</TooltipContent>
-              </Tooltip>
-              <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
-              <Tooltip>
-                <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                  <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
-                    <IconBuildingArch color="#667085" size={16} />
-                    {branchInfo.province}
-                  </span>{" "}
-                </TooltipTrigger>
-                <TooltipContent className="bg-vobb-neutral-70">state</TooltipContent>
-              </Tooltip>
-              <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
-              <Tooltip>
-                <TooltipTrigger onClick={(e) => e.preventDefault()}>
-                  <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
-                    <IconMail color="#667085" size={16} />
-                    {branchInfo.zipCode}
-                  </span>{" "}
-                </TooltipTrigger>
-                <TooltipContent className="bg-vobb-neutral-70">zipcode</TooltipContent>
-              </Tooltip>
+              {branchInfo.city && (
+                <>
+                  <Tooltip>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                      <span
+                        className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm"
+                        data-testid="branch-city">
+                        <IconBuilding color="#667085" size={16} />
+                        {branchInfo.city}
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-vobb-neutral-70">city</TooltipContent>
+                  </Tooltip>
+                  <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
+                </>
+              )}
+              {branchInfo.province && (
+                <>
+                  <Tooltip>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                      <span
+                        className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm"
+                        data-testid="branch-province">
+                        <IconBuildingArch color="#667085" size={16} />
+                        {branchInfo.province}
+                      </span>{" "}
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-vobb-neutral-70">state</TooltipContent>
+                  </Tooltip>
+                  <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
+                </>
+              )}
+
+              {branchInfo.zipCode && (
+                <>
+                  <Tooltip>
+                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                      <span
+                        className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm"
+                        data-testid="branch-zipcode">
+                        <IconMail color="#667085" size={16} />
+                        {branchInfo.zipCode}
+                      </span>{" "}
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-vobb-neutral-70">zipcode</TooltipContent>
+                  </Tooltip>
+                </>
+              )}
             </TooltipProvider>
           </section>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="pt-4 border-t -ml-4 pl-4">
@@ -266,15 +285,17 @@ const ActionColumn = ({ handleExistingMember, handleInviteMemberToBranch }) => {
           <PlusCircledIcon /> Add member
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="p-4 space-y-2">
+      <DropdownMenuContent align="end" className="py-4 px-2 space-y-2 w-[184px]">
         <DropdownMenuItem
           onClick={handleInviteMemberToBranch}
-          className="gap-2 cursor-pointer text-vobb-neutral-70">
+          className="gap-2 cursor-pointer text-vobb-neutral-70"
+          testId="invite-member">
           New Team Member
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleExistingMember}
-          className="gap-2 cursor-pointer text-vobb-neutral-70">
+          className="gap-2 cursor-pointer text-vobb-neutral-70"
+          testId="existing-member">
           Existing Member
         </DropdownMenuItem>
       </DropdownMenuContent>

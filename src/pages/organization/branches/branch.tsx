@@ -8,7 +8,6 @@ import { useCountriesContext, useUserContext } from "context";
 import { format, parseISO } from "date-fns";
 import { useParams } from "react-router-dom";
 import { InviteMemberToBranch } from "./inviteMemberToBranch";
-import { Label } from "@radix-ui/react-dropdown-menu";
 import { AddExistingMembers } from "./addExistingMembers";
 
 export const initBranchData = {
