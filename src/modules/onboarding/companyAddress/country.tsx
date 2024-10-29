@@ -56,7 +56,7 @@ const CountrySelect: React.FC<CompanyAddressProps> = ({
           errors.country?.value?.message ??
           errors.country?.label?.message
         }
-        data-testid="country"
+        testId="country"
       />
       <Button
         onClick={handleSubmit(onSubmit)}
