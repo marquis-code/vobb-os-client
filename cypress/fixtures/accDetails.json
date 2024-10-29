@@ -1,0 +1,43 @@
+{
+  "message": "Success",
+  "data": {
+    "_id": "66e40dc582934b8cf68ca1d8",
+    "email": "killmon@yopmail.com",
+    "status": "active",
+    "language": "English",
+    "fluent_languages": ["Afrikaans"],
+    "first_name": "killmon",
+    "last_name": "Jenny",
+    "title": "Big Chairman",
+    "timezone": "Africa/Lagos",
+    "user_attributes": [
+      {
+        "attribute": [
+          {
+            "label": "Test attribute",
+            "type": "long-text",
+            "meta": 250,
+            "_id": "66f34676e57c2e3bad56806e",
+            "attribute": "66f27dade7acb050da469011"
+          }
+        ],
+        "data": "Banker"
+      },
+      {
+        "attribute": [
+          {
+            "label": "hobbies",
+            "type": "email",
+            "_id": "66f346cae57c2e3bad579c48",
+            "attribute": "66f346a7e7acb050da469a3c"
+          }
+        ],
+        "data": "hamsaikemefuna@gmail.com"
+      }
+    ],
+    "role": "Super Admin",
+    "two_fa_status": false,
+    "google_signup": false,
+    "date_format": "DD/MM/YYYY"
+  }
+}

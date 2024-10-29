@@ -62,10 +62,14 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
 
   return (
     <>
-      <Modal contentClassName="max-w-[800px]" show={addBranch} close={close}>
+      <Modal
+        contentClassName="max-w-[800px]"
+        show={addBranch}
+        close={close}
+        testId="addBranch-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Create New Branch</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>
@@ -142,7 +146,7 @@ const AddBranchModal: React.FC<AddBranchModalProps> = ({ show, close, submit, lo
             className="text-error-10"
             size={"default"}
             variant={"outline"}
-            disabled={loading}>
+            disabled={!isDirty || loading}>
             Cancel
           </Button>
           <Button

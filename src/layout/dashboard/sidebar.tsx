@@ -102,6 +102,7 @@ export function BranchMenu() {
   const debouncedFetch = debounce(() => {
     handleFetchBranches();
   }, 1000);
+
   useEffect(() => {
     if (branchSearchQuery.trim()) {
       debouncedFetch();

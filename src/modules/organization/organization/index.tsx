@@ -88,6 +88,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           value: yup.string().required("Required")
         })
       )
+      .min(1, "At least one sector must be selected")
       .required("Required"),
     website: yup.string().url("Enter a valid url"),
     primaryEmail: yup.string().email("Enter a valid email"),
@@ -150,10 +151,13 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     !arraysHaveSameElements(
       sector.map((item) => item.value),
       profile.sector.map((item) => item)
-    ) &&
-    sector.length;
-  const primaryNumChanged = primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
-  const secondaryNumChanged = secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
+    );
+  const primaryNumChanged =
+    primaryNumber?.replace(/\D/g, "")?.length > 10 &&
+    primaryNumber?.replace(/\D/g, "") !== profile?.primaryPhoneNumber;
+  const secondaryNumChanged =
+    secondaryNumber?.replace(/\D/g, "")?.length > 10 &&
+    secondaryNumber?.replace(/\D/g, "") !== profile?.secondaryPhoneNumber;
 
   const onSubmit: SubmitHandler<OrgProfileFormData> = (data) => {
     const handleProfileUpdate = () => {
@@ -202,7 +206,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
     <>
       <SettingsPageTitle title="Organization Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8" data-testid="avatar-section">
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={
@@ -241,7 +245,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             <p className="text-[11px]">We support PNGs and JPEGs under 10MB</p>
           </div>
         </div>
-        <form className="grid grid-cols-2 gap-4">
+        <form className="grid grid-cols-2 gap-4" data-testid="profile-form">
           <CustomInput
             label="Company Name"
             type="text"
@@ -249,6 +253,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             register={register}
             validatorMessage={errors.name?.message}
             parentClassName="mb-2"
+            data-testid="name"
           />
           <CustomInput
             label="Company Website"
@@ -257,6 +262,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             register={register}
             validatorMessage={errors.website?.message}
             parentClassName="mb-2"
+            data-testid="website"
           />
           <MultiSelectInput
             label="Sectors"
@@ -268,6 +274,7 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
             }}
             placeholder="Select sectors"
             parentClassName="col-span-2"
+            validatorMessage={errors.sector?.message as string}
           />
           <CustomPhoneInput
             label="Primary Phone Number"
@@ -329,7 +336,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 }}
                 className="p-0 underline"
                 size={"sm"}
-                variant={"link"}>
+                variant={"link"}
+                data-testid="primary-emailBtn">
                 {profile?.primaryEmail || profile?.pendingPrimaryEmail
                   ? "Change email address"
                   : "Add email address"}
@@ -342,7 +350,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                   onClick={() => {
                     submitResendEmails({ action: "primary" });
                     handleSetParams("primary");
-                  }}>
+                  }}
+                  data-testid="primary-resend-button">
                   Resend verification mail
                 </Button>
               )}
@@ -392,7 +401,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                 }}
                 className="p-0 underline"
                 size={"sm"}
-                variant={"link"}>
+                variant={"link"}
+                data-testid="secondary-emailBtn">
                 {profile?.secondaryEmail || profile?.pendingSecondaryEmail
                   ? "Change email address"
                   : "Add email address"}
@@ -407,7 +417,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
                     submitResendEmails({ action: "support" });
                     searchParams.set("action", "support");
                     handleSetParams("support");
-                  }}>
+                  }}
+                  data-testid="secondary-resend-button">
                   Resend verification mail
                 </Button>
               )}
@@ -423,7 +434,8 @@ const OrgProfileUI: React.FC<OrgProfileProps> = ({
           disabled={!isDirty}
           loading={submitLoading || numbersLoading}
           onClick={handleSubmit(onSubmit)}
-          variant={"fill"}>
+          variant={"fill"}
+          data-testid="save-btn">
           Save
         </Button>
       </div>

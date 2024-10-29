@@ -223,6 +223,7 @@ export const renderFormFields = ({
         <SelectInput
           key={id}
           label={fieldData.title}
+          placeholder={fieldData.description}
           value={getCountryValue(fieldValue)}
           options={countries?.map((country) => ({
             label: country.label,
@@ -238,7 +239,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(newValue) =>
             radio?.handleChange ? radio.handleChange(newValue, id) : () => {}
           }
@@ -264,7 +265,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(val) => val && setValue(fieldName, val.value)}
           validatorMessage={getErrorMessage(errors[fieldName])}
         />

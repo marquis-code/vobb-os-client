@@ -63,6 +63,7 @@ const ClientAttributes: React.FC<ClientAttributesProps> = ({
           totalPages={totalPages}
           currentPage={currentPage}
           className="mt-4"
+          data-testid="pagination"
         />
       </section>
     </>

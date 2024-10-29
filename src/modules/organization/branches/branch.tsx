@@ -16,10 +16,21 @@ import {
 } from "components/tables/branchMemberTable";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
 import { IconPlus } from "@tabler/icons-react";
 
+type FilterItem = {
+  value: string;
+  cond: string;
+};
+
+type TransformedData = {
+  name: FilterItem[];
+  email: FilterItem[];
+  team: FilterItem[];
+  role: FilterItem[];
+  operation: FilterItem[];
+};
 // This list should come from the API
 const attributes: attributeType[] = [
   {
@@ -47,6 +58,7 @@ const attributes: attributeType[] = [
 interface OrgBranchUIProps extends BranchMemberTableActions {
   handleUpdateMembersParams: (param: string, value: string | number) => void;
   handleUpdateTeamsParams: (param: string, value: number) => void;
+  handleUpdateMemberFilters: (filtersArray) => void;
   loadingMembers: boolean;
   branchInfo: OrganisationBranchesData;
   branchTeams: BranchTeamsProps;
@@ -58,6 +70,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   handleViewMember,
   handleUpdateMembersParams,
   handleUpdateTeamsParams,
+  handleUpdateMemberFilters,
   loadingMembers,
   branchInfo,
   branchTeams,
@@ -86,10 +99,39 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   };
 
   const teamColumns = useMemo(() => getBranchTeamTableColumns(), []);
+
+  const transformedData: TransformedData = {
+    name: [],
+    email: [],
+    team: [],
+    role: [],
+    operation: []
+  };
+
+  memberFilters.forEach((item) => {
+    const key = item.property ? item.property.value : "";
+    if (transformedData.hasOwnProperty(key)) {
+      transformedData[key].push({
+        value: item.value,
+        cond: item.condition ? item.condition.value : ""
+      });
+    }
+  });
+
+  const checkAndUpdate = () => {
+    const hasValueSet = Object.values(transformedData).some(
+      (array) => array.some((item) => item.value) // Check if any item in the array has a value set
+    );
+
+    if (hasValueSet) {
+      handleUpdateMemberFilters(transformedData);
+    }
+  };
+
   return (
     <>
       {loadingMembers ? (
-        <LoadingSpinner />
+        <LoadingSpinner testId="loading" />
       ) : (
         <>
           <SettingsPageTitle
@@ -117,7 +159,10 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 <Filter
                   className="mb-0"
                   filters={memberFilters}
-                  setFilter={setMemberFilter}
+                  setFilter={(val) => {
+                    setMemberFilter(val);
+                    checkAndUpdate();
+                  }}
                   attributes={attributes}
                 />
                 <Button onClick={console.log} className="flex gap-2 ml-auto" variant={"fill"}>
@@ -136,6 +181,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 totalPages={membersMetaData.totalPages}
                 currentPage={membersMetaData.currentPage}
                 className="mt-4"
+                testId="pagination"
               />
             </TabsContent>
             <TabsContent className="pb-8 mb-12" value="client">
@@ -154,6 +200,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                 totalPages={teamsMetaData.totalPages}
                 currentPage={teamsMetaData.currentPage}
                 className="mt-4"
+                testId="pagination"
               />
             </TabsContent>
           </Tabs>

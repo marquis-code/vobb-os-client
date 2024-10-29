@@ -73,7 +73,8 @@ const TimeZone: React.FC<TimeZoneProps> = ({ submit, loadingTimezone }) => {
               onClick={handleSubmit(onSubmit)}
               variant={"fill"}
               loading={loadingTimezone}
-              disabled={loadingTimezone}>
+              disabled={loadingTimezone}
+              data-testid="save-btn">
               Save
             </Button>
           </div>
