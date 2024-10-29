@@ -1,4 +1,3 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import {
   SettingsPageTitle,
   Button,
@@ -19,6 +18,7 @@ import { TeamActivityResponse, TeamMembersDataProps } from "pages";
 import { TeamPermissionsUI } from "./teamPermissions";
 import { TeamActivity } from "./teamActivity";
 import { QueryParamProps } from "types";
+import { IconPlus } from "@tabler/icons-react";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -137,7 +137,7 @@ const TeamUI = ({
               attributes={attributes}
             />
             <Button onClick={handleAddMember} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
-              <PlusCircledIcon /> Add member
+              <IconPlus size={18} /> Add member
             </Button>
           </section>
           {loading ? (

@@ -154,7 +154,7 @@ const Member = () => {
           <MemberProfileActivity />
         ) : params.route === "emails" ? (
           <MemberProfileEmails />
-        ) : params.route === "file" ? (
+        ) : params.route === "files" ? (
           <MemberProfileFiles />
         ) : params.route === "tasks" ? (
           <MemberProfileTasks />

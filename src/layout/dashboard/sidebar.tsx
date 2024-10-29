@@ -7,14 +7,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
-import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "context";
 import { Input, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
 import { useFetchUserBranches } from "hooks";
 import { debounce } from "lib";
+import { IconPlus } from "@tabler/icons-react";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -148,7 +149,7 @@ export function BranchMenu() {
             <DropdownMenuItem>
               <button className="font-medium flex items-center" onClick={handleAddBranchModal}>
                 New Branch
-                <PlusCircledIcon className="ml-2" />
+                <IconPlus size={18} className="ml-2" />
               </button>
             </DropdownMenuItem>
           </>

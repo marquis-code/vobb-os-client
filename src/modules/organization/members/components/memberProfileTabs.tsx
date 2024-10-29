@@ -1,17 +1,9 @@
-import { EnvelopeClosedIcon, FileTextIcon, PersonIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
-import {
-  CheckSquareIcon,
-  FolderIcon,
-  LineChartUpIcon,
-  UserCircleIcon,
-  MessageChatSquareIcon
-} from "assets";
 import { ReactNode, useContext } from "react";
 import { MemberProfileContext } from "context";
 import {
   IconClipboardText,
-  IconFileText,
+  IconFiles,
   IconFlame,
   IconListCheck,
   IconMail,
@@ -64,7 +56,7 @@ const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
     {
       title: "Files",
       key: "files",
-      icon: <IconFileText size={16} />
+      icon: <IconFiles size={16} />
     },
     {
       title: "Notes",

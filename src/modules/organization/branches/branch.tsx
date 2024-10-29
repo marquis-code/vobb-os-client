@@ -18,6 +18,7 @@ import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
+import { IconPlus } from "@tabler/icons-react";
 
 // This list should come from the API
 const attributes: attributeType[] = [
@@ -120,7 +121,8 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                   attributes={attributes}
                 />
                 <Button onClick={console.log} className="flex gap-2 ml-auto" variant={"fill"}>
-                  <PlusCircledIcon /> Add member
+                  <IconPlus size={18} />
+                  Add member
                 </Button>
               </div>
 
@@ -140,7 +142,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
               {/* Add team */}
               {/* Search, sort, filter by teams */}
               <Button onClick={console.log} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
-                <PlusCircledIcon /> New team
+                <IconPlus size={18} /> New team
               </Button>
               <BranchTeamTable columns={teamColumns} data={teamsData} />
               <Pagination

@@ -2,6 +2,7 @@ import { cn } from "lib";
 import { Button } from "./ui";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { SelectInput } from "./form";
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
 
 export interface PaginationProps {
   className?: string;
@@ -75,7 +76,7 @@ const Pagination: React.FC<PaginationProps> = ({
           </div>
         )}
         <p>
-          <b>{start}</b> - <b>{end}</b> of <b>{totalCount}</b> items
+          {start} - {end} of {totalCount} items
         </p>
         <div className="flex gap-2">
           <Button
@@ -84,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
             size={"icon"}
             onClick={handleDecrease}
             data-testid="move-left">
-            <ChevronLeftIcon />
+            <IconArrowNarrowLeft size={16} color="#101323" />
           </Button>
           <Button
             size={"icon"}
@@ -92,7 +93,7 @@ const Pagination: React.FC<PaginationProps> = ({
             variant={"outline"}
             onClick={handleIncrease}
             data-testid="move-right">
-            <ChevronRightIcon />
+            <IconArrowNarrowRight size={16} color="#101323" />
           </Button>
         </div>
       </section>

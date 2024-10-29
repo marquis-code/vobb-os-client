@@ -1,6 +1,7 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { IconPlus } from "@tabler/icons-react";
+import { Button } from "components";
 import React, { ReactNode } from "react";
-import { Button } from "./ui";
+
 interface EmptyStateProps {
   pageIcon: ReactNode;
   title: string;
@@ -10,13 +11,13 @@ interface EmptyStateProps {
   btnText?: string;
 }
 
-const EmptyStates: React.FC<EmptyStateProps> = (props) => {
+const TableEmptyState: React.FC<EmptyStateProps> = (props) => {
   const {
     pageIcon,
     title,
     description,
     ctaFunction,
-    btnIcon = <PlusCircledIcon />,
+    btnIcon = <IconPlus size={16} />,
     btnText
   } = props;
 
@@ -30,9 +31,9 @@ const EmptyStates: React.FC<EmptyStateProps> = (props) => {
       <div className="flex flex-col justify-center items-center max-w-[300px] text-center m-auto">
         <p className="font-semibold text-base my-2">{title}</p>
 
-        <p className="text-xs">{description}</p>
+        <p className="text-xs text-vobb-neutral-60">{description}</p>
         {btnText && (
-          <Button onClick={ctaFunction} className="flex gap-2 mt-5" variant={"fill"}>
+          <Button onClick={ctaFunction} className="flex gap-1 mt-5 text-xs" variant={"fill"}>
             {btnIcon} {btnText}
           </Button>
         )}
@@ -41,4 +42,4 @@ const EmptyStates: React.FC<EmptyStateProps> = (props) => {
   );
 };
 
-export { EmptyStates };
+export { TableEmptyState };

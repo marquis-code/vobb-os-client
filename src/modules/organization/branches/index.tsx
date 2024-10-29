@@ -1,10 +1,10 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { IconHome } from "@tabler/icons-react";
+import { IconHome, IconPlus } from "@tabler/icons-react";
 import {
   BranchesTable,
   BranchTableActions,
   Button,
-  EmptyStates,
+  TableEmptyState,
   getBranchTableColumns,
   LoadingSpinner,
   Pagination,
@@ -59,12 +59,12 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
       <SettingsPageTitle title="Branches" className="max-w-full" />
       <section className="pb-8 mb-12">
         <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
-          <PlusCircledIcon /> New branch
+          <IconPlus size={18} /> New branch
         </Button>
         {loading ? (
           <LoadingSpinner />
         ) : !tableData.length ? (
-          <EmptyStates
+          <TableEmptyState
             pageIcon={<IconHome size={25} color="#101323" />}
             title="No branches have been created yet."
             description="Create a branch to manage clients, assign staff, and track performance for each location."
