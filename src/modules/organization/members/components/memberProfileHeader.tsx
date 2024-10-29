@@ -35,6 +35,7 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
           size={"md"}
           className="justify-center rounded-none -mt-4 -ml-4 w-[calc(100%+2rem)] border-t-0 border-x-0 py-2 gap-2"
           btnClassName="ml-0"
+          testId="suspended-member"
         />
       ) : (
         ""

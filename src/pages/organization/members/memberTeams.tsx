@@ -40,8 +40,8 @@ const MemberTeams = (props: MemberTeamsProps) => {
       <MemberTeamsModal
         handleRemoveTeam={confirmRemoval}
         {...props}
-        handleViewTeams={{
-          memberTeams,
+        memberTeams={{
+          data: memberTeams,
           loading,
           handlePagination
         }}

@@ -42,8 +42,8 @@ const MemberBranches = (props: MemberBranchesProps) => {
       <MemberBranchesModal
         handleRemoveBranch={confirmRemoval}
         {...props}
-        handleViewBranches={{
-          memberBranches,
+        memberBranches={{
+          data: memberBranches,
           loading,
           handlePagination
         }}

@@ -1,4 +1,4 @@
-import { Cross1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Button, LoadingSpinner, Pagination } from "components";
 import { Modal } from "components/modal";
 import { MemberBranchesDataProps } from "pages";
@@ -10,8 +10,8 @@ interface MemberBranchesModalProps extends ModalProps {
   name: string;
   handleRemoveBranch: ({ id, name }: { id: string; name: string }) => void;
   handleAddBranch: () => void;
-  handleViewBranches: {
-    memberBranches: MemberBranchesDataProps;
+  memberBranches: {
+    data: MemberBranchesDataProps;
     loading: boolean;
     handlePagination: (page: number) => void;
   };
@@ -23,10 +23,10 @@ const MemberBranchesModal = ({
   name,
   handleRemoveBranch,
   handleAddBranch,
-  handleViewBranches
+  memberBranches
 }: MemberBranchesModalProps) => {
-  const { memberBranches, loading, handlePagination } = handleViewBranches;
-  const { branches, metaData } = memberBranches;
+  const { data, loading, handlePagination } = memberBranches;
+  const { branches, metaData } = data;
   const { currentPage, totalCount, totalPages } = metaData;
   return (
     <>

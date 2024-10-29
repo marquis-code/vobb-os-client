@@ -44,9 +44,13 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
   const {
     loading: loadingBranches,
     options: branches,
-    handleSetId: handleSetBranch
+    handleSetId: handleFetchBranchTeams
   } = handleViewBranches;
-  const { loading: loadingTeams, options: teams, handleSetId: handleSetTeam } = handleViewTeams;
+  const {
+    loading: loadingTeams,
+    options: teams,
+    handleSetId: handleFetchBranchRoles
+  } = handleViewTeams;
 
   const {
     handleSubmit,
@@ -74,6 +78,11 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
   };
 
   const hasTeamInBranch = teams.some((team) => team.isDisabled);
+
+  const currentTeams = teams
+    .filter((team) => team.isDisabled)
+    .map((team) => team.label)
+    .join(", ");
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
@@ -94,7 +103,7 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
             value={watch("branch")?.value === "" ? null : branch}
             onChange={(val) => {
               val && setValue("branch", val);
-              val && handleSetBranch(val.value);
+              val && handleFetchBranchTeams(val.value);
             }}
             validatorMessage={getOptionTypeValidationMsg(errors.branch)}
             loading={loadingBranches}
@@ -106,11 +115,11 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
               value={watch("team")?.value === "" ? null : team}
               onChange={(val) => {
                 val && setValue("team", val);
-                val && handleSetTeam(val.value);
+                val && handleFetchBranchRoles(val.value);
               }}
               validatorMessage={getOptionTypeValidationMsg(errors.team)}
-              hint={`The member will be able to access the following teams in the new branch: {current teams}, ${
-                watch("team")?.label
+              hint={`The member will be able to access the following teams in the new branch: ${currentTeams}, ${
+                watch("team")?.label ?? ""
               }`}
               loading={loadingTeams}
             />
@@ -133,7 +142,7 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
             onClick={handleSubmit(onSubmit)}
             size={"default"}
             variant={"fill"}
-            disabled={loading || !getValues().branch || (!hasTeamInBranch && !getValues().team)}
+            disabled={!getValues().branch || (!hasTeamInBranch && !getValues().team)}
             loading={loading}>
             Save
           </Button>

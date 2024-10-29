@@ -208,7 +208,7 @@ export const attributeTypeIcons = {
 
 export const roleOptions: optionType[] = [
   {
-    label: "Super admin",
+    label: "Organization admin",
     value: "Super Admin"
   },
   {

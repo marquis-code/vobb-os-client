@@ -1,4 +1,4 @@
-import { Cross1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Button, LoadingSpinner, Pagination } from "components";
 import { Modal } from "components/modal";
 import { MemberTeamsDataProps } from "pages";
@@ -10,8 +10,8 @@ interface MemberTeamsModalProps extends ModalProps {
   name: string;
   handleRemoveTeam: ({ id, name }: { id: string; name: string }) => void;
   handleAddTeam: () => void;
-  handleViewTeams: {
-    memberTeams: MemberTeamsDataProps;
+  memberTeams: {
+    data: MemberTeamsDataProps;
     loading: boolean;
     handlePagination: (page: number) => void;
   };
@@ -23,10 +23,10 @@ const MemberTeamsModal = ({
   name,
   handleRemoveTeam,
   handleAddTeam,
-  handleViewTeams
+  memberTeams
 }: MemberTeamsModalProps) => {
-  const { memberTeams, loading, handlePagination } = handleViewTeams;
-  const { teams, metaData } = memberTeams;
+  const { data, loading, handlePagination } = memberTeams;
+  const { teams, metaData } = data;
   const { currentPage, totalCount, totalPages } = metaData;
   return (
     <>

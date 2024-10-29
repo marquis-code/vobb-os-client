@@ -75,7 +75,7 @@ const ChangeBranch = (props: ChangeBranchProps) => {
         );
 
         return {
-          label: `${item.name} ${isDisabled ? "(Already a member)" : ""}`,
+          label: item.name,
           value: item._id,
           isDisabled
         };

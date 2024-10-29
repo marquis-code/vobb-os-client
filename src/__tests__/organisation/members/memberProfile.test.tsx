@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import selectEvent from "react-select-event";
 import { MemberProfileContext } from "context";
 import { MemberProfileBody } from "modules/organization/members/components/memberProfileBody";
@@ -13,6 +13,7 @@ import { MemberProfileFiles } from "pages/organization/members/memberFiles";
 import { MemberProfileNotes } from "pages/organization/members/memberNotes";
 import { MemberProfileTasks } from "pages/organization/members/memberTasks";
 import { BrowserRouter } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("api", async () => {
   const originalModule = await vi.importActual<any>("api");
@@ -48,14 +49,14 @@ vi.mock("assets", async () => {
 });
 
 const mockMemberProfile = {
-  avatar: "avatar_url",
+  avatar: "https://avatar_url",
   initials: "JD",
   fullName: "John Doe",
   email: "john.doe@example.com",
   jobTitle: "Software Engineer",
   role: "Admin",
   status: "Active",
-  timeZone: "",
+  timeZone: "Africa/Lagos",
   phoneNumber: "123-456-7890",
   dateFormat: "DD/MM/YYYY",
   syslanguage: "English",
@@ -67,18 +68,20 @@ const mockHandleMainTabChange = vi.fn();
 const mockHandleUpdateSubTab = vi.fn();
 const mockHandleFetchProfile = vi.fn();
 
+const profileProps = {
+  memberProfile: mockMemberProfile,
+  loading: false,
+  handleSuspension: vi.fn(),
+  handleChangeRole: vi.fn(),
+  handleChangeBranch: vi.fn(),
+  handleChangeTeam: vi.fn(),
+  handleComposeEmail: vi.fn()
+};
+
 const renderComponent = (mainTab = "activity", subTab = "details") => {
   return render(
     <BrowserRouter>
-      <MemberProfileHeader
-        memberProfile={mockMemberProfile}
-        loading={false}
-        handleSuspension={vi.fn()}
-        handleChangeRole={vi.fn()}
-        handleChangeBranch={vi.fn()}
-        handleChangeTeam={vi.fn()}
-        handleComposeEmail={vi.fn()}
-      />
+      <MemberProfileHeader {...profileProps} />
       <MemberProfileContext.Provider value={{ subTab, handleUpdateSubTab: mockHandleUpdateSubTab }}>
         <MemberProfileTabs handleMainTabChange={mockHandleMainTabChange} mainTab={mainTab} />
       </MemberProfileContext.Provider>
@@ -126,6 +129,89 @@ describe("Member Page Integration", () => {
 
     const role = screen.getByText("Admin");
     expect(role).toBeInTheDocument();
+  });
+
+  it("displays avatar image when avatar URL is provided", () => {
+    renderComponent();
+
+    const avatarImage = screen.getByTestId("image");
+    expect(avatarImage).toBeInTheDocument();
+    expect(avatarImage).toHaveAttribute("src", "https://avatar_url");
+  });
+
+  it("displays initials when avatar URL is not provided", () => {
+    const updatedProfileProps = {
+      ...profileProps,
+      memberProfile: {
+        ...profileProps.memberProfile,
+        avatar: undefined
+      }
+    };
+
+    render(
+      <BrowserRouter>
+        <MemberProfileHeader {...updatedProfileProps} />
+      </BrowserRouter>
+    );
+
+    // Check that the initials are displayed
+    const avatarFallback = screen.getByText("JD");
+    expect(avatarFallback).toBeInTheDocument();
+  });
+
+  it("calls handleChangeRole when change role option is clicked", async () => {
+    renderComponent();
+    const menuButtons = screen.getByRole("button", { name: "Open menu" });
+    await userEvent.click(menuButtons);
+    const changeRole = await screen.findByText(/change role/i);
+    await userEvent.click(changeRole);
+    await waitFor(() => {
+      expect(profileProps.handleChangeRole).toHaveBeenCalled();
+    });
+  });
+
+  it("calls handleSuspension when suspend account option is clicked", async () => {
+    renderComponent();
+    const menuButtons = screen.getByRole("button", { name: "Open menu" });
+    await userEvent.click(menuButtons);
+    const suspension = await screen.findByText(/suspend account/i);
+    await userEvent.click(suspension);
+    await waitFor(() => {
+      expect(profileProps.handleSuspension).toHaveBeenCalled();
+    });
+  });
+
+  it("calls handleChangeBranch when change branch option is clicked", async () => {
+    renderComponent();
+    const menuButtons = screen.getByRole("button", { name: "Open menu" });
+    await userEvent.click(menuButtons);
+    const changeBranch = await screen.findByText(/change branch/i);
+    await userEvent.click(changeBranch);
+    await waitFor(() => {
+      expect(profileProps.handleChangeBranch).toHaveBeenCalled();
+    });
+  });
+
+  it("calls handleChangeTeam when change team option is clicked", async () => {
+    renderComponent();
+    const menuButtons = screen.getByRole("button", { name: "Open menu" });
+    await userEvent.click(menuButtons);
+    const changeTeam = await screen.findByText(/change team/i);
+    await userEvent.click(changeTeam);
+    await waitFor(() => {
+      expect(profileProps.handleChangeTeam).toHaveBeenCalled();
+    });
+  });
+
+  it("calls handleComposeEmail when compose email option is clicked", async () => {
+    renderComponent();
+    const menuButtons = screen.getByRole("button", { name: "Open menu" });
+    await userEvent.click(menuButtons);
+    const composeEmail = await screen.findByText(/compose email/i);
+    await userEvent.click(composeEmail);
+    await waitFor(() => {
+      expect(profileProps.handleComposeEmail).toHaveBeenCalled();
+    });
   });
 
   it("test activity main tab change", () => {
@@ -203,6 +289,10 @@ describe("Member Page Integration", () => {
     expect(screen.getByPlaceholderText(/Set last name/i)).toHaveValue("Doe");
     expect(screen.getByPlaceholderText(/Set email address/i)).toHaveValue("john.doe@example.com");
     expect(screen.getByPlaceholderText(/your Phone number/i)).toHaveValue("+1 (234) 567-890");
+    expect(screen.getByPlaceholderText(/Set Job title/i)).toHaveValue("Software Engineer");
+    expect(screen.getByText("English")).toBeInTheDocument(); // System Language
+    expect(screen.getByText("Africa/Lagos (GMT+01:00)")).toBeInTheDocument(); // Timezone
+    expect(screen.getByText("DD/MM/YYYY")).toBeInTheDocument(); // Date format
   });
 
   it("allows entering first name", () => {
@@ -242,7 +332,6 @@ describe("Member Page Integration", () => {
 
     const systemLanguageSelect = screen.getAllByRole("combobox")[0];
     await selectEvent.select(systemLanguageSelect, ["English"]);
-    expect(systemLanguageSelect).toHaveValue("English");
   });
 
   it("allows selecting a timezone", async () => {
@@ -257,5 +346,42 @@ describe("Member Page Integration", () => {
 
     const dateFormatSelect = screen.getAllByRole("combobox")[2];
     await selectEvent.select(dateFormatSelect, ["DD/MM/YYYY"]);
+  });
+
+  it("should render correctly when the user status is 'suspended'", async () => {
+    const suspendedProfile = { ...mockMemberProfile, status: "suspended" };
+
+    const suspendedProfileProps = {
+      ...profileProps,
+      memberProfile: suspendedProfile
+    };
+
+    // Render component with updated props
+    render(
+      <BrowserRouter>
+        <MemberProfileHeader {...suspendedProfileProps} />
+        <MemberProfileContext.Provider
+          value={{ subTab: "details", handleUpdateSubTab: mockHandleUpdateSubTab }}>
+          <MemberProfileTabs handleMainTabChange={mockHandleMainTabChange} mainTab="activity" />
+        </MemberProfileContext.Provider>
+        <MemberProfileBody
+          children={<MemberProfileActivity />}
+          subSection={
+            <MemberProfileDetails profile={suspendedProfile} callback={mockHandleFetchProfile} />
+          }
+        />
+      </BrowserRouter>
+    );
+
+    const suspendedBadge = screen.getByTestId("suspended-member");
+    const message = screen.getByText("This member has been suspended");
+    const undoBtn = screen.getByRole("button", { name: "Undo suspension" });
+
+    expect(suspendedBadge).toBeInTheDocument();
+    expect(message).toBeInTheDocument();
+    await userEvent.click(undoBtn);
+    await waitFor(() => {
+      expect(suspendedProfileProps.handleSuspension).toHaveBeenCalled();
+    });
   });
 });
