@@ -115,12 +115,12 @@ const ChangeBranch = (props: ChangeBranchProps) => {
       submit={handleAddToTeam}
       loading={addStatus.isPending}
       {...props}
-      handleViewBranches={{
+      memberBranches={{
         options: branchesOptions,
         loading: loadingBranches,
         handleSetId: handleSetBranchId
       }}
-      handleViewTeams={{
+      memberTeams={{
         options: branchTeams.teams,
         loading: teamsLoading.isPending,
         handleSetId: handleSetTeamId

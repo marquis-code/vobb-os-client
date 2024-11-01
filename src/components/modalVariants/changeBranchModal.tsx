@@ -20,12 +20,12 @@ interface ChangeBranchModalProps extends ModalProps {
   submit: (data) => void;
   loading: boolean;
   name: string;
-  handleViewBranches: {
+  memberBranches: {
     options: optionType[];
     loading: boolean;
     handleSetId: (id: string) => void;
   };
-  handleViewTeams: {
+  memberTeams: {
     options: optionType[];
     loading: boolean;
     handleSetId: (id: string) => void;
@@ -38,19 +38,19 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
   loading,
   show,
   name,
-  handleViewBranches,
-  handleViewTeams
+  memberBranches,
+  memberTeams
 }) => {
   const {
     loading: loadingBranches,
     options: branches,
     handleSetId: handleFetchBranchTeams
-  } = handleViewBranches;
+  } = memberBranches;
   const {
     loading: loadingTeams,
     options: teams,
     handleSetId: handleFetchBranchRoles
-  } = handleViewTeams;
+  } = memberTeams;
 
   const {
     handleSubmit,

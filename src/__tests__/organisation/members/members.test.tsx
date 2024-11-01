@@ -204,16 +204,38 @@ describe("Members UI tests", () => {
     });
   });
 
-  it("calls handleSuspendMember when suspend member button is clicked", async () => {
+  it("displays 'suspend member' when the user is not suspended", async () => {
     renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-activeUser");
     await userEvent.click(menuButtons[0]);
+
     const suspendOption = await screen.findByText(/suspend member/i);
+    const unsuspendOption = screen.queryByText(/undo suspension/i);
+
+    expect(unsuspendOption).not.toBeInTheDocument();
+
     await userEvent.click(suspendOption);
     await waitFor(() => {
       expect(mockHandleSuspension).toHaveBeenCalled();
     });
   });
+
+  it("displays 'undo suspension' when the user is suspended", async () => {
+    renderComponent(mockedData);
+    const menuButtons = screen.getAllByTestId("menu-suspendedUser");
+    await userEvent.click(menuButtons[0]);
+
+    const unsuspendOption = await screen.findByText(/undo suspension/i);
+    const suspendOption = screen.queryByText(/suspend member/i);
+
+    expect(suspendOption).not.toBeInTheDocument();
+
+    await userEvent.click(unsuspendOption);
+    await waitFor(() => {
+      expect(mockHandleSuspension).toHaveBeenCalled();
+    });
+  });
+
   it("calls handleChangeRole when change role for member button is clicked", async () => {
     renderComponent(mockedData);
     const menuButtons = screen.getAllByTestId("menu-activeUser");
