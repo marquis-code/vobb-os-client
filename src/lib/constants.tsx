@@ -228,3 +228,61 @@ export const roleOptions: optionType[] = [
     value: "member"
   }
 ];
+
+export interface ObjectOptionProps {
+  title: string;
+  color: string;
+  id?: string;
+}
+export const objectOptions: ObjectOptionProps[] = [
+  {
+    title: "Client",
+    color: "#EDA12F"
+  },
+  {
+    title: "Product",
+    color: "#4A22EB"
+  },
+  {
+    title: "Offering",
+    color: "#088FFF"
+  },
+  {
+    title: "Package",
+    color: "#EDA12F"
+  },
+  {
+    title: "General",
+    color: "#EDA12F"
+  }
+];
+
+export const statusOptions: ObjectOptionProps[] = [
+  {
+    title: "Complete",
+    color: "#069952"
+  },
+  {
+    title: "Incomplete",
+    color: "#EDA12F"
+  },
+  {
+    title: "Archive",
+    color: "#EAECF0"
+  }
+];
+
+export const priorityOptions: ObjectOptionProps[] = [
+  {
+    title: "High",
+    color: "#E62E2E"
+  },
+  {
+    title: "Medium",
+    color: "#EDA12F"
+  },
+  {
+    title: "Low",
+    color: "#069952"
+  }
+];

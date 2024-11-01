@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CalendarIcon, Cross1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Cross1Icon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "components/ui/select";
+import { IconCalendarDue } from "@tabler/icons-react";
 
 interface DateRangeProps extends React.HTMLAttributes<HTMLDivElement> {
   value: DateRange | undefined;
@@ -39,11 +40,11 @@ export function DateFilter({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left font-normal text-xs h-7 py-1 px-2 gap-2",
+              "w-full justify-start text-left font-normal text-xs h-8 py-1 px-2 gap-2",
               !date && "text-muted-foreground"
             )}
             data-testid={testId}>
-            <CalendarIcon className="text-vobb-neutral-60 h-4 w-4" />
+            <IconCalendarDue className="text-vobb-neutral-60 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>
@@ -63,7 +64,7 @@ export function DateFilter({
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <PlusIcon width={13} height={13} />
+              "Today"
             )}
           </Button>
         </PopoverTrigger>
