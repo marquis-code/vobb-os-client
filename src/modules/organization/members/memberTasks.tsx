@@ -12,9 +12,7 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { cn, ObjectOptionProps, objectOptions } from "lib";
 import { fetchMemberTasksQueryParams, MemberTasksProps } from "types";
-import IncompletedTasks from "./taskComponents/incompletedTasks";
-import CompletedTasks from "./taskComponents/completedTasks";
-import ArchivedTasks from "./taskComponents/archivedTasks";
+import { ArchivedTasks, CompletedTasks, IncompletedTasks } from "./taskComponents";
 
 interface MemberProfileTasksProps {
   allTasks: {
