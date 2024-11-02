@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import { useUserContext } from "context";
 import { MemberProfileProps } from "types";
 
 // Get member profile info from context and remove the comments
@@ -19,9 +20,9 @@ interface MemberProfileHeaderProps extends MenuProps {
 }
 
 const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
-  const { avatar, initials, fullName, email, jobTitle, role, status, zipcode } =
-    props.memberProfile;
+  const { avatar, initials, fullName, email, jobTitle, role, status } = props.memberProfile;
   const isSuspended = status === "suspended";
+  const { userDetails } = useUserContext();
 
   if (props.loading) return <LoadingSpinner />;
   return (
@@ -86,10 +87,10 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
               <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
                 <IconId color="#667085" size={16} />
-                {zipcode}
+                {userDetails?.timezone}
               </span>{" "}
             </TooltipTrigger>
-            <TooltipContent className="bg-vobb-neutral-70">zip code</TooltipContent>
+            <TooltipContent className="bg-vobb-neutral-70">Timezone</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </section>

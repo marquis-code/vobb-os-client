@@ -9,9 +9,7 @@ import {
   deleteRequest,
   getRequest,
   patchRequest,
-  postRequest
-} from "api/requestProcessor";
-import {
+  postRequest,
   fetchMemberBranchesURL,
   fetchMemberProfileURL,
   fetchMemberProsBranchesURL,
