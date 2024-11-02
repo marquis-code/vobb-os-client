@@ -1,19 +1,25 @@
 import { addTaskToMemberService } from "api";
 import { AddMemberTaskModal, AddTaskData, toast } from "components";
 import { format } from "date-fns";
-import { useApiRequest, useDebounce, useFetchOrgMembers } from "hooks";
-import { useEffect, useMemo, useState } from "react";
-import { ModalProps } from "types";
+import { useApiRequest } from "hooks";
+import { useMemo } from "react";
+import { ExistingUserTypes, ModalProps } from "types";
 
 interface AddMemberTaskProps extends ModalProps {
   callback: () => void;
+  allUsers: {
+    usersearchQuery: string;
+    users: ExistingUserTypes[];
+    loadingUsers: boolean;
+    handleSearch: (filter: string, value: string | number) => void;
+  };
 }
 
 const AddMemberTask: React.FC<AddMemberTaskProps> = (props) => {
-  const { close, callback } = props;
+  const { close, callback, allUsers } = props;
   const {
     run: runAddTask,
-    data: addaskResponse,
+    data: addTaskResponse,
     error: addTaskError,
     requestStatus: addTaskStatus
   } = useApiRequest({});
@@ -21,7 +27,8 @@ const AddMemberTask: React.FC<AddMemberTaskProps> = (props) => {
   const handleAddTask = (data: AddTaskData) => {
     runAddTask(
       addTaskToMemberService(data.object.title.toLowerCase(), {
-        message: data.message,
+        title: data.title,
+        description: data.description,
         assigned_to: data.assignedTo.map((user) => user.value),
         priority: data.priority.title.toLowerCase(),
         due_date: data.dueDate ? format(data.dueDate, "yyyy-MM-dd") : "",
@@ -31,9 +38,9 @@ const AddMemberTask: React.FC<AddMemberTaskProps> = (props) => {
   };
 
   useMemo(() => {
-    if (addaskResponse?.status === 201) {
+    if (addTaskResponse?.status === 201) {
       toast({
-        description: addaskResponse?.data?.message
+        description: addTaskResponse?.data?.message
       });
       close();
       callback?.();
@@ -43,46 +50,14 @@ const AddMemberTask: React.FC<AddMemberTaskProps> = (props) => {
         description: addTaskError?.response?.data?.error
       });
     }
-  }, [addaskResponse, addTaskError]);
-
-  const [allMembersQueryParams, setAllMembersQueryParams] = useState({
-    limit: 5,
-    search: ""
-  });
-  const handleUpdateMembersQueryParams = (filter: string, value: string | number) => {
-    setAllMembersQueryParams((prev) => ({ ...prev, [filter]: value }));
-  };
-  const { search } = allMembersQueryParams;
-  const debouncedSearchTerm = useDebounce(search, 1000);
-
-  const { fetchOrgMembers, orgMembersData, loading: loadingUsers } = useFetchOrgMembers({});
-  useEffect(() => {
-    if (debouncedSearchTerm.trim()) {
-      fetchOrgMembers({ search: debouncedSearchTerm });
-    } else {
-      fetchOrgMembers({});
-    }
-  }, [debouncedSearchTerm]);
-
-  const formattedMembers = orgMembersData.membersArray
-    .filter((member) => member.status === "active")
-    .map((member) => ({
-      avatar: member.avatar,
-      label: member.name,
-      value: member.id
-    }));
+  }, [addTaskResponse, addTaskError]);
 
   return (
     <AddMemberTaskModal
       submit={handleAddTask}
       {...props}
       loading={addTaskStatus.isPending}
-      allUsers={{
-        usersearchQuery: search,
-        users: formattedMembers,
-        loadingUsers,
-        handleSearch: handleUpdateMembersQueryParams
-      }}
+      allUsers={allUsers}
     />
   );
 };

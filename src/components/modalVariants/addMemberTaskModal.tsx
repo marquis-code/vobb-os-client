@@ -19,6 +19,16 @@ import { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
+export interface AddTaskData {
+  title: string;
+  description: string;
+  assignedTo: optionType[];
+  priority: ObjectOptionProps;
+  dueDate?: Date;
+  status: ObjectOptionProps;
+  object: ObjectOptionProps;
+}
+
 interface AddMemberTaskModalProps extends ModalProps {
   submit: (data: AddTaskData) => void;
   loading: boolean;
@@ -30,31 +40,23 @@ interface AddMemberTaskModalProps extends ModalProps {
   };
 }
 
-export interface AddTaskData {
-  message: string;
-  assignedTo: optionType[];
-  priority: ObjectOptionProps;
-  dueDate?: Date;
-  status: ObjectOptionProps;
-  object: ObjectOptionProps;
-}
-
 const schema = yup.object().shape({
-  message: yup.string().required("Message is required"),
+  title: yup.string().required("Required"),
+  description: yup.string().required("Required"),
   assignedTo: yup
     .array()
     .of(
       yup.object({
-        label: yup.string().required("Label is required"),
-        value: yup.string().required("Value is required")
+        label: yup.string().required("Required"),
+        value: yup.string().required("Required")
       })
     )
     .required("Assigned To is required"),
   priority: yup
     .object()
     .shape({
-      title: yup.string().required("Title is required"),
-      color: yup.string().required("Color is required"),
+      title: yup.string().required("Required"),
+      color: yup.string().required("Required"),
       id: yup.string().optional()
     })
     .nullable()
@@ -63,8 +65,8 @@ const schema = yup.object().shape({
   status: yup
     .object()
     .shape({
-      title: yup.string().required("Title is required"),
-      color: yup.string().required("Color is required"),
+      title: yup.string().required("Required"),
+      color: yup.string().required("Required"),
       id: yup.string().optional()
     })
     .nullable()
@@ -72,8 +74,8 @@ const schema = yup.object().shape({
   object: yup
     .object()
     .shape({
-      title: yup.string().required("Title is required"),
-      color: yup.string().required("Color is required"),
+      title: yup.string().required("Required"),
+      color: yup.string().required("Required"),
       id: yup.string().optional()
     })
     .nullable()
@@ -92,35 +94,36 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
   const assignedUser = users.find((user) => user.value === id);
 
   const initData = {
-    message: "",
+    title: "",
+    description: "",
     assignedTo: assignedUser ? [assignedUser] : [],
-    priority: { title: "Low", color: "#069952" },
+    priority: undefined,
     status: { title: "Incomplete", color: "#EDA12F" },
     object: { title: "General", color: "#EDA12F" }
   };
 
-  const { register, handleSubmit, watch, setValue, getValues } = useForm<AddTaskData>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+    getValues,
+    reset
+  } = useForm<AddTaskData>({
     resolver: yupResolver(schema),
     defaultValues: initData
   });
   const onSubmit: SubmitHandler<AddTaskData> = (data) => {
     submit(data);
+    reset();
   };
 
-  const message = watch("message");
   const object = watch("object");
   const status = watch("status");
   const priority = watch("priority");
   const dueDate = watch("dueDate");
   const assignedTo = watch("assignedTo");
-
-  const getFirstSevenWords = (text) => {
-    if (!text) return "";
-    const words = text.trim().split(/\s+/);
-    return words.slice(0, 7).join(" ");
-  };
-
-  const autoFilledTitle = getFirstSevenWords(message);
 
   const onDateChange = (date: Date | undefined) => {
     setValue("dueDate", date || undefined);
@@ -160,7 +163,7 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
   return (
     <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="addAttr-modal">
       <div className="flex items-center justify-between px-4 py-2 border-b border-vobb-neutral-20">
-        <h2 className="text-lg font-medium text-vobb-neutral-95">Create Attribute</h2>
+        <h2 className="text-lg font-medium text-vobb-neutral-95">Create Task</h2>
         <div className="flex items-center gap-2">
           <UsersDropdown
             selectedUsers={assignedTo}
@@ -178,7 +181,11 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
           />
           <PriorityDropdown selectedPriority={priority} handleSetPriority={handleSetPriority} />
 
-          <ObjectDropdown selectedObject={object} handleSetObject={handleSetObject} />
+          <ObjectDropdown
+            selectedObject={object}
+            handleSetObject={handleSetObject}
+            isMemberTask={true}
+          />
 
           <StatusDropdown selectedStatus={status} handleSetStatus={handleSetStatus} />
 
@@ -197,22 +204,22 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
           label=""
           type="text"
           name="title"
-          placeholder="[Auto-filled with the first part of the comment or key action point.]"
-          className="border-none shadow-none focus-visible:ring-transparent h-11"
+          placeholder="[Title containing the first part of the comment or key action point.]"
+          className="border-none shadow-none focus-visible:ring-transparent h-11 font-medium"
           parentClassName="mb-0"
-          value={autoFilledTitle}
-          readOnly
+          register={register}
+          validatorMessage={errors.title?.message}
         />
 
         <CustomInput
           label=""
           type="text"
-          name="message"
+          name="description"
           placeholder="e.g. 'We need to schedule a meeting with the client to finalize the travel itinerary.'"
           className="border-none shadow-none focus-visible:ring-transparent h-11"
           parentClassName="mb-0"
           register={register}
-          validatorMessage={""}
+          validatorMessage={errors.description?.message}
         />
       </form>
       <div className="flex justify-between items-center px-4 py-2 bg-vobb-neutral-10">

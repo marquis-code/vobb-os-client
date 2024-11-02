@@ -14,15 +14,21 @@ export interface fetchMemberTasksQueryParams {
 
 export interface MemberTasksData {
   id: string;
-  message: string;
+  title: string;
+  description: string;
+  object?: string;
   creator: {
     id: string;
-    avatar: string;
+    avatar: string | any;
     name: string;
   };
   status: string;
   priority: string;
-  assignedTo: [];
+  assignedTo: {
+    _id: string;
+    avatar?: any;
+    name: string;
+  }[];
   dueDate: string;
   date: string;
 }

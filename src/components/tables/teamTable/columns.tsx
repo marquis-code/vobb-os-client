@@ -1,4 +1,5 @@
 import { EyeOpenIcon, Pencil1Icon } from "@radix-ui/react-icons";
+import { IconDotsVertical } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "components/ui";
 import { BreadcrumbEllipsis } from "components/ui/breadcrumb";
@@ -111,9 +112,9 @@ const ActionColumn = ({ editTeam, viewHistory, viewTeam }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0" data-testid="menu-team">
+        <Button variant="outline" className="h-7 w-7 p-0" data-testid="menu-team">
           <span className="sr-only">Open menu</span>
-          <BreadcrumbEllipsis />
+          <IconDotsVertical size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

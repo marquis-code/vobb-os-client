@@ -4,7 +4,7 @@ import { Button } from "components/ui";
 import { cn, objectOptions } from "lib";
 import { IconArrowNarrowRight, IconPointFilled } from "@tabler/icons-react";
 
-const ObjectDropdown = ({ handleSetObject, selectedObject }) => {
+const ObjectDropdown = ({ handleSetObject, selectedObject, isMemberTask }) => {
   const [open, setOpen] = useState(false);
 
   const handleSelect = (obj) => {
@@ -18,7 +18,8 @@ const ObjectDropdown = ({ handleSetObject, selectedObject }) => {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start text-left items-center font-normal text-xs h-9 py-1 px-3 gap-1"
+            "w-full justify-start text-left items-center font-normal text-xs h-9 py-1 px-3 gap-1",
+            isMemberTask ? "pointer-events-none" : ""
           )}>
           {!selectedObject ? (
             <>

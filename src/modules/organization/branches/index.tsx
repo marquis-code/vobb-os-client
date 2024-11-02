@@ -1,4 +1,3 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { IconHome, IconPlus } from "@tabler/icons-react";
 import {
   BranchesTable,
@@ -54,8 +53,9 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   };
 
   const tableData = orgBranches?.branchesArray || [];
+
   return (
-    <div className="max-w-[1164px]">
+    <div>
       <SettingsPageTitle title="Branches" className="max-w-full" />
       <section className="pb-8 mb-12">
         <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>

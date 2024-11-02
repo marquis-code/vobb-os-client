@@ -36,11 +36,21 @@ interface MemberProfileTasksProps {
   };
 
   handleOpenAddTask: () => void;
+  handleOpenEditTask: (id: string) => void;
+
+  taskActions: {
+    handleChangeStatus: (id: string, status: string) => void;
+    loadingChangeStatus: boolean;
+    handleDeleteTask: (id: string) => void;
+    loadingDeleteTask: boolean;
+  };
 }
 
 const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
   allTasks,
-  handleOpenAddTask
+  handleOpenAddTask,
+  handleOpenEditTask,
+  taskActions
 }) => {
   const { data, loading, params, handleParams } = allTasks;
   const { data: incompletedTasksArray } = data.incompletedTasks;
@@ -73,24 +83,47 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
   const noTasks = !allMemberTasks.length;
   const loadingTasks =
     loading.loadingIncomplete || loading.loadingComplete || loading.loadingArchived;
+
   const taskStatusCategories = [
-    {
-      title: "completed",
-      color: "#069952",
-      length: completedTasksArray.length,
-      component: <CompletedTasks tasks={data.completedTasks} />
-    },
     {
       title: "incompleted",
       color: "#EDA12F",
       length: incompletedTasksArray.length,
-      component: <IncompletedTasks tasks={data.incompletedTasks} />
+      component: (
+        <IncompletedTasks
+          tasks={data.incompletedTasks}
+          loadingTasks={loading.loadingIncomplete}
+          taskActions={taskActions}
+          handleOpenEditTask={handleOpenEditTask}
+        />
+      )
     },
+    {
+      title: "completed",
+      color: "#069952",
+      length: completedTasksArray.length,
+      component: (
+        <CompletedTasks
+          tasks={data.completedTasks}
+          loadingTasks={loading.loadingComplete}
+          taskActions={taskActions}
+          handleOpenEditTask={handleOpenEditTask}
+        />
+      )
+    },
+
     {
       title: "archived",
       color: "#EAECF0",
       length: archivedTasksArray.length,
-      component: <ArchivedTasks tasks={data.archivedTasks} />
+      component: (
+        <ArchivedTasks
+          tasks={data.archivedTasks}
+          loadingTasks={loading.loadingArchived}
+          taskActions={taskActions}
+          handleOpenEditTask={handleOpenEditTask}
+        />
+      )
     }
   ];
   return (
@@ -145,15 +178,14 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           />
         ) : (
           <>
-            <div className="flex items-center text-vobb-neutral-60 text-xs px-3 py-4 border-b">
-              <h2 className="w-[500px]">Task</h2>
-              <div className="grid grid-cols-3 gap-4">
-                <p className="min-w-28">Due date</p>
-                <p className="min-w-28">Object</p>
-                <p className="min-w-28">Assigned to</p>
+            <div className="grid grid-cols-[1fr,1.5fr] items-center text-vobb-neutral-60 text-xs px-3 py-4 border-b">
+              <h2>Task</h2>
+              <div className="grid grid-cols-3">
+                <p>Due date</p>
+                <p>Object</p>
+                <p>Assigned to</p>
               </div>
             </div>
-
             {taskStatusCategories.map(({ title, color, length, component }) => (
               <div key={title}>
                 <p

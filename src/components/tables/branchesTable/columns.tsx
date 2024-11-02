@@ -16,6 +16,7 @@ import {
   StarFilledIcon,
   EyeOpenIcon
 } from "@radix-ui/react-icons";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 // This type is used to define the shape of our data.
 
@@ -96,9 +97,9 @@ const ActionColumn = ({ isPrimary, primaryBranch, editBranch, deleteBranch, view
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0" data-testid="menu-branch">
+        <Button variant="outline" className="h-7 w-7 p-0" data-testid="menu-branch">
           <span className="sr-only">Open menu</span>
-          <BreadcrumbEllipsis />
+          <IconDotsVertical size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

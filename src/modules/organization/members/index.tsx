@@ -91,7 +91,6 @@ const MembersUI: React.FC<MembersUIProps> = ({
 
   const membersData = orgMembersData?.membersArray;
   const { currentPage, totalCount, totalPages, pageLimit = 20 } = orgMembersData?.metaData;
-
   return (
     <>
       <SettingsPageTitle title="Members" className="max-w-none" />

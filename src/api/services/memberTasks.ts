@@ -19,7 +19,8 @@ import {
 import { fetchMemberTasksQueryParams } from "types";
 
 interface addTaskRequestBody {
-  message: string;
+  title: string;
+  description: string;
   assigned_to: string[];
   priority: string;
   due_date: string;

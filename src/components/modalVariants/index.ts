@@ -20,3 +20,4 @@ export * from "./memberBranchesModal";
 export * from "./memberTeamsModal";
 export * from "./updateJobTitleModal";
 export * from "./addMemberTaskModal";
+export * from "./editMemberTaskModal";
