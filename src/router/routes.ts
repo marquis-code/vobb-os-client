@@ -29,6 +29,7 @@ export const Routes = {
   accept_invite: "/invitation",
   invitation_success: "/invitation/success",
   invitation_failed: "/invitation/failed",
+  verify_member_email: "/verify-member-email",
 
   // Dashboard
   overview: "/overview",

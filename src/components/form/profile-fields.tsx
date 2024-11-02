@@ -219,10 +219,12 @@ interface ProfileSelectInputProps {
   icon?: ReactNode;
   required?: boolean;
   styles?: CSSObjectWithLabel;
+  disabled?: boolean;
 }
 
 const ProfileSelectInput = (props: ProfileSelectInputProps) => {
-  const { label, validatorMessage, parentClassName, hint, icon, required, styles } = props;
+  const { label, validatorMessage, parentClassName, hint, icon, required, styles, disabled } =
+    props;
 
   return (
     <div className={cn("mb-4 mb-2 grid grid-cols-[120px,1fr] gap-4 items-center", parentClassName)}>
@@ -288,6 +290,7 @@ const ProfileSelectInput = (props: ProfileSelectInputProps) => {
           }}
           menuShouldScrollIntoView
           menuPlacement="auto"
+          isDisabled={disabled}
         />
       </div>
       {validatorMessage && (

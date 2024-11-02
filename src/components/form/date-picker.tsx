@@ -21,6 +21,7 @@ export interface DatePickerProps {
   required?: boolean;
   labelClassName?: string;
   hideFieldIcon?: boolean;
+  disabled?: boolean;
 }
 
 const DatePicker: React.FC<DatePickerProps> = (props) => {
@@ -35,7 +36,8 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
     hint,
     placeholder,
     labelClassName,
-    hideFieldIcon
+    hideFieldIcon,
+    disabled
   } = props;
 
   return (
@@ -54,7 +56,8 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
               "w-full justify-start text-left font-normal hover:border-vobb-neutral-100 focus:border-vobb-neutral-100 hover:bg-white",
               !value && "text-muted-foreground",
               className
-            )}>
+            )}
+            disabled={disabled}>
             {!hideFieldIcon ? <CalendarIcon className="mr-2 h-4 w-4" /> : ""}
             {value ? format(value, "PPP") : <span>{placeholder ?? "Pick a date"}</span>}
           </Button>

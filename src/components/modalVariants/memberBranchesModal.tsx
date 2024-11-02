@@ -1,6 +1,7 @@
-import { Cross1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Button, Pagination } from "components";
+import { Cross1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Button, LoadingSpinner, Pagination } from "components";
 import { Modal } from "components/modal";
+import { MemberBranchesDataProps } from "pages";
 import { Link } from "react-router-dom";
 import { Routes } from "router";
 import { ModalProps } from "types";
@@ -9,6 +10,11 @@ interface MemberBranchesModalProps extends ModalProps {
   name: string;
   handleRemoveBranch: ({ id, name }: { id: string; name: string }) => void;
   handleAddBranch: () => void;
+  memberBranches: {
+    data: MemberBranchesDataProps;
+    loading: boolean;
+    handlePagination: (page: number) => void;
+  };
 }
 
 const MemberBranchesModal = ({
@@ -16,8 +22,12 @@ const MemberBranchesModal = ({
   close,
   name,
   handleRemoveBranch,
-  handleAddBranch
+  handleAddBranch,
+  memberBranches
 }: MemberBranchesModalProps) => {
+  const { data, loading, handlePagination } = memberBranches;
+  const { branches, metaData } = data;
+  const { currentPage, totalCount, totalPages } = metaData;
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
@@ -35,63 +45,41 @@ const MemberBranchesModal = ({
           size={"sm"}>
           <PlusIcon /> Add
         </Button>
-        <section className="max-h-[calc(100vh-220px)] overflow-auto border border-input rounded-md">
-          <div className="border-b justify-between items-center gap-1 p-2">
-            <div className="flex justify-between mb-1">
-              <p>
-                <Link target="blank" to={Routes.branch("123")} className="font-medium">
-                  Branch Two
-                </Link>
-              </p>
-              <Cross1Icon
-                role="button"
-                onClick={() => handleRemoveBranch({ id: "123", name: "Branch Two" })}
-                stroke="var(--error-20)"
-                strokeWidth={1}
-              />
-            </div>
-            <div className="flex justify-between">
-              <span className="text-xs">Ketu, Lagos, Nigeria</span>
-              <span className="text-xs ml-auto">Added on 13/12/2024</span>
-            </div>
-          </div>
-          <div className="border-b justify-between items-center gap-1 p-2">
-            <div className="flex justify-between mb-1">
-              <p>
-                <Link target="blank" to={Routes.branch("123")} className="font-medium">
-                  Branch Two
-                </Link>
-              </p>
-              <Cross1Icon stroke="var(--error-20)" strokeWidth={1} />
-            </div>
-            <div className="flex justify-between">
-              <span className="text-xs">Ketu, Lagos, Nigeria</span>
-              <span className="text-xs ml-auto">Added on 13/12/2024</span>
-            </div>
-          </div>
-          <div className=" justify-between items-center gap-1 p-2">
-            <div className="flex justify-between mb-1">
-              <p>
-                <Link target="blank" to={Routes.branch("123")} className="font-medium">
-                  Branch Two
-                </Link>
-              </p>
-              <Cross1Icon stroke="var(--error-20)" strokeWidth={1} />
-            </div>
-            <div className="flex justify-between">
-              <span className="text-xs">Ketu, Lagos, Nigeria</span>
-              <span className="text-xs ml-auto">Added on 13/12/2024</span>
-            </div>
-          </div>
-        </section>
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <section className="max-h-[calc(100vh-220px)] overflow-auto border border-input rounded-md divide-y-[1px]">
+            {branches?.map((branch) => (
+              <div className=" justify-between items-center gap-1 p-2" key={branch.id}>
+                <div className="flex justify-between mb-1">
+                  <p>
+                    <Link target="blank" to={Routes.branch(branch.id)} className="font-medium">
+                      {branch.name}
+                    </Link>
+                  </p>
+                  <Cross1Icon
+                    role="button"
+                    onClick={() => handleRemoveBranch({ id: branch.id, name: branch.name })}
+                    stroke="var(--error-20)"
+                    strokeWidth={1}
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs">{`${branch.city}, ${branch.province}, ${branch.country}`}</span>
+                  <span className="text-xs ml-auto">Added on {branch.dateAdded}</span>
+                </div>
+              </div>
+            ))}
+          </section>
+        )}
         <Pagination
           hidePageLimit
-          handleChange={console.log}
+          handleChange={(val) => handlePagination(val)}
           handlePageLimit={console.log}
-          totalCount={3}
-          pageLimit={3}
-          totalPages={1}
-          currentPage={1}
+          totalCount={totalCount}
+          pageLimit={totalCount}
+          totalPages={totalPages}
+          currentPage={currentPage}
           className="mt-2"
         />
       </Modal>

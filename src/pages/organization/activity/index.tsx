@@ -85,7 +85,6 @@ const OrgActivity = () => {
   useEffect(() => {
     fetchOrgActivities();
   }, [queryParams]);
-
   return (
     <>
       <OrgActivityUI

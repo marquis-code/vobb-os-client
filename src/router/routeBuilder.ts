@@ -35,7 +35,8 @@ import {
   Member,
   AcceptInvite,
   InvitationFailed,
-  InvitationSuccessful
+  InvitationSuccessful,
+  MemberEmailVerify
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -134,6 +135,10 @@ export const RouteBuilder: RouteBuilderItem[] = [
   {
     path: Routes.invitation_success,
     Element: InvitationSuccessful
+  },
+  {
+    path: Routes.verify_member_email,
+    Element: MemberEmailVerify
   },
 
   // Dashboard Routes

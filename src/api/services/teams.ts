@@ -7,6 +7,7 @@ TEAMS SERVICES
 import { deleteRequest, getRequest, patchRequest, postRequest } from "api/requestProcessor";
 import {
   acceptInviteURL,
+  addMemberToTeamURL,
   createTeamURL,
   editATeamURL,
   fetchATeamBranchesURL,
@@ -257,5 +258,15 @@ export const fetchTeamActivitiesService = (
 ) => {
   return getRequest({
     url: fetchTeamActivitiesURL(id, { page, limit, sort, ...queryParams })
+  });
+};
+
+/**
+ * Add member to a team service
+ * @returns axios promise
+ */
+export const addMemberToTeamService = ({ teamId, memberId }) => {
+  return postRequest({
+    url: addMemberToTeamURL({ teamId, memberId })
   });
 };
