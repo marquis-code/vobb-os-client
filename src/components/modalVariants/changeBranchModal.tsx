@@ -1,5 +1,5 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button, CheckboxWithText, CustomInput, Modal, SelectInput } from "components";
+import { Button, Modal, SelectInput } from "components";
 import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -18,20 +18,53 @@ const schema = yup.object({
 
 interface ChangeBranchModalProps extends ModalProps {
   submit: (data) => void;
+  loading: boolean;
   name: string;
+  memberBranches: {
+    options: optionType[];
+    loading: boolean;
+    handleSetId: (id: string) => void;
+  };
+  memberTeams: {
+    options: optionType[];
+    loading: boolean;
+    handleSetId: (id: string) => void;
+  };
 }
 
-const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, show, name }) => {
+const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({
+  submit,
+  close,
+  loading,
+  show,
+  name,
+  memberBranches,
+  memberTeams
+}) => {
+  const {
+    loading: loadingBranches,
+    options: branches,
+    handleSetId: handleFetchBranchTeams
+  } = memberBranches;
+  const {
+    loading: loadingTeams,
+    options: teams,
+    handleSetId: handleFetchBranchRoles
+  } = memberTeams;
+
   const {
     handleSubmit,
     formState: { errors },
     watch,
-    setValue
+    setValue,
+    reset,
+    getValues
   } = useForm<ChangeBranchData>({
     resolver: yupResolver(schema)
   });
   const onSubmit: SubmitHandler<ChangeBranchData> = (data) => {
     submit(data);
+    reset();
   };
 
   const branch: optionType = {
@@ -44,6 +77,12 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
     value: watch("team")?.value ?? ""
   };
 
+  const hasTeamInBranch = teams.some((team) => team.isDisabled);
+
+  const currentTeams = teams
+    .filter((team) => team.isDisabled)
+    .map((team) => team.label)
+    .join(", ");
   return (
     <>
       <Modal contentClassName="max-w-[500px]" show={show} close={close}>
@@ -60,32 +99,34 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
         <form>
           <SelectInput
             label="Branch"
-            options={[
-              { label: "Test", value: "test" },
-              { label: "Two", value: "two" },
-              { label: "Three", value: "three" }
-            ]}
+            options={branches}
             value={watch("branch")?.value === "" ? null : branch}
-            onChange={(val) => val && setValue("branch", val)}
+            onChange={(val) => {
+              val && setValue("branch", val);
+              val && handleFetchBranchTeams(val.value);
+            }}
             validatorMessage={getOptionTypeValidationMsg(errors.branch)}
+            loading={loadingBranches}
           />
-          <SelectInput
-            label={`Team (Optional)`} //Show "(Optional)" only if the member already has teams in the selected branch.
-            options={[
-              { label: "Test", value: "test" },
-              { label: "Two (Already a member)", value: "two", isDisabled: true },
-              { label: "Three", value: "three" }
-            ]}
-            value={watch("team")?.value === "" ? null : team}
-            onChange={(val) => val && setValue("team", val)}
-            validatorMessage={getOptionTypeValidationMsg(errors.team)}
-            hint={`The member will be able to access the following teams in the new branch: {current teams}, ${
-              watch("team")?.label
-            }`}
-          />
+          {getValues().branch && (
+            <SelectInput
+              label={`Team ${hasTeamInBranch ? "(Optional)" : ""}`}
+              options={teams}
+              value={watch("team")?.value === "" ? null : team}
+              onChange={(val) => {
+                val && setValue("team", val);
+                val && handleFetchBranchRoles(val.value);
+              }}
+              validatorMessage={getOptionTypeValidationMsg(errors.team)}
+              hint={`The member will be able to access the following teams in the new branch: ${currentTeams}, ${
+                watch("team")?.label ?? ""
+              }`}
+              loading={loadingTeams}
+            />
+          )}
         </form>
         <p className="text-xs text-vobb-neutral-70 mt-6">
-          NB: This adds the member to a new branch and does not remove them their current
+          NB: This adds the member to a new branch and does not remove them from their current
           branch(es).
         </p>
         <div className="flex justify-end gap-2 items-center mt-12">
@@ -93,10 +134,16 @@ const ChangeBranchModal: React.FC<ChangeBranchModalProps> = ({ submit, close, sh
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            disabled={!getValues().branch || (!hasTeamInBranch && !getValues().team)}
+            loading={loading}>
             Save
           </Button>
         </div>

@@ -9,9 +9,10 @@ interface SuspendMemberProps extends ModalProps {
   id: string;
   name: string;
   fetchMembers?: () => void;
+  callback?: () => void;
 }
 
-const SuspendMember = ({ show, close, id, name, fetchMembers }: SuspendMemberProps) => {
+const SuspendMember = ({ show, close, id, name, fetchMembers, callback }: SuspendMemberProps) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = (data) => {
     let requestBody: suspendMemberRequestBody = {
@@ -37,6 +38,7 @@ const SuspendMember = ({ show, close, id, name, fetchMembers }: SuspendMemberPro
       });
       close();
       fetchMembers?.();
+      callback?.();
     } else if (error) {
       toast({
         variant: "destructive",

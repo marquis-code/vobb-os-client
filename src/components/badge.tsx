@@ -12,10 +12,12 @@ interface BadgeProps {
   type: "warning" | "success" | "neutral" | "error" | "brand";
   badge: "trailing" | "leading";
   size: "md" | "lg";
+  testId?: string;
 }
 
 const Badge = (props: BadgeProps) => {
-  const { text, btnText, className, btnClassName, action, variant, type, size, badge } = props;
+  const { text, btnText, className, btnClassName, action, variant, type, size, badge, testId } =
+    props;
 
   const types = {
     warning: {
@@ -82,7 +84,8 @@ const Badge = (props: BadgeProps) => {
         direction,
         fontSize,
         className
-      )}>
+      )}
+      data-testid={testId}>
       <p className="font-medium px-2">{text}</p>
       {action && (
         <Button

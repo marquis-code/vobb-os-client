@@ -1,9 +1,9 @@
 import {
   optionType,
   formFieldData,
-  MemberTableData,
   BranchMemberTableData,
   BranchTeamTableData,
+  MemberTableData,
   TeamTableData,
   OrganisationAttributesData
 } from "types";
@@ -550,7 +550,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   }
 ];
 
-export const TeamTableMock: TeamTableData[] = [
+export const TeamTableMock = [
   {
     id: "728ed52f",
     name: "Finance",
@@ -640,7 +640,7 @@ export const MemberTableMock: MemberTableData[] = [
   },
   {
     id: "728ed52f",
-    name: "Jason Derule",
+    name: "Jason Mamoa",
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",

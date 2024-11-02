@@ -2,14 +2,17 @@ import {
   fetchMemberPropertiesService,
   fetchOrgPropertiesService,
   personalAccountUpdateService,
-  updateOrgPropertiesService,
-  updatePropertiesRequestBody
+  updateOrgPropertiesService
 } from "api";
 import { toast } from "components";
 import { useApiRequest, useFetchUser } from "hooks";
 import { AccountPersonalizationsUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
-import { MemberPropertiesData, OrganisationAttributesData, optionType } from "types";
+import {
+  MemberPropertiesData,
+  OrganisationAttributesData,
+  updatePropertiesRequestBody
+} from "types";
 
 const AccountPersonalizations = () => {
   const { fetchUserDetails } = useFetchUser();

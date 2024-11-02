@@ -1,0 +1,107 @@
+{
+  "data": {
+    "members": [
+      {
+        "full_name": "",
+        "email": "ephraim@yopmail.com",
+        "avatar": null,
+        "status": "expired",
+        "role": {
+          "_id": "66d9765362b93ae2b8f29a3f",
+          "name": "Super Admin"
+        },
+        "teams": [],
+        "branches": [],
+        "last_active": null,
+        "_id": "66d9765362b93ae2b8f29a40",
+        "date_added": "05-09-2024"
+      },
+      {
+        "full_name": "",
+        "email": "poseph@yopmail.com",
+        "avatar": null,
+        "status": "expired",
+        "role": {
+          "_id": "66d5676562b93ae2b8f293a0",
+          "name": "Super Admin"
+        },
+        "teams": [],
+        "branches": [],
+        "last_active": null,
+        "_id": "66d5676562b93ae2b8f293a1",
+        "date_added": "02-09-2024"
+      },
+      {
+        "full_name": "",
+        "email": "thursday@yopmail.com",
+        "avatar": null,
+        "status": "suspended",
+        "role": {
+          "_id": "66d5670762b93ae2b8f29383",
+          "name": "Super Admin"
+        },
+        "teams": [],
+        "branches": [],
+        "last_active": null,
+        "_id": "66d5670762b93ae2b8f29384",
+        "date_added": "02-09-2024"
+      },
+      {
+        "full_name": "",
+        "email": "test3@yopmail.com",
+        "avatar": null,
+        "status": "invited",
+        "role": {
+          "_id": "66d5676562b93ae2b8f293a8",
+          "name": "Super Admin"
+        },
+        "teams": [],
+        "branches": [],
+        "last_active": null,
+        "_id": "66d5676562b93ae2b8f293a7",
+        "date_added": "02-09-2024"
+      },
+      {
+        "full_name": "Posepher Dewbottom",
+        "email": "alt.d2-3o7w9412@yopmail.com",
+        "avatar": "https://vobb-os.s3.us-east-2.amazonaws.com/images/1724460638424-chivido.jpeg",
+        "status": "active",
+        "role": {
+          "_id": "6673e51e01d00acae3b83473",
+          "name": "Branch Manager"
+        },
+        "teams": [
+          {
+            "_id": "66dea74a62b93ae2b8f29ca0",
+            "name": "Test team"
+          },
+          {
+            "_id": "66dea76962b93ae2b8f29cb9",
+            "name": "Test team 2"
+          },
+          {
+            "_id": "66c5bbb762b93ae2b8f274ca",
+            "name": "Sunshine Delight"
+          },
+          {
+            "_id": "66dea84662b93ae2b8f29cde",
+            "name": "IT"
+          }
+        ],
+        "branches": [
+          {
+            "_id": "667e5b66512d68b07bf41a7c",
+            "name": "Headquaters"
+          }
+        ],
+        "last_active": "4 minutes ago",
+        "_id": "6673e51f01d00acae3b83475",
+        "date_added": "20-06-2024"
+      }
+    ],
+    "page": 1,
+    "total_pages": 3,
+    "total_count": 30,
+    "page_limit": 5
+  }
+}

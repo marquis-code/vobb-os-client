@@ -11,6 +11,7 @@ import { QueryParamProps } from "types";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";
+import { Routes } from "router";
 import { MetaDataProps, optionType } from "types";
 
 // {
@@ -169,7 +170,7 @@ const getMessage = ({
           Added to the team{" "}
           <Link
             target="_blank"
-            to={""}
+            to={Routes.team(metadata?.team?._id)}
             className="text-vobb-primary-70 hover:underline cursor-pointer">
             {metadata?.team?.name}
           </Link>

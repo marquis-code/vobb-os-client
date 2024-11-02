@@ -27,7 +27,7 @@ import {
   updateJobTitleURL,
   updateOrgPropertiesURL
 } from "api";
-import { activityParamsProps } from "types";
+import { activityParamsProps, PaginationProps, updatePropertiesRequestBody } from "types";
 
 interface changePasswordRequestBody {
   oldPassword: string;
@@ -38,17 +38,6 @@ interface changePasswordRequestBody {
 interface blacklistRequestBody {
   ip: string;
   blacklist_status: boolean;
-}
-
-interface queryParamsProps {
-  page?: number;
-  limit?: number;
-}
-
-export interface updatePropertiesRequestBody {
-  attribute: string;
-  type: string;
-  data: string[];
 }
 
 /*
@@ -193,7 +182,7 @@ export const blacklistIpAddressService = (data: blacklistRequestBody) => {
  * @param limit showing number of items per page
  * @returns axios promise
  */
-export const fetchOrgPropertiesService = ({ page, limit }: queryParamsProps) => {
+export const fetchOrgPropertiesService = ({ page, limit }: PaginationProps) => {
   return getRequest({
     url: fetchOrgPropertiessURL({ page, limit })
   });
@@ -211,7 +200,6 @@ export const fetchMemberPropertiesService = () => {
 
 /**
  * Create an organisation's property service
- * @param id of attribute
  * @returns axios promise
  */
 export const createOrgPropertiesService = (data: updatePropertiesRequestBody) => {
@@ -223,7 +211,6 @@ export const createOrgPropertiesService = (data: updatePropertiesRequestBody) =>
 
 /**
  * Update an organisation's property service
- * @param id of attribute
  * @returns axios promise
  */
 export const updateOrgPropertiesService = (data: updatePropertiesRequestBody) => {

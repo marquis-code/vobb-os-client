@@ -47,3 +47,13 @@ export const debounce = (func, delay) => {
     }, delay);
   };
 };
+
+export const calculateTotalWordCount = (values: any) => {
+  let wordCountObj = {};
+  Object.keys(values).forEach((fieldName) => {
+    if (fieldName.startsWith("long-text")) {
+      wordCountObj[fieldName] = values[fieldName].trim().split(/\s+/).length;
+    }
+  });
+  return wordCountObj;
+};

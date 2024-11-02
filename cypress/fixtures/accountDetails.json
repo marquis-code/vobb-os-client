@@ -1,0 +1,91 @@
+{
+  "data": {
+    "_id": "6673e51f01d00acae3b83475",
+    "email": "alt.d2-3o7w9412@yopmail.com",
+    "status": "active",
+    "language": "English",
+    "fluent_languages": ["Afrikaans", "Zulu"],
+    "first_name": "Posepher",
+    "last_name": "Dewbottom",
+    "avatar": "https://vobb-os.s3.us-east-2.amazonaws.com/images/1724460638424-chivido.jpeg",
+    "phone_number": "2347078901156",
+    "timezone": "Africa/Accra",
+    "title": "Overseer",
+    "user_attributes": [
+      {
+        "attribute": [
+          {
+            "label": "Team size",
+            "type": "number",
+            "_id": "66c0dc078259031f04c2f74e",
+            "attribute": "66c0db5a468d8240fccf3f79"
+          }
+        ],
+        "data": "25"
+      },
+      {
+        "attribute": [
+          {
+            "label": "Hobbies",
+            "type": "checkbox",
+            "meta": ["Football", "Swimming", "Handball", "Basketball"],
+            "_id": "66c0e0cb8259031f04d4c6da",
+            "attribute": "66c0e07d468d8240fccf4001"
+          }
+        ],
+        "data": ["Swimming", "Football", "Handball"]
+      },
+      {
+        "attribute": [
+          {
+            "label": "Specialties",
+            "type": "multiple-choice",
+            "meta": ["Agriculture", "Arts and Craft", "Theoretical physics"],
+            "_id": "66c0e1288259031f04d61265",
+            "attribute": "66c0dfdb468d8240fccf3fef"
+          }
+        ],
+        "data": "Arts and Craft"
+      },
+      {
+        "attribute": [
+          {
+            "label": "Recovery number",
+            "type": "phone-number",
+            "_id": "66c0e4e28259031f04e371a4",
+            "attribute": "66c0e371468d8240fccf407f"
+          }
+        ],
+        "data": "2347082836841"
+      },
+      {
+        "attribute": [
+          {
+            "label": "Country of Operation",
+            "type": "country",
+            "_id": "66c0e4f38259031f04e3ab42",
+            "attribute": "66c0e34a468d8240fccf4073"
+          }
+        ],
+        "data": "NGA"
+      },
+      {
+        "attribute": [
+          {
+            "label": "Tracks available",
+            "type": "checkbox",
+            "meta": ["Frontend", "Backend", "Fullstack"],
+            "_id": "66c0e8be8259031f04f0bc71",
+            "attribute": "66c0e8ab468d8240fccf413c"
+          }
+        ],
+        "data": ["Fullstack"]
+      }
+    ],
+    "role": "Super Admin",
+    "two_fa_status": false,
+    "google_signup": false,
+    "date_format": "DD/MM/YYYY",
+    "pending_email": "tezt@example.com"
+  }
+}
