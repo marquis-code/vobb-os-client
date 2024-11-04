@@ -1,5 +1,5 @@
 import { IconListCheck, IconPlus, IconPointFilled } from "@tabler/icons-react";
-import { Button, DateFilter, LoadingSpinner, TableEmptyState } from "components";
+import { Button, DateFilter, TableEmptyState } from "components";
 import { MemberFilters } from "./components/memberFilters";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -32,7 +32,12 @@ interface MemberProfileTasksProps {
       archivedQueryParams: fetchMemberTasksQueryParams;
     };
 
-    handleParams: (param: string, value: Date | string | number) => void;
+    handleParams: {
+      handleCompletedQuery: (param: string, value: Date | string | number) => void;
+      handleIncompleteQuery: (param: string, value: Date | string | number) => void;
+      handleArchivedQuery: (param: string, value: Date | string | number) => void;
+      handleUpdateAllQueries: (param: string, value: Date | string | number) => void;
+    };
   };
 
   handleOpenAddTask: () => void;
@@ -52,10 +57,16 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
   handleOpenEditTask,
   taskActions
 }) => {
-  const { data, loading, params, handleParams } = allTasks;
+  const { data, loading, handleParams } = allTasks;
   const { data: incompletedTasksArray } = data.incompletedTasks;
   const { data: completedTasksArray } = data.completedTasks;
   const { data: archivedTasksArray } = data.archivedTasks;
+  const {
+    handleArchivedQuery,
+    handleCompletedQuery,
+    handleIncompleteQuery,
+    handleUpdateAllQueries
+  } = handleParams;
 
   const [selectedObject, setSelectedObject] = useState<ObjectOptionProps | null>(null);
   const [date, setDate] = useState<DateRange | undefined>(undefined);
@@ -67,7 +78,7 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
 
   const handleSetSelectedObject = (obj: ObjectOptionProps) => {
     setSelectedObject(obj);
-    handleParams("object", obj.title.toLowerCase());
+    handleUpdateAllQueries("object", obj.title.toLowerCase());
   };
 
   const handleSetOpenTabs = (tab) => {
@@ -81,9 +92,21 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
     .concat(completedTasksArray)
     .concat(archivedTasksArray);
   const noTasks = !allMemberTasks.length;
-  const loadingTasks =
-    loading.loadingIncomplete || loading.loadingComplete || loading.loadingArchived;
 
+  const handleStartDatePagination = (dateValue) => {
+    if (dateValue.from && dateValue.to)
+      handleUpdateAllQueries("start", dateValue.from.toISOString().slice(0, 10));
+  };
+
+  const handleEndDatePagination = (dateValue) => {
+    if (dateValue.from && dateValue.to)
+      handleUpdateAllQueries("end", dateValue.to.toISOString().slice(0, 10));
+  };
+
+  const clearFilters = () => {
+    handleUpdateAllQueries("start", "");
+    handleUpdateAllQueries("end", "");
+  };
   const taskStatusCategories = [
     {
       title: "incompleted",
@@ -95,6 +118,8 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           loadingTasks={loading.loadingIncomplete}
           taskActions={taskActions}
           handleOpenEditTask={handleOpenEditTask}
+          handleParams={handleIncompleteQuery}
+          metaData={data.incompletedTasks.metaData}
         />
       )
     },
@@ -108,6 +133,8 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           loadingTasks={loading.loadingComplete}
           taskActions={taskActions}
           handleOpenEditTask={handleOpenEditTask}
+          handleParams={handleCompletedQuery}
+          metaData={data.completedTasks.metaData}
         />
       )
     },
@@ -122,6 +149,8 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           loadingTasks={loading.loadingArchived}
           taskActions={taskActions}
           handleOpenEditTask={handleOpenEditTask}
+          handleParams={handleArchivedQuery}
+          metaData={data.archivedTasks.metaData}
         />
       )
     }
@@ -136,20 +165,11 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
             handleChange={(val) => {
               setDate(val);
               if (val) {
-                handleParams(
-                  "start",
-                  val.from
-                    ? val.from.toISOString().slice(0, 10)
-                    : (params.incompleteQueryParams.start as string)
-                );
-                handleParams(
-                  "end",
-                  val.to
-                    ? val.to.toISOString().slice(0, 10)
-                    : (params.incompleteQueryParams.end as string)
-                );
+                handleStartDatePagination(val);
+                handleEndDatePagination(val);
               }
             }}
+            clearFilters={clearFilters}
           />
           <ActionColumn
             selectedObject={selectedObject}
@@ -158,6 +178,7 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           <Button
             onClick={handleOpenAddTask}
             variant={"outline"}
+            data-testid="add-task-button"
             className={
               "w-full justify-start text-left items-center font-normal text-xs h-8 py-1 px-2 gap-1"
             }>
@@ -166,14 +187,12 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
         </div>
       </MemberFilters>
       <div>
-        {loadingTasks ? (
-          <LoadingSpinner />
-        ) : noTasks ? (
+        {noTasks && !loading ? (
           <TableEmptyState
             pageIcon={<IconListCheck size={25} color="#101323" />}
             title="No tasks have been assigned yet."
             description="Assign tasks to ensure clear responsibilities and follow-up actions for this member."
-            ctaFunction={console.log}
+            ctaFunction={handleOpenAddTask}
             btnText="Add Task"
           />
         ) : (

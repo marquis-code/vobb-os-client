@@ -25,16 +25,16 @@ const AddMemberTask: React.FC<AddMemberTaskProps> = (props) => {
   } = useApiRequest({});
 
   const handleAddTask = (data: AddTaskData) => {
-    runAddTask(
-      addTaskToMemberService(data.object.title.toLowerCase(), {
-        title: data.title,
-        description: data.description,
-        assigned_to: data.assignedTo.map((user) => user.value),
-        priority: data.priority.title.toLowerCase(),
-        due_date: data.dueDate ? format(data.dueDate, "yyyy-MM-dd") : "",
-        status: data.status?.title.toLowerCase() || "default"
-      })
-    );
+    const taskData = {
+      title: data.title,
+      description: data.description,
+      assigned_to: data.assignedTo.map((user) => user.value),
+      ...(data.priority?.title && { priority: data.priority.title.toLowerCase() }),
+      ...(data.dueDate && { due_date: format(data.dueDate, "yyyy-MM-dd") }),
+      ...((data.status && { status: data.status.title.toLowerCase() }) || { status: "default" })
+    };
+
+    runAddTask(addTaskToMemberService(data.object.title.toLowerCase(), taskData));
   };
 
   useMemo(() => {

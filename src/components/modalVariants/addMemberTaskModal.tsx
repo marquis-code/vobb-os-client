@@ -5,9 +5,9 @@ import {
   CustomInput,
   Button,
   SingleDatePicker,
-  StatusDropdown,
   PriorityDropdown,
   ObjectDropdown,
+  StatusDropdown,
   UsersDropdown
 } from "components";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -23,7 +23,13 @@ export interface AddTaskData {
   title: string;
   description: string;
   assignedTo: optionType[];
-  priority: ObjectOptionProps;
+  priority?:
+    | {
+        title?: string;
+        color?: string;
+        id?: string;
+      }
+    | undefined;
   dueDate?: Date;
   status: ObjectOptionProps;
   object: ObjectOptionProps;
@@ -40,7 +46,7 @@ interface AddMemberTaskModalProps extends ModalProps {
   };
 }
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   title: yup.string().required("Required"),
   description: yup.string().required("Required"),
   assignedTo: yup
@@ -55,12 +61,11 @@ const schema = yup.object().shape({
   priority: yup
     .object()
     .shape({
-      title: yup.string().required("Required"),
-      color: yup.string().required("Required"),
+      title: yup.string().optional(),
+      color: yup.string().optional(),
       id: yup.string().optional()
     })
-    .nullable()
-    .required("Priority is required"),
+    .optional(),
   dueDate: yup.date().transform((curr, orig) => (orig === "" ? undefined : curr)),
   status: yup
     .object()
@@ -159,9 +164,8 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
     }
     setValue("status", initData.status);
   }, [assignedUser]);
-
   return (
-    <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="addAttr-modal">
+    <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="addTask-modal">
       <div className="flex items-center justify-between px-4 py-2 border-b border-vobb-neutral-20">
         <h2 className="text-lg font-medium text-vobb-neutral-95">Create Task</h2>
         <div className="flex items-center gap-2">
@@ -230,7 +234,8 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
           onClick={handleSubmit(onSubmit)}
           size={"default"}
           variant={"fill"}
-          loading={loading}>
+          loading={loading}
+          data-testid="submit-btn">
           Convert to Task
         </Button>
       </div>

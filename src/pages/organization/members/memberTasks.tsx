@@ -6,15 +6,19 @@ import { useEffect, useMemo, useState } from "react";
 import { AddMemberTask } from "./addMemberTask";
 import { toast } from "components";
 import { EditMemberTask } from "./editMemberTask";
-import { time } from "console";
 
-const initData = {
-  data: [],
-  metaData: {
-    currentPage: 1,
-    totalPages: 0,
-    totalCount: 0,
-    pageLimit: 0
+const isValidDateRange = (params) => {
+  switch (params) {
+    case !params.start && !params.end:
+      return true;
+    case params.start && !params.end:
+      return false;
+    case !params.start && params.end:
+      return true;
+    case params.start && params.end:
+      return false;
+    default:
+      return true;
   }
 };
 
@@ -90,7 +94,7 @@ const MemberProfileTasks = () => {
   // Query states for each task type
   const [completedQueryParams, setCompletedQueryParams] = useState({
     page: 1,
-    limit: 20,
+    limit: 4,
     object: "",
     id: "",
     priority: "",
@@ -102,7 +106,7 @@ const MemberProfileTasks = () => {
 
   const [incompleteQueryParams, setIncompleteQueryParams] = useState({
     page: 1,
-    limit: 20,
+    limit: 4,
     object: "",
     id: "",
     priority: "",
@@ -114,7 +118,7 @@ const MemberProfileTasks = () => {
 
   const [archivedQueryParams, setArchivedQueryParams] = useState({
     page: 1,
-    limit: 20,
+    limit: 4,
     object: "",
     id: "",
     priority: "",
@@ -126,10 +130,18 @@ const MemberProfileTasks = () => {
 
   // Fetch task functions
   const handleFetchTasks = (status: string) => {
-    if (status === "complete") runFetchComplete(fetchMembersTasksService(completedQueryParams));
-    if (status === "incomplete")
+    if (status === "complete" && isValidDateRange(completedQueryParams))
+      runFetchComplete(fetchMembersTasksService(completedQueryParams));
+    if (status === "incomplete" && isValidDateRange(incompleteQueryParams))
       runFetchIncomplete(fetchMembersTasksService(incompleteQueryParams));
-    if (status === "archived") runFetchArchived(fetchMembersTasksService(archivedQueryParams));
+    if (status === "archived" && isValidDateRange(archivedQueryParams))
+      runFetchArchived(fetchMembersTasksService(archivedQueryParams));
+  };
+
+  const runAllFetch = () => {
+    handleFetchTasks("complete");
+    handleFetchTasks("incomplete");
+    handleFetchTasks("archived");
   };
 
   const handleChangeStatus = (id: string, status: string) => {
@@ -141,10 +153,23 @@ const MemberProfileTasks = () => {
   };
 
   // Update fetch tasks query params function
-  const handleUpdateQuery = (param, value) => {
+  const handleCompletedQuery = (param, value) => {
     setCompletedQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
+
+  const handleIncompleteQuery = (param, value) => {
     setIncompleteQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
+
+  const handleArchivedQuery = (param, value) => {
     setArchivedQueryParams((prev) => ({ ...prev, [param]: value }));
+  };
+
+  // Helper function to update all queries at once when needed
+  const handleUpdateAllQueries = (param, value) => {
+    handleCompletedQuery(param, value);
+    handleIncompleteQuery(param, value);
+    handleArchivedQuery(param, value);
   };
 
   // Fetch tasks data processing
@@ -200,11 +225,6 @@ const MemberProfileTasks = () => {
     }),
     [fetchArchivedResponse, archivedQueryParams.limit]
   );
-  const runAllFetch = () => {
-    handleFetchTasks("complete");
-    handleFetchTasks("incomplete");
-    handleFetchTasks("archived");
-  };
 
   useMemo(() => {
     if (changeStatusResponse?.status === 200) {
@@ -235,8 +255,16 @@ const MemberProfileTasks = () => {
   }, [deleteTaskResponse, deleteTaskError]);
 
   useEffect(() => {
-    runAllFetch();
-  }, [completedQueryParams, incompleteQueryParams, archivedQueryParams]);
+    handleFetchTasks("complete");
+  }, [completedQueryParams]);
+
+  useEffect(() => {
+    handleFetchTasks("incomplete");
+  }, [incompleteQueryParams]);
+
+  useEffect(() => {
+    handleFetchTasks("archived");
+  }, [archivedQueryParams]);
 
   return (
     <>
@@ -249,7 +277,12 @@ const MemberProfileTasks = () => {
             loadingArchived: fetchArchivedStatus.isPending
           },
           params: { incompleteQueryParams, completedQueryParams, archivedQueryParams },
-          handleParams: handleUpdateQuery
+          handleParams: {
+            handleCompletedQuery,
+            handleIncompleteQuery,
+            handleArchivedQuery,
+            handleUpdateAllQueries
+          }
         }}
         handleOpenAddTask={handleOpenAddTask}
         handleOpenEditTask={handleOpenEditTask}

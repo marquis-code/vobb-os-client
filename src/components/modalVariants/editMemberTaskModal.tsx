@@ -24,7 +24,13 @@ export interface EditTaskData {
   title: string;
   description: string;
   assignedTo: optionType[];
-  priority: ObjectOptionProps;
+  priority?:
+    | {
+        title?: string;
+        color?: string;
+        id?: string;
+      }
+    | undefined;
   dueDate?: Date;
   status: ObjectOptionProps;
   object: ObjectOptionProps;
@@ -59,12 +65,11 @@ const schema = yup.object().shape({
   priority: yup
     .object()
     .shape({
-      title: yup.string().required("Required"),
-      color: yup.string().required("Required"),
+      title: yup.string().optional(),
+      color: yup.string().optional(),
       id: yup.string().optional()
     })
-    .nullable()
-    .required("Priority is required"),
+    .optional(),
   dueDate: yup.date().transform((curr, orig) => (orig === "" ? undefined : curr)),
   status: yup
     .object()
@@ -156,12 +161,14 @@ const EditMemberTaskModal: React.FC<EditMemberTaskModalProps> = ({
           value: _id
         }))
       );
-      setValue(
-        "priority",
-        priorityOptions.find(
-          (priority) => priority.title.toLowerCase() === fetchedData.priority.toLowerCase()
-        ) ?? priorityOptions[0]
-      );
+      if (fetchedData.priority) {
+        setValue(
+          "priority",
+          priorityOptions.find(
+            (priority) => priority.title.toLowerCase() === fetchedData.priority.toLowerCase()
+          ) ?? priorityOptions[0]
+        );
+      }
       setValue(
         "status",
         statusOptions.find(
@@ -288,7 +295,8 @@ const EditMemberTaskModal: React.FC<EditMemberTaskModalProps> = ({
           onClick={handleSubmit(onSubmit)}
           size={"default"}
           variant={"fill"}
-          loading={loadingEdit}>
+          loading={loadingEdit}
+          data-testid="submit-btn">
           Save Changes
         </Button>
       </div>

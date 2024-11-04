@@ -23,6 +23,7 @@ interface DateRangeProps extends React.HTMLAttributes<HTMLDivElement> {
   handleChange: (date: DateRange | undefined) => void;
   showPreset?: boolean;
   testId?: string;
+  clearFilters?: () => void;
 }
 
 export function DateFilter({
@@ -30,7 +31,8 @@ export function DateFilter({
   value: date,
   handleChange: setDate,
   testId,
-  showPreset
+  showPreset,
+  clearFilters
 }: DateRangeProps) {
   return (
     <div className={cn("grid gap-2", className)}>
@@ -51,7 +53,10 @@ export function DateFilter({
                   {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
                   <Cross1Icon
                     role="button"
-                    onClick={() => setDate(undefined)}
+                    onClick={() => {
+                      setDate(undefined);
+                      clearFilters?.();
+                    }}
                     width={12}
                     height={12}
                     stroke="var(--error-20)"

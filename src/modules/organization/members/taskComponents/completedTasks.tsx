@@ -33,25 +33,29 @@ const CompletedTasks = ({
     <div className="max-h-[220px] overflow-scroll">
       {loading ? (
         <div>
-          <p className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center">
-            <div className="flex items-center gap-2">
-              <span className="border rounded-full cursor-pointer">
-                {" "}
-                <IconCircleCheck color="#fff" size={10} />
-              </span>
-              <p className="w-60 h-2 rounded-full bg-vobb-neutral-30"></p>
-            </div>
-            <div className="grid grid-cols-3 items-center">
-              <p className="w-20 h-2 rounded-full bg-vobb-neutral-30"></p>
-              <p className="w-20 h-2 rounded-full bg-vobb-neutral-30"></p>
-              <p className="w-60 h-2 rounded-full bg-vobb-neutral-30"></p>
-            </div>
-          </p>
+          {Array(2)
+            .fill(null)
+            .map((_, index) => (
+              <p key={index} className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center">
+                <div className="flex items-center gap-2">
+                  <span className="border rounded-full cursor-pointer">
+                    <IconCircleCheck color="#fff" size={10} />
+                  </span>
+                  <p className="w-60 h-2 rounded-full bg-vobb-neutral-30"></p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="w-20 h-2 rounded-full bg-vobb-neutral-30"></p>
+                  <p className="w-20 h-2 rounded-full bg-vobb-neutral-30"></p>
+                  <p className="w-60 h-2 rounded-full bg-vobb-neutral-30"></p>
+                </div>
+              </p>
+            ))}
         </div>
       ) : (
         completedTasks.map(({ assignedTo, id, dueDate, title }) => {
-          const { displayText, textStyle } = calculateDueDate(dueDate);
-
+          const { displayText, textStyle } = dueDate
+            ? calculateDueDate(dueDate)
+            : { displayText: "", textStyle: {} };
           return (
             <div
               className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center hover:bg-accent hover:text-accent-foreground cursor-pointer"
@@ -121,11 +125,12 @@ const CompletedTasks = ({
                       <p>{assignedTo[0]?.name}</p>
                     </Button>
                   )}
-
-                  <Menu
-                    handleArchiveTask={() => handleChangeStatus(id, "archived")}
-                    handleDeleteTask={() => handleDeleteTask(id)}
-                  />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Menu
+                      handleArchiveTask={() => handleChangeStatus(id, "archived")}
+                      handleDeleteTask={() => handleDeleteTask(id)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

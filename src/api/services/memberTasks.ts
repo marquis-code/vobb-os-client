@@ -22,9 +22,17 @@ interface addTaskRequestBody {
   title: string;
   description: string;
   assigned_to: string[];
-  priority: string;
-  due_date: string;
-  status?: string;
+  priority?: string;
+  due_date?: string;
+  status: string;
+}
+
+interface editTaskRequestBody {
+  title: string;
+  description: string;
+  assigned_to: string[];
+  priority?: string;
+  due_date?: string;
 }
 
 /**
@@ -71,7 +79,7 @@ export const changeStatusOfTaskService = (id: string, data: { status: string }) 
  * @returns url string
  *
  */
-export const editTaskService = (id: string, data: addTaskRequestBody) => {
+export const editTaskService = (id: string, data: editTaskRequestBody) => {
   return patchRequest({
     url: editTaskURL({ id }),
     data

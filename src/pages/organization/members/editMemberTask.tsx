@@ -48,15 +48,14 @@ const EditMemberTask: React.FC<editMemberTaskProps> = (props) => {
   };
 
   const handleEditTask = (data: EditTaskData) => {
-    runEditTask(
-      editTaskService(data.id, {
-        title: data.title,
-        description: data.description,
-        assigned_to: data.assignedTo.map((user) => user.value),
-        priority: data.priority.title.toLowerCase(),
-        due_date: data.dueDate ? format(data.dueDate, "yyyy-MM-dd") : ""
-      })
-    );
+    const taskData = {
+      title: data.title,
+      description: data.description,
+      assigned_to: data.assignedTo.map((user) => user.value),
+      ...(data.priority?.title && { priority: data.priority.title.toLowerCase() }),
+      ...(data.dueDate && { due_date: format(data.dueDate, "yyyy-MM-dd") })
+    };
+    runEditTask(editTaskService(data.id, taskData));
   };
 
   const taskData = useMemo<MemberTasksData>(() => {
