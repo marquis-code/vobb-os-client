@@ -64,14 +64,20 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">{jobTitle}</span>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconUser color="#667085" size={16} />
+                {jobTitle}
+              </span>{" "}
             </TooltipTrigger>
-            <TooltipContent className="bg-vobb-neutral-70">Job Title</TooltipContent>
+            <TooltipContent className="bg-vobb-neutral-70">Job title</TooltipContent>
           </Tooltip>
           <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">{role}</span>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconBriefcase color="#667085" size={16} />
+                {role}
+              </span>{" "}
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Role</TooltipContent>
           </Tooltip>
