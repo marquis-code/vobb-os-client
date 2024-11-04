@@ -11,10 +11,12 @@ import {
   IconUser,
   IconUsers
 } from "@tabler/icons-react";
+import { MemberProfileTabLengthsProps } from "types";
 
 interface MemberProfileTabsProps {
   handleMainTabChange: (tab: string) => void;
   mainTab: string;
+  memberProfileTabLengths: MemberProfileTabLengthsProps;
 }
 
 interface TabListData {
@@ -25,56 +27,62 @@ interface TabListData {
 }
 
 const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
-  const { handleMainTabChange, mainTab } = props;
+  const { handleMainTabChange, mainTab, memberProfileTabLengths } = props;
 
   const { subTab, handleUpdateSubTab } = useContext(MemberProfileContext);
+  const { activity, email, clients, tasks, comments, details, files, notes } =
+    memberProfileTabLengths;
 
   const mainTabs: TabListData[] = [
     {
       title: "Activity",
       key: "activity",
       icon: <IconFlame size={16} />,
-      length: 2
+      length: activity
     },
     {
       title: "Emails",
       key: "emails",
       icon: <IconMail size={16} />,
-      length: 4
+      length: email
     },
     {
       title: "Assigned Clients",
       key: "clients",
-      icon: <IconUsers size={16} />
+      icon: <IconUsers size={16} />,
+      length: clients
     },
     {
       title: "Tasks",
       key: "tasks",
       icon: <IconListCheck size={16} />,
-      length: 3
+      length: tasks
     },
     {
       title: "Files",
       key: "files",
-      icon: <IconFiles size={16} />
+      icon: <IconFiles size={16} />,
+      length: files
     },
     {
       title: "Notes",
       key: "notes",
-      icon: <IconClipboardText size={16} />
+      icon: <IconClipboardText size={16} />,
+      length: notes
     }
   ];
   const subTabs: TabListData[] = [
     {
       title: "Details",
       key: "details",
-      icon: <IconUser size={16} />
+      icon: <IconUser size={16} />,
+      length: details
     },
     {
       title: "Comments",
       key: "comments",
       icon: <IconMessageCircle size={16} />,
-      length: 5
+      length: comments
     }
   ];
 
@@ -95,10 +103,12 @@ const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
                   : ""
               )}>
               {icon} {title}{" "}
-              {length && (
+              {length && length > 0 ? (
                 <span className="bg-vobb-neutral-10 text-vobb-neutral-100 h-4 w-4 border text-[10px] rounded-sm">
                   {length}
                 </span>
+              ) : (
+                ""
               )}
             </button>
           ))}
@@ -115,10 +125,12 @@ const MemberProfileTabs: React.FC<MemberProfileTabsProps> = (props) => {
                   : ""
               )}>
               {icon} {title}{" "}
-              {length && (
+              {length && length > 0 ? (
                 <span className="bg-vobb-neutral-10 text-vobb-neutral-100 h-4 w-4 border text-[10px] rounded-sm">
                   {length}
                 </span>
+              ) : (
+                ""
               )}
             </button>
           ))}

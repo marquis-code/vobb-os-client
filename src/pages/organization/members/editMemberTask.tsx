@@ -30,7 +30,6 @@ const initData = {
 
 const EditMemberTask: React.FC<editMemberTaskProps> = (props) => {
   const { id, close, callback, allUsers } = props;
-  console.log(id);
   const {
     run: runFetchTask,
     data: fetchTaskResponse,

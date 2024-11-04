@@ -22,7 +22,7 @@ const isValidDateRange = (params) => {
   }
 };
 
-const MemberProfileTasks = () => {
+const MemberProfileTasks = ({ handleUpdateProfileTabLengths }) => {
   const [addTaskModal, setAddTaskModal] = useState(false);
   const [editTaskModal, setEditTaskModal] = useState({ id: "", show: false });
 
@@ -254,16 +254,42 @@ const MemberProfileTasks = () => {
     }
   }, [deleteTaskResponse, deleteTaskError]);
 
-  useEffect(() => {
-    handleFetchTasks("complete");
-  }, [completedQueryParams]);
+  //Calculate tab lengths
+  const totalCountOfTasks =
+    incompletedTasks.metaData.totalCount +
+    completedTasks.metaData.totalCount +
+    archivedTasks.metaData.totalCount;
+
+  const isAllTaskCountsLoaded =
+    fetchCompleteStatus.isResolved &&
+    fetchIncompleteStatus.isResolved &&
+    fetchArchivedStatus.isResolved;
 
   useEffect(() => {
+    if (isAllTaskCountsLoaded) {
+      handleUpdateProfileTabLengths("tasks", totalCountOfTasks);
+    }
+  }, [
+    incompletedTasks.metaData.totalCount,
+    completedTasks.metaData.totalCount,
+    archivedTasks.metaData.totalCount,
+    totalCountOfTasks
+  ]);
+
+  useEffect(() => {
+    handleFetchTasks("complete");
+    handleUpdateProfileTabLengths("tasks", totalCountOfTasks);
+  }, [completedQueryParams]);
+
+  //FEtch all tasks
+  useEffect(() => {
     handleFetchTasks("incomplete");
+    handleUpdateProfileTabLengths("tasks", totalCountOfTasks);
   }, [incompleteQueryParams]);
 
   useEffect(() => {
     handleFetchTasks("archived");
+    handleUpdateProfileTabLengths("tasks", totalCountOfTasks);
   }, [archivedQueryParams]);
 
   return (

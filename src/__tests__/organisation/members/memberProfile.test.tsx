@@ -48,6 +48,17 @@ vi.mock("assets", async () => {
   };
 });
 
+const mockProfileTabLengths = {
+  activity: 0,
+  email: 0,
+  clients: 0,
+  tasks: 0,
+  files: 0,
+  notes: 0,
+  details: 0,
+  comments: 0
+};
+
 const mockMemberProfile = {
   avatar: "https://avatar_url",
   initials: "JD",
@@ -67,6 +78,7 @@ const mockMemberProfile = {
 const mockHandleMainTabChange = vi.fn();
 const mockHandleUpdateSubTab = vi.fn();
 const mockHandleFetchProfile = vi.fn();
+const mockHandleUpdateProfileTabsLength = vi.fn();
 
 const profileProps = {
   memberProfile: mockMemberProfile,
@@ -83,7 +95,11 @@ const renderComponent = (mainTab = "activity", subTab = "details") => {
     <BrowserRouter>
       <MemberProfileHeader {...profileProps} />
       <MemberProfileContext.Provider value={{ subTab, handleUpdateSubTab: mockHandleUpdateSubTab }}>
-        <MemberProfileTabs handleMainTabChange={mockHandleMainTabChange} mainTab={mainTab} />
+        <MemberProfileTabs
+          handleMainTabChange={mockHandleMainTabChange}
+          mainTab={mainTab}
+          memberProfileTabLengths={mockProfileTabLengths}
+        />
       </MemberProfileContext.Provider>
       <MemberProfileBody
         children={
@@ -94,7 +110,7 @@ const renderComponent = (mainTab = "activity", subTab = "details") => {
           ) : mainTab === "file" ? (
             <MemberProfileFiles />
           ) : mainTab === "tasks" ? (
-            <MemberProfileTasks />
+            <MemberProfileTasks handleUpdateProfileTabLengths={mockHandleUpdateProfileTabsLength} />
           ) : mainTab === "notes" ? (
             <MemberProfileNotes />
           ) : mainTab === "clients" ? (
@@ -361,7 +377,11 @@ describe("Member Page Integration", () => {
         <MemberProfileHeader {...suspendedProfileProps} />
         <MemberProfileContext.Provider
           value={{ subTab: "details", handleUpdateSubTab: mockHandleUpdateSubTab }}>
-          <MemberProfileTabs handleMainTabChange={mockHandleMainTabChange} mainTab="activity" />
+          <MemberProfileTabs
+            handleMainTabChange={mockHandleMainTabChange}
+            mainTab="activity"
+            memberProfileTabLengths={mockProfileTabLengths}
+          />
         </MemberProfileContext.Provider>
         <MemberProfileBody
           children={<MemberProfileActivity />}

@@ -37,3 +37,14 @@ export interface MemberTasksProps {
   data: MemberTasksData[];
   metaData: MetaDataProps;
 }
+
+export interface MemberProfileTabLengthsProps {
+  activity: number;
+  email: number;
+  clients: number;
+  tasks: number;
+  files: number;
+  notes: number;
+  details: number;
+  comments: number;
+}
