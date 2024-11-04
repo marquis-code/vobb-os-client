@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "components/ui/breadcrumb";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface NavBarProps {
@@ -26,12 +27,24 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
           <BreadcrumbList className="text-xs">
             {items.length > 2 && (
               <span className="flex gap-2 items-center">
-                <IconArrowNarrowLeft onClick={() => navigate(-1)} color="#101323" size={18} />
-                <IconArrowNarrowRight onClick={() => navigate(+1)} color="#101323" size={18} />
+                <IconArrowNarrowLeft
+                  onClick={() => navigate(-1)}
+                  color="#101323"
+                  size={18}
+                  className="cursor-pointer"
+                />
+                {items.length > 1 && (
+                  <IconArrowNarrowRight
+                    onClick={() => navigate(+1)}
+                    color="#101323"
+                    size={18}
+                    className="cursor-pointer"
+                  />
+                )}
               </span>
             )}
-            {items?.map((item, index) => (
-              <>
+            {items.map((item, index) => (
+              <React.Fragment key={index}>
                 {item.path ? (
                   <BreadcrumbLink href={item.path}>{item.title}</BreadcrumbLink>
                 ) : (
@@ -42,8 +55,8 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
                     {item.title}
                   </BreadcrumbItem>
                 )}
-                {index !== items.length - 1 ? <BreadcrumbSeparator /> : ""}
-              </>
+                {index !== items.length - 1 && <BreadcrumbSeparator />}
+              </React.Fragment>
             ))}
           </BreadcrumbList>
         </Breadcrumb>
