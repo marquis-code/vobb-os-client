@@ -98,11 +98,12 @@ describe("MemberProfileTasksUI", () => {
   it("renders correctly with no tasks", () => {
     renderComponent();
     expect(screen.getByText(/No tasks have been assigned yet/i)).toBeInTheDocument();
-    expect(screen.getByText(/Add Task/i)).toBeInTheDocument();
+    expect(screen.getByTestId("add-task-button")).toBeInTheDocument();
+    expect(screen.getByTestId("empty-state-action")).toBeInTheDocument();
   });
 
   it("calls handleOpenAddTask when the Add Task button is clicked", () => {
-    const addTaskButton = screen.getByRole("button", { name: /Add Task/i });
+    const addTaskButton = screen.getByTestId("add-task-button");
     fireEvent.click(addTaskButton);
     expect(mockHandleOpenAddTask).toHaveBeenCalledTimes(1);
   });

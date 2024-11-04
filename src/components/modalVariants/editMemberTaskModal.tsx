@@ -205,13 +205,9 @@ const EditMemberTaskModal: React.FC<EditMemberTaskModalProps> = ({
           />
           <PriorityDropdown selectedPriority={priority} handleSetPriority={handleSetPriority} />
 
-          <ObjectDropdown
-            selectedObject={object}
-            handleSetObject={handleSetObject}
-            isMemberTask={true}
-          />
+          <ObjectDropdown selectedObject={object} handleSetObject={handleSetObject} isDisabled />
 
-          <StatusDropdown selectedStatus={status} handleSetStatus={handleSetStatus} />
+          <StatusDropdown selectedStatus={status} handleSetStatus={handleSetStatus} isDisabled />
 
           <Button
             onClick={close}

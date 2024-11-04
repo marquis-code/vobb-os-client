@@ -2,9 +2,19 @@ import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { Button } from "components/ui";
 import { IconPointFilled } from "@tabler/icons-react";
-import { cn, statusOptions } from "lib";
+import { cn, ObjectOptionProps, statusOptions } from "lib";
 
-const StatusDropdown = ({ handleSetStatus, selectedStatus }) => {
+interface StatusDropdownProps {
+  handleSetStatus: (obj) => void;
+  selectedStatus: ObjectOptionProps;
+  isDisabled?: boolean;
+}
+
+const StatusDropdown: React.FC<StatusDropdownProps> = ({
+  handleSetStatus,
+  selectedStatus,
+  isDisabled = false
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleSelect = (obj) => {
@@ -18,7 +28,8 @@ const StatusDropdown = ({ handleSetStatus, selectedStatus }) => {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start text-left items-center font-normal text-xs h-9 py-1 px-3 gap-1"
+            "w-full justify-start text-left items-center font-normal text-xs h-9 py-1 px-3 gap-1",
+            isDisabled ? "pointer-events-none" : ""
           )}>
           {!selectedStatus ? (
             "Status"

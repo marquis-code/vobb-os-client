@@ -33,7 +33,11 @@ const TableEmptyState: React.FC<EmptyStateProps> = (props) => {
 
         <p className="text-xs text-vobb-neutral-60">{description}</p>
         {btnText && (
-          <Button onClick={ctaFunction} className="flex gap-1 mt-5 text-xs" variant={"fill"}>
+          <Button
+            onClick={ctaFunction}
+            className="flex gap-1 mt-5 text-xs"
+            variant={"fill"}
+            data-testid="empty-state-action">
             {btnIcon} {btnText}
           </Button>
         )}

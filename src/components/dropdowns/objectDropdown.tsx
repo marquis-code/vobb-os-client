@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { Button } from "components/ui";
-import { cn, objectOptions } from "lib";
+import { cn, ObjectOptionProps, objectOptions } from "lib";
 import { IconArrowNarrowRight, IconPointFilled } from "@tabler/icons-react";
 
-const ObjectDropdown = ({ handleSetObject, selectedObject, isMemberTask }) => {
+interface ObjectDropdownProps {
+  handleSetObject: (obj) => void;
+  selectedObject: ObjectOptionProps;
+  isDisabled?: boolean;
+}
+
+const ObjectDropdown: React.FC<ObjectDropdownProps> = ({
+  handleSetObject,
+  selectedObject,
+  isDisabled = false
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleSelect = (obj) => {
@@ -19,7 +29,7 @@ const ObjectDropdown = ({ handleSetObject, selectedObject, isMemberTask }) => {
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left items-center font-normal text-xs h-9 py-1 px-3 gap-1",
-            isMemberTask ? "pointer-events-none" : ""
+            isDisabled ? "pointer-events-none" : ""
           )}>
           {!selectedObject ? (
             <>

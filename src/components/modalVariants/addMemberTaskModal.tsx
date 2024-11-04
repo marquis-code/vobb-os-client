@@ -185,11 +185,7 @@ const AddMemberTaskModal: React.FC<AddMemberTaskModalProps> = ({
           />
           <PriorityDropdown selectedPriority={priority} handleSetPriority={handleSetPriority} />
 
-          <ObjectDropdown
-            selectedObject={object}
-            handleSetObject={handleSetObject}
-            isMemberTask={true}
-          />
+          <ObjectDropdown selectedObject={object} handleSetObject={handleSetObject} isDisabled />
 
           <StatusDropdown selectedStatus={status} handleSetStatus={handleSetStatus} />
 
