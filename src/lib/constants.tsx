@@ -209,23 +209,23 @@ export const attributeTypeIcons = {
 export const roleOptions: optionType[] = [
   {
     label: "Organization admin",
-    value: "admin"
+    value: "Super Admin"
   },
   {
     label: "Branch manager",
-    value: "branch-manager"
+    value: "Branch Manager"
   },
   {
-    label: "Team mamager",
-    value: "team-manager"
+    label: "Team manager",
+    value: "Team Manager"
   },
   {
     label: "Team lead",
-    value: "team-lead"
+    value: "Team Lead"
   },
   {
-    label: "Member",
-    value: "member"
+    label: "Team member",
+    value: "Team Member"
   }
 ];
 

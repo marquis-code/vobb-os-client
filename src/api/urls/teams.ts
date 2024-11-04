@@ -76,20 +76,6 @@ export const fetchATeamsMembersURL = ({ id, page, limit }) =>
   `${prefixTeam}/members/${id}?page=${page}&limit=${limit}`;
 
 /**
- * Fetch orgnasiation's members URL
- * @returns url string
- *
- */
-export const fetchOrgMembersURL = (queryParams: fetchMemberQueryParams) => {
-  const queryString = Object.entries(queryParams)
-    .filter(([_, value]) => value !== undefined && value !== "")
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
-    .join("&");
-
-  return `/org/members${queryString ? `?${queryString}` : ""}`;
-};
-
-/**
  * Invite a member to organisation URL
  * @returns url string
  *

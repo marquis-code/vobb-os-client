@@ -52,3 +52,12 @@ export function shortenText(text, maxLength) {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength - 3) + "...";
 }
+export const calculateTotalWordCount = (values: any) => {
+  let wordCountObj = {};
+  Object.keys(values).forEach((fieldName) => {
+    if (fieldName.startsWith("long-text")) {
+      wordCountObj[fieldName] = values[fieldName].trim().split(/\s+/).length;
+    }
+  });
+  return wordCountObj;
+};

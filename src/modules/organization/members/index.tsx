@@ -151,3 +151,4 @@ export * from "./memberTasks";
 export * from "./acceptInvite";
 export * from "./invitationSuccessful";
 export * from "./invitationFailed";
+export * from "./memberEmailVerify";
