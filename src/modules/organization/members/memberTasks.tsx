@@ -122,7 +122,6 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           taskActions={taskActions}
           handleOpenEditTask={handleOpenEditTask}
           handleParams={handleIncompleteQuery}
-          metaData={data.incompletedTasks.metaData}
         />
       )
     },
@@ -137,7 +136,6 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           taskActions={taskActions}
           handleOpenEditTask={handleOpenEditTask}
           handleParams={handleCompletedQuery}
-          metaData={data.completedTasks.metaData}
         />
       )
     },
@@ -153,7 +151,6 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
           taskActions={taskActions}
           handleOpenEditTask={handleOpenEditTask}
           handleParams={handleArchivedQuery}
-          metaData={data.archivedTasks.metaData}
         />
       )
     }
@@ -212,7 +209,8 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
               <div key={title}>
                 <p
                   className="bg-vobb-neutral-10 py-2 px-4 flex justify-between items-center capitalize border-b"
-                  onClick={() => handleSetOpenTabs(title)}>
+                  onClick={() => handleSetOpenTabs(title)}
+                  data-testId={`view-${title}`}>
                   <p className="flex items-center gap-2">
                     <IconPointFilled color={color} size={14} /> {title}
                     {length > 0 && (

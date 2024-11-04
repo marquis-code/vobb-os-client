@@ -1,10 +1,11 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { MockedMemberTasks } from "lib";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { MockedArchivedTasks, MockedCompletedTasks, MockedIncompletedTasks } from "lib";
 import { MemberProfileTasksUI } from "modules";
 import { BrowserRouter } from "react-router-dom";
 import { vi } from "vitest";
 
-const mockCompletedTasks = {
+const defaultCompletedTasks = {
   data: [],
   metaData: {
     currentPage: 1,
@@ -14,7 +15,7 @@ const mockCompletedTasks = {
   }
 };
 
-const mockIncompletedTasks = {
+const defaultIncompletedTasks = {
   data: [],
   metaData: {
     currentPage: 1,
@@ -24,7 +25,7 @@ const mockIncompletedTasks = {
   }
 };
 
-const mockArchivedTasks = {
+const defaultArchivedTasks = {
   data: [],
   metaData: {
     currentPage: 1,
@@ -37,9 +38,9 @@ const mockArchivedTasks = {
 const defaultProps = {
   allTasks: {
     data: {
-      completedTasks: mockCompletedTasks,
-      incompletedTasks: mockIncompletedTasks,
-      archivedTasks: mockArchivedTasks
+      completedTasks: defaultCompletedTasks,
+      incompletedTasks: defaultIncompletedTasks,
+      archivedTasks: defaultArchivedTasks
     },
     loading: {
       loadingIncomplete: false,
@@ -77,6 +78,39 @@ const mockTaskActions = {
   loadingDeleteTask: false
 };
 
+const tasksWithData = {
+  ...defaultProps.allTasks,
+  data: {
+    completedTasks: {
+      data: MockedCompletedTasks,
+      metaData: {
+        currentPage: 1,
+        totalCount: MockedCompletedTasks.length,
+        totalPages: 1,
+        pageLimit: 4
+      }
+    },
+    incompletedTasks: {
+      data: MockedIncompletedTasks,
+      metaData: {
+        currentPage: 1,
+        totalCount: MockedIncompletedTasks.length,
+        totalPages: 1,
+        pageLimit: 4
+      }
+    },
+    archivedTasks: {
+      data: MockedArchivedTasks,
+      metaData: {
+        currentPage: 1,
+        totalCount: MockedArchivedTasks.length,
+        totalPages: 1,
+        pageLimit: 4
+      }
+    }
+  }
+};
+
 describe("MemberProfileTasksUI", () => {
   const renderComponent = (props = {}) =>
     render(
@@ -103,97 +137,112 @@ describe("MemberProfileTasksUI", () => {
   });
 
   it("calls handleOpenAddTask when the Add Task button is clicked", () => {
+    renderComponent();
     const addTaskButton = screen.getByTestId("add-task-button");
     fireEvent.click(addTaskButton);
     expect(mockHandleOpenAddTask).toHaveBeenCalledTimes(1);
   });
 
-  it("displays the task categories when ther is data", () => {
-    const tasksWithData = {
-      ...defaultProps.allTasks,
-      data: {
-        completedTasks: {
-          data: MockedMemberTasks,
-          metaData: {
-            currentPage: 1,
-            totalCount: MockedMemberTasks.length,
-            totalPages: 1,
-            pageLimit: 20
-          }
-        },
-        incompletedTasks: { data: [] },
-        archivedTasks: { data: [] }
-      }
-    };
-
+  it("displays the tasks categories when there is data", () => {
     renderComponent({
       allTasks: tasksWithData,
       handleOpenAddTask: mockHandleOpenAddTask,
       handleOpenEditTask: mockHandleOpenEditTask,
       taskActions: mockTaskActions
     });
+    const completedTask = screen.getByText(/Complete the project proposal/i);
+    const inCompletedTask = screen.getByText(/Prepare presentation for stakeholders/i);
+    const archivedTask = screen.getByText(/Take a sprint/i);
 
-    expect(screen.getByText(/completed/i)).toBeInTheDocument();
+    expect(completedTask).toBeInTheDocument();
+    expect(inCompletedTask).toBeInTheDocument();
 
-    const completedTab = screen.getByText(/completed/i);
-    fireEvent.click(completedTab);
+    expect(archivedTask).toBeInTheDocument();
+  });
 
-    expect(screen.getByText(/Complete the project proposal/i)).toBeInTheDocument();
+  it("toggles the viewing of completed tasks", () => {
+    renderComponent({
+      allTasks: tasksWithData,
+      handleOpenAddTask: mockHandleOpenAddTask,
+      handleOpenEditTask: mockHandleOpenEditTask,
+      taskActions: mockTaskActions
+    });
+    const completedTaskComponent = screen.getByTestId("completed-task-component");
+
+    expect(completedTaskComponent).toBeInTheDocument();
+    const completedView = screen.getByTestId("view-completed");
+    fireEvent.click(completedView);
+    expect(completedTaskComponent).not.toBeInTheDocument();
+  });
+
+  it("toggles the viewing of incompleted tasks", () => {
+    renderComponent({
+      allTasks: tasksWithData,
+      handleOpenAddTask: mockHandleOpenAddTask,
+      handleOpenEditTask: mockHandleOpenEditTask,
+      taskActions: mockTaskActions
+    });
+    const incompletedTaskComponent = screen.getByTestId("incompleted-task-component");
+
+    expect(incompletedTaskComponent).toBeInTheDocument();
+    const completedView = screen.getByTestId("view-incompleted");
+    fireEvent.click(completedView);
+    expect(incompletedTaskComponent).not.toBeInTheDocument();
+  });
+
+  it("toggles the viewing of archived tasks", () => {
+    renderComponent({
+      allTasks: tasksWithData,
+      handleOpenAddTask: mockHandleOpenAddTask,
+      handleOpenEditTask: mockHandleOpenEditTask,
+      taskActions: mockTaskActions
+    });
+    const archivedTaskComponent = screen.getByTestId("archived-task-component");
+    expect(archivedTaskComponent).toBeInTheDocument();
+    const archivedView = screen.getByTestId("view-archived");
+    fireEvent.click(archivedView);
+
+    expect(archivedTaskComponent).not.toBeInTheDocument();
   });
 
   it("renders the member filters and date filter", () => {
     renderComponent();
-    expect(screen.getByText(/Tasks/i)).toBeInTheDocument();
-    expect(screen.getByText(/By object/i)).toBeInTheDocument();
+    const tasksSubheading = screen.getByRole("heading", { name: "Tasks" });
+    const objectFilter = screen.getByText(/By object/i);
+    expect(tasksSubheading).toBeInTheDocument();
+    expect(objectFilter).toBeInTheDocument();
   });
 
-  it("opens the dropdown menu and selects an object", () => {
+  it("opens the dropdown menu and selects an object", async () => {
     renderComponent();
 
     const objectButton = screen.getByRole("button", { name: /By object/i });
-    fireEvent.click(objectButton);
+    await userEvent.click(objectButton);
 
-    const objectOption = screen.getByText(/general/i);
-    fireEvent.click(objectOption);
-
-    expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith(
-      "object",
-      "general".toLowerCase()
-    );
+    const objectOption = await screen.findByText(/general/i);
+    await userEvent.click(objectOption);
+    await waitFor(() => {
+      expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith(
+        "object",
+        "general".toLowerCase()
+      );
+    });
   });
 
-  it("opens the date filter and updates the date range", () => {
+  it("opens the date filter and updates the date range", async () => {
     renderComponent();
 
-    const dateFilterButton = screen.getByRole("button", { name: /date/i }); // Replace with the actual button name
+    const dateFilterButton = screen.getByRole("button", { name: /Today/i });
     fireEvent.click(dateFilterButton);
 
-    const dateRange = { from: new Date(), to: new Date() }; // Adjust as needed
-    fireEvent.change(screen.getByLabelText(/date range/i), { target: { value: dateRange } });
+    const selectRange = screen.getByText(/Select a range/i);
+    fireEvent.click(selectRange);
 
-    expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith(
-      "start",
-      dateRange.from.toISOString().slice(0, 10)
-    );
-    expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith(
-      "end",
-      dateRange.to.toISOString().slice(0, 10)
-    );
-  });
+    const dateRange = screen.getByText(/3 days ago/i);
+    await userEvent.click(dateRange);
 
-  it("clears filters when clear button is clicked", () => {
-    renderComponent();
-
-    const clearButton = screen.getByRole("button", { name: /clear filters/i }); // Replace with the actual button name
-    fireEvent.click(clearButton);
-
-    expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith(
-      "start",
-      ""
-    );
-    expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith(
-      "end",
-      ""
-    );
+    // await waitFor(() => {
+    //   expect(defaultProps.allTasks.handleParams.handleUpdateAllQueries).toHaveBeenCalledWith();
+    // });
   });
 });

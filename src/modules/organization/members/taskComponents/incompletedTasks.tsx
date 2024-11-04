@@ -8,7 +8,7 @@ import {
 } from "@tabler/icons-react";
 import { Button } from "components";
 import { cn, shortenText } from "lib";
-import { MemberTasksProps, MetaDataProps } from "types";
+import { MemberTasksProps } from "types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,7 +31,6 @@ export interface TaskComponentProps {
     loadingDeleteTask: boolean;
   };
   handleParams: (param: string, value: Date | string | number) => void;
-  metaData: MetaDataProps;
 }
 
 const IncompletedTasks = ({
@@ -39,10 +38,9 @@ const IncompletedTasks = ({
   loadingTasks,
   handleOpenEditTask,
   taskActions,
-  handleParams,
-  metaData
+  handleParams
 }: TaskComponentProps) => {
-  const incompletedTasks = tasks.data;
+  const { data: incompletedTasks, metaData } = tasks;
   const { handleChangeStatus, loadingChangeStatus, handleDeleteTask, loadingDeleteTask } =
     taskActions;
   const loading = loadingTasks || loadingChangeStatus || loadingDeleteTask;
@@ -50,7 +48,7 @@ const IncompletedTasks = ({
   const { loadMoreRef } = useInfiniteScroll(metaData, handleParams);
 
   return (
-    <div className="max-h-[220px] overflow-scroll">
+    <div className="max-h-[220px] overflow-scroll" data-testid="incompleted-task-component">
       {incompletedTasks?.map(({ assignedTo, id, dueDate, title }) => {
         const { displayText, textStyle } = dueDate
           ? calculateDueDate(dueDate)
@@ -68,7 +66,8 @@ const IncompletedTasks = ({
                   handleChangeStatus(id, "complete");
                   e.stopPropagation();
                 }}
-                className="border rounded-full cursor-pointer">
+                className="border rounded-full cursor-pointer"
+                data-testid="mark-complete">
                 {" "}
                 <IconCircleCheck color="#fff" size={10} />
               </span>
@@ -142,7 +141,10 @@ const IncompletedTasks = ({
           {Array(2)
             .fill(null)
             .map((_, index) => (
-              <p key={index} className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center">
+              <p
+                key={index}
+                className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center"
+                data-testid="skeleton-task">
                 <div className="flex items-center gap-2">
                   <span className="border rounded-full cursor-pointer">
                     <IconCircleCheck color="#fff" size={10} />

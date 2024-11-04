@@ -25,17 +25,16 @@ const CompletedTasks = ({
   loadingTasks,
   taskActions,
   handleOpenEditTask,
-  handleParams,
-  metaData
+  handleParams
 }: TaskComponentProps) => {
-  const completedTasks = tasks.data;
+  const { data: completedTasks, metaData } = tasks;
   const { handleChangeStatus, loadingChangeStatus, handleDeleteTask, loadingDeleteTask } =
     taskActions;
   const loading = loadingTasks || loadingChangeStatus || loadingDeleteTask;
 
   const { loadMoreRef } = useInfiniteScroll(metaData, handleParams);
   return (
-    <div className="max-h-[220px] overflow-scroll">
+    <div className="max-h-[220px] overflow-scroll" data-testid="completed-task-component">
       {completedTasks?.map(({ assignedTo, id, dueDate, title }) => {
         const { displayText, textStyle } = dueDate
           ? calculateDueDate(dueDate)
@@ -53,7 +52,8 @@ const CompletedTasks = ({
                   handleChangeStatus(id, "incomplete");
                   e.stopPropagation();
                 }}
-                className="rounded-full cursor-pointer">
+                className="rounded-full cursor-pointer"
+                data-testid="mark-incomplete">
                 {" "}
                 <IconCircleCheckFilled color="#4A22EB" size={14} />
               </span>
@@ -130,7 +130,10 @@ const CompletedTasks = ({
           {Array(2)
             .fill(null)
             .map((_, index) => (
-              <p key={index} className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center">
+              <p
+                key={index}
+                className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center"
+                data-testid="skeleton-task">
                 <div className="flex items-center gap-2">
                   <span className="border rounded-full cursor-pointer">
                     <IconCircleCheck color="#fff" size={10} />

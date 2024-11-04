@@ -770,7 +770,7 @@ export const existingUsers: ExistingUserTypes[] = [
   }
 ];
 
-export const MockedMemberTasks: MemberTasksData[] = [
+export const MockedCompletedTasks: MemberTasksData[] = [
   {
     id: "1",
     title: "Complete the project proposal",
@@ -781,7 +781,7 @@ export const MockedMemberTasks: MemberTasksData[] = [
       avatar: "https://example.com/avatar_creator1.jpg",
       name: "Olivia Parker"
     },
-    status: "archived",
+    status: "complete",
     priority: "high",
     assignedTo: [
       { _id: "201", avatar: "https://example.com/avatar1.jpg", name: "Alice Johnson" },
@@ -800,7 +800,7 @@ export const MockedMemberTasks: MemberTasksData[] = [
       avatar: "https://example.com/avatar_creator2.jpg",
       name: "Liam Walker"
     },
-    status: "archived",
+    status: "complete",
     priority: "medium",
     assignedTo: [{ _id: "203", avatar: "https://example.com/avatar3.jpg", name: "Charlie Brown" }],
     dueDate: "2024-10-15",
@@ -816,7 +816,7 @@ export const MockedMemberTasks: MemberTasksData[] = [
       avatar: "https://example.com/avatar_creator3.jpg",
       name: "Emma Davis"
     },
-    status: "archived",
+    status: "complete",
     priority: "high",
     assignedTo: [
       { _id: "204", avatar: "https://example.com/avatar4.jpg", name: "Dana Lee" },
@@ -835,15 +835,72 @@ export const MockedMemberTasks: MemberTasksData[] = [
       avatar: "https://example.com/avatar_creator4.jpg",
       name: "Ava Thompson"
     },
-    status: "archived",
+    status: "complete",
     priority: "low",
     assignedTo: [{ _id: "206", avatar: "https://example.com/avatar6.jpg", name: "Frank White" }],
     dueDate: "2024-11-20",
     date: "2024-10-08"
+  }
+];
+
+export const MockedIncompletedTasks: MemberTasksData[] = [
+  {
+    id: "78",
+    title: "Prepare presentation for stakeholders",
+    description: "Develop a comprehensive presentation for the stakeholders meeting.",
+    object: "General",
+    creator: {
+      id: "105",
+      avatar: "https://example.com/avatar_creator5.jpg",
+      name: "James Anderson"
+    },
+    status: "incomplete",
+    priority: "high",
+    assignedTo: [{ _id: "207", avatar: "https://example.com/avatar7.jpg", name: "Grace Black" }],
+    dueDate: "2024-12-01",
+    date: "2024-10-10"
   },
   {
+    id: "6",
+    title: "Set up training for new hires",
+    description: "Organize a training session covering company policies and processes.",
+    object: "General",
+    creator: {
+      id: "106",
+      avatar: "https://example.com/avatar_creator6.jpg",
+      name: "Sophia Martinez"
+    },
+    status: "incomplete",
+    priority: "medium",
+    assignedTo: [
+      { _id: "208", avatar: "https://example.com/avatar8.jpg", name: "Hank Doe" },
+      { _id: "209", avatar: "https://example.com/avatar9.jpg", name: "Ivy Green" }
+    ],
+    dueDate: "2024-11-05",
+    date: "2024-10-12"
+  },
+  {
+    id: "7",
+    title: "Update compliance documents",
+    description: "Ensure all compliance documents are up-to-date and approved.",
+    object: "General",
+    creator: {
+      id: "107",
+      avatar: "https://example.com/avatar_creator7.jpg",
+      name: "Benjamin Miller"
+    },
+    status: "incomplete",
+    priority: "low",
+    assignedTo: [{ _id: "210", avatar: "https://example.com/avatar10.jpg", name: "Jack King" }],
+    dueDate: "2024-10-31",
+    date: "2024-10-01"
+  }
+];
+
+export const MockedArchivedTasks: MemberTasksData[] = [
+  {
     id: "5",
-    title: "Prepare presentation for stakeholders",
+    title: "Take a sprint",
     description: "Develop a comprehensive presentation for the stakeholders meeting.",
     object: "General",
     creator: {
@@ -859,7 +916,7 @@ export const MockedMemberTasks: MemberTasksData[] = [
   },
   {
     id: "6",
-    title: "Set up training for new hires",
+    title: "STart a marathon",
     description: "Organize a training session covering company policies and processes.",
     object: "General",
     creator: {
@@ -878,7 +935,7 @@ export const MockedMemberTasks: MemberTasksData[] = [
   },
   {
     id: "7",
-    title: "Update compliance documents",
+    title: "Deliver an address",
     description: "Ensure all compliance documents are up-to-date and approved.",
     object: "General",
     creator: {

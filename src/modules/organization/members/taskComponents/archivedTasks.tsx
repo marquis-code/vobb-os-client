@@ -24,17 +24,16 @@ const ArchivedTasks = ({
   loadingTasks,
   taskActions,
   handleOpenEditTask,
-  handleParams,
-  metaData
+  handleParams
 }: TaskComponentProps) => {
-  const archivedTasks = tasks.data;
+  const { data: archivedTasks, metaData } = tasks;
   const { handleChangeStatus, loadingChangeStatus, handleDeleteTask, loadingDeleteTask } =
     taskActions;
   const loading = loadingTasks || loadingChangeStatus || loadingDeleteTask;
 
   const { loadMoreRef } = useInfiniteScroll(metaData, handleParams);
   return (
-    <div className="max-h-[220px] overflow-scroll">
+    <div className="max-h-[220px] overflow-scroll" data-testid="archived-task-component">
       {archivedTasks?.map(({ assignedTo, id, dueDate, title }) => {
         const { displayText, textStyle } = dueDate
           ? calculateDueDate(dueDate)
@@ -49,10 +48,11 @@ const ArchivedTasks = ({
             <div className="flex items-center gap-2">
               <span
                 onClick={(e) => {
-                  handleChangeStatus(id, "incomplete");
+                  handleChangeStatus(id, "complete");
                   e.stopPropagation();
                 }}
-                className="rounded-full border cursor-pointer">
+                className="rounded-full border cursor-pointer"
+                data-testid="mark-complete">
                 {" "}
                 <IconCircleCheck color="#fff" size={10} />
               </span>
@@ -122,7 +122,10 @@ const ArchivedTasks = ({
           {Array(2)
             .fill(null)
             .map((_, index) => (
-              <p key={index} className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center">
+              <p
+                key={index}
+                className="border-b px-4 py-2 grid grid-cols-[1fr,1.5fr] items-center"
+                data-testid="skeleton-task">
                 <div className="flex items-center gap-2">
                   <span className="border rounded-full cursor-pointer">
                     <IconCircleCheck color="#fff" size={10} />
