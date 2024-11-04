@@ -107,6 +107,9 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
     handleUpdateAllQueries("start", "");
     handleUpdateAllQueries("end", "");
   };
+  const loadingAllTasks =
+    loading.loadingArchived || loading.loadingIncomplete || loading.loadingComplete;
+
   const taskStatusCategories = [
     {
       title: "incompleted",
@@ -187,7 +190,7 @@ const MemberProfileTasksUI: React.FC<MemberProfileTasksProps> = ({
         </div>
       </MemberFilters>
       <div>
-        {noTasks && !loading ? (
+        {noTasks && !loadingAllTasks ? (
           <TableEmptyState
             pageIcon={<IconListCheck size={25} color="#101323" />}
             title="No tasks have been assigned yet."
