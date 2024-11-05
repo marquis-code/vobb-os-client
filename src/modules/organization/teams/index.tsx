@@ -1,4 +1,5 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { IconPlus } from "@tabler/icons-react";
 import {
   SettingsPageTitle,
   Button,
@@ -67,7 +68,8 @@ const TeamsUI = ({
           className="flex mb-6 gap-2 ml-auto"
           variant={"fill"}
           data-testid="add-team">
-          <PlusCircledIcon /> New team
+          <IconPlus size={18} />
+          New team
         </Button>
       </section>
       {loading ? (
