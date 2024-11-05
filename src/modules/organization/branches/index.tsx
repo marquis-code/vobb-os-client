@@ -1,8 +1,10 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { IconHome, IconPlus } from "@tabler/icons-react";
 import {
   BranchesTable,
   BranchTableActions,
   Button,
+  TableEmptyState,
   getBranchTableColumns,
   LoadingSpinner,
   Pagination,
@@ -52,36 +54,40 @@ const OrgBranchesUI: React.FC<OrgBranchesUIProps> = ({
   };
 
   const tableData = orgBranches?.branchesArray || [];
-
   return (
-    <>
-      <SettingsPageTitle title="Branches" />
-      <section className="pb-8 mb-12 max-w-[800px]">
-        <Button
-          onClick={handleAddBranch}
-          className="flex mt-8 mb-6 gap-2 ml-auto"
-          variant={"fill"}
-          data-testid="add-branch">
-          <PlusCircledIcon /> New branch
+    <div className="max-w-[1164px]">
+      <SettingsPageTitle title="Branches" className="max-w-full" />
+      <section className="pb-8 mb-12">
+        <Button onClick={handleAddBranch} className="flex mt-8 mb-6 gap-2 ml-auto" variant={"fill"}>
+          <IconPlus size={18} /> New branch
         </Button>
         {loading ? (
-          <LoadingSpinner testId="loading" />
+          <LoadingSpinner />
+        ) : !tableData.length ? (
+          <TableEmptyState
+            pageIcon={<IconHome size={25} color="#101323" />}
+            title="No branches have been created yet."
+            description="Create a branch to manage clients, assign staff, and track performance for each location."
+            ctaFunction={handleAddBranch}
+            btnText="New Branch"
+          />
         ) : (
-          <BranchesTable columns={columns} data={tableData} />
+          <>
+            <BranchesTable columns={columns} data={tableData} />
+            <Pagination
+              // hidePageLimit
+              handleChange={(val) => handlePagination("page", val)}
+              handlePageLimit={(val) => handlePagination("limit", val)}
+              totalCount={totalCount}
+              pageLimit={pageLimit}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              className="mt-4"
+            />
+          </>
         )}
-        <Pagination
-          // hidePageLimit
-          handleChange={(val) => handlePagination("page", val)}
-          handlePageLimit={(val) => handlePagination("limit", val)}
-          totalCount={totalCount}
-          pageLimit={pageLimit}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          className="mt-4"
-          testId="pagination"
-        />
       </section>
-    </>
+    </div>
   );
 };
 

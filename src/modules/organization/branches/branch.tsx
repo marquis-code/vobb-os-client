@@ -16,8 +16,8 @@ import {
 } from "components/tables/branchMemberTable";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
+import { IconPlus } from "@tabler/icons-react";
 
 type FilterItem = {
   value: string;
@@ -165,14 +165,12 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                   }}
                   attributes={attributes}
                 />
-                <Button
-                  onClick={console.log}
-                  className="flex gap-2 ml-auto"
-                  variant={"fill"}
-                  data-testid="add-member">
-                  <PlusCircledIcon /> Add member
+                <Button onClick={console.log} className="flex gap-2 ml-auto" variant={"fill"}>
+                  <IconPlus size={18} />
+                  Add member
                 </Button>
               </div>
+
               <BranchMemberTable columns={memberColumns} data={membersData} />
               <Pagination
                 // hidePageLimit
@@ -189,12 +187,8 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
             <TabsContent className="pb-8 mb-12" value="client">
               {/* Add team */}
               {/* Search, sort, filter by teams */}
-              <Button
-                onClick={console.log}
-                className="flex mb-6 gap-2 ml-auto"
-                variant={"fill"}
-                data-testid="add-team">
-                <PlusCircledIcon /> New team
+              <Button onClick={console.log} className="flex mb-6 gap-2 ml-auto" variant={"fill"}>
+                <IconPlus size={18} /> New team
               </Button>
               <BranchTeamTable columns={teamColumns} data={teamsData} />
               <Pagination

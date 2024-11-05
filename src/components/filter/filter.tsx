@@ -1,5 +1,4 @@
 import {
-  DotsHorizontalIcon,
   DotsVerticalIcon,
   LayersIcon,
   MixerHorizontalIcon,
@@ -23,6 +22,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { optionType } from "types";
 import { CustomInput, SelectInput } from "components/form";
+import { IconAdjustmentsAlt } from "@tabler/icons-react";
 
 export interface attributeType extends optionType {
   type: fieldType;
@@ -111,7 +111,7 @@ const FilterSelection = ({
             <PlusIcon color="var(--neutral-70)" />
           ) : (
             <>
-              <MixerHorizontalIcon />
+              <IconAdjustmentsAlt size={18} />
               Filter
             </>
           )}

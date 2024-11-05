@@ -1,4 +1,5 @@
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { IconBriefcase, IconId, IconUser } from "@tabler/icons-react";
 import { Badge, Button, LoadingSpinner } from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import {
@@ -9,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import { useUserContext } from "context";
 import { MemberProfileProps } from "types";
 
 // Get member profile info from context and remove the comments
@@ -20,6 +22,7 @@ interface MemberProfileHeaderProps extends MenuProps {
 const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
   const { avatar, initials, fullName, email, jobTitle, role, status } = props.memberProfile;
   const isSuspended = status === "suspended";
+  const { userDetails } = useUserContext();
 
   if (props.loading) return <LoadingSpinner />;
   return (
@@ -62,16 +65,32 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">{jobTitle}</span>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconUser color="#667085" size={16} />
+                {jobTitle}
+              </span>
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Job Title</TooltipContent>
           </Tooltip>
-          <span className="bg-vobb-neutral-40 rounded-md w-[6px] h-[6px] block"></span>
+          <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">{role}</span>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconBriefcase color="#667085" size={16} />
+                {role}
+              </span>{" "}
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Role</TooltipContent>
+          </Tooltip>
+          <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
+          <Tooltip>
+            <TooltipTrigger onClick={(e) => e.preventDefault()}>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconId color="#667085" size={16} />
+                {userDetails?.timezone}
+              </span>{" "}
+            </TooltipTrigger>
+            <TooltipContent className="bg-vobb-neutral-70">Timezone</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </section>
