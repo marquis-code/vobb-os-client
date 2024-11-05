@@ -18,39 +18,33 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [history, setHistory] = useState<string[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(-1);
-
-  // Track navigation history
-  useEffect(() => {
-    setHistory((prev) => {
-      const newHistory = prev.slice(0, currentIndex + 1);
-      if (location.pathname !== newHistory[newHistory.length - 1]) {
-        return [...newHistory, location.pathname];
-      }
-      return prev;
-    });
-    setCurrentIndex((prev) => {
-      if (location.pathname !== history[prev]) {
-        return prev + 1;
-      }
-      return prev;
-    });
-  }, [location.pathname]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleBack = () => {
     if (currentIndex > 0) {
-      navigate(-1);
-      setCurrentIndex((prev) => prev - 1);
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      navigate(history[newIndex]);
     }
   };
 
   const handleForward = () => {
     if (currentIndex < history.length - 1) {
-      navigate(1);
-      setCurrentIndex((prev) => prev + 1);
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
+      navigate(history[newIndex]);
     }
   };
-  console.log(history);
+  useEffect(() => {
+    setHistory((prevHistory) => {
+      if (location.pathname !== prevHistory[prevHistory.length - 1]) {
+        return [...prevHistory, location.pathname];
+      }
+      return prevHistory;
+    });
+    setCurrentIndex(history.length);
+  }, [location.pathname]);
+
   return (
     <header
       style={{ width: `calc(100dvw - ${sideBarWidth})`, left: sideBarWidth }}
