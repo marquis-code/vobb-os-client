@@ -12,7 +12,6 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { MemberProfileProps } from "types";
 
-// Get member profile info from context and remove the comments
 interface MemberProfileHeaderProps extends MenuProps {
   memberProfile: MemberProfileProps;
   loading: boolean;
@@ -67,7 +66,7 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
               <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
                 <IconUser color="#667085" size={16} />
                 {jobTitle}
-              </span>{" "}
+              </span>
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Job title</TooltipContent>
           </Tooltip>
