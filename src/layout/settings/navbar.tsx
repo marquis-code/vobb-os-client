@@ -50,7 +50,7 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
       setCurrentIndex((prev) => prev + 1);
     }
   };
-
+  console.log(history);
   return (
     <header
       style={{ width: `calc(100dvw - ${sideBarWidth})`, left: sideBarWidth }}
