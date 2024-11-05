@@ -104,7 +104,11 @@ const MembersUI: React.FC<MembersUIProps> = ({
           <PlusCircledIcon /> Invite member
         </Button>
       </section>
-      {loading ? <LoadingSpinner /> : <MemberTable columns={memberColumns} data={membersData} />}
+      {loading ? (
+        <LoadingSpinner testId="loading" />
+      ) : (
+        <MemberTable columns={memberColumns} data={membersData} />
+      )}
       <Pagination
         // hidePageLimit
         handleChange={(val) => handleParams("page", val)}
@@ -132,3 +136,4 @@ export * from "./memberTasks";
 export * from "./acceptInvite";
 export * from "./invitationSuccessful";
 export * from "./invitationFailed";
+export * from "./memberEmailVerify";

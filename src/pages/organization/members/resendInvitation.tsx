@@ -7,10 +7,10 @@ import { ModalProps } from "types";
 interface ResendInvitationProps extends ModalProps {
   id: string;
   email: string;
-  fetchMembers: () => void;
+  callback: () => void;
 }
 
-const ResendInvitation = ({ show, close, id, email, fetchMembers }: ResendInvitationProps) => {
+const ResendInvitation = ({ show, close, id, email, callback }: ResendInvitationProps) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = () => {
     run(resendInviteToMemberService({ id }));
@@ -21,8 +21,7 @@ const ResendInvitation = ({ show, close, id, email, fetchMembers }: ResendInvita
       toast({
         description: response?.data?.message
       });
-      close();
-      fetchMembers();
+      callback();
     } else if (error) {
       toast({
         variant: "destructive",

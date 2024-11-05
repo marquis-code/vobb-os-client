@@ -1,5 +1,5 @@
 const MemberProfileEmailsUI = () => {
-  return <>MemberprofileEmailsMemberProfileEmails</>;
+  return <>MemberprofileEmails</>;
 };
 
 export { MemberProfileEmailsUI };

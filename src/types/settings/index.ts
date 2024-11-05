@@ -23,6 +23,17 @@ export interface BlacklistProps {
   status: boolean;
 }
 
+export interface updatePropertiesRequestBody {
+  attribute: string;
+  type: string;
+  data: string[];
+}
+
+export interface PaginationProps {
+  page?: number;
+  limit?: number;
+}
+
 export interface OrganisationProfileProps {
   organisation: string;
   logo: string;
@@ -72,6 +83,23 @@ export interface OrganisationAttributesData {
   description?: string;
   metaData?: any;
 }
+export interface createTeamRequestBody {
+  name?: string;
+  description?: string;
+  icon?: string;
+  general?: boolean;
+  join_team?: boolean;
+}
+
+export interface suspendMemberRequestBody {
+  member: string;
+  reason?: string;
+  duration?: {
+    start_date: string;
+    end_date: string;
+  };
+}
+
 export interface BranchesDataProps {
   branchesArray: OrganisationBranchesData[];
   branchesMetaData: MetaDataProps;
@@ -179,6 +207,28 @@ export type MemberTableData = {
   status: statuses;
 };
 
+export interface MemberDataProps {
+  membersArray: MemberTableData[];
+  metaData: MetaDataProps;
+}
+
+export interface MemberProfileProps {
+  avatar: string | undefined;
+  initials: string;
+  fullName: string;
+  email: string;
+  jobTitle: string;
+  role: string;
+  status: string;
+  timeZone: string;
+  phoneNumber: string;
+  dateFormat: string;
+  syslanguage: string;
+  pendingEmail: string | null;
+  fluentLanguages: string[];
+  userAttributes: any;
+}
+
 type conditions = "is" | "is_not" | "contains" | "not_contain" | "starts_with" | "ends_with";
 
 export interface MemberDataProps {
@@ -217,6 +267,17 @@ export interface PaginationProps {
   search?: string;
 }
 
+export interface editMemberDetailsRequestBody {
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
+  avatar?: string;
+  title?: string;
+  language?: string;
+  timezone?: string;
+  date_format?: string;
+  fluent_languages?: string[];
+}
 export interface QueryParamProps {
   page: number;
   limit: number;

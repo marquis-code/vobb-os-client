@@ -11,6 +11,7 @@ import { QueryParamProps } from "types";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";
+import { Routes } from "router";
 import { MetaDataProps, optionType } from "types";
 
 // {
@@ -63,7 +64,7 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
       />
 
       <section className="grid gap-4 max-w-[800px]">
-        <div className="flex gap-2">
+        <div className="flex gap-2" data-testid="filter-div">
           <SortBy
             isClearable
             sort={{
@@ -93,13 +94,13 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
           />
         </div>
         {loading ? (
-          <LoadingSpinner />
+          <LoadingSpinner data-testid="loading-spinner" />
         ) : !activityList.length ? (
           <p>No Account activities for this time.</p>
         ) : (
           <>
             {activityList.map((item, index) => (
-              <ActivityCard {...item} key={`${index}_${item.date}`} />
+              <ActivityCard {...item} key={`${index}_${item.date}`} data-testid="activity-card" />
             ))}
             <Pagination
               handleChange={(val) => handleFilter("page", val)}
@@ -108,6 +109,7 @@ const AccountActivityUI: React.FC<AccountActivityProps> = ({
               pageLimit={pageLimit}
               totalPages={totalPages}
               currentPage={currentPage}
+              data-testid="pagination"
             />
           </>
         )}
@@ -168,7 +170,7 @@ const getMessage = ({
           Added to the team{" "}
           <Link
             target="_blank"
-            to={""}
+            to={Routes.team(metadata?.team?._id)}
             className="text-vobb-primary-70 hover:underline cursor-pointer">
             {metadata?.team?.name}
           </Link>

@@ -9,11 +9,7 @@ describe("Login page", () => {
   });
 
   it("should toggle password visibility when clicking the eye icon", () => {
-    cy.get('input[name="password"]').should("have.attr", "type", "password");
-    cy.get('svg[role="button"]').click();
-    cy.get('input[name="password"]').should("have.attr", "type", "text");
-    cy.get('svg[role="button"]').click();
-    cy.get('input[name="password"]').should("have.attr", "type", "password");
+    cy.togglePasswordVisibility("password");
   });
 
   it("should successfully go to sign up page", () => {

@@ -32,11 +32,11 @@ const ConnectedAccounts: React.FC<ConnectedAccountsProps> = ({ handleGoogleAuth 
           </p>
         </div>
         <div className="flex items-start justify-between text-sm">
-          <div className="flex gap-4 items-center text-sm">
+          <div className="flex gap-4 items-center text-sm" data-testid="google-connection">
             <GoogleLogoIcon />
             <p>Enable Google Authentication</p>
           </div>
-          <span className="flex items-center gap-4">
+          <span className="flex items-center gap-4" data-testid="connect-switch">
             <Button
               size={"sm"}
               className="p-0 h-[fit-content]"

@@ -28,16 +28,16 @@ const initData: ProfileFormData = {
 };
 
 interface AccountProfileProps {
-  updateProfile: (formData: FormData) => void;
-  loadingUpdate: boolean;
+  submit: (formData: FormData) => void;
+  loading: boolean;
   handleChangeEmail: () => void;
   handleResendEmail: () => void;
 }
 const AccountProfileUI: React.FC<AccountProfileProps> = ({
   handleChangeEmail,
   handleResendEmail,
-  updateProfile,
-  loadingUpdate
+  submit,
+  loading
 }) => {
   const { userDetails: profile } = useUserContext();
   const { setUpdateJobTitle } = useModalContext();
@@ -52,7 +52,10 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
   const baseSchema = yup.object({
     firstName: yup.string().required("Required"),
     lastName: yup.string().required("Required"),
-    phoneNumber: yup.string().required("Required"),
+    phoneNumber: yup
+      .string()
+      .required("Required")
+      .min(10, "Phone number must be at least 10 characters long"),
     jobTitle: yup.string().required("Required"),
     email: yup.string().required("Required")
   });
@@ -107,13 +110,13 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
     if (dirtyFields.lastName) {
       formData.append("last_name", data.lastName);
     }
-    if (numberChanged) {
+    if (numberChanged && phoneNumber.trim()) {
       formData.append("phone_number", data.phoneNumber.replace(/\D/g, ""));
     }
     if (avatarChanged) {
       formData.append("avatar", data.avatarFile);
     }
-    updateProfile(formData);
+    submit(formData);
   };
 
   const isDirty = !isEmptyObj(dirtyFields) || avatarChanged || numberChanged;
@@ -125,7 +128,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
     <>
       <SettingsPageTitle title="Profile" />
       <section className="border-b border-vobb-neutral-20 py-4 mb-4 max-w-[800px]">
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8" data-testid="avatar-section">
           <Avatar className="w-16 h-16">
             <AvatarImage
               src={
@@ -177,6 +180,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             register={register}
             validatorMessage={errors.firstName?.message}
             parentClassName="mb-2"
+            data-testid="firstName"
           />
           <CustomInput
             label="Last Name"
@@ -185,6 +189,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
             register={register}
             validatorMessage={errors.lastName?.message}
             parentClassName="mb-2"
+            data-testid="lastName"
           />
           <CustomPhoneInput
             label="Phone Number"
@@ -214,7 +219,8 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                 }}
                 className="p-0 underline"
                 size={"sm"}
-                variant={"link"}>
+                variant={"link"}
+                data-testid="job-title-btn">
                 Update job title
               </Button>
             )}
@@ -231,10 +237,12 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                 parentClassName="mb-0"
               />
 
-              <div className="absolute -right-8 top-7">
+              <div className="absolute -right-8 top-7" data-testid="email-tooltip">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger onClick={(e) => e.preventDefault()}>
+                    <TooltipTrigger
+                      onClick={(e) => e.preventDefault()}
+                      data-testid="tooltip-trigger">
                       {profile?.pendingEmail ? (
                         <QuestionMarkCircledIcon width={20} height={20} color="var(--warning-50)" />
                       ) : (
@@ -242,7 +250,7 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
                       )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
+                      <p data-testid="tooltip-content">
                         {profile?.pendingEmail
                           ? "Email is unverified, please request a new verification email"
                           : "Email is verified!"}
@@ -280,13 +288,15 @@ const AccountProfileUI: React.FC<AccountProfileProps> = ({
         </form>
       </section>
       <div className="flex gap-2 justify-end max-w-[800px] mb-8 pt-2">
-        <Button disabled={!isDirty} onClick={() => reset()} variant={"outline"}>
+        <Button disabled={!isDirty || loading} onClick={() => reset()} variant={"outline"}>
           Cancel
         </Button>
         <Button
-          disabled={!isDirty || loadingUpdate}
+          disabled={!isDirty || loading}
           onClick={handleSubmit(onSubmit)}
-          variant={"fill"}>
+          variant={"fill"}
+          loading={loading}
+          data-testid="save-btn">
           Save
         </Button>
       </div>

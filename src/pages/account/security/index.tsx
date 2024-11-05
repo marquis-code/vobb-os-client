@@ -96,7 +96,7 @@ const AccountSecurity = () => {
   };
 
   useMemo(() => {
-    if (passwordResponse?.status === 201) {
+    if (passwordResponse?.status === 200) {
       toast({
         description: passwordResponse?.data?.message
       });

@@ -4,7 +4,7 @@ SETTINGS URLS
 =================================
 */
 
-import { activityParamsProps } from "types";
+import { activityParamsProps, PaginationProps } from "types";
 
 /*
 PERSONAL PROFILE URLS
@@ -112,9 +112,15 @@ export const fetchMemberPropertiesURL = () => `${prefixAcc}/attribute`;
  * @returns url string
  *
  */
-export const fetchOrgPropertiessURL = ({ page, limit }) =>
-  `${prefixAcc}/org-attribute?page=${page}&limit=${limit}`;
+export const fetchOrgPropertiessURL = ({ page, limit }: PaginationProps) => {
+  const queryParams = new URLSearchParams();
 
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+
+  const queryString = queryParams.toString();
+  return `${prefixAcc}/org-attribute${queryString ? `?${queryString}` : ""}`;
+};
 /**
  * Create organisation's properties URL
  * @returns url string

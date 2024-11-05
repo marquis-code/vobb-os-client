@@ -123,10 +123,14 @@ const EditAttributeModal: React.FC<EditAttributeModalProps> = ({
   }, [initData, reset]);
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close}>
+      <Modal
+        contentClassName="max-w-[600px]"
+        show={show}
+        close={close}
+        data-testid="editAttr-modal">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">Edit Attribute</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
+          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
             <Cross1Icon stroke="currentColor" strokeWidth={1} />
           </Button>
         </div>

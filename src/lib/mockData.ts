@@ -1,10 +1,11 @@
 import {
   optionType,
   formFieldData,
-  MemberTableData,
   BranchMemberTableData,
   BranchTeamTableData,
-  TeamTableData
+  MemberTableData,
+  TeamTableData,
+  OrganisationAttributesData
 } from "types";
 import { TeamActivityData } from "modules";
 
@@ -368,7 +369,7 @@ export const orgActivityMockData = [
   }
 ];
 
-export const AttributesTableMock = [
+export const AttributesTableMock: OrganisationAttributesData[] = [
   {
     id: "1234",
     title: "First name",
@@ -478,7 +479,7 @@ export const AttributesTableMock = [
 export const BranchMemberTableMock: BranchMemberTableData[] = [
   {
     id: "728ed52f",
-    name: "Jason Derule",
+    name: "Garnacho Derulo",
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",
@@ -549,7 +550,7 @@ export const BranchTeamTableMock: BranchTeamTableData[] = [
   }
 ];
 
-export const TeamTableMock: TeamTableData[] = [
+export const TeamTableMock = [
   {
     id: "728ed52f",
     name: "Finance",
@@ -639,7 +640,7 @@ export const MemberTableMock: MemberTableData[] = [
   },
   {
     id: "728ed52f",
-    name: "Jason Derule",
+    name: "Jason Mamoa",
     email: "jason@gmail.com",
     teams: ["Finance", "Operations"],
     role: "Member",

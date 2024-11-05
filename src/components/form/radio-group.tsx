@@ -17,6 +17,7 @@ export interface RadioGroupProps {
   validatorMessage?: string;
   hideOptions?: boolean;
   labelClassName?: string;
+  disabled?: boolean;
 }
 
 const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
@@ -31,7 +32,8 @@ const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
     validatorMessage,
     hint,
     className,
-    labelClassName
+    labelClassName,
+    disabled
   } = props;
 
   const [show, setShow] = useState(false);
@@ -40,7 +42,6 @@ const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
 
   const ref = useRef(null);
   useClickOutside(ref, close);
-
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>
@@ -72,7 +73,8 @@ const CustomRadioGroup: React.FC<RadioGroupProps> = (props) => {
                 className={className}
                 onValueChange={(val) => onChange(options.find((item) => val === item.value))}
                 //   defaultValue={value?.value}
-                value={value?.value}>
+                value={value?.value}
+                disabled={disabled}>
                 {options.map(({ label, value }) => (
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem onClick={close} value={value} id={value} />

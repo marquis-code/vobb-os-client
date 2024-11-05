@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "context";
 import { Input, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
@@ -101,6 +101,7 @@ export function BranchMenu() {
   const debouncedFetch = debounce(() => {
     handleFetchBranches();
   }, 1000);
+
   useEffect(() => {
     if (branchSearchQuery.trim()) {
       debouncedFetch();

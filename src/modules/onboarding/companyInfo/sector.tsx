@@ -46,7 +46,7 @@ const SectorForm: React.FC<SectorFormProps> = ({ initData, submit }) => {
         validatorMessage={
           errors.sector?.message ?? errors.sector?.value?.message ?? errors.sector?.label?.message
         }
-        data-testid="sector"
+        testId="sector"
       />
       <Button
         onClick={handleSubmit(onSubmit)}

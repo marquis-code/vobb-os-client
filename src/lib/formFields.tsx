@@ -1,3 +1,4 @@
+import { CalendarIcon, EnvelopeClosedIcon, ImageIcon, PersonIcon } from "@radix-ui/react-icons";
 import {
   CustomCheckboxGroup,
   CustomInput,
@@ -8,6 +9,16 @@ import {
   FileUpload,
   SelectInput
 } from "components";
+import {
+  ProfileCheckboxGroup,
+  ProfileDatePicker,
+  ProfileFileUpload,
+  ProfileInput,
+  ProfilePhoneInput,
+  ProfileRadioGroup,
+  ProfileSelectInput,
+  ProfileTextarea
+} from "components/form/profile-fields";
 import { endOfDay, format } from "date-fns";
 import { isFile, isValidFileType } from "lib";
 import {
@@ -47,6 +58,7 @@ interface DynamicFormProps {
     value: File | null;
     handleChange: (file: File) => void;
   };
+  loading?: boolean;
 }
 
 export const dynamicValidationSchema = (fieldData: OrganisationAttributesData) => {
@@ -117,7 +129,7 @@ const getErrorMessage = (
   error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 ): string | undefined => {
   if (error && typeof error === "object" && "message" in error) {
-    //@ts-ignore
+    // @ts-ignore
     return error.message;
   }
   return undefined;
@@ -223,6 +235,7 @@ export const renderFormFields = ({
         <SelectInput
           key={id}
           label={fieldData.title}
+          placeholder={fieldData.description}
           value={getCountryValue(fieldValue)}
           options={countries?.map((country) => ({
             label: country.label,
@@ -238,7 +251,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(newValue) =>
             radio?.handleChange ? radio.handleChange(newValue, id) : () => {}
           }
@@ -264,7 +277,7 @@ export const renderFormFields = ({
           key={id}
           label={fieldData.title}
           value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
-          options={fieldData.metaData.map((option) => ({ label: option, value: option }))}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
           onChange={(val) => val && setValue(fieldName, val.value)}
           validatorMessage={getErrorMessage(errors[fieldName])}
         />
@@ -288,6 +301,196 @@ export const renderFormFields = ({
       return (
         <FileUpload
           key={id}
+          label={fieldData.title}
+          file={file?.value ?? null}
+          multiple
+          id={fieldName}
+          onFileChange={() => (file?.handleChange ? file.handleChange : () => {})}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
+export const renderProfileFormFields = ({
+  fieldData,
+  id,
+  register,
+  errors,
+  setValue,
+  longTextCount,
+  countries,
+  radio,
+  checkbox,
+  date,
+  file,
+  watch,
+  loading
+}: DynamicFormProps) => {
+  const fieldName = `${fieldData.type}_${id}`;
+  const fieldValue = watch(fieldName);
+
+  const getCountryValue = (value) => {
+    if (!value) return null;
+    if (Array.isArray(value)) {
+      return value.map((option) => ({
+        label: countries?.find((country) => country.value === option)?.label || option,
+        value: option
+      }));
+    }
+    if (typeof value === "string") {
+      return {
+        label: countries?.find((country) => country.value === value)?.label || value,
+        value: value
+      };
+    }
+    return value;
+  };
+  switch (fieldData.type) {
+    case "short-text":
+      return (
+        <ProfileInput
+          key={id}
+          label={fieldData.title}
+          icon={<PersonIcon />}
+          type="text"
+          name={fieldName}
+          placeholder={fieldData.description}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+          register={register}
+        />
+      );
+    case "long-text":
+      return (
+        <ProfileTextarea
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          name={fieldName}
+          placeholder={fieldData.description}
+          hint={`${longTextCount}/${fieldData.metaData ?? 250} words`}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+          register={register}
+        />
+      );
+    case "number":
+      return (
+        <ProfileInput
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          type="number"
+          name={fieldName}
+          placeholder={fieldData.description}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+          register={register}
+        />
+      );
+    case "email":
+      return (
+        <ProfileInput
+          key={id}
+          icon={<EnvelopeClosedIcon />}
+          label={fieldData.title}
+          type="email"
+          placeholder={fieldData.description}
+          name={fieldName}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+          register={register}
+        />
+      );
+    case "phone-number":
+      return (
+        <ProfilePhoneInput
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          name={fieldName}
+          value={watch(fieldName)}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+          handleChange={(val) => {
+            setValue(fieldName, val);
+          }}
+        />
+      );
+    case "country":
+      return (
+        <ProfileSelectInput
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          value={getCountryValue(fieldValue)}
+          options={countries?.map((country) => ({
+            label: country.label,
+            value: country.value
+          }))}
+          onChange={(val) => val && setValue(fieldName, val)}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+        />
+      );
+    case "multiple-choice":
+      return (
+        <ProfileRadioGroup
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
+          onChange={(newValue) =>
+            radio?.handleChange ? radio.handleChange(newValue, id) : () => {}
+          }
+          validatorMessage={getErrorMessage(errors[fieldName])}
+        />
+      );
+    case "checkbox":
+      return (
+        <ProfileCheckboxGroup
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          value={fieldValue?.map((option) => ({ label: option, value: option })) || []}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option })) || []}
+          onChange={(newValue) =>
+            checkbox?.handleChange ? checkbox.handleChange(newValue, id) : () => {}
+          }
+          validatorMessage={getErrorMessage(errors[fieldName])}
+        />
+      );
+    case "dropdown":
+      return (
+        <ProfileSelectInput
+          key={id}
+          icon={<PersonIcon />}
+          label={fieldData.title}
+          value={fieldValue ? { label: fieldValue, value: fieldValue } : null}
+          options={fieldData?.metaData?.map((option) => ({ label: option, value: option }))}
+          onChange={(val) => val && setValue(fieldName, val.value)}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+        />
+      );
+    case "date":
+      return (
+        <ProfileDatePicker
+          key={id}
+          icon={<CalendarIcon />}
+          value={date?.value}
+          handleChange={(value) => {
+            if (value) {
+              date?.handleChange?.(value);
+              setValue(fieldName, format(endOfDay(value), "yyyy-MM-dd'T'HH:mm:ssXX"));
+            }
+          }}
+          label={fieldData.title}
+          validatorMessage={getErrorMessage(errors[fieldName])}
+        />
+      );
+    case "file":
+      return (
+        <ProfileFileUpload
+          key={id}
+          icon={<ImageIcon />}
           label={fieldData.title}
           file={file?.value ?? null}
           multiple

@@ -50,7 +50,7 @@ const OrgActivity = () => {
       fetchOrgActivitiesService({
         page,
         limit,
-        sort: order,
+        sort: order ?? "desc",
         start_date: startDate,
         end_date: endDate
       })
@@ -85,7 +85,6 @@ const OrgActivity = () => {
   useEffect(() => {
     fetchOrgActivities();
   }, [queryParams]);
-
   return (
     <>
       <OrgActivityUI
