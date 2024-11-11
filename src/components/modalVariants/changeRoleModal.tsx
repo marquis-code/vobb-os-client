@@ -24,6 +24,7 @@ interface ChangeRoleModalProps extends ModalProps {
   submit: (data) => void;
   initData: ChangeRoleData;
   name: string;
+  loading: boolean;
 }
 
 const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
@@ -31,7 +32,8 @@ const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
   close,
   submit,
   initData,
-  name
+  name,
+  loading
 }) => {
   const {
     register,
@@ -86,10 +88,16 @@ const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
             onClick={() => close()}
             className="text-error-10"
             size={"default"}
-            variant={"outline"}>
+            variant={"outline"}
+            disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} size={"default"} variant={"fill"}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            size={"default"}
+            variant={"fill"}
+            disabled={loading}
+            loading={loading}>
             Save
           </Button>
         </div>

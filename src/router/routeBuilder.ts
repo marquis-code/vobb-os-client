@@ -35,9 +35,10 @@ import {
   Member,
   AcceptInvite,
   InvitationFailed,
-  InvitationSuccessful
+  InvitationSuccessful,
+  MemberEmailVerify
 } from "pages";
-import { DashboardLayout, OnboardingLayout, SettingsLayout, SettingsLayoutProps } from "layout";
+import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -135,6 +136,10 @@ export const RouteBuilder: RouteBuilderItem[] = [
     path: Routes.invitation_success,
     Element: InvitationSuccessful
   },
+  {
+    path: Routes.verify_member_email,
+    Element: MemberEmailVerify
+  },
 
   // Dashboard Routes
   {
@@ -201,7 +206,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Organization",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Organization"
         }
@@ -216,7 +221,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Branches",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Branches"
         }
@@ -231,7 +236,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Branches",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Branches",
           path: Routes.branches
@@ -250,7 +255,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Branding",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Branding"
         }
@@ -265,7 +270,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Communication",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Communication"
         }
@@ -280,7 +285,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Bank Accounts",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Bank Accounts"
         }
@@ -295,7 +300,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Attributes",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Attributes"
         }
@@ -325,7 +330,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Organization Activity",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Activity"
         }
@@ -340,7 +345,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Teams",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Teams"
         }
@@ -355,7 +360,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Teams",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Teams",
           path: Routes.teams
@@ -374,7 +379,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Members",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Members"
         }
@@ -389,7 +394,7 @@ export const RouteBuilder: RouteBuilderItem[] = [
     props: {
       title: "Members",
       items: [
-        { title: "Workspace" },
+        { title: "Workspace settings" },
         {
           title: "Members",
           path: Routes.members

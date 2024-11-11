@@ -16,7 +16,6 @@ import {
 } from "components/tables/branchMemberTable";
 import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
 import {
   DropdownMenu,
@@ -26,6 +25,8 @@ import {
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { IconBuilding, IconBuildingArch, IconMail } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
+
 type FilterItem = {
   value: string;
   cond: string;

@@ -7,10 +7,10 @@ import { ModalProps } from "types";
 interface CancelInvitationProps extends ModalProps {
   id: string;
   email: string;
-  fetchMembers: () => void;
+  callback: () => void;
 }
 
-const CancelInvitation = ({ show, close, id, email, fetchMembers }: CancelInvitationProps) => {
+const CancelInvitation = ({ show, close, id, email, callback }: CancelInvitationProps) => {
   const { run, data: response, error, requestStatus } = useApiRequest({});
   const handleContinue = () => {
     run(cancelInviteToMemberService({ id }));
@@ -21,8 +21,7 @@ const CancelInvitation = ({ show, close, id, email, fetchMembers }: CancelInvita
       toast({
         description: response?.data?.message
       });
-      close();
-      fetchMembers();
+      callback();
     } else if (error) {
       toast({
         variant: "destructive",

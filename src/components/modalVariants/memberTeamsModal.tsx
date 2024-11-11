@@ -1,6 +1,7 @@
-import { Cross1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Button, Pagination } from "components";
+import { Cross1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Button, LoadingSpinner, Pagination } from "components";
 import { Modal } from "components/modal";
+import { MemberTeamsDataProps } from "pages";
 import { Link } from "react-router-dom";
 import { Routes } from "router";
 import { ModalProps } from "types";
@@ -9,6 +10,11 @@ interface MemberTeamsModalProps extends ModalProps {
   name: string;
   handleRemoveTeam: ({ id, name }: { id: string; name: string }) => void;
   handleAddTeam: () => void;
+  memberTeams: {
+    data: MemberTeamsDataProps;
+    loading: boolean;
+    handlePagination: (page: number) => void;
+  };
 }
 
 const MemberTeamsModal = ({
@@ -16,8 +22,12 @@ const MemberTeamsModal = ({
   close,
   name,
   handleRemoveTeam,
-  handleAddTeam
+  handleAddTeam,
+  memberTeams
 }: MemberTeamsModalProps) => {
+  const { data, loading, handlePagination } = memberTeams;
+  const { teams, metaData } = data;
+  const { currentPage, totalCount, totalPages } = metaData;
   return (
     <>
       <Modal contentClassName="max-w-[500px] p-0" show={show} close={close}>
@@ -32,76 +42,48 @@ const MemberTeamsModal = ({
             <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <div className="p-4">
-          <p className="mb-4">This shows the teams the member can access within their branches</p>
-          <Button
-            onClick={handleAddTeam}
-            className="flex mb-4 ml-auto gap-2"
-            variant={"fill"}
-            size={"sm"}>
-            <PlusIcon /> Add
-          </Button>
-          <section className="max-h-[calc(100vh-220px)] overflow-auto border border-input rounded-md">
-            <div className="border-b flex justify-between items-center gap-1 p-2">
-              <div className="">
-                <p>
-                  <Link target="blank" to={Routes.branch("123")} className="font-medium">
-                    Finance
-                  </Link>
-                </p>
-                <span className="text-xs ml-auto">Added on 13/12/2024</span>
+        <p className="mb-4">This shows the teams the member can access within their branches</p>
+        <Button
+          onClick={handleAddTeam}
+          className="flex mb-4 ml-auto gap-2"
+          variant={"fill"}
+          size={"sm"}>
+          <PlusIcon /> Add
+        </Button>
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <section className="max-h-[calc(100vh-220px)] overflow-auto border border-input rounded-md divide-y-[1px]">
+            {teams?.map((team) => (
+              <div className="flex justify-between items-center gap-1 p-2" key={team.id}>
+                <div className="">
+                  <p>
+                    <Link target="blank" to={Routes.branch(team.id)} className="font-medium">
+                      {team.name}
+                    </Link>
+                  </p>
+                  <span className="text-xs ml-auto">Added on {team.dateAdded}</span>
+                </div>
+                <Cross1Icon
+                  role="button"
+                  onClick={() => handleRemoveTeam({ id: team.id, name: team.name })}
+                  stroke="var(--error-20)"
+                  strokeWidth={1}
+                />
               </div>
-              <Cross1Icon
-                role="button"
-                onClick={() => handleRemoveTeam({ id: "123", name: "Finance" })}
-                stroke="var(--error-20)"
-                strokeWidth={1}
-              />
-            </div>
-            <div className="border-b flex justify-between items-center gap-1 p-2">
-              <div className="">
-                <p>
-                  <Link target="blank" to={Routes.branch("123")} className="font-medium">
-                    Customer Happiness
-                  </Link>
-                </p>
-                <span className="text-xs ml-auto">Added on 13/12/2024</span>
-              </div>
-              <Cross1Icon
-                role="button"
-                onClick={() => handleRemoveTeam({ id: "123", name: "Branch Two" })}
-                stroke="var(--error-20)"
-                strokeWidth={1}
-              />
-            </div>
-            <div className="flex justify-between items-center gap-1 p-2">
-              <div className="">
-                <p>
-                  <Link target="blank" to={Routes.branch("123")} className="font-medium">
-                    Human Resources
-                  </Link>
-                </p>
-                <span className="text-xs ml-auto">Added on 13/12/2024</span>
-              </div>
-              <Cross1Icon
-                role="button"
-                onClick={() => handleRemoveTeam({ id: "123", name: "Branch Two" })}
-                stroke="var(--error-20)"
-                strokeWidth={1}
-              />
-            </div>
+            ))}
           </section>
-          <Pagination
-            hidePageLimit
-            handleChange={console.log}
-            handlePageLimit={console.log}
-            totalCount={3}
-            pageLimit={3}
-            totalPages={1}
-            currentPage={1}
-            className="mt-2"
-          />
-        </div>
+        )}
+        <Pagination
+          hidePageLimit
+          handleChange={(val) => handlePagination(val)}
+          handlePageLimit={console.log}
+          totalCount={totalCount}
+          pageLimit={totalCount}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          className="mt-2"
+        />
       </Modal>
     </>
   );

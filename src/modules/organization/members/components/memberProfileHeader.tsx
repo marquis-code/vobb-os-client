@@ -1,5 +1,6 @@
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Badge, Button } from "components";
+import { IconBriefcase, IconId, IconUser } from "@tabler/icons-react";
+import { Badge, Button, LoadingSpinner } from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import {
   DropdownMenu,
@@ -9,22 +10,24 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import { useUserContext } from "context";
+import { MemberProfileProps } from "types";
 
 // Get member profile info from context and remove the comments
 interface MemberProfileHeaderProps extends MenuProps {
-  // avatar: string | undefined;
-  // intials: string;
-  // fullName: string;
-  // email: string;
-  // jobTitle: string;
-  // role: string;
+  memberProfile: MemberProfileProps;
+  loading: boolean;
 }
 
 const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
+  const { avatar, initials, fullName, email, jobTitle, role, status } = props.memberProfile;
+  const isSuspended = status === "suspended";
+  const { userDetails } = useUserContext();
+
+  if (props.loading) return <LoadingSpinner />;
   return (
     <>
-      {/* Only shown when member is suspended */}
-      {props.isSuspended ? (
+      {isSuspended ? (
         <Badge
           text={"This member has been suspended"}
           btnText={"Undo suspension"}
@@ -35,40 +38,59 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
           size={"md"}
           className="justify-center rounded-none -mt-4 -ml-4 w-[calc(100%+2rem)] border-t-0 border-x-0 py-2 gap-2"
           btnClassName="ml-0"
+          testId="suspended-member"
         />
       ) : (
         ""
       )}
       <section className="pb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-testid="avatar-section">
           <Avatar className="w-10 h-10">
-            <AvatarImage src={""} alt="avatar" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={avatar} alt="avatar" />
+            <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold">Jason Doe</p>
-            <p className="text-xs text-vobb-neutral-70">jasondoe@gmail.com</p>
+            <p className="font-semibold">{fullName}</p>
+            <p className="text-xs text-vobb-neutral-70">{email}</p>
           </div>
 
           <div className="ml-auto">
-            <Menu {...props} />
+            <Menu {...props} isSuspended={isSuspended} testId="member-menu" />
           </div>
         </div>
       </section>
-      <section className="border-y py-3 px-4 flex text-xs gap-2 bg-vobb-neutral-10 -ml-4 w-[calc(100%+2rem)] items-center">
+      <section
+        className="border-y py-3 px-4 flex text-xs gap-2 bg-vobb-neutral-10 -ml-4 w-[calc(100%+2rem)] items-center"
+        data-testid="tabs-section">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">Frontend Engineer</span>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconUser color="#667085" size={16} />
+                {jobTitle}
+              </span>
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Job Title</TooltipContent>
           </Tooltip>
-          <span className="bg-vobb-neutral-40 rounded-md w-[6px] h-[6px] block"></span>
+          <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <span className="bg-white border rounded-xl px-2 py-1">Team lead</span>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconBriefcase color="#667085" size={16} />
+                {role}
+              </span>{" "}
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Role</TooltipContent>
+          </Tooltip>
+          <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
+          <Tooltip>
+            <TooltipTrigger onClick={(e) => e.preventDefault()}>
+              <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
+                <IconId color="#667085" size={16} />
+                {userDetails?.timezone}
+              </span>{" "}
+            </TooltipTrigger>
+            <TooltipContent className="bg-vobb-neutral-70">Timezone</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </section>
@@ -82,7 +104,6 @@ interface MenuProps {
   handleChangeTeam: () => void;
   handleSuspension: () => void;
   handleComposeEmail: () => void;
-  isSuspended: boolean;
 }
 
 const Menu = ({
@@ -91,12 +112,13 @@ const Menu = ({
   handleChangeTeam,
   handleSuspension,
   handleComposeEmail,
-  isSuspended
-}: MenuProps) => {
+  isSuspended,
+  testId
+}: MenuProps & { isSuspended: boolean; testId: string }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="px-3">
+        <Button variant="outline" className="px-3" data-testId={testId}>
           <span className="sr-only">Open menu</span>
           <DotsVerticalIcon />
         </Button>

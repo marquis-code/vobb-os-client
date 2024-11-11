@@ -128,7 +128,7 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
             validatorMessage={errors.email?.message}
           />
 
-          {watch("role")?.label !== "Super Admin" ? (
+          {watch("role")?.label !== "Organization Admin" ? (
             <>
               <SelectInput
                 label="Branch"

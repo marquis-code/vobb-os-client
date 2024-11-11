@@ -22,7 +22,6 @@ import {
   MoveIcon,
   PaperPlaneIcon,
   PersonIcon,
-  PlusCircledIcon,
   TimerIcon
 } from "@radix-ui/react-icons";
 import { UsersIcon, UsersRightIcon } from "assets";
@@ -31,6 +30,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { cn } from "lib";
 import { useModalContext } from "context";
+import { IconPlus } from "@tabler/icons-react";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -130,7 +130,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     },
     {
       title: "Integrations",
-      icon: <PlusCircledIcon width={14} height={14} color="#101323" />,
+      icon: <IconPlus width={14} height={14} color="#101323" />,
       path: Routes.profile,
       value: "migration"
     },
@@ -267,7 +267,7 @@ export function BranchMenu() {
         <DropdownMenuItem>
           <button className="font-medium flex items-center" onClick={handleBranch}>
             New Branch
-            <PlusCircledIcon className="ml-2" />
+            <IconPlus size={18} className="ml-2" />
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

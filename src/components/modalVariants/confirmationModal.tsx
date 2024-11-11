@@ -8,7 +8,7 @@ interface ConfirmationModalProps extends ModalProps {
   text: ReactNode | string;
   handleContinue: () => void;
   isDestructive?: boolean;
-  loading: boolean;
+  loading?: boolean;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({

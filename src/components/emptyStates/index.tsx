@@ -1,1 +1,2 @@
-export * from "./modalEmptyState";
+export * from "./ModalEmptyState";
+export * from './TableEmptyState'

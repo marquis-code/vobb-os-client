@@ -1,4 +1,4 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { IconPlus, IconUsersGroup } from "@tabler/icons-react";
 import {
   SettingsPageTitle,
   Filter,
@@ -9,7 +9,8 @@ import {
   MemberTableActions,
   Pagination,
   getMemberTableColumns,
-  LoadingSpinner
+  LoadingSpinner,
+  TableEmptyState
 } from "components";
 import { useMemo, useState } from "react";
 import { MemberDataProps } from "types";
@@ -95,27 +96,46 @@ const MembersUI: React.FC<MembersUIProps> = ({
     <>
       <SettingsPageTitle title="Members" className="max-w-none" />
       <section className="mb-6 flex justify-between gap-4 items-center">
-        <Filter className="mb-0" filters={filters} setFilter={setFilters} attributes={attributes} />
+        <Filter
+          className="mb-0 h-9 w-20"
+          filters={filters}
+          setFilter={setFilters}
+          attributes={attributes}
+        />
         <Button
           onClick={handleInviteMember}
           className="flex gap-2 ml-auto"
           variant={"fill"}
           data-testid="invite-member">
-          <PlusCircledIcon /> Invite member
+          <IconPlus size={18} /> Invite member
         </Button>
       </section>
-      {loading ? <LoadingSpinner /> : <MemberTable columns={memberColumns} data={membersData} />}
-      <Pagination
-        // hidePageLimit
-        handleChange={(val) => handleParams("page", val)}
-        handlePageLimit={(val) => handleParams("limit", val)}
-        totalCount={totalCount}
-        pageLimit={pageLimit}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        className="mt-4 mb-28"
-        testId="pagination"
-      />
+      {loading ? (
+        <LoadingSpinner />
+      ) : !membersData.length ? (
+        <TableEmptyState
+          pageIcon={<IconUsersGroup size={25} color="#101323" />}
+          title="No members have been added yet."
+          description="Start adding members to manage their profiles, track tasks, and monitor their activities."
+          ctaFunction={handleInviteMember}
+          btnText="Invite member"
+        />
+      ) : (
+        <>
+          <MemberTable columns={memberColumns} data={membersData} />
+          <Pagination
+            // hidePageLimit
+            handleChange={(val) => handleParams("page", val)}
+            handlePageLimit={(val) => handleParams("limit", val)}
+            totalCount={totalCount}
+            pageLimit={pageLimit}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            className="mt-4 mb-28"
+            testId="pagination"
+          />
+        </>
+      )}
     </>
   );
 };
@@ -132,3 +152,4 @@ export * from "./memberTasks";
 export * from "./acceptInvite";
 export * from "./invitationSuccessful";
 export * from "./invitationFailed";
+export * from "./memberEmailVerify";

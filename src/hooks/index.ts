@@ -9,5 +9,6 @@ export * from "./useLogout";
 export * from "./useFetchOrganisation";
 export * from "./useFetchBranches";
 export * from "./useFetchTeams";
+export * from "./useFetchOrgAttributes";
 export * from "./useFetchUserBranches";
 export * from "./useFetchOrgMembers";
