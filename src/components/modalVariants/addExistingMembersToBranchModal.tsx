@@ -5,9 +5,8 @@ import { CustomInput } from "../form";
 import { useState } from "react";
 import { Switch } from "components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { ModalEmptyState } from "components";
-import { IconX } from "@tabler/icons-react";
+import { IconPlus, IconX } from "@tabler/icons-react";
 
 interface AddExistingMembersToBranchProps extends ModalProps {
   submit: (data: string[]) => void;
@@ -61,7 +60,7 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
         <div>
           {loadingMembers ? (
             <LoadingSpinner />
-          ) : !members.length ? (
+          ) : !members?.length ? (
             <ModalEmptyState
               title="No members are available to add"
               description="Please ensure members belong to a team in this branch."
@@ -112,7 +111,7 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
                 loading={loadingSubmit}
                 className="flex gap-2 mt-2 w-full"
                 data-testid="add-btn">
-                <PlusCircledIcon />
+                <IconPlus size={18} />
                 Add Selected Members
               </Button>
             </div>

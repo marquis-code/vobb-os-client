@@ -1,18 +1,23 @@
-import { addExistingMembersToBranchService } from "api";
+import { addExistingMembersToBranchService, fetchEligibleMembersForBranchService } from "api";
 import { AddExistingMembersToBranchModal, toast } from "components";
-import { useApiRequest, useDebounce, useFetchOrgMembers } from "hooks";
+import { useApiRequest, useDebounce } from "hooks";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { BranchMemberTableData, ModalProps } from "types";
+import { ModalProps } from "types";
 
 interface AddExistingMemberProps extends ModalProps {
   callback?: () => void;
-  branchMembers: BranchMemberTableData[];
 }
 
 const AddExistingMembers: React.FC<AddExistingMemberProps> = (props) => {
   const { id: branchId = "" } = useParams() || {};
-  const { branchMembers, close, callback } = props;
+  const { close, callback } = props;
+  const {
+    run: runFetchEligibleMembers,
+    data: eligibleMembersResponse,
+    error: eligibleMembersError,
+    requestStatus: eligibleMembersStatus
+  } = useApiRequest({});
   const {
     run: runAddExisting,
     data: existingResponse,
@@ -20,42 +25,59 @@ const AddExistingMembers: React.FC<AddExistingMemberProps> = (props) => {
     requestStatus: existingStatus
   } = useApiRequest({});
 
-  const [allMembersQueryParams, setAllMembersQueryParams] = useState({
+  const [eligibleMembersQueryParams, setEligibleMembersQueryParams] = useState({
     limit: 4,
     search: ""
   });
   const handleUpdateMembersQueryParams = (filter: string, value: string | number) => {
-    setAllMembersQueryParams((prev) => ({ ...prev, [filter]: value }));
+    setEligibleMembersQueryParams((prev) => ({ ...prev, [filter]: value }));
   };
-  const { search } = allMembersQueryParams;
+  const { search } = eligibleMembersQueryParams;
   const debouncedSearchTerm = useDebounce(search, 1000);
 
-  const { fetchOrgMembers, orgMembersData, loading: loadingMembers } = useFetchOrgMembers({});
-
-  const handleAddMembers = (data: string[]) => {
-    runAddExisting(addExistingMembersToBranchService(branchId, { members: data }));
+  const handleFetchEligibleMembers = ({ search = "" }) => {
+    runFetchEligibleMembers(
+      fetchEligibleMembersForBranchService(branchId, { ...eligibleMembersQueryParams, search })
+    );
   };
+
+  const eligibleMembersData = useMemo(() => {
+    if (eligibleMembersResponse?.status === 200) {
+      const data = eligibleMembersResponse?.data?.data?.users.map((item) => ({
+        value: item._id,
+        avatar: item.avatar,
+        label: item.full_name
+      }));
+      const metaData = {
+        currentPage: eligibleMembersResponse?.data?.data?.page ?? 1,
+        totalPages: eligibleMembersResponse?.data?.data?.total_pages,
+        totalCount: eligibleMembersResponse?.data?.data?.total_count,
+        pageLimit: eligibleMembersQueryParams.limit
+      };
+      return { data, metaData };
+    } else if (eligibleMembersError) {
+      toast({
+        variant: "destructive",
+        description: eligibleMembersError?.response?.data?.error
+      });
+    }
+    return {};
+  }, [eligibleMembersResponse, eligibleMembersQueryParams.limit, eligibleMembersError]);
 
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
-      fetchOrgMembers({ search: debouncedSearchTerm });
+      handleFetchEligibleMembers({ search: debouncedSearchTerm });
     } else {
-      fetchOrgMembers({});
+      handleFetchEligibleMembers({});
     }
   }, [debouncedSearchTerm]);
 
-  const formattedMembers = orgMembersData.membersArray
-    .filter(
-      (member) =>
-        member.status === "active" &&
-        !branchMembers.some((branchMember) => branchMember.id === member.id)
-    )
-    .map((member) => ({
-      avatar: member.avatar,
-      label: member.name,
-      value: member.id
-    }));
+  const formattedMembers = eligibleMembersData.data;
 
+  //add existing member
+  const handleAddMembers = (data: string[]) => {
+    runAddExisting(addExistingMembersToBranchService(branchId, { members: data }));
+  };
   useMemo(() => {
     if (existingResponse?.status === 200) {
       toast({
@@ -75,11 +97,11 @@ const AddExistingMembers: React.FC<AddExistingMemberProps> = (props) => {
     <AddExistingMembersToBranchModal
       submit={handleAddMembers}
       loadingSubmit={existingStatus.isPending}
-      loadingMembers={loadingMembers}
+      loadingMembers={eligibleMembersStatus.isPending}
       {...props}
       handleSearch={handleUpdateMembersQueryParams}
       members={formattedMembers}
-      memberSearchQuery={allMembersQueryParams.search}
+      memberSearchQuery={eligibleMembersQueryParams.search}
     />
   );
 };

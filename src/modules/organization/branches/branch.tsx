@@ -26,6 +26,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { IconBuilding, IconBuildingArch, IconMail } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 type FilterItem = {
   value: string;
@@ -236,7 +237,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                   className="flex mb-6 gap-2 ml-auto"
                   variant={"fill"}
                   data-testid="add-team">
-                  <PlusCircledIcon /> New team
+                  <IconPlus size={18} /> New team
                 </Button>
               )}
             </div>
@@ -283,7 +284,7 @@ const ActionColumn = ({ handleExistingMember, handleInviteMemberToBranch }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="flex gap-2 ml-auto" variant={"fill"} data-testid="add-member">
-          <PlusCircledIcon /> Add member
+          <IconPlus size={18} /> Add member
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="py-4 px-2 space-y-2 w-[184px]">

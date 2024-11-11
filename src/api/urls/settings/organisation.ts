@@ -250,3 +250,24 @@ export const fetchUserBranchesURL = ({ page, limit, search }: PaginationProps) =
  */
 
 export const addExistingMembersToBranchURL = ({ branchId }) => `/user/add-branch/${branchId}`;
+
+/**
+ * Fetch eligible members to join branch URL
+ * @returns url string
+ *
+ */
+
+export const fetchEligibleMembersForBranchURL = (
+  id: string,
+  { page, limit, search }: PaginationProps
+) => {
+  const queryParams = new URLSearchParams();
+
+  if (page !== undefined) queryParams.append("page", page.toString());
+  if (limit !== undefined) queryParams.append("limit", limit.toString());
+  if (search && search !== "") queryParams.append("search", search);
+
+  const queryString = queryParams.toString();
+
+  return `/org/branch/${id}${queryString ? `?${queryString}` : ""}`;
+};

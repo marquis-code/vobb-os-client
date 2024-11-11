@@ -236,7 +236,6 @@ const OrgBranch = () => {
         show={addExistingMembers}
         close={closeAddExistingMembers}
         callback={() => fetchBranchMembers()}
-        branchMembers={branchMembers.membersArray}
       />
       <OrgBranchUI
         handleViewMember={console.log}

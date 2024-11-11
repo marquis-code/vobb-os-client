@@ -12,6 +12,7 @@ import {
   deleteOrgBranchURL,
   deleteRequest,
   fetchABranchURL,
+  fetchEligibleMembersForBranchURL,
   fetchOrgActivitiesURL,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
@@ -414,5 +415,18 @@ export const addExistingMembersToBranchService = (
   return postRequest({
     url: addExistingMembersToBranchURL({ branchId }),
     data
+  });
+};
+
+/**
+ *  Fetch eligible members to join branch service
+ * @param page showing page number requested,
+ * @param limit showing number of items per page
+ * @param search fetches branch from user input
+ * @returns axios promise
+ */
+export const fetchEligibleMembersForBranchService = (id: string, query: PaginationProps = {}) => {
+  return getRequest({
+    url: fetchEligibleMembersForBranchURL(id, query)
   });
 };
