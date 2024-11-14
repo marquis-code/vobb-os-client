@@ -49,7 +49,6 @@ describe("SideBar Component", () => {
     renderSideBar();
     const searchInput = screen.getByPlaceholderText("search");
 
-    // Simulate typing into the search input
     fireEvent.change(searchInput, { target: { value: "Pro" } });
     expect(screen.getByText("Profile")).toBeInTheDocument();
     expect(screen.queryByText("Security")).not.toBeInTheDocument();
@@ -60,16 +59,55 @@ describe("SideBar Component", () => {
     const accountHeader = screen.getByText("Account");
     const profileLink = screen.getByText("Profile");
 
-    // Initially open
     expect(profileLink).toBeInTheDocument();
 
-    // Click to collapse
     fireEvent.click(accountHeader);
     expect(screen.queryByText("Profile")).not.toBeInTheDocument();
 
-    // Click to expand again
     fireEvent.click(accountHeader);
     expect(screen.getByText("Profile")).toBeInTheDocument();
+  });
+
+  it("toggles the Workspace section when clicked", () => {
+    renderSideBar();
+    const workspaceHeader = screen.getByText("Workspace");
+    const organizationLink = screen.getByText("Organization");
+
+    expect(organizationLink).toBeInTheDocument();
+
+    fireEvent.click(workspaceHeader);
+    expect(screen.queryByText("Organization")).not.toBeInTheDocument();
+
+    fireEvent.click(workspaceHeader);
+    expect(screen.getByText("Organization")).toBeInTheDocument();
+  });
+
+  it("toggles the Reports section when clicked", () => {
+    renderSideBar();
+    const reportsHeader = screen.getAllByText("Reports")[0];
+    const reportsLink = screen.getByTestId("Reports-link");
+
+    expect(reportsLink).toBeInTheDocument();
+
+    fireEvent.click(reportsHeader);
+    expect(screen.queryByTestId("Reports-link")).not.toBeInTheDocument();
+
+    fireEvent.click(reportsHeader);
+    expect(screen.getByTestId("Reports-link")).toBeInTheDocument();
+  });
+
+  it("toggles the Automation section when clicked", () => {
+    renderSideBar();
+    const automationHeader = screen.getByText("Automation");
+    const workflowsLink = screen.getByText("Workflows");
+
+    expect(workflowsLink).toBeInTheDocument();
+
+    fireEvent.click(automationHeader);
+    expect(screen.queryByText("Workflows")).not.toBeInTheDocument();
+
+    fireEvent.click(automationHeader);
+    expect(screen.getByText("Workflows")).toBeInTheDocument();
   });
 
   it("highlights the active link", () => {
