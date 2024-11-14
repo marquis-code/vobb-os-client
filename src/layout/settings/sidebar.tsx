@@ -184,7 +184,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
       <section className="p-4 overflow-auto">
         <div className="mb-6">
           <CustomInput
-            placeholder="search"
+            placeholder="Search settings"
             value={searchSettings}
             onChange={(e) => setSearchSettings(e.target.value)}
             icon={<IconSearch size={16} />}
