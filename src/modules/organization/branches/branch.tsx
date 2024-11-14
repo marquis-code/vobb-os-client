@@ -1,4 +1,5 @@
 import {
+  AddExistingMembersToBranchDropdown,
   attributeType,
   BranchMemberTableActions,
   BranchTeamTable,
@@ -14,9 +15,9 @@ import {
   getBranchMemberTableColumns,
   BranchMemberTable
 } from "components/tables/branchMemberTable";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
+import { BranchMembersProps, BranchTeamsProps, optionType, OrganisationBranchesData } from "types";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -26,6 +27,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { IconBuilding, IconBuildingArch, IconMail } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
+import { useClickOutside } from "hooks";
 
 type FilterItem = {
   value: string;
@@ -73,6 +75,16 @@ interface OrgBranchUIProps extends BranchMemberTableActions {
   branchInfo: OrganisationBranchesData;
   branchTeams: BranchTeamsProps;
   branchMembers: BranchMembersProps;
+  addExistingMembers: {
+    submit: (data: string[]) => void;
+    loading: boolean;
+  };
+  eligibleMembers: {
+    loading: boolean;
+    data: optionType[];
+    searchQuery: string;
+    handleParams: (filter: string, value: string | number) => void;
+  };
 }
 
 const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
@@ -82,11 +94,12 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
   handleUpdateTeamsParams,
   handleUpdateMemberFilters,
   handleInviteMemberToBranch,
-  handleAddExistingMembersToBranch,
   loadingMembers,
   branchInfo,
   branchTeams,
-  branchMembers
+  branchMembers,
+  addExistingMembers,
+  eligibleMembers
 }) => {
   const memberColumns = useMemo(
     () => getBranchMemberTableColumns({ handleTransferMember, handleViewMember }),
@@ -200,7 +213,10 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
               )}
             </TooltipProvider>
           </section>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="pt-4 border-t -ml-4 pl-4">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="pt-4 border-t -ml-4 pl-4 min-h-screen">
             <div className="flex justify-between">
               <TabsList className="mb-2">
                 <TabsTrigger
@@ -226,8 +242,9 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
                     attributes={attributes}
                   />
                   <ActionColumn
-                    handleExistingMember={handleAddExistingMembersToBranch}
                     handleInviteMemberToBranch={handleInviteMemberToBranch}
+                    addExistingMembers={addExistingMembers}
+                    eligibleMembers={eligibleMembers}
                   />
                 </div>
               ) : (
@@ -278,36 +295,58 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
 
 export { OrgBranchUI };
 
-const ActionColumn = ({ handleExistingMember, handleInviteMemberToBranch }) => {
+const ActionColumn = ({ handleInviteMemberToBranch, addExistingMembers, eligibleMembers }) => {
   const [showInviteDropdown, setShowInviteDropdown] = useState(false);
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          className="flex gap-2 ml-auto text-xs rounded-sm"
-          variant={"fill"}
-          data-testid="add-member">
-          <IconPlus size={16} /> Add member
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="rounded-lg px-2 space-y-1 w-[184px]">
-        <DropdownMenuItem
-          onClick={handleInviteMemberToBranch}
-          className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
-          testId="invite-member">
-          New Team Member
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setShowInviteDropdown(true)}
-          className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
-          testId="existing-member">
-          Existing Member
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
+  const dropdownRef = useRef(null);
 
-const UsersDropdownUI = () => {
-  return <div></div>;
+  const { submit: submitAddExistingMembers, loading: loadingSubmitExistingMembers } =
+    addExistingMembers;
+  const {
+    loading: loadingEligible,
+    data: members,
+    searchQuery: searchEligible,
+    handleParams
+  } = eligibleMembers;
+
+  useClickOutside(dropdownRef, () => setShowInviteDropdown(false));
+  return (
+    <div className="relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            className="flex gap-2 ml-auto text-xs rounded-sm"
+            variant={"fill"}
+            data-testid="add-member">
+            <IconPlus size={16} /> Add member
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="rounded-lg px-1 space-y-1.5 w-[184px]">
+          <DropdownMenuItem
+            onClick={handleInviteMemberToBranch}
+            className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
+            testId="invite-member">
+            New Team Member
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => setShowInviteDropdown(true)}
+            className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
+            testId="existing-member">
+            Existing Member
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {showInviteDropdown && (
+        <div ref={dropdownRef} className="absolute top-[115%] w-[260px] z-20 right-0 bg-white">
+          <AddExistingMembersToBranchDropdown
+            submit={submitAddExistingMembers}
+            loadingSubmit={loadingSubmitExistingMembers}
+            loadingMembers={loadingEligible}
+            handleSearch={handleParams}
+            members={members}
+            memberSearchQuery={searchEligible}
+          />
+        </div>
+      )}
+    </div>
+  );
 };
