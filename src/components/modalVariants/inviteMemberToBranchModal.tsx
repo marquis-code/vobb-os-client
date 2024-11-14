@@ -1,4 +1,3 @@
-import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, CheckboxWithText, CustomInput, Modal, SelectInput } from "components";
 import { ModalProps, optionType } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,6 +5,7 @@ import * as yup from "yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { getOptionTypeValidationMsg } from "lib";
+import { IconX } from "@tabler/icons-react";
 
 interface InviteMemberToBranchData {
   email: string;
@@ -67,7 +67,6 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
   } = handleTeamRoles;
 
   const [inviteNew, setInviteNew] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -84,11 +83,6 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
     setValue("role", { label: "", value: "" });
   };
 
-  const team: optionType = {
-    label: watch("team")?.label ?? "",
-    value: watch("team")?.value ?? ""
-  };
-
   useEffect(() => {
     if (currentBranch) setValue("branch", currentBranch);
   }, [currentBranch, setValue]);
@@ -96,15 +90,15 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
   return (
     <>
       <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="invite-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
-          <h2 className="text-lg font-medium text-vobb-neutral-95">Invite Member To Branch</h2>
+        <div className="flex items-center justify-between px-4 py-[11px] border-b border-vobb-neutral-20">
+          <h2 className="text-base font-medium text-vobb-neutral-95">Invite Member To Branch</h2>
           <Button
             onClick={close}
             variant={"ghost"}
             size={"icon"}
             data-testid="close-btn"
-            className="border p-2 shadow-sm">
-            <Cross1Icon stroke="#101323" strokeWidth={1} className="w-6 h-6" />
+            className="border w-[26px] h-[26px] shadow-sm">
+            <IconX size={16} />
           </Button>
         </div>
 
@@ -124,7 +118,7 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
                 label="Team"
                 placeholder="Select team"
                 options={teamsOptions}
-                value={watch("team")?.value === "" ? null : team}
+                value={watch("team")?.value === "" ? null : undefined}
                 onChange={(val) => {
                   if (val) {
                     setValue("team", val);
@@ -158,27 +152,29 @@ const InviteMemberToBranchModal: React.FC<InviteMemberToBranchModalProps> = ({
           />
         </form>
 
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
-          <CheckboxWithText
-            label={"Invite another member"}
-            handleChecked={setInviteNew}
-            checked={inviteNew}
-            className="mr-auto"
-          />
+        <div className="flex justify-end gap-2 items-center px-4 py-2 bg-vobb-neutral-0">
           <Button
             onClick={() => close()}
-            className="text-error-10"
+            className="h-9 w-[68px] rounded-sm mr-auto text-xs text-vobb-neutral-80"
             size={"default"}
             variant={"outline"}
             disabled={loading}>
             Cancel
           </Button>
+          <CheckboxWithText
+            label={"Invite another member"}
+            handleChecked={setInviteNew}
+            checked={inviteNew}
+            className="mr-4 text-xs text-vobb-neutral-80"
+          />
+
           <Button
             onClick={handleSubmit(onSubmit)}
             size={"default"}
             variant={"fill"}
+            className="h-9 w-[68px] rounded-sm text-xs"
             loading={loading}>
-            Send invitation
+            Invite
           </Button>
         </div>
       </Modal>

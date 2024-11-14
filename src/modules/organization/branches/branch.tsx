@@ -26,7 +26,6 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
 import { IconBuilding, IconBuildingArch, IconMail } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 type FilterItem = {
   value: string;
@@ -205,12 +204,12 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
             <div className="flex justify-between">
               <TabsList className="mb-2">
                 <TabsTrigger
-                  className=" data-[state=active]:bg-white data-[state=active]:text-vobb-neutral-70"
+                  className="text-xs data-[state=active]:bg-white data-[state=active]:text-vobb-neutral-70"
                   value="members">
                   Members
                 </TabsTrigger>
                 <TabsTrigger
-                  className=" data-[state=active]:bg-white data-[state=active]:text-vobb-neutral-70"
+                  className="text-xs data-[state=active]:bg-white data-[state=active]:text-vobb-neutral-70"
                   value="teams">
                   Teams
                 </TabsTrigger>
@@ -218,7 +217,7 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
               {activeTab === "members" ? (
                 <div className="mb-6 flex justify-between gap-4 items-center">
                   <Filter
-                    className="mb-0 h-9"
+                    className="mb-0 h-9 text-xs"
                     filters={memberFilters}
                     setFilter={(val) => {
                       setMemberFilter(val);
@@ -280,27 +279,35 @@ const OrgBranchUI: React.FC<OrgBranchUIProps> = ({
 export { OrgBranchUI };
 
 const ActionColumn = ({ handleExistingMember, handleInviteMemberToBranch }) => {
+  const [showInviteDropdown, setShowInviteDropdown] = useState(false);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="flex gap-2 ml-auto" variant={"fill"} data-testid="add-member">
-          <IconPlus size={18} /> Add member
+        <Button
+          className="flex gap-2 ml-auto text-xs rounded-sm"
+          variant={"fill"}
+          data-testid="add-member">
+          <IconPlus size={16} /> Add member
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="py-4 px-2 space-y-2 w-[184px]">
+      <DropdownMenuContent align="end" className="rounded-lg px-2 space-y-1 w-[184px]">
         <DropdownMenuItem
           onClick={handleInviteMemberToBranch}
-          className="gap-2 cursor-pointer text-vobb-neutral-70"
+          className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
           testId="invite-member">
           New Team Member
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={handleExistingMember}
-          className="gap-2 cursor-pointer text-vobb-neutral-70"
+          onClick={() => setShowInviteDropdown(true)}
+          className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
           testId="existing-member">
           Existing Member
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
+};
+
+const UsersDropdownUI = () => {
+  return <div></div>;
 };

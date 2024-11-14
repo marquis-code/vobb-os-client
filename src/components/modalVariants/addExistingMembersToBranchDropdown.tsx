@@ -46,11 +46,7 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
   };
   return (
     <>
-      <Modal
-        show={show}
-        close={close}
-        contentClassName="overflow-hidden max-w-[300px]"
-        testId="existing-members-modal">
+      <div className="p-4 border-b border-vobb-neutral-20">
         <CustomInput
           placeholder="search"
           value={memberSearchQuery}
@@ -117,7 +113,7 @@ const AddExistingMembersToBranchModal: React.FC<AddExistingMembersToBranchProps>
             </div>
           )}
         </div>
-      </Modal>
+      </div>
     </>
   );
 };
