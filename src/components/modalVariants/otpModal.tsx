@@ -16,19 +16,26 @@ const OTPModal: React.FC<OTPModalProps> = ({ show, close, text, title, submit, l
   const [otp, setOTP] = useState("");
   return (
     <>
-      <Modal show={show} close={close}>
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-bold">{title}</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal show={show} close={close} contentClassName="p-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">{title}</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <p className="mb-12">{text}</p>
-        <form className="mb-16 flex justify-center align-center">
-          <CustomInputOTP value={otp} onChange={setOTP} />
-        </form>
+        <div className="p-4 mb-8">
+          <p className="mb-10">{text}</p>
+          <form className="flex justify-center align-center">
+            <CustomInputOTP value={otp} onChange={setOTP} />
+          </form>
+        </div>
 
-        <div className="flex justify-end gap-2">
+        <div className="border-t border-vobb-neutral-20 flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button className="text-error-10" size={"default"} variant={"outline"}>
             Cancel
           </Button>

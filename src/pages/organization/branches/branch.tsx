@@ -1,11 +1,20 @@
 import { OrgBranchUI } from "modules";
 import { useEffect, useMemo, useState } from "react";
 import { TransferMember } from "./transferMember";
-import { useApiRequest } from "hooks";
-import { fetchABranchService, fetchOrgBranchMembersService, fetchTeamsPerBranchService } from "api";
+import { useApiRequest, useDebounce } from "hooks";
+import {
+  addExistingMembersToBranchService,
+  fetchABranchService,
+  fetchEligibleMembersForBranchService,
+  fetchOrgBranchMembersService,
+  fetchTeamsPerBranchService
+} from "api";
 import { BranchMembersProps, BranchTeamsProps, OrganisationBranchesData } from "types";
 import { useCountriesContext, useUserContext } from "context";
 import { format, parseISO } from "date-fns";
+import { useParams } from "react-router-dom";
+import { InviteMemberToBranch } from "./inviteMemberToBranch";
+import { toast } from "components";
 
 export const initBranchData = {
   id: "",
@@ -42,6 +51,15 @@ const initTeamsData: BranchTeamsProps = {
 };
 
 const OrgBranch = () => {
+  const [inviteMemberToBranch, setInviteMemberToBranch] = useState(false);
+  const [addExistingMembers, setAddExistingMembers] = useState(false);
+
+  const handleInviteMemberToBranch = () => setInviteMemberToBranch(true);
+  const closeInviteMemberToBranch = () => setInviteMemberToBranch(false);
+
+  const handleAddExistingMembers = () => setAddExistingMembers(true);
+  const closeAddExistingMembers = () => setAddExistingMembers(false);
+
   const { userDetails } = useUserContext();
   const userDateFormat = userDetails?.dateFormat;
   const dateFormatted =
@@ -72,8 +90,8 @@ const OrgBranch = () => {
     limit: 20
   });
   const { countries } = useCountriesContext();
-  const branchPath = window.location.pathname.split("/");
-  const branchId = branchPath[branchPath.length - 1];
+  const { id: branchId = "" } = useParams() || {};
+
   const [transfer, setTransfer] = useState({ show: false, id: "" });
   const handleTransferMember = (id: string) => {
     setTransfer({ show: true, id });
@@ -140,7 +158,7 @@ const OrgBranch = () => {
     }
 
     return initMembersData;
-  }, [membersResponse]);
+  }, [membersResponse, dateFormatted, memberQueryParams.limit]);
 
   const branchTeams = useMemo<BranchTeamsProps>(() => {
     if (teamsResponse?.status === 200) {
@@ -165,7 +183,7 @@ const OrgBranch = () => {
     }
 
     return initTeamsData;
-  }, [teamsResponse]);
+  }, [teamsResponse, teamQueryParams.limit]);
 
   const branchInfo = useMemo<OrganisationBranchesData>(() => {
     if (branchResponse?.status === 200) {
@@ -205,6 +223,87 @@ const OrgBranch = () => {
     setTeamsQueryParams((prev) => ({ ...prev, [param]: value }));
   };
 
+  const {
+    run: runFetchEligibleMembers,
+    data: eligibleMembersResponse,
+    error: eligibleMembersError,
+    requestStatus: eligibleMembersStatus
+  } = useApiRequest({});
+  const {
+    run: runAddExisting,
+    data: existingResponse,
+    error: existingError,
+    requestStatus: existingStatus
+  } = useApiRequest({});
+
+  const [eligibleMembersQueryParams, setEligibleMembersQueryParams] = useState({
+    limit: 4,
+    search: ""
+  });
+
+  const handleUpdateMembersQueryParams = (filter: string, value: string | number) => {
+    setEligibleMembersQueryParams((prev) => ({ ...prev, [filter]: value }));
+  };
+  const { search } = eligibleMembersQueryParams;
+  const debouncedSearchTerm = useDebounce(search, 1000);
+
+  const handleFetchEligibleMembers = ({ search = "" }) => {
+    runFetchEligibleMembers(
+      fetchEligibleMembersForBranchService(branchId, { ...eligibleMembersQueryParams, search })
+    );
+  };
+
+  const eligibleMembersData = useMemo(() => {
+    if (eligibleMembersResponse?.status === 200) {
+      const data = eligibleMembersResponse?.data?.data?.users.map((item) => ({
+        value: item._id,
+        avatar: item.avatar,
+        label: item.full_name
+      }));
+      const metaData = {
+        currentPage: eligibleMembersResponse?.data?.data?.page ?? 1,
+        totalPages: eligibleMembersResponse?.data?.data?.total_pages,
+        totalCount: eligibleMembersResponse?.data?.data?.total_count,
+        pageLimit: eligibleMembersQueryParams.limit
+      };
+      return { data, metaData };
+    } else if (eligibleMembersError) {
+      toast({
+        variant: "destructive",
+        description: eligibleMembersError?.response?.data?.error
+      });
+    }
+    return {};
+  }, [eligibleMembersResponse, eligibleMembersQueryParams.limit, eligibleMembersError]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim()) {
+      handleFetchEligibleMembers({ search: debouncedSearchTerm });
+    } else {
+      handleFetchEligibleMembers({});
+    }
+  }, [debouncedSearchTerm]);
+
+  const formattedMembers = eligibleMembersData.data;
+
+  //add existing member
+  const handleAddMembers = (data: string[]) => {
+    runAddExisting(addExistingMembersToBranchService(branchId, { members: data }));
+  };
+  useMemo(() => {
+    if (existingResponse?.status === 200) {
+      toast({
+        description: existingResponse?.data?.message
+      });
+      fetchBranchMembers();
+    } else if (existingError) {
+      toast({
+        variant: "destructive",
+        description: existingError?.response?.data?.error
+      });
+    }
+  }, [existingResponse, existingError]);
+
   return (
     <>
       <TransferMember
@@ -215,16 +314,35 @@ const OrgBranch = () => {
         fetchBranchMembers={fetchBranchMembers}
         close={() => setTransfer({ show: false, id: "" })}
       />
+      <InviteMemberToBranch
+        show={inviteMemberToBranch}
+        close={closeInviteMemberToBranch}
+        callback={() => fetchBranchMembers()}
+        currentBranch={{ label: branchInfo?.name, value: branchInfo?.id }}
+      />
+
       <OrgBranchUI
         handleViewMember={console.log}
         handleTransferMember={handleTransferMember}
         handleUpdateMembersParams={handleUpdateMembersParams}
         handleUpdateTeamsParams={handleUpdateTeamsParams}
         handleUpdateMemberFilters={handleUpdateMemberFilters}
+        handleInviteMemberToBranch={handleInviteMemberToBranch}
+        handleAddExistingMembersToBranch={handleAddExistingMembers}
         loadingMembers={membersStatus.isPending || branchStatus.isPending}
         branchInfo={branchInfo}
         branchMembers={branchMembers}
         branchTeams={branchTeams}
+        addExistingMembers={{
+          submit: handleAddMembers,
+          loading: existingStatus.isPending
+        }}
+        eligibleMembers={{
+          loading: eligibleMembersStatus.isPending,
+          data: formattedMembers,
+          searchQuery: eligibleMembersQueryParams.search,
+          handleParams: handleUpdateMembersQueryParams
+        }}
       />
     </>
   );

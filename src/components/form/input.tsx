@@ -35,7 +35,11 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     <>
       <div className={cn("mb-4", parentClassName)}>
         {label && (
-          <label className={cn("block font-inter text-xs mb-1", labelClassName)}>
+          <label
+            className={cn(
+              "block font-inter text-xs mb-1 text-vobb-neutral-80 leading-5",
+              labelClassName
+            )}>
             {label}
             {required ? <span className={"text-error-50"}>*</span> : ""}
           </label>
@@ -55,7 +59,9 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
                 })}
                 defaultValue={defaultValue}
                 className={cn(
-                  `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
+                  `${
+                    validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""
+                  } placeholder:text-vobb-neutral-60 text-xs font-medium leading-5`,
                   className,
                   icon ? "pl-8" : "" // Ensures padding when icon is present
                 )}

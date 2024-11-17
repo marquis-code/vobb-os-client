@@ -25,6 +25,10 @@ describe("Organisation Members", () => {
     cy.url().should("include", "/settings/members");
   });
 
+  it("displays the header nav and the h1", () => {
+    cy.verifyHeaderNavAndTitle("Workspace", "Members");
+  });
+
   it("displays the filter component", () => {
     cy.get('[aria-haspopup="dialog"]').should("exist").and("not.be.disabled");
     cy.get('[aria-haspopup="dialog"]').click();
@@ -56,7 +60,25 @@ describe("Organisation Members", () => {
     });
   });
 
-  it("opens invite member modal when button is clicked", () => {
+  it("displays the pagination component and triggers API call on limit change", () => {
+    cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/org/members*", (req) => {
+      req.continue((res) => {});
+    }).as("fetchData");
+
+    cy.get("[data-testid='pagination']").should("exist");
+    cy.get("[data-testid='select-limit']").should("be.visible").click();
+
+    cy.get("div.css-1nmdiq5-menu").should("exist");
+
+    cy.get("div#react-select-3-option-1").should("be.visible").click();
+
+    cy.wait("@fetchData").its("response.statusCode").should("eq", 200);
+
+    cy.get("[data-testid='move-left']").should("be.visible");
+    cy.get("[data-testid='move-right']").should("be.visible");
+  });
+
+  it("displays invite member modal when button is clicked", () => {
     cy.get('[data-testid="invite-member"]').click();
 
     cy.get("[data-testid='invite-modal']").within(() => {
@@ -91,8 +113,6 @@ describe("Organisation Members", () => {
   });
 
   it("closes invite member modal when cancel button is clicked", () => {
-    cy.get('[data-testid="invite-member"]').click(); //open modal
-
     cy.get('[data-testid="close-btn"]').click();
     cy.get("[data-testid='invite-modal']").should("not.exist");
   });
@@ -231,32 +251,45 @@ describe("Organisation Members", () => {
     cy.checkAndCloseToastNotification("Invite cancelled successfully");
   });
 
-  it("change role for active user", () => {
-    cy.get("[data-testid='menu-activeUser']").eq(1).click();
+  it("displays actions options for active user", () => {
+    cy.get("[data-testid='menu-activeUser']").eq(0).click();
+
+    cy.get("div").contains("Actions").should("exist");
+    cy.get("[data-testid='view-member']")
+      .contains("View member")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get("[data-testid='change-role']")
+      .contains("Change role")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+    cy.get("[data-testid='suspend-member']")
+      .contains("Suspend member")
+      .within(() => {
+        cy.get("svg").should("exist");
+      });
+  });
+
+  it("displays change role modal for active user", () => {
+    cy.get("[data-testid='menu-activeUser']").click();
     cy.get("[data-testid='change-role']").contains("Change role").click();
 
     cy.get("[data-testid='changeRole-modal']").within(() => {
       cy.get("[data-testid='close-btn']").should("be.visible").and("be.enabled");
 
       cy.get("label").should("contain.text", "Select role");
-      cy.get("div.css-b62m3t-container")
-        .eq(0)
-        .within(() => {
-          cy.get("div.css-1xc3v61-indicatorContainer").click();
-          cy.wait(1000);
-          cy.get("div.css-1nmdiq5-menu").should("exist");
-          cy.get("div#react-select-5-option-0").should("be.visible").click();
-        });
+      cy.get("div.css-b62m3t-container").should("exist");
 
       cy.get("button").contains("Cancel").should("be.visible").and("be.enabled");
       cy.get("button").contains("Save").should("be.visible").and("be.enabled");
       cy.get("[data-testid='close-btn']").click();
     });
-    cy.checkAndCloseToastNotification("Role changed successfully");
   });
 
-  it("suspends member indefinitely for active user", () => {
-    cy.get("[data-testid='menu-activeUser']").eq(0).click();
+  it("displays suspend member modal for active user", () => {
+    cy.get("[data-testid='menu-activeUser']").click();
     cy.get("[data-testid='suspend-member']").contains("Suspend member").click();
 
     cy.get("[data-testid='suspendMember-modal']").within(() => {

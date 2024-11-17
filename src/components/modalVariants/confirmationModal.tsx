@@ -21,15 +21,20 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
   return (
     <>
-      <Modal contentClassName="max-w-[600px]" show={show} close={close} testId="confirm-modal">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-bold">Confirm Action</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"} data-testid="close-btn">
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal contentClassName="max-w-[944px] p-0" show={show} close={close} testId="confirm-modal">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Confirm Action</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <p className="text-sm text-vobb-neutral-70 mb-8">{text}</p>
-        <div className="flex justify-end gap-2">
+        <p className="text-sm text-vobb-neutral-70 p-4 ">{text}</p>
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={close}
             className={isDestructive ? "" : "text-error-10"}
