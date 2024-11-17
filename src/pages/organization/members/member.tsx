@@ -341,7 +341,7 @@ const Member = () => {
         currentRole={memberProfile?.role}
         show={changeRole}
         close={handleCloseChangeRole}
-        handleFetch={handleFetchProfile}
+        callback={handleFetchProfile}
       />
       <ChangeBranch
         id={params.id ?? ""}

@@ -9,11 +9,11 @@ interface ChangeRoleProps extends ModalProps {
   currentRole: string;
   name: string;
   id: string;
-  handleFetch: () => void;
+  callback: () => void;
 }
 
 const ChangeRole = (props: ChangeRoleProps) => {
-  const { id, close, handleFetch } = props;
+  const { id, close, callback } = props;
   const { run, data: response, error, requestStatus } = useApiRequest({});
 
   const submit = (data: { role: optionType }) => {
@@ -26,7 +26,7 @@ const ChangeRole = (props: ChangeRoleProps) => {
         description: response?.data?.message
       });
       close();
-      handleFetch();
+      callback();
     } else if (error) {
       toast({
         variant: "destructive",

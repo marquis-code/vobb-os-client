@@ -24,13 +24,18 @@ import {
   PersonIcon,
   TimerIcon
 } from "@radix-ui/react-icons";
-import { UsersIcon, UsersRightIcon } from "assets";
-import { Button } from "components";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, CustomInput } from "components";
+import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
-import { cn } from "lib";
 import { useModalContext } from "context";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { useState } from "react";
+import { SidebarSection } from "./sidebarSection";
+
+interface SideBarProps {
+  sideBarWidth: string;
+  active: string;
+}
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -39,6 +44,7 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
   const navigate = useNavigate();
+  const [searchSettings, setSearchSettings] = useState("");
 
   const accountItems = [
     {
@@ -62,14 +68,14 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Notifications",
       icon: <BellIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.notifications,
       value: "notifications"
     },
     {
       title: "Account Activity",
       icon: <TimerIcon width={14} height={14} color="#101323" />,
       path: Routes.account_activity,
-      value: "Account activity"
+      value: "account activity"
     }
   ];
 
@@ -88,13 +94,13 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     },
     {
       title: "Members",
-      icon: <UsersRightIcon width={14} height={14} color="#101323" />,
+      icon: <PersonIcon width={14} height={14} color="#101323" />,
       path: Routes.members,
       value: "members"
     },
     {
       title: "Teams",
-      icon: <UsersIcon width={14} height={14} color="#101323" />,
+      icon: <PersonIcon width={14} height={14} color="#101323" />,
       path: Routes.teams,
       value: "teams"
     },
@@ -113,8 +119,8 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Billing",
       icon: <FileTextIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "notifications"
+      path: Routes.billing,
+      value: "billing"
     },
     {
       title: "Communication",
@@ -130,14 +136,14 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     },
     {
       title: "Integrations",
-      icon: <IconPlus width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "migration"
+      icon: <MoveIcon width={14} height={14} color="#101323" />,
+      path: Routes.integrations,
+      value: "integrations"
     },
     {
       title: "Migration from another CRM",
       icon: <AllSidesIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.migration,
       value: "migration"
     },
     {
@@ -152,7 +158,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Reports",
       icon: <MoveIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
+      path: Routes.reports,
       value: "reports"
     }
   ];
@@ -161,87 +167,57 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, active }) => {
     {
       title: "Workflows",
       icon: <MoveIcon width={14} height={14} color="#101323" />,
-      path: Routes.profile,
-      value: "profile"
+      path: Routes.workflows,
+      value: "workflows"
     }
   ];
+
   return (
-    <aside
-      style={{ width: sideBarWidth }}
-      className="border-r border-vobb-neutral-30 h-full fixed top-0 left-0">
-      <div className="border-b border-vobb-neutral-30 px-4 py-1 h-[55px] flex items-center">
-        <Button onClick={() => navigate(Routes.overview)} variant={"ghost"} size={"icon"}>
+    <aside style={{ width: sideBarWidth }} className="border-r h-full fixed top-0 left-0">
+      <div className="border-b px-4 py-1 h-[55px] flex items-center">
+        <Button onClick={() => navigate(Routes.overview)} variant="ghost" size="icon">
           <span className="sr-only">Back to overview</span>
           <ChevronLeftIcon />
         </Button>
-        <p className="ml-2 font-workSans font-bold text-lg">Settings</p>
+        <p className="ml-2 font-bold text-lg">Settings</p>
       </div>
-      <section style={{ height: "calc(100dvh - 55px)" }} className="p-4 overflow-auto no-scrollbar">
+      <section className="p-4 overflow-auto">
         <div className="mb-6">
-          <p className="text-xs text-vobb-neutral-50 mb-2 font-light">Account</p>
-          {accountItems.map(({ icon, title, value, path }) => (
-            <Link
-              key={value}
-              className={cn(
-                "flex items-center gap-2 w-full hover:bg-vobb-neutral-10 p-2 rounded-md text-vobb-neutral-100 font-medium mb-1",
-                value === active ? "bg-vobb-neutral-10 font-semibold" : ""
-              )}
-              to={path}>
-              {icon}
-              {title}
-            </Link>
-          ))}
+          <CustomInput
+            placeholder="Search settings"
+            value={searchSettings}
+            onChange={(e) => setSearchSettings(e.target.value)}
+            icon={<IconSearch size={16} />}
+          />
         </div>
-        <div className="mb-6">
-          <p className="text-xs text-vobb-neutral-50 mb-2 font-light">Workspace</p>
-          {orgItems.map(({ icon, title, value, path }) => (
-            <Link
-              key={title}
-              className={cn(
-                "flex items-center gap-2 w-full hover:bg-vobb-neutral-10 p-2 rounded-md text-vobb-neutral-100 font-medium mb-1",
-                value === active ? "bg-vobb-neutral-10 font-semibold" : ""
-              )}
-              to={path}>
-              {icon}
-              {title}
-            </Link>
-          ))}
-        </div>
-        <div className="mb-6">
-          <p className="text-xs text-vobb-neutral-50 mb-2 font-light">Reports</p>
-          {reportItems.map(({ icon, title, value, path }) => (
-            <Link
-              key={value}
-              className={cn(
-                "flex items-center gap-2 w-full hover:bg-vobb-neutral-10 p-2 rounded-md text-vobb-neutral-100 font-medium mb-1",
-                value === active ? "bg-vobb-neutral-10 font-semibold" : ""
-              )}
-              to={path}>
-              {icon}
-              {title}
-            </Link>
-          ))}
-        </div>
-        <div className="mb-0">
-          <p className="text-xs text-vobb-neutral-50 mb-2 font-light">Automations</p>
-          {automationItems.map(({ icon, title, value, path }) => (
-            <Link
-              key={value}
-              className={cn(
-                "flex items-center gap-2 w-full hover:bg-vobb-neutral-10 p-2 rounded-md text-vobb-neutral-100 font-medium mb-1",
-                value === active ? "bg-vobb-neutral-10 font-semibold" : ""
-              )}
-              to={path}>
-              {icon}
-              {title}
-            </Link>
-          ))}
-        </div>
+        <SidebarSection
+          title="Account"
+          items={accountItems}
+          active={active}
+          searchQuery={searchSettings}
+        />
+        <SidebarSection
+          title="Workspace"
+          items={orgItems}
+          active={active}
+          searchQuery={searchSettings}
+        />
+        <SidebarSection
+          title="Reports"
+          items={reportItems}
+          active={active}
+          searchQuery={searchSettings}
+        />
+        <SidebarSection
+          title="Automation"
+          items={automationItems}
+          active={active}
+          searchQuery={searchSettings}
+        />
       </section>
     </aside>
   );
 };
-
 export function BranchMenu() {
   const { setAddBranch } = useModalContext();
   const handleBranch = () => {

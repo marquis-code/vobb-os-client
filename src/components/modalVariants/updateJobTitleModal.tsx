@@ -41,14 +41,19 @@ const UpdateJobTitleModal: React.FC<UpdateJobTitleModalProps> = ({
 
   return (
     <>
-      <Modal show={show} close={close} testId="update-job-title-modal">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Update Job Title</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal show={show} close={close} testId="update-job-title-modal" contentClassName="p-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">Update Job Title</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
-        <form className="mb-16">
+        <form className="p-4 border-b border-vobb-neutral-20">
           <CustomInput
             label="Job title"
             name="jobTitle"
@@ -56,7 +61,7 @@ const UpdateJobTitleModal: React.FC<UpdateJobTitleModalProps> = ({
             validatorMessage={errors.jobTitle?.message}
           />
         </form>
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
           <Button
             onClick={() => close()}
             className="text-error-10"

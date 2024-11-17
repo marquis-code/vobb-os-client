@@ -51,6 +51,7 @@ module.exports = {
         },
         "vobb-neutral": {
           100: "var(--neutral-100)",
+          95: "var(--neutral-95)",
           90: "var(--neutral-90)",
           80: "var(--neutral-80)",
           70: "var(--neutral-70)",
@@ -58,7 +59,9 @@ module.exports = {
           50: "var(--neutral-50)",
           40: "var(--neutral-40)",
           30: "var(--neutral-30)",
+          25: "var(--neutral-25)",
           20: "var(--neutral-20)",
+          15: "var(--neutral-15)",
           10: "var(--neutral-10)",
           0: "var(--neutral-0)"
         },

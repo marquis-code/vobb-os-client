@@ -6,8 +6,8 @@ import { ExistingUserTypes } from "types";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { IconUser, IconX } from "@tabler/icons-react";
 import { CustomInput } from "components/form";
-import { ModalEmptyState } from "components/emptystates";
 import { Switch } from "components/ui/switch";
+import { ModalEmptyState } from "components/emptyStates";
 
 const MAX_TEXT_LENGTH = 32;
 

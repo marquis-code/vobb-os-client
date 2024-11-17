@@ -9,5 +9,5 @@ export * from "./settingsPageTitle";
 export * from "./activityCard";
 export * from "./filter";
 export * from "./badge";
-export * from "./emptystates";
+export * from "./emptyStates";
 export * from "./dropdowns";

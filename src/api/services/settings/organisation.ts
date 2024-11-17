@@ -5,12 +5,14 @@ SETTINGS SERVICES
 */
 
 import {
+  addExistingMembersToBranchURL,
   addNewOrgBranchURL,
   archiveOrgAttributeURL,
   createOrgAttributeURL,
   deleteOrgBranchURL,
   deleteRequest,
   fetchABranchURL,
+  fetchEligibleMembersForBranchURL,
   fetchOrgActivitiesURL,
   fetchOrgAttributesURL,
   fetchOrgBranchesURL,
@@ -89,6 +91,11 @@ interface transferMembersRequestBody {
   oldBranch: string;
   newBranch: string;
   members?: string[];
+}
+
+interface addExistingMembersRequestBody {
+  team?: string;
+  members: string[];
 }
 
 /**
@@ -392,5 +399,34 @@ export const fetchOrgActivitiesService = ({
 export const fetchUserBranchesService = (query: PaginationProps = {}) => {
   return getRequest({
     url: fetchUserBranchesURL(query)
+  });
+};
+
+/**
+ * Add members to a branch Service
+ * @returns url string
+ *
+ */
+
+export const addExistingMembersToBranchService = (
+  branchId: string,
+  data: addExistingMembersRequestBody
+) => {
+  return postRequest({
+    url: addExistingMembersToBranchURL({ branchId }),
+    data
+  });
+};
+
+/**
+ *  Fetch eligible members to join branch service
+ * @param page showing page number requested,
+ * @param limit showing number of items per page
+ * @param search fetches branch from user input
+ * @returns axios promise
+ */
+export const fetchEligibleMembersForBranchService = (id: string, query: PaginationProps = {}) => {
+  return getRequest({
+    url: fetchEligibleMembersForBranchURL(id, query)
   });
 };

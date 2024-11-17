@@ -1,15 +1,22 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons";
-import React from "react";
+import React, { ReactNode } from "react";
 import { Button } from "components/ui";
-import { EmptyStateProps } from "./TableEmptyState";
+import { IconPlus } from "@tabler/icons-react";
 
+interface EmptyStateProps {
+  pageIcon: ReactNode;
+  title: string;
+  description: string;
+  ctaFunction?: () => void;
+  btnIcon?: ReactNode;
+  btnText?: string;
+}
 const ModalEmptyState: React.FC<EmptyStateProps> = (props) => {
   const {
     pageIcon,
     title,
     description,
     ctaFunction,
-    btnIcon = <PlusCircledIcon />,
+    btnIcon = <IconPlus size={18} />,
     btnText
   } = props;
 

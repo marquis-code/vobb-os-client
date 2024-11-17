@@ -30,11 +30,16 @@ const MemberBranchesModal = ({
   const { currentPage, totalCount, totalPages } = metaData;
   return (
     <>
-      <Modal contentClassName="max-w-[500px]" show={show} close={close}>
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-bold">{name}'s Branches</h2>
-          <Button onClick={close} variant={"ghost"} size={"icon"}>
-            <Cross1Icon stroke="currentColor" strokeWidth={1} />
+      <Modal contentClassName="max-w-[500px] p-0" show={show} close={close}>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
+          <h2 className="text-lg font-medium text-vobb-neutral-95">{name}'s Branches</h2>
+          <Button
+            onClick={close}
+            variant={"ghost"}
+            size={"icon"}
+            data-testid="close-btn"
+            className="border p-2 shadow-sm">
+            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
           </Button>
         </div>
         <p className="mb-4">This shows the branches the member can access</p>
