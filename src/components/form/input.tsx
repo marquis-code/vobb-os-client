@@ -57,14 +57,15 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
                 className={cn(
                   `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
                   className,
-                  icon ? "pl-8" : ""
+                  icon ? "pl-8" : "" // Ensures padding when icon is present
                 )}
               />
             ) : (
               <Input
                 className={cn(
                   `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
-                  className
+                  className,
+                  icon ? "pl-8" : "" // Ensures padding when icon is present
                 )}
                 {...props}
               />
