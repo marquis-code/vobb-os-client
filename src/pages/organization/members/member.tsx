@@ -215,6 +215,7 @@ const Member = () => {
   const fetchAccessibleTeams = () => {
     if (params.id) runFetchAccessibleTeams(fetchMemberAllAccessibleTeamsService(params.id));
   };
+
   const memberProfile = useMemo<MemberProfileProps>(() => {
     if (profileResponse?.status === 200) {
       const data = profileResponse?.data?.data;
@@ -265,6 +266,20 @@ const Member = () => {
     return initMemberTeams;
   }, [memberTeamsResponse, memberTeamsError]);
 
+  const [memberProfileTabLengths, setMemberProfileTabLengths] = useState({
+    activity: 0,
+    email: 0,
+    clients: 0,
+    tasks: 0,
+    files: 0,
+    notes: 0,
+    details: 0,
+    comments: 0
+  });
+
+  const handleUpdateProfileTabLengths = (tabKey: string, value: number) => {
+    setMemberProfileTabLengths((prev) => ({ ...prev, [tabKey]: value }));
+  };
   const memberBranches = useMemo<MemberBranchesDataProps>(() => {
     if (memberBranchesResponse?.status === 200) {
       const branches = memberBranchesResponse.data.data.branches.map((item) => ({
@@ -407,6 +422,7 @@ const Member = () => {
         }}
       />
       <MemberProfileTabs
+        memberProfileTabLengths={memberProfileTabLengths}
         handleMainTabChange={handleMainTabChange}
         mainTab={params.route ?? "activity"}
       />
@@ -425,7 +441,7 @@ const Member = () => {
         ) : params.route === "files" ? (
           <MemberProfileFiles />
         ) : params.route === "tasks" ? (
-          <MemberProfileTasks />
+          <MemberProfileTasks handleUpdateProfileTabLengths={handleUpdateProfileTabLengths} />
         ) : params.route === "notes" ? (
           <MemberProfileNotes />
         ) : params.route === "clients" ? (

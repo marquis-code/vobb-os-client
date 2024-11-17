@@ -2,7 +2,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { Button } from "components";
 import React, { ReactNode } from "react";
 
-interface EmptyStateProps {
+export interface EmptyStateProps {
   pageIcon: ReactNode;
   title: string;
   description: string;
@@ -24,7 +24,7 @@ const TableEmptyState: React.FC<EmptyStateProps> = (props) => {
   return (
     <>
       <div className="bg-circle-pattern w-[300px] h-[395px]  m-auto bg-no-repeat bg-[length:600px_600px] bg-[center_top] relative">
-        <span className="w-10 h-10 absolute top-[57%] left-[50.25%] -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+        <span className="w-10 h-10 absolute top-[56.5%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
           {pageIcon}
         </span>
       </div>
@@ -33,7 +33,11 @@ const TableEmptyState: React.FC<EmptyStateProps> = (props) => {
 
         <p className="text-xs text-vobb-neutral-60">{description}</p>
         {btnText && (
-          <Button onClick={ctaFunction} className="flex gap-1 mt-5 text-xs" variant={"fill"}>
+          <Button
+            onClick={ctaFunction}
+            className="flex gap-1 mt-5 text-xs"
+            variant={"fill"}
+            data-testid="empty-state-action">
             {btnIcon} {btnText}
           </Button>
         )}

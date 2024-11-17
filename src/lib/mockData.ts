@@ -6,7 +6,8 @@ import {
   MemberTableData,
   TeamTableData,
   OrganisationAttributesData,
-  ExistingUserTypes
+  ExistingUserTypes,
+  MemberTasksData
 } from "types";
 import { TeamActivityData } from "modules";
 
@@ -740,7 +741,8 @@ export const teamActivityMockData: TeamActivityData[] = [
     metadata: undefined
   }
 ];
-export const users: ExistingUserTypes[] = [
+
+export const existingUsers: ExistingUserTypes[] = [
   {
     avatar: null,
     label: "First",
@@ -765,5 +767,186 @@ export const users: ExistingUserTypes[] = [
     avatar: null,
     label: "Seventh",
     value: "1241"
+  }
+];
+
+export const MockedCompletedTasks: MemberTasksData[] = [
+  {
+    id: "1",
+    title: "Complete the project proposal",
+    description: "Draft and finalize the project proposal for the upcoming quarter.",
+    object: "General",
+    creator: {
+      id: "101",
+      avatar: "https://example.com/avatar_creator1.jpg",
+      name: "Olivia Parker"
+    },
+    status: "complete",
+    priority: "high",
+    assignedTo: [
+      { _id: "201", avatar: "https://example.com/avatar1.jpg", name: "Alice Johnson" },
+      { _id: "202", avatar: "https://example.com/avatar2.jpg", name: "Bob Smith" }
+    ],
+    dueDate: "2024-11-01",
+    date: "2024-10-01"
+  },
+  {
+    id: "2",
+    title: "Update team on the Q4 targets",
+    description: "Discuss the targets and objectives with the team for Q4.",
+    object: "General",
+    creator: {
+      id: "102",
+      avatar: "https://example.com/avatar_creator2.jpg",
+      name: "Liam Walker"
+    },
+    status: "complete",
+    priority: "medium",
+    assignedTo: [{ _id: "203", avatar: "https://example.com/avatar3.jpg", name: "Charlie Brown" }],
+    dueDate: "2024-10-15",
+    date: "2024-09-25"
+  },
+  {
+    id: "3",
+    title: "Finalize new hiring process",
+    description: "Complete the documentation for the revised hiring process.",
+    object: "Task",
+    creator: {
+      id: "103",
+      avatar: "https://example.com/avatar_creator3.jpg",
+      name: "Emma Davis"
+    },
+    status: "complete",
+    priority: "high",
+    assignedTo: [
+      { _id: "204", avatar: "https://example.com/avatar4.jpg", name: "Dana Lee" },
+      { _id: "205", avatar: "https://example.com/avatar5.jpg", name: "Eli Green" }
+    ],
+    dueDate: "2024-11-10",
+    date: "2024-10-05"
+  },
+  {
+    id: "4",
+    title: "Create project roadmap",
+    description: "Outline and set milestones for the project roadmap.",
+    object: "General",
+    creator: {
+      id: "104",
+      avatar: "https://example.com/avatar_creator4.jpg",
+      name: "Ava Thompson"
+    },
+    status: "complete",
+    priority: "low",
+    assignedTo: [{ _id: "206", avatar: "https://example.com/avatar6.jpg", name: "Frank White" }],
+    dueDate: "2024-11-20",
+    date: "2024-10-08"
+  }
+];
+
+export const MockedIncompletedTasks: MemberTasksData[] = [
+  {
+    id: "78",
+    title: "Prepare presentation for stakeholders",
+    description: "Develop a comprehensive presentation for the stakeholders meeting.",
+    object: "General",
+    creator: {
+      id: "105",
+      avatar: "https://example.com/avatar_creator5.jpg",
+      name: "James Anderson"
+    },
+    status: "incomplete",
+    priority: "high",
+    assignedTo: [{ _id: "207", avatar: "https://example.com/avatar7.jpg", name: "Grace Black" }],
+    dueDate: "2024-12-01",
+    date: "2024-10-10"
+  },
+  {
+    id: "6",
+    title: "Set up training for new hires",
+    description: "Organize a training session covering company policies and processes.",
+    object: "General",
+    creator: {
+      id: "106",
+      avatar: "https://example.com/avatar_creator6.jpg",
+      name: "Sophia Martinez"
+    },
+    status: "incomplete",
+    priority: "medium",
+    assignedTo: [
+      { _id: "208", avatar: "https://example.com/avatar8.jpg", name: "Hank Doe" },
+      { _id: "209", avatar: "https://example.com/avatar9.jpg", name: "Ivy Green" }
+    ],
+    dueDate: "2024-11-05",
+    date: "2024-10-12"
+  },
+  {
+    id: "7",
+    title: "Update compliance documents",
+    description: "Ensure all compliance documents are up-to-date and approved.",
+    object: "General",
+    creator: {
+      id: "107",
+      avatar: "https://example.com/avatar_creator7.jpg",
+      name: "Benjamin Miller"
+    },
+    status: "incomplete",
+    priority: "low",
+    assignedTo: [{ _id: "210", avatar: "https://example.com/avatar10.jpg", name: "Jack King" }],
+    dueDate: "2024-10-31",
+    date: "2024-10-01"
+  }
+];
+
+export const MockedArchivedTasks: MemberTasksData[] = [
+  {
+    id: "5",
+    title: "Take a sprint",
+    description: "Develop a comprehensive presentation for the stakeholders meeting.",
+    object: "General",
+    creator: {
+      id: "105",
+      avatar: "https://example.com/avatar_creator5.jpg",
+      name: "James Anderson"
+    },
+    status: "archived",
+    priority: "high",
+    assignedTo: [{ _id: "207", avatar: "https://example.com/avatar7.jpg", name: "Grace Black" }],
+    dueDate: "2024-12-01",
+    date: "2024-10-10"
+  },
+  {
+    id: "6",
+    title: "STart a marathon",
+    description: "Organize a training session covering company policies and processes.",
+    object: "General",
+    creator: {
+      id: "106",
+      avatar: "https://example.com/avatar_creator6.jpg",
+      name: "Sophia Martinez"
+    },
+    status: "archived",
+    priority: "medium",
+    assignedTo: [
+      { _id: "208", avatar: "https://example.com/avatar8.jpg", name: "Hank Doe" },
+      { _id: "209", avatar: "https://example.com/avatar9.jpg", name: "Ivy Green" }
+    ],
+    dueDate: "2024-11-05",
+    date: "2024-10-12"
+  },
+  {
+    id: "7",
+    title: "Deliver an address",
+    description: "Ensure all compliance documents are up-to-date and approved.",
+    object: "General",
+    creator: {
+      id: "107",
+      avatar: "https://example.com/avatar_creator7.jpg",
+      name: "Benjamin Miller"
+    },
+    status: "archived",
+    priority: "low",
+    assignedTo: [{ _id: "210", avatar: "https://example.com/avatar10.jpg", name: "Jack King" }],
+    dueDate: "2024-10-31",
+    date: "2024-10-01"
   }
 ];

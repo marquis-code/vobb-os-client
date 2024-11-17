@@ -23,7 +23,7 @@ export interface MetaDataProps {
 }
 
 export interface ExistingUserTypes {
-  avatar: any | File;
+  avatar?: any | File;
   label: string;
   value: string;
 }

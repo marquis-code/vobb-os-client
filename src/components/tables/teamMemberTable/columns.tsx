@@ -9,6 +9,7 @@ import {
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 import { EyeOpenIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 // This type is used to define the shape of our data.
 export type TeamMemberTableData = {
@@ -68,9 +69,9 @@ const ActionColumn = ({ viewMember }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button variant="outline" className="h-7 w-7 p-0">
           <span className="sr-only">Open menu</span>
-          <BreadcrumbEllipsis />
+          <IconDotsVertical size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

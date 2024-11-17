@@ -1,5 +1,5 @@
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { IconBriefcase, IconId, IconUser } from "@tabler/icons-react";
+import { IconBriefcase, IconCancel, IconId, IconRefresh, IconUser } from "@tabler/icons-react";
 import { Badge, Button, LoadingSpinner } from "components";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import {
@@ -10,19 +10,17 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
-import { useUserContext } from "context";
 import { MemberProfileProps } from "types";
 
-// Get member profile info from context and remove the comments
 interface MemberProfileHeaderProps extends MenuProps {
   memberProfile: MemberProfileProps;
   loading: boolean;
 }
 
 const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
-  const { avatar, initials, fullName, email, jobTitle, role, status } = props.memberProfile;
+  const { avatar, initials, fullName, email, jobTitle, role, timeZone, status } =
+    props.memberProfile;
   const isSuspended = status === "suspended";
-  const { userDetails } = useUserContext();
 
   if (props.loading) return <LoadingSpinner />;
   return (
@@ -70,7 +68,7 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
                 {jobTitle}
               </span>
             </TooltipTrigger>
-            <TooltipContent className="bg-vobb-neutral-70">Job Title</TooltipContent>
+            <TooltipContent className="bg-vobb-neutral-70">Job title</TooltipContent>
           </Tooltip>
           <span className="bg-vobb-neutral-30 rounded-md w-[4px] h-[4px] block"></span>
           <Tooltip>
@@ -87,7 +85,7 @@ const MemberProfileHeader: React.FC<MemberProfileHeaderProps> = (props) => {
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
               <span className="bg-white border rounded-sm px-2 py-2 flex gap-1 items-end shadow-sm">
                 <IconId color="#667085" size={16} />
-                {userDetails?.timezone}
+                {timeZone}
               </span>{" "}
             </TooltipTrigger>
             <TooltipContent className="bg-vobb-neutral-70">Timezone</TooltipContent>
@@ -123,15 +121,41 @@ const Menu = ({
           <DotsVerticalIcon />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-36 mr-4">
+      <DropdownMenuContent className="w-56 mr-4 text-vobb-neutral-70 text-xs rounded-lg">
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={handleChangeRole}>Change role</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleChangeTeam}>Change team</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleChangeBranch}>Change branch</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleComposeEmail}>Compose email</DropdownMenuItem>{" "}
+          <DropdownMenuItem onClick={handleChangeRole} className="flex items-center gap-2 py-3">
+            {" "}
+            <span>
+              <IconRefresh size={18} color="#000000" />{" "}
+            </span>{" "}
+            Change member role
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleChangeTeam} className="flex items-center gap-2  py-3">
+            {" "}
+            <span>
+              <IconRefresh size={18} color="#000000" />{" "}
+            </span>{" "}
+            Change member team
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleChangeBranch} className="flex items-center gap-2  py-3">
+            {" "}
+            <span>
+              <IconRefresh size={18} color="#000000" />{" "}
+            </span>{" "}
+            Change member branch
+          </DropdownMenuItem>
+          {/* <DropdownMenuItem onClick={handleComposeEmail}>Compose email</DropdownMenuItem>{" "} */}
           {/*TBD after sendup*/}
-          <DropdownMenuItem onClick={handleSuspension}>
-            {isSuspended ? "Undo suspension" : "Suspend account"}
+          <DropdownMenuItem onClick={handleSuspension} className="py-3">
+            {isSuspended ? (
+              <span className="text-error-10 flex items-center gap-2">
+                <IconRefresh size={18} /> Undo suspension
+              </span>
+            ) : (
+              <span className="text-error-10 flex items-center gap-2">
+                <IconCancel size={18} /> Suspend account
+              </span>
+            )}
           </DropdownMenuItem>{" "}
         </DropdownMenuGroup>
       </DropdownMenuContent>

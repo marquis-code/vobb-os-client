@@ -10,6 +10,7 @@ import {
 } from "components/ui/dropdown-menu";
 import { EyeOpenIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
 import { BranchMemberTableData } from "types";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 export interface BranchMemberTableActions {
   handleViewMember: (id: string) => void;
@@ -75,9 +76,9 @@ const ActionColumn = ({ viewMember, transferMemberToBranch }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-6 w-6 p-0">
+        <Button variant="outline" className="h-7 w-7 p-0">
           <span className="sr-only">Open menu</span>
-          <BreadcrumbEllipsis />
+          <IconDotsVertical size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

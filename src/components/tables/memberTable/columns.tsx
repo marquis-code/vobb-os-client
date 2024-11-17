@@ -19,6 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { cn } from "lib";
 import { MemberTableData, statuses } from "types";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 export enum memberStatuses {
   invited = "Invited",
@@ -197,7 +198,7 @@ const ActionColumn = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           className="h-6 w-6 p-0"
           data-testid={
             status === "active"
@@ -207,7 +208,7 @@ const ActionColumn = ({
               : "menu-inactiveUser"
           }>
           <span className="sr-only">Open menu</span>
-          <BreadcrumbEllipsis />
+          <IconDotsVertical size={16} />{" "}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
