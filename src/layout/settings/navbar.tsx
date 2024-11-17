@@ -6,8 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator
 } from "components/ui/breadcrumb";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Routes } from "router";
 
 interface NavBarProps {
   sideBarWidth: string;
@@ -19,30 +20,40 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
   const location = useLocation();
   const [history, setHistory] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isNavigatingRef = useRef(false);
 
   const handleBack = () => {
     if (currentIndex > 0) {
+      isNavigatingRef.current = true;
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
       navigate(history[newIndex]);
     }
+    if (currentIndex === 0) navigate(Routes.members);
   };
 
   const handleForward = () => {
     if (currentIndex < history.length - 1) {
+      isNavigatingRef.current = true;
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
       navigate(history[newIndex]);
     }
   };
+
   useEffect(() => {
-    setHistory((prevHistory) => {
-      if (location.pathname !== prevHistory[prevHistory.length - 1]) {
-        return [...prevHistory, location.pathname];
-      }
-      return prevHistory;
-    });
-    setCurrentIndex(history.length);
+    if (!isNavigatingRef.current) {
+      setHistory((prevHistory) => {
+        if (location.pathname !== prevHistory[prevHistory.length - 1]) {
+          const newHistory = [...prevHistory, location.pathname];
+          setCurrentIndex(newHistory.length - 1);
+          return newHistory;
+        }
+        return prevHistory;
+      });
+    } else {
+      isNavigatingRef.current = false;
+    }
   }, [location.pathname]);
 
   return (
@@ -55,8 +66,8 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, items }) => {
             <span className="flex gap-2 items-center">
               <IconArrowNarrowLeft
                 onClick={handleBack}
-                color={currentIndex > 0 ? "#101323" : "#D1D5DB"}
-                className={currentIndex > 0 ? "cursor-pointer" : "cursor-not-allowed"}
+                color={"#101323"}
+                className="cursor-pointer"
                 size={18}
               />
               <IconArrowNarrowRight
