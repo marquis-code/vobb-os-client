@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { CompanyAddressFormData, companyAddressRequestBody, optionType } from "types";
+import Cookies from "js-cookie";
 
 const CompanyAddress = () => {
   const { handleFormChange } = useOnboardingContext();
@@ -128,8 +129,14 @@ const CompanyAddress = () => {
 
   useMemo(() => {
     if (cityResponse?.status === 200) {
-      localStorage.setItem("vobbOSAccess", cityResponse?.data?.data?.access_token);
-      localStorage.setItem("vobbOSRefresh", cityResponse?.data?.data?.refresh_token);
+      Cookies.set("vobbOSAccess", cityResponse?.data?.data?.access_token, {
+        secure: true,
+        sameSite: "Strict"
+      });
+      Cookies.set("vobbOSRefresh", cityResponse?.data?.data?.refresh_token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       navigate(Routes.completed_onboarding);
       toast({
         description: cityResponse?.data?.message

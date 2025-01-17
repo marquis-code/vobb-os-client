@@ -5,6 +5,7 @@ import { AcceptInviteUI } from "modules";
 import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import Cookies from "js-cookie";
 
 const AcceptInvite = () => {
   const navigate = useNavigate();
@@ -39,8 +40,14 @@ const AcceptInvite = () => {
 
   useMemo(() => {
     if (acceptResponse?.status === 201) {
-      localStorage.setItem("vobbOSAccess", acceptResponse?.data?.data?.access_token);
-      localStorage.setItem("vobbOSRefresh", acceptResponse?.data?.data?.refresh_token);
+      Cookies.set("vobbOSAccess", acceptResponse?.data?.data?.access_token, {
+        secure: true,
+        sameSite: "Strict"
+      });
+      Cookies.set("vobbOSRefresh", acceptResponse?.data?.data?.refresh_token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       navigate(Routes.invitation_success);
       toast({
         description: acceptResponse?.data?.message
@@ -55,7 +62,10 @@ const AcceptInvite = () => {
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem("vobbOSAccess", token);
+      Cookies.set("vobbOSAccess", token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       handleValidateInvite();
     }
   }, []);

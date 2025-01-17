@@ -6,10 +6,8 @@ describe("Member tasks", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
     cy.visit("/members/6718c8f96425ba1f755f4cc2/tasks");
     cy.url().should("include", "/members/6718c8f96425ba1f755f4cc2/tasks");
   });

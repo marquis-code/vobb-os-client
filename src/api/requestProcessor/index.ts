@@ -1,6 +1,7 @@
 import { refreshTokenURL } from "api/urls";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { Routes } from "router";
+import Cookies from "js-cookie";
 // Create an axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL
@@ -11,7 +12,7 @@ export const axiosInstanceUnauth = axios.create({
 // axios request interceptor for authenticated instance
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const accessToken = localStorage.getItem("vobbOSAccess");
+    const accessToken = Cookies.get("vobbOSAccess");
     if (accessToken && config.headers) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
@@ -21,7 +22,7 @@ axiosInstance.interceptors.request.use(
 );
 export const refreshToken = async (): Promise<string | null> => {
   try {
-    const refreshToken = localStorage.getItem("vobbOSRefresh");
+    const refreshToken = Cookies.get("vobbOSRefresh");
     if (!refreshToken) throw new Error("No refresh token available");
     const config = {
       headers: {
@@ -31,13 +32,17 @@ export const refreshToken = async (): Promise<string | null> => {
     const response = await axiosInstanceUnauth.get(refreshTokenURL(), config);
     const newAccessToken = response.data?.data?.access_token;
     if (newAccessToken) {
-      localStorage.setItem("vobbOSAccess", newAccessToken);
+      Cookies.set("vobbOSAccess", newAccessToken, {
+        secure: true,
+        sameSite: "Strict"
+      });
       return newAccessToken;
     } else {
       throw new Error("No access token received");
     }
   } catch (error) {
-    localStorage.clear();
+    Cookies.remove("vobbOSAccess");
+    Cookies.remove("vobbOSRefresh");
     window.location.assign(Routes.home);
     return null;
   }
@@ -59,7 +64,8 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } else {
-        localStorage.clear();
+        Cookies.remove("vobbOSAccess");
+        Cookies.remove("vobbOSRefresh");
         window.location.assign(Routes.home);
       }
     }

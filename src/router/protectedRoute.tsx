@@ -1,4 +1,5 @@
 import { useFetchOrganisation, useFetchUser, useLogout } from "hooks";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
 /**
@@ -17,7 +18,7 @@ const ProtectedRoute: React.FC<{ children: any }> = ({ children }) => {
   const { logout } = useLogout();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const accessToken = localStorage.getItem("vobbOSAccess");
+  const accessToken = Cookies.get("vobbOSAccess");
 
   const checkUser = () => {
     if (!accessToken || accessToken === "undefined") {

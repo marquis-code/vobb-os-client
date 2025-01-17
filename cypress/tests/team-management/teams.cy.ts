@@ -6,10 +6,8 @@ describe("Organisation teams", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
     cy.visit("/settings/teams");
     cy.url().should("include", "/settings/teams");
   });

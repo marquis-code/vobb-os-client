@@ -6,11 +6,8 @@ describe("Organisation branches", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
-
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
     cy.visit("/settings/branch/667e5b66512d68b07bf41a7c");
 
     cy.url().should("include", "/settings/branch/667e5b66512d68b07bf41a7c");

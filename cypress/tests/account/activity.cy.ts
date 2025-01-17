@@ -6,10 +6,8 @@ describe("Account Activities", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh);    
     cy.visit("/settings/account-activity");
     cy.url().should("include", "/settings/account-activity");
   });

@@ -6,10 +6,8 @@ describe("Organisation Branding", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
 
     cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/details", {
       statusCode: 200,

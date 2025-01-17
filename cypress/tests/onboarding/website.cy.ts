@@ -6,10 +6,8 @@ describe("Onboarding - Company website flow", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
     cy.visit("/onboarding/company_website");
     cy.url().should("include", "/onboarding/company_website");
   });

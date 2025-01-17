@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { resetPasswordData } from "types/auth";
+import Cookies from "js-cookie";
 
 const NewPassword = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const NewPassword = () => {
   useMemo(() => {
     if (response?.status === 200) {
       navigate(Routes.new_password_completed);
-      localStorage.removeItem("vobbOSAccess");
+      Cookies.remove("vobbOSAccess");
     } else if (error) {
       toast({
         variant: "destructive",
