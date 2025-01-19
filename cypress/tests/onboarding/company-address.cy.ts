@@ -6,10 +6,8 @@ describe("Onboarding - Company address flow", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
     cy.visit("/onboarding/operating_address");
     cy.url().should("include", "/onboarding/operating_address");
   });

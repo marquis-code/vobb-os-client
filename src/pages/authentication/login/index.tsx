@@ -7,6 +7,7 @@ import { loginData } from "types/auth";
 import { toast } from "components";
 import { Routes } from "router";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [loginReq, setLoginReq] = useState<loginData>(initLogin);
@@ -40,17 +41,29 @@ const Login = () => {
   useMemo(() => {
     if (emailResponse?.status === 200) {
       if (emailResponse?.data["2fa_status"]) {
-        localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
+        Cookies.set("vobbOSAccess", emailResponse?.data?.data?.token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         setTwoFactor({ show: true });
       } else if (emailResponse?.data?.status) {
-        localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
+        Cookies.set("vobbOSAccess", emailResponse?.data?.data?.token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         if (emailResponse?.data?.status === "email_verify") {
           const email = encodeURIComponent(emailResponse?.data?.data?.email);
           navigate(`${Routes.email_verify}?email=${email}`);
         } else navigate(`${Routes[`onboarding_${emailResponse?.data?.status}`]}`);
       } else {
-        localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.access_token);
-        localStorage.setItem("vobbOSRefresh", emailResponse?.data?.data?.refresh_token);
+        Cookies.set("vobbOSAccess", emailResponse?.data?.data?.access_token, {
+          secure: true,
+          sameSite: "Strict"
+        });
+        Cookies.set("vobbOSRefresh", emailResponse?.data?.data?.refresh_token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         navigate(Routes.overview);
       }
       toast({
@@ -78,11 +91,20 @@ const Login = () => {
   useMemo(() => {
     if (googleResponse?.status === 200) {
       if (googleResponse?.data?.status) {
-        localStorage.setItem("vobbOSAccess", googleResponse?.data?.token);
+        Cookies.set("vobbOSAccess", googleResponse?.data?.token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         navigate(`${Routes[`onboarding_${googleResponse?.data?.status}`]}`);
       } else {
-        localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.access_token);
-        localStorage.setItem("vobbOSRefresh", googleResponse?.data?.data?.refresh_token);
+        Cookies.set("vobbOSAccess", googleResponse?.data?.data?.access_token, {
+          secure: true,
+          sameSite: "Strict"
+        });
+        Cookies.set("vobbOSRefresh", googleResponse?.data?.data?.refresh_token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         navigate(Routes.overview);
       }
       toast({

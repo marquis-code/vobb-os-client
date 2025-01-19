@@ -5,6 +5,7 @@ import { Routes } from "router";
 import { useApiRequest } from "hooks";
 import { resendVerifyEmailService, verifyEmailService } from "api";
 import { toast } from "components";
+import Cookies from "js-cookie";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -30,7 +31,10 @@ const VerifyEmail = () => {
 
   useMemo(() => {
     if (verifyResponse?.status === 200) {
-      localStorage.setItem("vobbOSAccess", verifyResponse?.data?.data?.token);
+      Cookies.set("vobbOSAccess", verifyResponse?.data?.data?.token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       navigate(Routes.completed_email_verify);
       toast({
         description: verifyResponse?.data?.message

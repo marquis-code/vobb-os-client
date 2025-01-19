@@ -6,11 +6,8 @@ describe("Organisation Activities", () => {
   });
 
   beforeEach(function () {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", this.vobbOSAccess);
-      window.localStorage.setItem("vobbOSRefresh", this.vobbOSRefresh);
-    });
-
+    cy.setCookie("vobbOSAccess", this.vobbOSAccess);
+    cy.setCookie("vobbOSRefresh", this.vobbOSRefresh); 
     cy.fixture("activitiesMock").then((activitiesMock) => {
       cy.intercept("GET", "https://os-stg-api.vobb.io/api/v1/settings/org/activity*", {
         statusCode: 200,

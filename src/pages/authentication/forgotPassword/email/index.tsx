@@ -5,6 +5,7 @@ import { EmailUI } from "modules";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import Cookies from "js-cookie";
 
 const Email = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,10 @@ const Email = () => {
 
   useMemo(() => {
     if (response?.status === 200) {
-      localStorage.setItem("vobbOSAccess", response?.data?.data?.token);
+      Cookies.set("vobbOSAccess", response?.data?.data?.token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       const token = response?.data?.data?.token;
       navigate(`${Routes.forgot_password_verify}?email=${email}&token=${token}`);
       toast({

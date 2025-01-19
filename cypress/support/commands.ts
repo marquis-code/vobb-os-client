@@ -79,13 +79,15 @@ Cypress.Commands.add("loginUserWithEmail", (email, password) => {
 
   cy.url({ timeout: 10000 }).should("not.include", "/login");
 
-  cy.window().then((window) => {
-    const vobbOSAccess = window.localStorage.getItem("vobbOSAccess");
-    const vobbOSRefresh = window.localStorage.getItem("vobbOSRefresh");
-    cy.wrap(vobbOSAccess).as("vobbOSAccess");
-    cy.wrap(vobbOSRefresh).as("vobbOSRefresh");
+  cy.getCookie("vobbOSAccess").then((cookie) => {
+    cy.wrap(cookie?.value).as("vobbOSAccess");
+  });
+
+  cy.getCookie("vobbOSRefresh").then((cookie) => {
+    cy.wrap(cookie?.value).as("vobbOSRefresh");
   });
 });
+
 
 Cypress.Commands.add("checkAndCloseToastNotification", (message, timeout = 10000) => {
   cy.get('li[role="status"]', { timeout: timeout })

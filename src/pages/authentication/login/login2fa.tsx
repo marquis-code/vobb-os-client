@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 import { ModalProps } from "types";
+import Cookies from "js-cookie";
 
 interface Login2FAProps extends ModalProps {
   email: string;
@@ -21,11 +22,20 @@ const Login2FA: React.FC<Login2FAProps> = ({ show, close, email }) => {
   useMemo(() => {
     if (response?.status === 200) {
       if (response?.data?.status) {
-        localStorage.setItem("vobbOSAccess", response?.data?.token);
+        Cookies.set("vobbOSAccess", response?.data?.token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         navigate(`${Routes[`onboarding_${response?.data?.status}`]}`);
       } else {
-        localStorage.setItem("vobbOSAccess", response?.data?.data?.access_token);
-        localStorage.setItem("vobbOSRefresh", response?.data?.data?.refresh_token);
+        Cookies.set("vobbOSAccess", response?.data?.data?.access_token, {
+          secure: true,
+          sameSite: "Strict"
+        });
+        Cookies.set("vobbOSRefresh", response?.data?.data?.refresh_token, {
+          secure: true,
+          sameSite: "Strict"
+        });
         navigate(Routes.overview);
       }
       toast({

@@ -6,6 +6,7 @@ import { forgotPasswordService, forgotPasswordVerifyService } from "api";
 import { useMemo } from "react";
 import { toast } from "components";
 import { forgotPasswordParams } from "types";
+import Cookies from "js-cookie";
 
 const VerifyPassword = () => {
   const {
@@ -21,7 +22,10 @@ const VerifyPassword = () => {
 
   useMemo(() => {
     if (verifyResponse?.status === 200) {
-      localStorage.setItem("vobbOSAccess", verifyResponse?.data?.data?.token);
+      Cookies.set("vobbOSAccess", verifyResponse?.data?.data?.token, {
+        secure: true,
+        sameSite: "Strict"
+      });
 
       navigate(Routes.new_password);
       toast({
@@ -50,7 +54,10 @@ const VerifyPassword = () => {
   };
   useMemo(() => {
     if (resendResponse?.status === 200) {
-      localStorage.setItem("vobbOSAccess", resendResponse?.data?.data?.token);
+      Cookies.set("vobbOSAccess", resendResponse?.data?.data?.token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       toast({
         description: resendResponse?.data?.message
       });

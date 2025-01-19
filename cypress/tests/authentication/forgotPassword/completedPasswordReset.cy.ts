@@ -1,9 +1,7 @@
 describe("Completed password reset page", () => {
   beforeEach(() => {
-    cy.window().then((window) => {
-      window.localStorage.setItem("vobbOSAccess", "fake-auth-token");
-      window.localStorage.setItem("vobbOSRefresh", "fake-refresh-token");
-    });
+    cy.setCookie("vobbOSAccess", "fake-auth-token");
+    cy.setCookie("vobbOSRefresh", "fake-refresh-token");
     cy.visit("/new-password/completed");
     cy.on("uncaught:exception", (err, runnable) => {
       console.error("Uncaught Exception:", err.message);
@@ -11,11 +9,9 @@ describe("Completed password reset page", () => {
     });
   });
 
-  it("should have necessary tokens in local storage", () => {
-    cy.window().then((win) => {
-      cy.wrap(win.localStorage.getItem("vobbOSAccess")).should("exist");
-      cy.wrap(win.localStorage.getItem("vobbOSRefresh")).should("exist");
-    });
+  it("should have necessary tokens in cookies", () => {
+    cy.getCookie("vobbOSAccess").should("exist");
+    cy.getCookie("vobbOSRefresh").should("exist");
   });
 
   it("Continue button takes user to sign in page", () => {

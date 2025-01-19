@@ -6,6 +6,7 @@ import { SignupData, SignupUI } from "modules";
 import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
+import Cookies from "js-cookie";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -32,7 +33,10 @@ const Signup = () => {
 
   useMemo(() => {
     if (emailResponse?.status === 201) {
-      localStorage.setItem("vobbOSAccess", emailResponse?.data?.data?.token);
+      Cookies.set("vobbOSAccess", emailResponse?.data?.data?.token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       const email = encodeURIComponent(emailResponse?.data?.data?.email);
       navigate(`${Routes.email_verify}?email=${email}`);
       toast({
@@ -59,7 +63,10 @@ const Signup = () => {
 
   useMemo(() => {
     if (googleResponse?.status === 201) {
-      localStorage.setItem("vobbOSAccess", googleResponse?.data?.data?.token);
+      Cookies.set("vobbOSAccess", googleResponse?.data?.data?.token, {
+        secure: true,
+        sameSite: "Strict"
+      });
       navigate(Routes.onboarding_user_details);
       toast({
         description: googleResponse?.data?.message
