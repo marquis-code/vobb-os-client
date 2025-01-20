@@ -43,8 +43,8 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({ title, items, active, s
           <Link
             key={value}
             className={cn(
-              "flex items-center gap-2 w-full hover:bg-gray-100 p-2 rounded-md mb-1",
-              value === active ? "bg-gray-100 font-semibold" : ""
+              "flex items-center gap-2 w-full hover:bg-vobb-neutral-20 p-2 rounded-md mb-1",
+              value === active ? "bg-vobb-neutral-20 font-semibold" : ""
             )}
             to={path}
             data-testid={`${title}-link`}>

@@ -153,8 +153,10 @@ module.exports = {
         "caret-blink": "caret-blink 1.25s ease-out infinite"
       },
       backgroundImage: {
-        "circle-pattern": "url('/src/assets/vectors/illustrations/circles.svg')"
+        "circle-pattern": "url('/src/assets/vectors/illustrations/circles.svg')",
+        "grid-bg": "url('/src/assets/vectors/illustrations/pipelineGridBg.svg')"
       },
+
       gridTemplateColumns: {
         colsLayout: "1.5fr 2.5fr 1fr"
       }

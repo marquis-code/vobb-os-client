@@ -8,14 +8,15 @@ import {
   DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserContext } from "context";
-import { Input, LoadingSpinner } from "components";
+import { CustomInput, LoadingSpinner } from "components";
 import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
-import { useFetchUserBranches } from "hooks";
-import { debounce } from "lib";
+import { useDebounce, useFetchUserBranches } from "hooks";
 import { IconPlus } from "@tabler/icons-react";
+import { SidebarLinks } from "./sidebarLInks";
+import { useLocation } from "react-router-dom";
 
 interface SideBarProps {
   sideBarWidth: string;
@@ -24,6 +25,7 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollapse }) => {
+  const location = useLocation();
   return (
     <aside
       style={{ width: sideBarWidth }}
@@ -42,7 +44,9 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarWidth, collapse, handleCollaps
           <ChevronLeftDoubleIcon className={collapse ? "rotate-180" : undefined} />
         </button>
       </div>
-      <section>sidebar</section>
+      <section>
+        <SidebarLinks active={location.pathname} sideBarWidth={sideBarWidth} />
+      </section>
     </aside>
   );
 };
@@ -52,7 +56,6 @@ interface BranchType {
 }
 
 export function BranchMenu() {
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const { setAddBranch } = useModalContext();
   const { userDetails } = useUserContext();
   const { fetchUserBranches, userBranches, loading: loadingUser } = useFetchUserBranches({});
@@ -60,6 +63,12 @@ export function BranchMenu() {
   const [allBranches, setAllBranches] = useState<BranchType[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<BranchType>({ id: "", name: "" });
   const [branchSearchQuery, setBranchSearchQuery] = useState("");
+
+  const handleAddBranchModal = () => {
+    setAddBranch(true);
+  };
+
+  const debouncedBranchSearchQuery = useDebounce(branchSearchQuery, 1000);
 
   const handleBranchSearch = (value: string) => {
     setBranchSearchQuery(value);
@@ -69,13 +78,13 @@ export function BranchMenu() {
     setSelectedBranch(branch);
   };
 
-  const handleAddBranchModal = () => {
-    setAddBranch(true);
+  const handleFetchBranches = (search = "") => {
+    fetchUserBranches({ limit: 8, search: search.trim() });
   };
 
-  const handleFetchBranches = () => {
-    fetchUserBranches({ limit: 8, search: branchSearchQuery.trim() });
-  };
+  useEffect(() => {
+    handleFetchBranches(debouncedBranchSearchQuery);
+  }, [debouncedBranchSearchQuery]);
 
   useEffect(() => {
     if (!loadingUser && userBranches?.branchesArray) {
@@ -88,26 +97,11 @@ export function BranchMenu() {
         setSelectedBranch(branches[0]);
       }
     }
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
   }, [loadingUser, userBranches]);
 
-  //initial load
   useEffect(() => {
     handleFetchBranches();
   }, []);
-
-  //debounced fetch
-  const debouncedFetch = debounce(() => {
-    handleFetchBranches();
-  }, 1000);
-
-  useEffect(() => {
-    if (branchSearchQuery.trim()) {
-      debouncedFetch();
-    }
-  }, [branchSearchQuery]);
 
   return (
     <DropdownMenu>
@@ -117,11 +111,10 @@ export function BranchMenu() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 ml-4 mt-1">
-        <Input
+        <CustomInput
           placeholder="search"
           value={branchSearchQuery}
           onChange={(e) => handleBranchSearch(e.target.value)}
-          ref={inputRef}
         />
         <DropdownMenuGroup>
           {loadingUser ? (

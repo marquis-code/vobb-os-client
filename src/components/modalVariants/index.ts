@@ -19,6 +19,8 @@ export * from "./changeTeamModal";
 export * from "./memberBranchesModal";
 export * from "./memberTeamsModal";
 export * from "./updateJobTitleModal";
+export * from "./createPipelineModal";
+export * from "./editPipelineStagesModal";
 export * from "./addMemberTaskModal";
 export * from "./editMemberTaskModal";
 export * from "./inviteMemberToBranchModal";

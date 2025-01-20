@@ -6,3 +6,4 @@ export * from "./settings/organisation";
 export * from "./teams";
 export * from "./memberTasks";
 export * from "./member";
+export * from "./pipeline";

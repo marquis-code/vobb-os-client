@@ -22,6 +22,10 @@ export interface MetaDataProps {
   pageLimit?: number;
 }
 
+export interface stagesType {
+  title?: string | undefined;
+  color?: string | undefined;
+}
 export interface ExistingUserTypes {
   avatar?: any | File;
   label: string;

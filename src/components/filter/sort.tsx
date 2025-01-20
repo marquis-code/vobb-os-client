@@ -42,7 +42,7 @@ const SortBy = ({ order, sort, className, isClearable, testId }: SortByProps) =>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="py-1 h-7 px-2 gap-1 text-xs text-vobb-neutral-60 focus-visible:ring-0 focus-visible:ring-none"
+          className="py-1 h-9 px-2 gap-1 text-xs text-vobb-neutral-60 focus-visible:ring-0 focus-visible:ring-none"
           data-testid={testId}>
           {!order.active && <CaretSortIcon />}
           {sort.active ? (
