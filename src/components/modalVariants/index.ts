@@ -24,3 +24,5 @@ export * from "./editPipelineStagesModal";
 export * from "./addMemberTaskModal";
 export * from "./editMemberTaskModal";
 export * from "./inviteMemberToBranchModal";
+export * from "./addMemberNoteModal";
+export * from "./editMemberNoteModal";

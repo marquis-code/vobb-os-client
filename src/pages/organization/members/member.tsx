@@ -443,7 +443,10 @@ const Member = () => {
         ) : params.route === "tasks" ? (
           <MemberProfileTasks handleUpdateProfileTabLengths={handleUpdateProfileTabLengths} />
         ) : params.route === "notes" ? (
-          <MemberProfileNotes />
+          <MemberProfileNotes
+            handleUpdateProfileTabLengths={handleUpdateProfileTabLengths}
+            memberProfile={memberProfile}
+          />
         ) : params.route === "clients" ? (
           <MemberProfileClients />
         ) : (

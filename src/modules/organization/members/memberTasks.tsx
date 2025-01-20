@@ -253,12 +253,12 @@ const ActionColumn = ({ handleSetSelectedObject, selectedObject }) => {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="py-4 px-2 space-y-2 w-[184px]">
+      <DropdownMenuContent align="end" className="rounded-lg px-1 space-y-1.5 w-[184px]">
         {objectOptions.map((obj) => (
           <DropdownMenuItem
             onClick={() => handleSetSelectedObject(obj)}
             key={obj.title}
-            className="gap-2 cursor-pointer text-vobb-neutral-70"
+            className="gap-2 cursor-pointer text-vobb-neutral-70 text-xs"
             testId="invite-member">
             <IconPointFilled color={obj.color} size={14} /> {obj.title}
           </DropdownMenuItem>

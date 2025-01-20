@@ -161,11 +161,11 @@ const Menu = ({ handleArchiveTask, handleDeleteTask }: MenuProps) => {
           <IconDotsVertical size={18} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[184px] p-2 rounded-xl">
+      <DropdownMenuContent className="rounded-lg px-1 space-y-1.5 w-[184px]">
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={handleArchiveTask}
-            className="flex gap-2 items-center py-2 "
+            className="flex gap-2 items-center cursor-pointer text-vobb-neutral-70 text-xs"
             data-testid="unarchive-task">
             <span>
               <IconInbox size={16} color="#101323" />
@@ -174,7 +174,7 @@ const Menu = ({ handleArchiveTask, handleDeleteTask }: MenuProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleDeleteTask}
-            className="flex gap-2 items-center text-error-30 py-2">
+            className="flex gap-2 items-center text-error-30 cursor-pointer text-xs">
             <span>
               <IconTrash size={16} />{" "}
             </span>

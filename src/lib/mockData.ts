@@ -7,7 +7,8 @@ import {
   TeamTableData,
   OrganisationAttributesData,
   ExistingUserTypes,
-  MemberTasksData
+  MemberTasksData,
+  MemberNotesData
 } from "types";
 import { TeamActivityData } from "modules";
 
@@ -948,5 +949,68 @@ export const MockedArchivedTasks: MemberTasksData[] = [
     assignedTo: [{ _id: "210", avatar: "https://example.com/avatar10.jpg", name: "Jack King" }],
     dueDate: "2024-10-31",
     date: "2024-10-01"
+  }
+];
+
+export const MockedMemberNotesData: MemberNotesData[] = [
+  {
+    id: "1",
+    title: "Meeting Notes",
+    body: "Discussed project milestones and assigned tasks.",
+    creator: {
+      id: "u1",
+      avatar: null,
+      name: "Alice Johnson"
+    },
+    isPublic: true,
+    createdAt: "2024-11-18T10:30:00Z"
+  },
+  {
+    id: "2",
+    title: "Sprint Retrospective",
+    body: "Reviewed the past sprint and noted areas for improvement.",
+    creator: {
+      id: "u2",
+      avatar: "https://example.com/avatars/u2.png",
+      name: "Bob Smith"
+    },
+    isPublic: false,
+    createdAt: "2024-11-17T15:45:00Z"
+  },
+  {
+    id: "3",
+    title: "Client Feedback",
+    body: "Captured feedback from the client on the latest release.",
+    creator: {
+      id: "u3",
+      avatar: null,
+      name: "Charlie Davis"
+    },
+    isPublic: true,
+    createdAt: "2024-11-16T08:20:00Z"
+  },
+  {
+    id: "4",
+    title: "Bug Report",
+    body: "Logged critical bugs discovered during testing.",
+    creator: {
+      id: "u4",
+      avatar: "https://example.com/avatars/u4.png",
+      name: "Diana Ross"
+    },
+    isPublic: false,
+    createdAt: "2024-11-15T13:00:00Z"
+  },
+  {
+    id: "5",
+    title: "Team Update",
+    body: "Provided an update on team progress and upcoming tasks.",
+    creator: {
+      id: "u5",
+      avatar: null,
+      name: "Ethan Hunt"
+    },
+    isPublic: true,
+    createdAt: "2024-11-14T09:15:00Z"
   }
 ];

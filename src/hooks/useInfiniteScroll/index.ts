@@ -2,7 +2,7 @@ import { useDebounce } from "hooks/useDebounce";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 export const useInfiniteScroll = (metaData, handleParams) => {
-  const [currentLimit, setCurrentLimit] = useState(metaData.pageLimit || 4);
+  const [currentLimit, setCurrentLimit] = useState(metaData?.pageLimit || 4);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -11,13 +11,13 @@ export const useInfiniteScroll = (metaData, handleParams) => {
 
   // Function to load more tasks by increasing the limit
   const loadMoreTasks = useCallback(() => {
-    if (currentLimit < metaData.totalCount) {
+    if (currentLimit < metaData?.totalCount) {
       setLoadingMore(true);
-      const newLimit = Math.min(currentLimit + 1, metaData.totalCount); // Fetch one more task, not exceeding totalCount
+      const newLimit = Math.min(currentLimit + 1, metaData?.totalCount); // Fetch one more task, not exceeding totalCount
       handleParams("limit", newLimit); // Fetch more tasks
       setCurrentLimit(newLimit);
     }
-  }, [currentLimit, metaData.totalCount, handleParams]);
+  }, [currentLimit, metaData?.totalCount, handleParams]);
 
   // Setup IntersectionObserver to detect when reaching the bottom
   useEffect(() => {
