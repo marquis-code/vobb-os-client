@@ -15,8 +15,8 @@ import { ChevronLeftDoubleIcon } from "assets";
 import { useModalContext } from "context";
 import { useDebounce, useFetchUserBranches } from "hooks";
 import { IconPlus } from "@tabler/icons-react";
-import { SidebarLinks } from "./sidebarLInks";
 import { useLocation } from "react-router-dom";
+import { SidebarLinks } from "./sidebarLinks";
 
 interface SideBarProps {
   sideBarWidth: string;

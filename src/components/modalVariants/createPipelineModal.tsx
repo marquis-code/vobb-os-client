@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IconX } from "@tabler/icons-react";
-import { CustomInput, SelectInput } from "components/form";
+import { CustomInput, CustomTextarea, SelectInput } from "components/form";
 import { Modal } from "components/modal";
 import { Button } from "components/ui";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -86,7 +86,7 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
             register={register}
             validatorMessage={errors.name?.message}
           />
-          <CustomInput
+          <CustomTextarea
             label="Description (optional)"
             placeholder="Enter description (optional)"
             name="description"
@@ -105,6 +105,7 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
               errors.sector?.value?.message ??
               errors.sector?.label?.message
             }
+            menuPosition="fixed"
           />
         </form>
         <div className="flex justify-between py-2 px-4 bg-vobb-neutral-10">
@@ -123,7 +124,7 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
             size={"default"}
             variant={"fill"}
             className="text-xs rounded-sm">
-            Create
+            Create Pipeline
           </Button>
         </div>
       </Modal>

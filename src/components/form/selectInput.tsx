@@ -2,7 +2,14 @@ import { FileIcon, ImageIcon, UploadIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
 import { ReactNode } from "react";
 import { optionType } from "types";
-import Select, { ActionMeta, CSSObjectWithLabel, MultiValue, SingleValue } from "react-select";
+import Select, {
+  ActionMeta,
+  CSSObjectWithLabel,
+  MenuPlacement,
+  MenuPosition,
+  MultiValue,
+  SingleValue
+} from "react-select";
 
 interface SelectInputProps {
   options: optionType[] | undefined;
@@ -21,6 +28,8 @@ interface SelectInputProps {
   loading?: boolean;
   testId?: string;
   disabled?: boolean;
+  menuPlacement?: MenuPlacement | undefined;
+  menuPosition?: MenuPosition | undefined;
 }
 
 const SelectInput: React.FC<SelectInputProps> = (props) => {

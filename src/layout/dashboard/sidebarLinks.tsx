@@ -40,7 +40,7 @@ const SidebarLinks: React.FC<SidebarLinksProps> = ({ sideBarWidth, active }) => 
         {
           title: "Pipelines",
           icon: <IconSubtask size={16} color="#494949" />,
-          path: Routes.overview,
+          path: Routes.pipelines,
           value: "pipelines"
         },
         {

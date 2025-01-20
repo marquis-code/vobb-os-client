@@ -43,7 +43,7 @@ const UpdateJobTitleModal: React.FC<UpdateJobTitleModalProps> = ({
     <>
       <Modal show={show} close={close} testId="update-job-title-modal" contentClassName="p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
-          <h2 className="text-lg font-medium text-vobb-neutral-95">Update Job Title</h2>
+          <h2 className="text-lg font-medium text-vobb-neutral-95">What's your job title?</h2>
           <Button
             onClick={close}
             variant={"ghost"}

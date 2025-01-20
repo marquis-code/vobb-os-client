@@ -36,7 +36,8 @@ import {
   AcceptInvite,
   InvitationFailed,
   InvitationSuccessful,
-  MemberEmailVerify
+  MemberEmailVerify,
+  Pipelines
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -149,6 +150,15 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: DashboardLayout,
     props: {
       title: "Overview"
+    }
+  },
+  {
+    path: Routes.pipelines,
+    Element: Pipelines,
+    isProtected: true,
+    Layout: DashboardLayout,
+    props: {
+      title: "Pipelines"
     }
   },
 
