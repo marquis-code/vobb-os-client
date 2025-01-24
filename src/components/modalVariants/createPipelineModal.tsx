@@ -89,6 +89,7 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
           <CustomTextarea
             label="Description (optional)"
             placeholder="Enter description (optional)"
+            className="min-h-[128px]"
             name="description"
             register={register}
             validatorMessage={errors.description?.message}

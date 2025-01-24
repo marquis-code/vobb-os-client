@@ -103,7 +103,7 @@ const FilterSelection = ({
           variant={variant ?? "outline"}
           role="combobox"
           aria-expanded={open}
-          className={cn("gap-2 items-center px-2 bg-vobb-neutral-0 h-7", className)}
+          className={cn("gap-2 items-center px-2 bg-vobb-neutral-0 font-medium text-xs", className)}
           size={"sm"}>
           {!noValue ? (
             value.label
@@ -111,8 +111,8 @@ const FilterSelection = ({
             <PlusIcon color="var(--neutral-70)" />
           ) : (
             <>
-              <IconAdjustmentsAlt size={18} />
-              Filter
+              <IconAdjustmentsAlt className="w-[12px] h-[12px] text-neutral-600" />
+              Filters
             </>
           )}
         </Button>
@@ -398,14 +398,14 @@ const Filter = ({ filters, setFilter, attributes, className }: FilterProps) => {
               : false;
           const isAdvanced = item.isAdvanced ?? false;
           return (
-            <div className="flex items-stretch text-xs border rounded-md w-fit bg-vobb-neutral-0 h-auto relative">
-              <FilterSelection
+            <div className="flex items-stretch text-xs rounded-md w-fit bg-vobb-neutral-0 relative">
+              {/* <FilterSelection
                 variant={"ghost"}
-                className="shadow-none px-2 py-1 h-auto bg-transparent rounded-none"
+                className="shadow-none px-2 bg-transparent rounded-none border border-yellow-500"
                 options={attributes}
                 value={attributes.find((attr) => attr.value === item.property?.value)}
                 setValue={(val) => handleProperty(val, index)}
-              />
+              /> */}
               {item.property && (
                 <FilterCondition
                   variant={"ghost"}
@@ -436,7 +436,7 @@ const Filter = ({ filters, setFilter, attributes, className }: FilterProps) => {
             </div>
           );
         })}
-        <div className="flex items-stretch text-xs border rounded-md w-fit bg-vobb-neutral-0 h-auto relative">
+        <div className="flex items-stretch text-xs border border-neutral-40 h-[32px] rounded-md w-fit bg-vobb-neutral-0 relative shadow-xs">
           <FilterSelection
             variant={"ghost"}
             className="shadow-none px-2 py-1 h-auto bg-transparent rounded-none"

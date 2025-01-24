@@ -1,7 +1,9 @@
+import { IconPlus } from "@tabler/icons-react";
 import { createPipelineRequestBody, createPipelineService } from "api";
-import { CreatePipelineData, CreatePipelineModal, toast } from "components";
+import { Button, CreatePipelineData, CreatePipelineErrorModal, CreatePipelineModal, CreatePipelineSuccessModal } from "components";
 import { useApiRequest } from "hooks";
-import { useMemo } from "react";
+import { Column, Row } from "layout";
+import { useMemo, useState } from "react";
 import { ModalProps } from "types";
 
 interface CreatePipelineProps extends ModalProps {
@@ -17,7 +19,8 @@ const CreatePipeline: React.FC<CreatePipelineProps> = ({
   handleOpenEditPipelineStages
 }) => {
   const { run, data: response, requestStatus, error } = useApiRequest({});
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailureModal, setShowFailureModal] = useState(false);
   const submit = (data: CreatePipelineData) => {
     const requestBody: createPipelineRequestBody = {
       name: data.name,
@@ -34,19 +37,15 @@ const CreatePipeline: React.FC<CreatePipelineProps> = ({
 
   useMemo(() => {
     if (response?.status === 201) {
-      toast({
-        description: response?.data?.message
-      });
+      setShowSuccessModal(true);
       callback?.();
       close();
-      handleOpenEditPipelineStages();
     } else if (error) {
-      toast({
-        variant: "destructive",
-        description: error?.response?.data?.error
-      });
+      close();
+      setShowFailureModal(true);
     }
   }, [response, error]);
+
 
   return (
     <>
@@ -56,6 +55,8 @@ const CreatePipeline: React.FC<CreatePipelineProps> = ({
         submit={submit}
         loading={requestStatus.isPending}
       />
+      <CreatePipelineSuccessModal show={showSuccessModal} close={() => setShowSuccessModal(false)} onEditPipelineStages={handleOpenEditPipelineStages} />
+      <CreatePipelineErrorModal show={showFailureModal} close={() => setShowFailureModal(false)} errorMessage={error?.response?.data?.error} />
     </>
   );
 };

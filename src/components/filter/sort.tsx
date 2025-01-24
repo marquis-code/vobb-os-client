@@ -10,6 +10,7 @@ import {
 import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "components";
 import { optionType } from "types";
+import { IconArrowsDownUp } from "@tabler/icons-react";
 
 export type SortOrderType = "asc" | "desc";
 
@@ -42,22 +43,16 @@ const SortBy = ({ order, sort, className, isClearable, testId }: SortByProps) =>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="py-1 h-9 px-2 gap-1 text-xs text-vobb-neutral-60 focus-visible:ring-0 focus-visible:ring-none"
+          className="border-neutral-40 h-[32px] py-1 px-2 gap-1 text-xs text-neutral-800 font-medium focus-visible:ring-0 focus-visible:ring-none shadow-xs"
           data-testid={testId}>
           {!order.active && <CaretSortIcon />}
           {sort.active ? (
             <>
-              Sorted by:{" "}
               <span className="text-vobb-neutral-100 flex gap-1 items-center">
                 {sort.active.label}{" "}
-                {order.active === "asc" ? (
-                  <ArrowUpIcon width={10} height={10} />
-                ) : order.active === "desc" ? (
-                  <ArrowDownIcon width={10} height={10} />
-                ) : (
-                  ""
-                )}
+               <IconArrowsDownUp className="text-neutral-600 w-[12px] h-[12px] stroke-2" />
               </span>
+              Sort
             </>
           ) : (
             "Sort"
