@@ -59,5 +59,8 @@ export const Routes = {
   member: (id = ":id", tab = ":route") => `/members/${id}/${tab}`,
 
   // Pipelines
-  pipelines: "/pipelines"
+  pipelines: "/pipelines",
+
+  // Drive
+  drive: "/drive"
 };

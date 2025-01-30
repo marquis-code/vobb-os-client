@@ -11,6 +11,7 @@ import {
   MemberNotesData
 } from "types";
 import { TeamActivityData } from "modules";
+import { error } from "console";
 
 export const loginHistoryMock = [
   {
@@ -1014,3 +1015,54 @@ export const MockedMemberNotesData: MemberNotesData[] = [
     createdAt: "2024-11-14T09:15:00Z"
   }
 ];
+
+export const mockAllDefaultFolders = {
+  defaultFoldersData: [
+    {
+      _id: "1",
+      name: "Users Directory",
+      files_count: 5,
+      total_files_size: "0KB",
+      is_default: true,
+      path: "user",
+      type: "folder"
+    },
+    {
+      _id: "2",
+      name: "Clients Directory",
+      files_count: 1,
+      total_files_size: "0KB",
+      is_default: true,
+      path: "client",
+      type: "folder"
+    },
+    {
+      _id: "3",
+      name: "General Directory",
+      files_count: 0,
+      total_files_size: "0KB",
+      is_default: true,
+      path: "general",
+      type: "folder"
+    },
+    {
+      _id: "4",
+      name: "Packages Directory",
+      files_count: 2,
+      total_files_size: "0KB",
+      is_default: true,
+      path: "package",
+      type: "folder"
+    }
+  ],
+  loading: false, 
+  error: false
+};
+
+export const mockFolder = {
+  index: 0,
+  _id: "1",
+  name: "Users Directory",
+  fileCount: 5,
+  folderSize: "0KB"
+};

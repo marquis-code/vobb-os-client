@@ -20,8 +20,10 @@ import { ReactComponent as LineChartUpIcon } from "./lineChartUpIcon.svg";
 import { ReactComponent as CheckSquareIcon } from "./checkSquareIcon.svg";
 import { ReactComponent as UserCircleIcon } from "./userCircleIcon.svg";
 import { ReactComponent as MessageChatSquareIcon } from "./messageChatSquareIcon.svg";
+import { ReactComponent as DirectoryIcon } from "./directoryIcon.svg";
 
 export {
+  DirectoryIcon,
   UserCircleIcon,
   MessageChatSquareIcon,
   CheckSquareIcon,

@@ -58,7 +58,7 @@ const SidebarLinks: React.FC<SidebarLinksProps> = ({ sideBarWidth, active }) => 
         {
           title: "Vobb Drive",
           icon: <IconDeviceSdCard size={16} color="#494949" />,
-          path: Routes.overview,
+          path: Routes.drive,
           value: "drive"
         }
       ]

@@ -103,7 +103,7 @@ const FilterSelection = ({
           variant={variant ?? "outline"}
           role="combobox"
           aria-expanded={open}
-          className={cn("gap-2 items-center px-2 bg-vobb-neutral-0 font-medium text-xs", className)}
+          className={cn("gap-2 items-center px-2  text-vobb-neutral-60 bg-vobb-neutral-0 h-7", className)}
           size={"sm"}>
           {!noValue ? (
             value.label
@@ -181,7 +181,7 @@ const FilterCondition = ({
           {!noValue ? value.label : "Select condition"}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-fit p-0 flex flex-col p-1">
+      <PopoverContent align="start" className="w-fit flex flex-col p-1">
         {options.map((option) => (
           <button
             onClick={() => setValue(option)}
