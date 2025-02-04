@@ -16,6 +16,7 @@ const Drive = () => {
   const handleFetchDefaultFolders = () => {
     runFetchDefaultFolders(fetchDefaultFoldersService());
   };
+
   useEffect(() => {
     handleFetchDefaultFolders();
   }, []);

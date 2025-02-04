@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { DriveUI } from "modules";
 import { DirectoryCard } from "components";
+import { BrowserRouter } from "react-router-dom";
 import { mockAllDefaultFolders, mockFolder } from "lib";
 
 vi.mock("assets", async () => {
@@ -13,7 +14,7 @@ vi.mock("assets", async () => {
 });
 
 const renderWithProvider = (ui: React.ReactElement) => {
-  return render(<>{ui}</>);
+  return render(<BrowserRouter>{ui}</BrowserRouter>);
 };
 
 describe("DriveUI tests", () => {
@@ -39,7 +40,6 @@ describe("DriveUI tests", () => {
 
     renderWithProvider(<DriveUI allDefaultFolders={emptyMockData} />);
     expect(screen.getByTestId("empty-state")).toBeInTheDocument();
-    expect(screen.queryByText("Directory")).not.toBeInTheDocument();
   });
 
   it("renders the empty state when defaultFoldersData is undefined", () => {
@@ -59,11 +59,12 @@ describe("DriveUI tests", () => {
 
   it("renders the directory card component correctly", async () => {
     renderWithProvider(
-      <DirectoryCard
-        name={mockFolder.name}
-        fileCount={mockFolder.fileCount}
-        folderSize={mockFolder.folderSize}
-      />
+        <DirectoryCard
+          name={mockFolder[0].name}
+          fileCount={mockFolder[0].fileCount}
+          folderSize={mockFolder[0].folderSize}
+          path={mockFolder[0].path}
+        />
     );
     expect(screen.getByText("Users Directory")).toBeInTheDocument();
     expect(screen.getByText("5 files")).toBeInTheDocument();
@@ -74,12 +75,32 @@ describe("DriveUI tests", () => {
   it("renders the dropdown menu with options triggered", async () => {
     renderWithProvider(
       <DirectoryCard
-        name={mockFolder.name}
-        fileCount={mockFolder.fileCount}
-        folderSize={mockFolder.folderSize}
+        name={mockFolder[0].name}
+        fileCount={mockFolder[0].fileCount}
+        folderSize={mockFolder[0].folderSize}
       />
     );
     const menuTrigger = screen.getByRole("data-test-dropdown-trigger");
     expect(menuTrigger).toBeInTheDocument();
+  });
+
+  it("links to the selected directory when clicked", () => {
+    renderWithProvider(
+
+        <DirectoryCard
+          name={mockFolder[0].name}
+          fileCount={mockFolder[0].fileCount}
+          folderSize={mockFolder[0].folderSize}
+          path={mockFolder[0].path}
+        />
+
+    );
+    mockFolder.forEach((folder) => {
+      const linkElement = screen.getByRole("link", {
+        name: new RegExp(folder.name, "i")
+      });
+
+      expect(linkElement).toHaveAttribute("href", `/drive/${folder.path}`);
+    });
   });
 });

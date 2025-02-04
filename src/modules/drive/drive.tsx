@@ -19,7 +19,7 @@ const DriveUI: React.FC<DriveUIProps> = ({ allDefaultFolders }) => {
   }, []);
   return (
     <div className="h-[calc(100vh-55px)]">
-      <section role="heading" className="flex items-center justify-center px-4 relative h-[70%]">
+      <section role="heading" className="flex items-start justify-center px-4 relative h-[70%]">
         {loading ? (
           <LoadingSpinner data-testid="loading-spinner" />
         ) : !defaultFoldersData?.length || error ? (
@@ -29,13 +29,14 @@ const DriveUI: React.FC<DriveUIProps> = ({ allDefaultFolders }) => {
             pageIcon={<DirectoryIcon stroke="#000000" />}
           />
         ) : (
-          <div className="flex w-full items-start justify-start gap-4 flex-wrap h-full">
+          <div className="flex w-full items-start justify-start gap-4 flex-wrap my-4">
             {defaultFoldersData?.map((defaultFolder, index) => (
               <DirectoryCard
                 key={index}
                 name={defaultFolder.name}
                 fileCount={defaultFolder.files_count}
                 folderSize={defaultFolder.total_files_size}
+                path={defaultFolder.path}
               />
             ))}
           </div>

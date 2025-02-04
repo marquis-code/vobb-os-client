@@ -62,5 +62,9 @@ export const Routes = {
   pipelines: "/pipelines",
 
   // Drive
-  drive: "/drive"
+  drive: "/drive",
+  users_directory: "/drive/user",
+  clients_directory: "/drive/client",
+  packages_directory: "/drive/package",
+  general_directory: "/drive/general"
 };

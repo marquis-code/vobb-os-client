@@ -32,12 +32,8 @@ const NavBar: React.FC<NavBarProps> = ({ sideBarWidth, collapse, title }) => {
       <header
         style={{ width: `calc(100dvw - ${sideBarWidth})`, left: sideBarWidth }}
         className="border-b border-vobb-neutral-30 w-full fixed top-0 right-0 px-4 py-1 h-[55px] flex items-center">
-        <div>
-          <p
-            className={cn(
-              "font-workSans font-bold text-lg text-vobb-neutral-100",
-              collapse ? "ml-[30px]" : ""
-            )}>
+        <div className="flex items-center gap-2">
+          <p className={cn(`font-workSans font-medium text-lg`, collapse ? "ml-[30px]" : "")}>
             {title}
           </p>
         </div>

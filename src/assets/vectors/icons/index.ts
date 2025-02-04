@@ -21,8 +21,10 @@ import { ReactComponent as CheckSquareIcon } from "./checkSquareIcon.svg";
 import { ReactComponent as UserCircleIcon } from "./userCircleIcon.svg";
 import { ReactComponent as MessageChatSquareIcon } from "./messageChatSquareIcon.svg";
 import { ReactComponent as DirectoryIcon } from "./directoryIcon.svg";
+import { ReactComponent as UserFolderIcon } from "./userFolderIcon.svg";
 
 export {
+  UserFolderIcon,
   DirectoryIcon,
   UserCircleIcon,
   MessageChatSquareIcon,

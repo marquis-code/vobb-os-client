@@ -12,7 +12,7 @@ import { Button } from "components";
 import { optionType } from "types";
 import { IconArrowsDownUp } from "@tabler/icons-react";
 
-export type SortOrderType = "asc" | "desc";
+export type SortOrderType = "asc" | "desc" | string;
 
 interface SortByProps {
   sort: {

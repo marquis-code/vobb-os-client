@@ -38,7 +38,8 @@ import {
   InvitationSuccessful,
   MemberEmailVerify,
   Pipelines,
-  Drive
+  Drive,
+  Users
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -166,6 +167,15 @@ export const RouteBuilder: RouteBuilderItem[] = [
     path: Routes.drive,
     Element: Drive,
     isProtected: true,
+    Layout: DashboardLayout,
+    props: {
+      title: "Vobb Drive"
+    }
+  },
+  {
+    path: Routes.users_directory,
+    isProtected: true,
+    Element: Users,
     Layout: DashboardLayout,
     props: {
       title: "Vobb Drive"

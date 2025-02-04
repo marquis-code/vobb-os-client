@@ -11,7 +11,6 @@ import {
   MemberNotesData
 } from "types";
 import { TeamActivityData } from "modules";
-import { error } from "console";
 
 export const loginHistoryMock = [
   {
@@ -1055,14 +1054,61 @@ export const mockAllDefaultFolders = {
       type: "folder"
     }
   ],
-  loading: false, 
+  loading: false,
   error: false
 };
 
-export const mockFolder = {
-  index: 0,
-  _id: "1",
-  name: "Users Directory",
-  fileCount: 5,
-  folderSize: "0KB"
+export const mockFolder = [
+  {
+    index: 0,
+    _id: "1",
+    name: "Users Directory",
+    fileCount: 5,
+    folderSize: "0KB",
+    path: "user"
+  }
+];
+
+export const mockAllUsersFolders = {
+  usersFoldersData: {
+    folders: [
+      {
+        _id: "1",
+        name: "Biola Awoyemi",
+        is_default: false,
+        path: "user",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      },
+      {
+        _id: "2",
+        name: "Alfred Princess",
+        is_default: false,
+        path: "user",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      }
+    ],
+    total_count: 2,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1
+  }
 };
+
+export const mockUserFolder = [
+  {
+    name: "Biola Awoyemi",
+    file_count: 0,
+    total_folder_size: "0KB"
+  }
+];

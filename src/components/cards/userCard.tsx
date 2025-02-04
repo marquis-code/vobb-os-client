@@ -1,42 +1,21 @@
-import { DirectoryIcon } from "assets";
+import { UserFolderIcon } from "assets";
+import { IconDotsVertical } from "@tabler/icons-react";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem
+  DropdownMenuItem,
+  DropdownMenuTrigger
 } from "components/ui/dropdown-menu";
-import { Button } from "components/ui";
-import { IconDotsVertical } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+
+import { Button } from "components";
 import { FolderCardProps } from "types";
 
-const DirectoryCard = ({ name, fileCount, folderSize, path }: FolderCardProps) => {
+const UserCard = ({ name, fileCount, folderSize }: FolderCardProps) => {
   return (
-    <Link
-      to={`/drive/${path}`}
-      className="flex w-[272px] items-center justify-start gap-2 rounded-[12px] border border-vobb-neutral-30">
+    <div className="flex w-[176px] h-[118px] items-center justify-start gap-2 rounded-[12px] border border-vobb-neutral-30">
       <div className="flex flex-col p-3 items-center justify-start gap-4 w-full">
-        <div
-          className={`flex items-center justify-center ${
-            name === "Users Directory"
-              ? "bg-vobb-primary-10"
-              : name === "Clients Directory"
-              ? "bg-vobb-sec-10"
-              : name === "Packages Directory"
-              ? "bg-success-0"
-              : name === "General Directory" && "bg-vobb-neutral-20"
-          } w-full rounded-[8px] py-7`}>
-          <DirectoryIcon
-            stroke={`${
-              name === "Users Directory"
-                ? "#4a22eb"
-                : name === "Clients Directory"
-                ? "#088fff"
-                : name === "Packages Directory"
-                ? "#069952"
-                : name === "General Directory" && "#1d2939"
-            } `}
-          />
+        <div className="flex items-center justify-center bg-vobb-primary-10 w-full rounded-[8px] py-3">
+          <UserFolderIcon />
         </div>
         <div className="w-full flex justify-center items-center">
           <div className="w-full flex justify-between items-center">
@@ -58,16 +37,14 @@ const DirectoryCard = ({ name, fileCount, folderSize, path }: FolderCardProps) =
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-72 mr-64">
-                <DropdownMenuItem className="text-xs">
-                  Access Control and permissions
-                </DropdownMenuItem>
+                <DropdownMenuItem>Rename Folder</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
-export { DirectoryCard };
+export { UserCard };
