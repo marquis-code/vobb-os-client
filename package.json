@@ -2,7 +2,7 @@
   "name": "vobb-os-client",
   "version": "0.1.0",
   "engines": {
-    "node": "20.9.0"
+    "node": ">=23.3.0"
   },
   "private": true,
   "dependencies": {
