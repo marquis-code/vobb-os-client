@@ -285,3 +285,11 @@ export interface QueryParamProps {
   startDate: string;
   endDate: string;
 }
+
+export interface NotificationProps {
+  title: string;
+  description: string;
+  inAppSubmit: (enable: string) => void;
+  emailSubmit: (enable: string) => void;
+  popUpSubmit: (enable: string) => void;
+}

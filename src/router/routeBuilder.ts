@@ -36,6 +36,7 @@ import {
   AcceptInvite,
   InvitationFailed,
   InvitationSuccessful,
+  Notifications,
   MemberEmailVerify,
   Pipelines,
   Drive,
@@ -224,6 +225,21 @@ export const RouteBuilder: RouteBuilderItem[] = [
         { title: "Account" },
         {
           title: "Personalizations"
+        }
+      ]
+    }
+  },
+  {
+    path: Routes.notifications,
+    Element: Notifications,
+    isProtected: true,
+    Layout: SettingsLayout,
+    props: {
+      title: "Notifications",
+      items: [
+        { title: "Account" },
+        {
+          title: "Notifications"
         }
       ]
     }
