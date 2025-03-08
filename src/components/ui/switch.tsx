@@ -4,7 +4,6 @@ import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { cn } from "lib/utils";
 
 type SwitchProps = React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & {
-  thumbClassname?: string;
   testId?: string;
   thumbClassname?: string;
 };
