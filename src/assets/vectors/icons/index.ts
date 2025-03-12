@@ -22,8 +22,12 @@ import { ReactComponent as UserCircleIcon } from "./userCircleIcon.svg";
 import { ReactComponent as MessageChatSquareIcon } from "./messageChatSquareIcon.svg";
 import { ReactComponent as DirectoryIcon } from "./directoryIcon.svg";
 import { ReactComponent as UserFolderIcon } from "./userFolderIcon.svg";
+import { ReactComponent as SendupLinkIcon } from "./sendupLinkIcon.svg";
+import { ReactComponent as BooksLinkIcon } from "./booksLinkIcon.svg";
 
 export {
+  BooksLinkIcon,
+  SendupLinkIcon,
   UserFolderIcon,
   DirectoryIcon,
   UserCircleIcon,

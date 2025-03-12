@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { NavBar } from "./navbar";
-import { SideBar } from "./sidebar";
+import { SideBar } from "./sidebar/sidebar";
 import { useMobile } from "hooks";
 import { UnsupportedScreenSize } from "components";
 import { useModalContext, useUserContext } from "context";
@@ -15,7 +15,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
   const { setUpdateJobTitle } = useModalContext();
   const [collapse, setCollapse] = useState(false);
 
-  const sideBarWidth = collapse ? "60px" : "275px";
+  const sideBarWidth = collapse ? "0px" : "276px";
 
   const willSetJobTitle = userDetails?.role === "Super Admin" && !userDetails?.jobTitle;
 
@@ -29,7 +29,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
     <>
       <NavBar title={title} collapse={collapse} sideBarWidth={sideBarWidth} />
       <SideBar collapse={collapse} handleCollapse={setCollapse} sideBarWidth={sideBarWidth} />
-      <main style={{ marginLeft: sideBarWidth }} className="mt-[55px]">
+      <main style={{ marginLeft: sideBarWidth }} className="mt-[55px] transition-all duration-300">
         {children}
       </main>
     </>
