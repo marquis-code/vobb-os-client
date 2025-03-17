@@ -4,6 +4,8 @@ import { BranchMemberTableMock, BranchTeamTableMock } from "lib";
 import { OrgBranchUI } from "modules";
 import { BrowserRouter } from "react-router-dom";
 
+const mockSubmit = vi.fn();
+const mockHandleParams = vi.fn();
 const mockHandleTransferMember = vi.fn();
 const mockHandleViewMember = vi.fn();
 const mockHandleMemberPagination = vi.fn();
@@ -44,6 +46,23 @@ const defaultProps = {
       totalPages: 5,
       pageLimit: 20
     }
+  },
+  addExistingMembers: {
+    submit: mockSubmit,
+    loading: false,
+  },
+
+  eligibleMembers: {
+    loading: false,
+    data: [
+      {
+        label: "test label",
+        value: "testLabel",
+        isDisabled: false
+      }
+    ],
+    searchQuery: "test search",
+    handleParams: mockHandleParams
   },
   handleTransferMember: mockHandleTransferMember,
   handleViewMember: mockHandleViewMember,
