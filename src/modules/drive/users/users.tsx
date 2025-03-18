@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
 import { CustomInput, LoadingSpinner, SortBy, UserCard } from "components";
-import { fetchUsersFoldersQueryParams, UsersFolders } from "types";
+import { fetchFoldersQueryParams, FoldersResponse } from "types";
 import { DirectoryEmptyState } from "components/emptyStates/DirectoryEmptyState";
 import { useDebounce } from "hooks";
 import { DirectoryIcon } from "assets";
@@ -13,16 +13,24 @@ type optionType = {
 
 export interface UsersUIProps {
   usersFolders: {
-    usersFoldersData: UsersFolders;
+    usersFoldersData: FoldersResponse;
     loading: boolean;
     error: boolean;
-    params: fetchUsersFoldersQueryParams;
+    params: fetchFoldersQueryParams;
   };
   handleParams: (param: string, value: string | number) => void;
   handleFetchUsersFolders: () => void;
+  handleFolderRename: (_id: string, newName: string) => void;
+  renameLoading: boolean;
 }
 
-const UsersUI: React.FC<UsersUIProps> = ({ usersFolders, handleParams }) => {
+const UsersUI: React.FC<UsersUIProps> = ({
+  usersFolders,
+  handleParams,
+  handleFetchUsersFolders,
+  handleFolderRename,
+  renameLoading
+}) => {
   const {
     usersFoldersData: { folders: usersFoldersData },
     loading,
@@ -50,18 +58,18 @@ const UsersUI: React.FC<UsersUIProps> = ({ usersFolders, handleParams }) => {
 
   return (
     <div className="h-[calc(100vh-55px)]">
-      <section className="flex justify-end items-center px-4 py-2 border-b">
+      <section className="flex justify-end items-center px-4 py-2 border-b bg-white relative z-[100]">
         <div className="flex items-center gap-3 text-vobb-neutral-80">
           <CustomInput
             icon={<IconSearch size={16} />}
-            placeholder="Search files"
+            placeholder="Search users"
             value={usersFoldersSearchQuery}
             onChange={(e) => handleUsersFoldersSearch(e.target.value)}
             parentClassName="mb-0 min-w-[250px] text-sm"
           />
         </div>
       </section>
-      <section className="flex gap-2 px-4 py-2 border-b">
+      <section className="flex gap-2 px-4 py-2 border-b bg-white relative z-[100]">
         <SortBy
           isClearable
           sort={{
@@ -74,13 +82,19 @@ const UsersUI: React.FC<UsersUIProps> = ({ usersFolders, handleParams }) => {
             active: sort === "asc" ? "asc" : "desc",
             handleChange: (order) => handleParams("sort", order === "asc" ? "asc" : "desc")
           }}
-          testId="sort-button"
+          testId="users-sort-button"
         />
       </section>
 
       <section className="flex items-start justify-center px-4 relative h-[70%]">
         {loading ? (
           <LoadingSpinner data-testid="users-loading-spinner" />
+        ) : debouncedUsersFoldersSearchQuery && !usersFoldersData?.length ? (
+          <DirectoryEmptyState
+            title={`No users found for "${search}"`}
+            description="Please try again using a different keyword"
+            pageIcon={<DirectoryIcon stroke="#000000" />}
+          />
         ) : !usersFoldersData?.length || error ? (
           <DirectoryEmptyState
             title="No folders available"
@@ -89,12 +103,17 @@ const UsersUI: React.FC<UsersUIProps> = ({ usersFolders, handleParams }) => {
           />
         ) : (
           <div className="flex w-full items-start justify-start gap-4 flex-wrap my-4">
-            {usersFoldersData?.map((defaultFolder, index) => (
+            {usersFoldersData?.map((userFolder, index) => (
               <UserCard
                 key={index}
-                name={defaultFolder.name}
-                fileCount={defaultFolder.files_count}
-                folderSize={defaultFolder.total_files_size}
+                id={userFolder.id}
+                name={userFolder.name}
+                fileCount={userFolder.files_count}
+                folderSize={userFolder.total_files_size}
+                path={userFolder.path}
+                handleFetchFolders={handleFetchUsersFolders}
+                handleFolderRename={handleFolderRename}
+                renameLoading={renameLoading}
               />
             ))}
           </div>

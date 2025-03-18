@@ -33,6 +33,7 @@ const DriveUI: React.FC<DriveUIProps> = ({ allDefaultFolders }) => {
             {defaultFoldersData?.map((defaultFolder, index) => (
               <DirectoryCard
                 key={index}
+                id={defaultFolder.id}
                 name={defaultFolder.name}
                 fileCount={defaultFolder.files_count}
                 folderSize={defaultFolder.total_files_size}

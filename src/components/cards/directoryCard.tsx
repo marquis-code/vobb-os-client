@@ -10,32 +10,36 @@ import { IconDotsVertical } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { FolderCardProps } from "types";
 
-const DirectoryCard = ({ name, fileCount, folderSize, path }: FolderCardProps) => {
+const DirectoryCard = ({
+  name,
+  fileCount,
+  folderSize,
+  path
+}: Omit<FolderCardProps, "handleFetchFolders" | "handleFolderRename" | "renameLoading">) => {
   return (
     <Link
       to={`/drive/${path}`}
+      data-testid="drive-folder"
       className="flex w-[272px] items-center justify-start gap-2 rounded-[12px] border border-vobb-neutral-30">
       <div className="flex flex-col p-3 items-center justify-start gap-4 w-full">
         <div
-          className={`flex items-center justify-center ${
-            name === "Users Directory"
+          className={`flex items-center justify-center ${name === "Users Directory"
               ? "bg-vobb-primary-10"
               : name === "Clients Directory"
-              ? "bg-vobb-sec-10"
-              : name === "Packages Directory"
-              ? "bg-success-0"
-              : name === "General Directory" && "bg-vobb-neutral-20"
-          } w-full rounded-[8px] py-7`}>
+                ? "bg-vobb-sec-10"
+                : name === "Packages Directory"
+                  ? "bg-success-0"
+                  : name === "General Directory" && "bg-vobb-neutral-20"
+            } w-full rounded-[8px] py-7`}>
           <DirectoryIcon
-            stroke={`${
-              name === "Users Directory"
+            stroke={`${name === "Users Directory"
                 ? "#4a22eb"
                 : name === "Clients Directory"
-                ? "#088fff"
-                : name === "Packages Directory"
-                ? "#069952"
-                : name === "General Directory" && "#1d2939"
-            } `}
+                  ? "#088fff"
+                  : name === "Packages Directory"
+                    ? "#069952"
+                    : name === "General Directory" && "#1d2939"
+              } `}
           />
         </div>
         <div className="w-full flex justify-center items-center">

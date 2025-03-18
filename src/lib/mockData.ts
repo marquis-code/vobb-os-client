@@ -1018,7 +1018,7 @@ export const MockedMemberNotesData: MemberNotesData[] = [
 export const mockAllDefaultFolders = {
   defaultFoldersData: [
     {
-      _id: "1",
+      id: "1",
       name: "Users Directory",
       files_count: 5,
       total_files_size: "0KB",
@@ -1027,7 +1027,7 @@ export const mockAllDefaultFolders = {
       type: "folder"
     },
     {
-      _id: "2",
+      id: "2",
       name: "Clients Directory",
       files_count: 1,
       total_files_size: "0KB",
@@ -1036,7 +1036,7 @@ export const mockAllDefaultFolders = {
       type: "folder"
     },
     {
-      _id: "3",
+      id: "3",
       name: "General Directory",
       files_count: 0,
       total_files_size: "0KB",
@@ -1045,7 +1045,7 @@ export const mockAllDefaultFolders = {
       type: "folder"
     },
     {
-      _id: "4",
+      id: "4",
       name: "Packages Directory",
       files_count: 2,
       total_files_size: "0KB",
@@ -1061,11 +1061,19 @@ export const mockAllDefaultFolders = {
 export const mockFolder = [
   {
     index: 0,
-    _id: "1",
+    id: "1",
     name: "Users Directory",
     fileCount: 5,
     folderSize: "0KB",
     path: "user"
+  },
+  {
+    index: 1,
+    id: "2",
+    name: "Clients Directory",
+    fileCount: 5,
+    folderSize: "0KB",
+    path: "client"
   }
 ];
 
@@ -1073,7 +1081,7 @@ export const mockAllUsersFolders = {
   usersFoldersData: {
     folders: [
       {
-        _id: "1",
+        id: "1",
         name: "Biola Awoyemi",
         is_default: false,
         path: "user",
@@ -1082,7 +1090,7 @@ export const mockAllUsersFolders = {
         total_files_size: "0KB"
       },
       {
-        _id: "2",
+        id: "2",
         name: "Alfred Princess",
         is_default: false,
         path: "user",
@@ -1107,8 +1115,129 @@ export const mockAllUsersFolders = {
 
 export const mockUserFolder = [
   {
+    id: "u1",
     name: "Biola Awoyemi",
     file_count: 0,
     total_folder_size: "0KB"
+  }
+];
+
+export const mockAllClientsFolders = {
+  clientsFoldersData: {
+    folders: [
+      {
+        id: "1",
+        name: "Biola Awoyemi",
+        is_default: false,
+        path: "client",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      },
+      {
+        id: "2",
+        name: "Jon Doe",
+        is_default: false,
+        path: "client",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      }
+    ],
+    total_count: 2,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1
+  }
+};
+
+export const mockClientFolder = [
+  {
+    id: "0",
+    name: "Biola Awoyemi",
+    file_count: 0,
+    total_folder_size: "0KB",
+    path: "client"
+  }
+];
+
+export const mockAllUserFiles = {
+  filesData: {
+    files: [
+      {
+        id: "1",
+        name: "Capture.PNG",
+        path: "user",
+        type: "file",
+        file_size: "0KB",
+        file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
+      }
+    ],
+    total_count: 2,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1
+  }
+};
+
+export const mockUserFile = [
+  {
+    id: "1",
+    name: "Capture.PNG",
+    path: "user",
+    type: "file",
+    file_size: "0KB",
+    file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
+  }
+];
+
+export const mockAllClientFiles = {
+  filesData: {
+    files: [
+      {
+        id: "1",
+        name: "Capture.PNG",
+        path: "client",
+        type: "file",
+        file_size: "0KB",
+        file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
+      }
+    ],
+    total_count: 2,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1
+  }
+};
+
+export const mockClientFile = [
+  {
+    id: "1",
+    name: "Capture.PNG",
+    path: "client",
+    type: "file",
+    file_size: "0KB",
+    file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
   }
 ];

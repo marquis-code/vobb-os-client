@@ -2,7 +2,7 @@ import { DriveUI } from "modules";
 import { fetchDefaultFoldersService } from "api";
 import { useApiRequest } from "hooks";
 import { useEffect, useMemo } from "react";
-import { DefaultFolder } from "types";
+import { DefaultFolder, DefaultFolderResponse } from "types";
 import { toast } from "components";
 
 const Drive = () => {
@@ -23,7 +23,7 @@ const Drive = () => {
 
   const defaultFoldersData = useMemo<DefaultFolder[]>(() => {
     if (fetchDefaultFoldersResponse?.status === 200) {
-      return fetchDefaultFoldersResponse.data.data.map((item) => ({
+      return fetchDefaultFoldersResponse.data.data.map((item: DefaultFolderResponse) => ({
         id: item._id,
         name: item.name,
         is_default: item.is_default,

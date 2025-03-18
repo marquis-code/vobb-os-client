@@ -64,7 +64,9 @@ export const Routes = {
   // Drive
   drive: "/drive",
   users_directory: "/drive/user",
+  user_files_directory: (id = ":id") => `/drive/user/${id}`,
   clients_directory: "/drive/client",
+  client_files_directory: (id = ":id") => `/drive/client/${id}`,
   packages_directory: "/drive/package",
   general_directory: "/drive/general"
 };

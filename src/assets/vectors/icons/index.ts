@@ -22,10 +22,28 @@ import { ReactComponent as UserCircleIcon } from "./userCircleIcon.svg";
 import { ReactComponent as MessageChatSquareIcon } from "./messageChatSquareIcon.svg";
 import { ReactComponent as DirectoryIcon } from "./directoryIcon.svg";
 import { ReactComponent as UserFolderIcon } from "./userFolderIcon.svg";
+import { ReactComponent as JpegIcon } from "./jpegIcon.svg";
+import { ReactComponent as DocIcon } from "./docIcon.svg";
+import { ReactComponent as PdfIcon } from "./pdfIcon.svg";
+import { ReactComponent as CsvIcon } from "./csvIcon.svg";
+import { ReactComponent as XlsIcon } from "./xlsIcon.svg";
+import { ReactComponent as FileIcon } from "./fileIcon.svg";
+import { ReactComponent as JpgIcon } from "./jpgIcon.svg";
+import { ReactComponent as PngIcon } from "./pngIcon.svg";
+import { ReactComponent as WebpIcon } from "./webpIcon.svg";
 import { ReactComponent as SendupLinkIcon } from "./sendupLinkIcon.svg";
 import { ReactComponent as BooksLinkIcon } from "./booksLinkIcon.svg";
 
 export {
+  FileIcon,
+  JpegIcon,
+  JpgIcon,
+  PngIcon,
+  WebpIcon,
+  DocIcon,
+  PdfIcon,
+  CsvIcon,
+  XlsIcon,
   BooksLinkIcon,
   SendupLinkIcon,
   UserFolderIcon,

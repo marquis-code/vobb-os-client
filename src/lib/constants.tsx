@@ -287,3 +287,15 @@ export const priorityOptions: ObjectOptionProps[] = [
   }
 ];
 
+export const ACCEPTED_FILE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "image/png",
+  "image/gif",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+];
+export const MAX_FILE_SIZE = 15 * 1024 * 1024;
+

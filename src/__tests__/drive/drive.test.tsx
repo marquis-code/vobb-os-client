@@ -40,31 +40,32 @@ describe("DriveUI tests", () => {
 
     renderWithProvider(<DriveUI allDefaultFolders={emptyMockData} />);
     expect(screen.getByTestId("empty-state")).toBeInTheDocument();
+    expect(screen.queryByText("Directory")).not.toBeInTheDocument();
   });
 
   it("renders the empty state when defaultFoldersData is undefined", () => {
     const undefinedDataMock = { defaultFoldersData: undefined, loading: false, error: false };
     renderWithProvider(<DriveUI allDefaultFolders={undefinedDataMock} />);
     expect(screen.getByTestId("empty-state")).toBeInTheDocument();
-    expect(screen.queryByText("Directory")).not.toBeInTheDocument();
   });
 
   it("renders the empty state when defaultFoldersData is null", () => {
-  const nullDataMock = { defaultFoldersData: null, loading: false, error: false };
+    const nullDataMock = { defaultFoldersData: null, loading: false, error: false };
 
-  renderWithProvider(<DriveUI allDefaultFolders={nullDataMock} />);
-  expect(screen.getByTestId("empty-state")).toBeInTheDocument();
-  expect(screen.queryByText("Directory")).not.toBeInTheDocument();
+    renderWithProvider(<DriveUI allDefaultFolders={nullDataMock} />);
+    expect(screen.getByTestId("empty-state")).toBeInTheDocument();
+    expect(screen.queryByText("Directory")).not.toBeInTheDocument();
   });
 
   it("renders the directory card component correctly", async () => {
     renderWithProvider(
-        <DirectoryCard
-          name={mockFolder[0].name}
-          fileCount={mockFolder[0].fileCount}
-          folderSize={mockFolder[0].folderSize}
-          path={mockFolder[0].path}
-        />
+      <DirectoryCard
+        id={mockFolder[0].id}
+        name={mockFolder[0].name}
+        fileCount={mockFolder[0].fileCount}
+        folderSize={mockFolder[0].folderSize}
+        path={mockFolder[0].path}
+      />
     );
     expect(screen.getByText("Users Directory")).toBeInTheDocument();
     expect(screen.getByText("5 files")).toBeInTheDocument();
@@ -75,9 +76,11 @@ describe("DriveUI tests", () => {
   it("renders the dropdown menu with options triggered", async () => {
     renderWithProvider(
       <DirectoryCard
+        id={mockFolder[0].id}
         name={mockFolder[0].name}
         fileCount={mockFolder[0].fileCount}
         folderSize={mockFolder[0].folderSize}
+        path={mockFolder[0].path}
       />
     );
     const menuTrigger = screen.getByRole("data-test-dropdown-trigger");
@@ -86,21 +89,16 @@ describe("DriveUI tests", () => {
 
   it("links to the selected directory when clicked", () => {
     renderWithProvider(
-
-        <DirectoryCard
-          name={mockFolder[0].name}
-          fileCount={mockFolder[0].fileCount}
-          folderSize={mockFolder[0].folderSize}
-          path={mockFolder[0].path}
-        />
-
+      <DirectoryCard
+        id={mockFolder[0].id}
+        name={mockFolder[1].name}
+        fileCount={mockFolder[1].fileCount}
+        folderSize={mockFolder[1].folderSize}
+        path={mockFolder[1].path}
+      />
     );
-    mockFolder.forEach((folder) => {
-      const linkElement = screen.getByRole("link", {
-        name: new RegExp(folder.name, "i")
-      });
+    const linkElement = screen.getByTestId("drive-folder");
+    expect(linkElement).toHaveAttribute("href", `/drive/${mockFolder[1].path}`);
 
-      expect(linkElement).toHaveAttribute("href", `/drive/${folder.path}`);
-    });
   });
 });

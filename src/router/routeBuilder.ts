@@ -40,7 +40,10 @@ import {
   MemberEmailVerify,
   Pipelines,
   Drive,
-  Users
+  Users,
+  Clients,
+  UserFiles,
+  ClientFiles
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -177,6 +180,33 @@ export const RouteBuilder: RouteBuilderItem[] = [
     path: Routes.users_directory,
     isProtected: true,
     Element: Users,
+    Layout: DashboardLayout,
+    props: {
+      title: "Vobb Drive"
+    }
+  },
+  {
+    path: Routes.clients_directory,
+    isProtected: true,
+    Element: Clients,
+    Layout: DashboardLayout,
+    props: {
+      title: "Vobb Drive"
+    }
+  },
+  {
+    path: Routes.user_files_directory(":id"),
+    isProtected: true,
+    Element: UserFiles,
+    Layout: DashboardLayout,
+    props: {
+      title: "Vobb Drive"
+    }
+  },
+  {
+    path: Routes.client_files_directory(":id"),
+    isProtected: true,
+    Element: ClientFiles,
     Layout: DashboardLayout,
     props: {
       title: "Vobb Drive"

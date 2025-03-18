@@ -9,6 +9,7 @@ import {
   CountriesProvider,
   MemberProfileProvider,
   ModalProvider,
+  MultiCheckViewProvider,
   UserDetailsProvider
 } from "context";
 
@@ -20,7 +21,9 @@ root.render(
         <CountriesProvider>
           <BrowserRouter>
             <ModalProvider>
-              <App />
+              <MultiCheckViewProvider>
+                <App />
+              </MultiCheckViewProvider>
             </ModalProvider>
             <Toaster />
           </BrowserRouter>

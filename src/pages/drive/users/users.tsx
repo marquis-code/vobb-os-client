@@ -1,23 +1,30 @@
-import { fetchUsersFoldersService } from "api";
+import { fetchUsersFoldersService, renameFolderService } from "api";
 import { useApiRequest } from "hooks";
 import { useEffect, useMemo, useState } from "react";
-import { DefaultFolder, fetchUsersFoldersQueryParams, UsersFolders } from "types";
+import { DefaultFolderResponse, fetchFoldersQueryParams, FoldersResponse } from "types";
 import { toast } from "components";
-import { UsersUI } from "modules/drive/users";
+import { UsersUI } from "modules";
 
 const Users = () => {
   const {
     run: runFetchUsersFolders,
     data: fetchUsersFoldersResponse,
     error: fetchUsersFoldersError,
-    requestStatus: fetchUsersFoldersStatus,
+    requestStatus: fetchUsersFoldersStatus
   } = useApiRequest({});
 
-  const [usersFoldersQueryParams, setUsersFoldersQueryParams] = useState<fetchUsersFoldersQueryParams>({
+  const {
+    run: runRename,
+    data: renameResponse,
+    error: renameError,
+    requestStatus: renameStatus
+  } = useApiRequest({});
+
+  const [usersFoldersQueryParams, setUsersFoldersQueryParams] = useState<fetchFoldersQueryParams>({
     page: 1,
     limit: 30,
     search: "",
-    sort: "asc",
+    sort: "asc"
   });
 
   const { page, limit, search, sort } = usersFoldersQueryParams;
@@ -32,7 +39,7 @@ const Users = () => {
         page,
         limit,
         search,
-        sort,
+        sort
       })
     );
   };
@@ -45,29 +52,46 @@ const Users = () => {
     handleFetchUsersFolders();
   }, [usersFoldersQueryParams]);
 
-  const usersFoldersData = useMemo<UsersFolders>(() => {
+  const usersFoldersData = useMemo<FoldersResponse>(() => {
     if (fetchUsersFoldersResponse?.status === 200) {
-      const folders = fetchUsersFoldersResponse.data.data.folders.map((item: DefaultFolder) => ({
-        _id: item._id,
+      const folders = fetchUsersFoldersResponse.data.data.folders.map((item: DefaultFolderResponse) => ({
+        id: item._id,
         name: item.name,
         is_default: item.is_default,
         path: item.path,
         type: item.type,
         files_count: item.files_count,
-        total_files_size: item.total_files_size,
+        total_files_size: item.total_files_size
       }));
       return {
         folders,
         total_count: fetchUsersFoldersResponse.data.total_count || 0,
         total_pages: fetchUsersFoldersResponse.data.total_pages || 0,
-        page: fetchUsersFoldersResponse.data.page || 1,
+        page: fetchUsersFoldersResponse.data.page || 1
       };
     } else if (fetchUsersFoldersError) {
       toast({ description: fetchUsersFoldersError?.response?.data.error });
     }
 
-    return {} as UsersFolders;
+    return {} as FoldersResponse;
   }, [fetchUsersFoldersResponse, fetchUsersFoldersError]);
+
+  const handleFolderRename = (id: string, newName: string) => {
+    runRename(renameFolderService(id, { name: newName }));
+  };
+  useMemo(() => {
+    if (renameResponse?.status === 200) {
+      toast({
+        description: renameResponse?.data?.message
+      });
+      handleFetchUsersFolders();
+    } else if (renameError) {
+      toast({
+        variant: "destructive",
+        description: renameError?.response?.data?.error
+      });
+    }
+  }, [renameResponse, renameError]);
 
   return (
     <UsersUI
@@ -75,10 +99,12 @@ const Users = () => {
         usersFoldersData,
         loading: fetchUsersFoldersStatus.isPending,
         params: usersFoldersQueryParams,
-        error: fetchUsersFoldersError || fetchUsersFoldersStatus.isRejected,
+        error: fetchUsersFoldersError || fetchUsersFoldersStatus.isRejected
       }}
       handleParams={handleUpdateQueryParams}
       handleFetchUsersFolders={handleFetchUsersFolders}
+      handleFolderRename={handleFolderRename}
+      renameLoading={renameStatus.isPending}
     />
   );
 };
