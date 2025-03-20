@@ -67,6 +67,8 @@ export interface fetchFoldersQueryParams {
   sort: SortOrderType;
   limit: number;
   page: number;
+  start_date?: string;
+  end_date?: string;
 }
 export interface ActionsList {
   name: string;

@@ -11,7 +11,7 @@ import { FileCardProps } from "types";
 import { handleDownloadFile } from "lib";
 import { useMultiCheckViewContext } from "context";
 import { InputActionModal } from "components/modalVariants";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const FileCard = ({
   name,

@@ -67,7 +67,6 @@ const FilesContainer: React.FC<FilesContainerProps> = ({
 
   const { id } = useParams<{ id: string }>();
   const { search, sort } = params;
-
   const [filesSearchQuery, setFilesSearchQuery] = useState(search || "");
   const debouncedFilesSearchQuery = useDebounce(filesSearchQuery, 1000);
   const { multiCheckView, selectedCheckboxes } = useMultiCheckViewContext();
@@ -163,13 +162,18 @@ const FilesContainer: React.FC<FilesContainerProps> = ({
       <section className="flex items-start justify-center px-4 relative h-[70%]">
         {loading ? (
           <LoadingSpinner data-testid="files-loading-spinner" />
+        ) : error ? (
+          <DirectoryEmptyState
+            title="No files available"
+            description="Uh-oh, you don't seem to have any files, please contact support if this issue persists."
+          />
         ) : debouncedFilesSearchQuery && !filesData?.length ? (
           <DirectoryEmptyState
             title={`No files found for "${search}"`}
             description="Please try again using a different keyword"
             pageIcon={<FileIcon stroke="#000000" />}
           />
-        ) : !filesData?.length || error ? (
+        ) : !filesData?.length ? (
           <DirectoryEmptyState
             title="No files have been created"
             description="Upload files to begin storing documents here for better organization."

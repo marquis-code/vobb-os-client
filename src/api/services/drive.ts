@@ -10,6 +10,8 @@ import {
   fetchClientFilesURL,
   fetchClientsFoldersURL,
   fetchDefaultFoldersURL,
+  fetchPackageOfferingsURL,
+  fetchPackagesFoldersURL,
   fetchUserFilesURL,
   fetchUsersFoldersURL,
   getRequest,
@@ -36,6 +38,21 @@ export const fetchUsersFoldersService = (queryParams: fetchFoldersQueryParams) =
 export const fetchClientsFoldersService = (queryParams: fetchFoldersQueryParams) => {
   return getRequest({
     url: fetchClientsFoldersURL(queryParams)
+  });
+};
+
+export const fetchPackagesFoldersService = (queryParams: fetchFoldersQueryParams) => {
+  return getRequest({
+    url: fetchPackagesFoldersURL(queryParams)
+  });
+};
+
+export const fetchPackageOfferingsService = (
+  id: string,
+  queryParams: fetchFoldersQueryParams
+) => {
+  return getRequest({
+    url: fetchPackageOfferingsURL(id, queryParams)
   });
 };
 

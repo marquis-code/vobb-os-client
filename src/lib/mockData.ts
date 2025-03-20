@@ -1074,6 +1074,14 @@ export const mockFolder = [
     fileCount: 5,
     folderSize: "0KB",
     path: "client"
+  },
+  {
+    index: 3,
+    id: "3",
+    name: "Packages Directory",
+    fileCount: 5,
+    folderSize: "0KB",
+    path: "package"
   }
 ];
 
@@ -1118,7 +1126,8 @@ export const mockUserFolder = [
     id: "u1",
     name: "Biola Awoyemi",
     file_count: 0,
-    total_folder_size: "0KB"
+    total_folder_size: "0KB",
+    path: "user" 
   }
 ];
 
@@ -1126,7 +1135,7 @@ export const mockAllClientsFolders = {
   clientsFoldersData: {
     folders: [
       {
-        id: "1",
+        id: "c1",
         name: "Biola Awoyemi",
         is_default: false,
         path: "client",
@@ -1135,7 +1144,7 @@ export const mockAllClientsFolders = {
         total_files_size: "0KB"
       },
       {
-        id: "2",
+        id: "c2",
         name: "Jon Doe",
         is_default: false,
         path: "client",
@@ -1160,13 +1169,108 @@ export const mockAllClientsFolders = {
 
 export const mockClientFolder = [
   {
-    id: "0",
+    id: "c0",
     name: "Biola Awoyemi",
     file_count: 0,
     total_folder_size: "0KB",
     path: "client"
   }
 ];
+
+export const mockAllPackages = {
+  packagesFoldersData: {
+    folders: [
+      {
+        id: "p1",
+        name: "Package 1",
+        is_default: false,
+        path: "package",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      },
+      {
+        id: "p2",
+        name: "Package 2",
+        is_default: false,
+        path: "package",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      }
+    ],
+    total_count: 2,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1,
+  }
+};
+
+export const mockPackageFolder = [
+  {
+    id: "p0",
+    name: "Package 1",
+    file_count: 0,
+    total_folder_size: "0KB",
+    path: "package"
+  }
+];
+
+export const mockAllPackageOfferings = {
+  packageOfferingsData: {
+    folders: [
+      {
+        id: "po1",
+        name: "Offering 1",
+        is_default: false,
+        path: "offering",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      },
+      {
+        id: "po2",
+        name: "Offering 2",
+        is_default: false,
+        path: "offering",
+        type: "folder",
+        files_count: 0,
+        total_files_size: "0KB"
+      }
+    ],
+    total_count: 2,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1,
+    start_date: "2024-12-21",
+    end_date: "2025-02-04"
+  }
+};
+
+export const mockPackageOffering = [
+  {
+    id: "po0",
+    name: "Offering 1",
+    file_count: 0,
+    total_folder_size: "0KB",
+    path: "offering"
+  }
+];
+
 
 export const mockAllUserFiles = {
   filesData: {

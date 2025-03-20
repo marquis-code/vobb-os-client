@@ -43,7 +43,9 @@ import {
   Users,
   Clients,
   UserFiles,
-  ClientFiles
+  ClientFiles,
+  Packages,
+  PackageOfferings
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
 
@@ -189,6 +191,24 @@ export const RouteBuilder: RouteBuilderItem[] = [
     path: Routes.clients_directory,
     isProtected: true,
     Element: Clients,
+    Layout: DashboardLayout,
+    props: {
+      title: "Vobb Drive"
+    }
+  },
+  {
+    path: Routes.packages_directory,
+    isProtected: true,
+    Element: Packages,
+    Layout: DashboardLayout,
+    props: {
+      title: "Vobb Drive"
+    }
+  },
+  {
+    path: Routes.package_offerings_directory(":id"),
+    isProtected: true,
+    Element: PackageOfferings,
     Layout: DashboardLayout,
     props: {
       title: "Vobb Drive"

@@ -1,4 +1,4 @@
-import { UserFolderIcon } from "assets";
+import { OfferingIcon } from "assets";
 import { IconDotsVertical } from "@tabler/icons-react";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import { FolderCardProps } from "types";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const ClientCard = ({
+const OfferingCard = ({
   name,
   fileCount,
   folderSize,
@@ -25,24 +25,23 @@ const ClientCard = ({
   const handleOpenRenameModalView = () => {
     setRenameModalView(true);
   };
-  const handleConfirmRename = (newName: string) => {
-    handleFolderRename(id, newName);
-  };
-
   const handleCloseRenameModalView = () => {
     setRenameModalView(false);
+  };
+  const handleConfirmRename = (newName: string) => {
+    handleFolderRename(id, newName);
   };
 
   return (
     <Link
       to={`/drive/${path}/${id}`}
-      data-testid="client-card"
-      className="flex w-[176px] h-[118px] items-center justify-start gap-2 rounded-[12px] border border-vobb-neutral-30">
-      <div className="flex flex-col p-3 items-center justify-start gap-4 w-full">
-        <div className="flex items-center justify-center bg-vobb-sec-10 w-full rounded-[8px] py-3">
-          <UserFolderIcon stroke="#088FFF" />
+      data-testid="offering-card"
+      className="flex w-[272px] items-center justify-start gap-2 rounded-[12px] border border-vobb-neutral-30">
+      <div className="flex p-3 items-center justify-start gap-4 w-full">
+        <div className="flex w-10 h-10 items-center justify-center bg-success-0 rounded-[8px] py-3">
+          <OfferingIcon />
         </div>
-        <div className="w-full flex justify-center items-center">
+        <div className=" w-[80%] flex justify-center items-center">
           <div className="w-full flex justify-between items-center">
             <div className="flex gap-4 items-center">
               <div className="flex flex-col justify-center items-start gap-2 text-xs">
@@ -70,8 +69,8 @@ const ClientCard = ({
               </DropdownMenu>
               <InputActionModal
                 modalView={renameModalView}
-                handleClose={handleCloseRenameModalView}
                 prefilledValue={name}
+                handleClose={handleCloseRenameModalView}
                 placeholder="Rename"
                 onConfirm={handleConfirmRename}
                 loading={renameLoading}
@@ -85,4 +84,4 @@ const ClientCard = ({
   );
 };
 
-export { ClientCard };
+export { OfferingCard };

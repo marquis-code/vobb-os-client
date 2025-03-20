@@ -3,7 +3,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { FileIcon } from "assets";
 import { Button } from "components/ui";
 import { ACCEPTED_FILE_TYPES, cn, formatFileSize, getFileTypeDisplay, MAX_FILE_SIZE } from "lib";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export interface CustomFileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   validatorMessage?: string;

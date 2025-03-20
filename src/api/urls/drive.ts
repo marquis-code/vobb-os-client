@@ -44,6 +44,38 @@ export const fetchClientsFoldersURL = (queryParams: fetchFoldersQueryParams) => 
 };
 
 /**
+ * Get packages folders URL
+ *
+ * @returns url string
+ *
+ */
+
+export const fetchPackagesFoldersURL = (queryParams: fetchFoldersQueryParams) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefix}/package/${queryString ? `?${queryString}` : ""}`;
+};
+
+/**
+ * Get package offerings folders URL
+ *
+ * @returns url string
+ *
+ */
+
+export const fetchPackageOfferingsURL = (id: string, queryParams: fetchFoldersQueryParams) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefix}/package/offering/${id}/${queryString ? `?${queryString}` : ""}`;
+};
+
+/**
  * Get users files URL
  *
  * @returns url string
@@ -72,7 +104,7 @@ export const fetchClientFilesURL = (id: string, queryParams: fetchFoldersQueryPa
     .join("&");
 
   return `${prefix}/client/${id}${queryString ? `?${queryString}` : ""}`;
-};
+}; 
 
 /**
  * Delete documents URL
