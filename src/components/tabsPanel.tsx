@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { cn } from "lib";
-import { FC, HTMLAttributes, ReactElement, useState, useEffect } from "react";
+import { FC, ReactElement, useState, useEffect } from "react";
 import { optionType } from "types";
 
 type TabType = {
@@ -51,7 +51,7 @@ type TabType = {
  * @param {string} [props.urlParam] - Current URL parameter value to sync with
  * @param {Function} [props.onUrlChange] - Callback when tab changes, to update URL
  */
-interface Props extends HTMLAttributes<HTMLDivElement> {
+interface Props {
   tabs: Array<TabType & optionType>;
   containerClassName?: string;
   syncWithUrl?: boolean;
