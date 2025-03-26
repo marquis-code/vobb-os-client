@@ -3,7 +3,7 @@ import { useApiRequest } from "hooks";
 import { useEffect, useMemo, useState } from "react";
 import { DefaultFolderResponse, fetchFoldersQueryParams, FoldersResponse } from "types";
 import { toast } from "components";
-import { ClientsUI } from "modules";
+import { ClientsDirectoryUI } from "modules";
 
 const Clients = () => {
   const {
@@ -95,7 +95,7 @@ const Clients = () => {
   }, [renameResponse, renameError]);
 
   return (
-    <ClientsUI
+    <ClientsDirectoryUI
       clientsFolders={{
         clientsFoldersData,
         loading: fetchClientsFoldersStatus.isPending,

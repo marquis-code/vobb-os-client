@@ -11,7 +11,7 @@ type optionType = {
   value: string;
 };
 
-export interface ClientsUIProps {
+export interface ClientsDirectoryUIProps {
   clientsFolders: {
     clientsFoldersData: FoldersResponse;
     loading: boolean;
@@ -24,7 +24,7 @@ export interface ClientsUIProps {
   renameLoading: boolean;
 }
 
-const ClientsUI: React.FC<ClientsUIProps> = ({
+const ClientsDirectoryUI: React.FC<ClientsDirectoryUIProps> = ({
   clientsFolders,
   handleParams,
   handleFetchClientsFolders,
@@ -129,4 +129,4 @@ const ClientsUI: React.FC<ClientsUIProps> = ({
   );
 };
 
-export { ClientsUI };
+export { ClientsDirectoryUI };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
-import { CustomInput, LoadingSpinner, SortBy, UserCard } from "components";
+import { CustomInput, LoadingSpinner, PackageCard, SortBy } from "components";
 import { fetchFoldersQueryParams, FoldersResponse } from "types";
 import { DirectoryEmptyState } from "components/emptyStates/DirectoryEmptyState";
 import { useDebounce } from "hooks";
@@ -11,39 +11,35 @@ type optionType = {
   value: string;
 };
 
-export interface UsersUIProps {
-  usersFolders: {
-    usersFoldersData: FoldersResponse;
+export interface PackagesDirectoryUIProps {
+  packagesFolders: {
+    packagesFoldersData: FoldersResponse;
     loading: boolean;
     error: boolean;
     params: fetchFoldersQueryParams;
   };
   handleParams: (param: string, value: string | number) => void;
-  handleFetchUsersFolders: () => void;
-  handleFolderRename: (_id: string, newName: string) => void;
-  renameLoading: boolean;
+  handleFetchPackagesFolders: () => void;
 }
 
-const UsersUI: React.FC<UsersUIProps> = ({
-  usersFolders,
+const PackagesDirectoryUI: React.FC<PackagesDirectoryUIProps> = ({
+  packagesFolders,
   handleParams,
-  handleFetchUsersFolders,
-  handleFolderRename,
-  renameLoading
+  handleFetchPackagesFolders
 }) => {
   const {
-    usersFoldersData: { folders: usersFoldersData },
+    packagesFoldersData: { folders: packagesFoldersData },
     loading,
     error,
     params
-  } = usersFolders;
+  } = packagesFolders;
 
   const { search, sort } = params;
-  const [usersFoldersSearchQuery, setUsersFoldersSearchQuery] = useState(search || "");
-  const debouncedUsersFoldersSearchQuery = useDebounce(usersFoldersSearchQuery, 1000);
+  const [packagesFoldersSearchQuery, setPackagesFoldersSearchQuery] = useState(search || "");
+  const debouncedPackagesFoldersSearchQuery = useDebounce(packagesFoldersSearchQuery, 1000);
 
-  const handleUsersFoldersSearch = (value: string) => {
-    setUsersFoldersSearchQuery(value);
+  const handlePackagesFoldersSearch = (value: string) => {
+    setPackagesFoldersSearchQuery(value);
   };
 
   const handleSortChange = (option: optionType | undefined) => {
@@ -53,8 +49,8 @@ const UsersUI: React.FC<UsersUIProps> = ({
   };
 
   useEffect(() => {
-    handleParams("search", debouncedUsersFoldersSearchQuery);
-  }, [debouncedUsersFoldersSearchQuery]);
+    handleParams("search", debouncedPackagesFoldersSearchQuery);
+  }, [debouncedPackagesFoldersSearchQuery]);
 
   return (
     <div className="h-[calc(100vh-55px)]">
@@ -62,9 +58,9 @@ const UsersUI: React.FC<UsersUIProps> = ({
         <div className="flex items-center gap-3 text-vobb-neutral-80">
           <CustomInput
             icon={<IconSearch size={16} />}
-            placeholder="Search users"
-            value={usersFoldersSearchQuery}
-            onChange={(e) => handleUsersFoldersSearch(e.target.value)}
+            placeholder="Search packages"
+            value={packagesFoldersSearchQuery}
+            onChange={(e) => handlePackagesFoldersSearch(e.target.value)}
             parentClassName="mb-0 min-w-[250px] text-sm"
           />
         </div>
@@ -82,38 +78,42 @@ const UsersUI: React.FC<UsersUIProps> = ({
             active: sort === "asc" ? "asc" : "desc",
             handleChange: (order) => handleParams("sort", order === "asc" ? "asc" : "desc")
           }}
-          testId="users-sort-button"
+          testId="packages-sort-button"
         />
       </section>
 
       <section className="flex items-start justify-center px-4 relative h-[70%]">
         {loading ? (
-          <LoadingSpinner data-testid="users-loading-spinner" />
-        ) : debouncedUsersFoldersSearchQuery && !usersFoldersData?.length ? (
+          <LoadingSpinner data-testid="packages-loading-spinner" />
+        ) : error ? (
           <DirectoryEmptyState
-            title={`No users found for "${search}"`}
+            title="No folders available"
+            description="Uh-oh, you don't seem to have any packages, please contact support if this issue persists."
+          />
+        ) : debouncedPackagesFoldersSearchQuery && !packagesFoldersData?.length ? (
+          <DirectoryEmptyState
+            title={`No packages found for "${search}"`}
             description="Please try again using a different keyword"
             pageIcon={<DirectoryIcon stroke="#000000" />}
           />
-        ) : !usersFoldersData?.length || error ? (
+        ) : !packagesFoldersData?.length ? (
           <DirectoryEmptyState
-            title="No folders available"
-            description="Uh-oh, we failed to fetch your folders, please contact support if this issue persists."
+            title="No packages have been created"
+            description="Create packages to begin storing documents here for better organization."
+            btnText="Create a package"
             pageIcon={<DirectoryIcon stroke="#000000" />}
           />
         ) : (
           <div className="flex w-full items-start justify-start gap-4 flex-wrap my-4">
-            {usersFoldersData?.map((userFolder, index) => (
-              <UserCard
+            {packagesFoldersData?.map((packageFolder, index) => (
+              <PackageCard
                 key={index}
-                id={userFolder.id}
-                name={userFolder.name}
-                fileCount={userFolder.files_count}
-                folderSize={userFolder.total_files_size}
-                path={userFolder.path}
-                handleFetchFolders={handleFetchUsersFolders}
-                handleFolderRename={handleFolderRename}
-                renameLoading={renameLoading}
+                id={packageFolder.id}
+                name={packageFolder.name}
+                fileCount={packageFolder.files_count}
+                folderSize={packageFolder.total_files_size}
+                path={packageFolder.path}
+                handleFetchFolders={handleFetchPackagesFolders}
               />
             ))}
           </div>
@@ -123,4 +123,4 @@ const UsersUI: React.FC<UsersUIProps> = ({
   );
 };
 
-export { UsersUI };
+export { PackagesDirectoryUI };

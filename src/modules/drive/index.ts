@@ -1,4 +1,4 @@
 export * from "./drive";
-export * from "./clients";
-export * from "./users";
-export * from "./packages";
+export * from "./clientsDirectory";
+export * from "./usersDirectory";
+export * from "./packagesDirectory";

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { PackageCard } from "components";
-import { PackagesUI } from "modules";
+import { PackagesDirectoryUI } from "modules";
 import { BrowserRouter } from "react-router-dom";
 import { mockPackageFolder, mockAllPackages } from "lib";
 import { vi } from "vitest";
@@ -23,10 +23,10 @@ const renderWithProvider = (ui: React.ReactElement) => {
   return render(<BrowserRouter>{ui}</BrowserRouter>);
 };
 
-describe("PackagesUI tests", () => {
+describe("PackagesDirectoryUI tests", () => {
   it("renders the package folders with correct details", () => {
     renderWithProvider(
-      <PackagesUI
+      <PackagesDirectoryUI
         packagesFolders={mockAllPackages}
         handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
         handleParams={mockHandleParams}
@@ -53,7 +53,7 @@ describe("PackagesUI tests", () => {
     };
 
     renderWithProvider(
-      <PackagesUI
+      <PackagesDirectoryUI
         packagesFolders={loadingMockData}
         handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
         handleParams={mockHandleParams}
@@ -77,7 +77,7 @@ describe("PackagesUI tests", () => {
     };
 
     renderWithProvider(
-      <PackagesUI
+      <PackagesDirectoryUI
         packagesFolders={errorMockData}
         handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
         handleParams={mockHandleParams}
@@ -100,7 +100,7 @@ describe("PackagesUI tests", () => {
     };
 
     renderWithProvider(
-      <PackagesUI
+      <PackagesDirectoryUI
         packagesFolders={emptyMockData}
         handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
         handleParams={mockHandleParams}
@@ -123,7 +123,7 @@ describe("PackagesUI tests", () => {
     };
 
     renderWithProvider(
-      <PackagesUI
+      <PackagesDirectoryUI
         packagesFolders={undefinedMockData}
         handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
         handleParams={mockHandleParams}
@@ -146,7 +146,7 @@ describe("PackagesUI tests", () => {
     };
 
     renderWithProvider(
-      <PackagesUI
+      <PackagesDirectoryUI
         packagesFolders={nullMockData}
         handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
         handleParams={mockHandleParams}
@@ -175,7 +175,7 @@ describe("PackagesUI tests", () => {
   describe("Search functionality", () => {
     it("updates the search input value when typing", () => {
       renderWithProvider(
-        <PackagesUI
+        <PackagesDirectoryUI
           packagesFolders={mockAllPackages}
           handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
           handleParams={mockHandleParams}
@@ -192,7 +192,7 @@ describe("PackagesUI tests", () => {
       vi.useFakeTimers();
 
       renderWithProvider(
-        <PackagesUI
+        <PackagesDirectoryUI
           packagesFolders={mockAllPackages}
           handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
           handleParams={mockHandleParams}
@@ -212,7 +212,7 @@ describe("PackagesUI tests", () => {
   describe("Sort functionality", () => {
     it("calls handleParams with the correct sort value when a sort option is selected", async () => {
       renderWithProvider(
-        <PackagesUI
+        <PackagesDirectoryUI
           packagesFolders={mockAllPackages}
           handleFetchPackagesFolders={mockHandleFetchPackagesFolders}
           handleParams={mockHandleParams}

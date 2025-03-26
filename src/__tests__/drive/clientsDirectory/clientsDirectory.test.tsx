@@ -1,8 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { UserCard } from "components";
-import { UsersUI } from "modules";
+import { ClientCard } from "components";
+import { ClientsDirectoryUI } from "modules";
 import { BrowserRouter } from "react-router-dom";
-import { mockAllUsersFolders, mockFolder, mockUserFolder } from "lib";
+import { mockAllClientsFolders, mockClientFolder, mockFolder } from "lib";
 import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 
@@ -11,12 +11,12 @@ vi.mock("assets", async () => {
 
   return {
     ...originalModule,
-    UserFolderIcon: () => <div data-testid="mock-folder-icon">Mocked User Icon</div>,
+    UserFolderIcon: () => <div data-testid="mock-folder-icon">Mocked Icon</div>,
     DirectoryIcon: () => <div data-testid="mock-directory-icon">Mocked Directory Icon</div>
   };
 });
 
-const mockHandleFetchUsersFolders = vi.fn();
+const mockHandleFetchClientsFolders = vi.fn();
 const mockHandleParams = vi.fn();
 const mockHandleRenameFolder = vi.fn();
 
@@ -24,18 +24,18 @@ const renderWithProvider = (ui: React.ReactElement) => {
   return render(<BrowserRouter>{ui}</BrowserRouter>);
 };
 
-describe("UserUI tests", () => {
+describe("ClientUI tests", () => {
   it("renders the user folders with correct details", () => {
     renderWithProvider(
-      <UsersUI
-        usersFolders={mockAllUsersFolders}
-        handleFetchUsersFolders={mockHandleFetchUsersFolders}
+      <ClientsDirectoryUI
+        clientsFolders={mockAllClientsFolders}
+        handleFetchClientsFolders={mockHandleFetchClientsFolders}
         handleParams={mockHandleParams}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
       />
     );
-    mockAllUsersFolders.usersFoldersData.folders.forEach((folder, index, folders) => {
+    mockAllClientsFolders.clientsFoldersData.folders.forEach((folder, index, folders) => {
       expect(screen.getByText(folder.name)).toBeInTheDocument();
       expect(screen.queryAllByText(`${folder.files_count} files`)).toHaveLength(folders.length);
       expect(screen.queryAllByText(folder.total_files_size)).toHaveLength(folders.length);
@@ -44,7 +44,7 @@ describe("UserUI tests", () => {
 
   it("renders the LoadingSpinner when loading is true", () => {
     const loadingMockData = {
-      usersFoldersData: { folders: [], total_count: 0, total_pages: 1, page: 1 },
+      clientsFoldersData: { folders: [], total_count: 0, total_pages: 1, page: 1 },
       loading: true,
       error: false,
       params: {
@@ -56,21 +56,21 @@ describe("UserUI tests", () => {
     };
 
     renderWithProvider(
-      <UsersUI
-        usersFolders={loadingMockData}
-        handleFetchUsersFolders={mockHandleFetchUsersFolders}
+      <ClientsDirectoryUI
+        clientsFolders={loadingMockData}
+        handleFetchClientsFolders={mockHandleFetchClientsFolders}
         handleParams={mockHandleParams}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
       />
     );
-    expect(screen.getByTestId("users-loading-spinner")).toBeInTheDocument();
+    expect(screen.getByTestId("clients-loading-spinner")).toBeInTheDocument();
     expect(screen.queryByText("files")).not.toBeInTheDocument();
   });
 
   it("handles missing or invalid data gracefully by rendering the empty state when fetch fails", () => {
     const errorMockData = {
-      usersFoldersData: { folders: [], total_count: 0, total_pages: 1, page: 1 },
+      clientsFoldersData: { folders: [], total_count: 0, total_pages: 1, page: 1 },
       loading: false,
       error: true,
       params: {
@@ -82,9 +82,9 @@ describe("UserUI tests", () => {
     };
 
     renderWithProvider(
-      <UsersUI
-        usersFolders={errorMockData}
-        handleFetchUsersFolders={mockHandleFetchUsersFolders}
+      <ClientsDirectoryUI
+        clientsFolders={errorMockData}
+        handleFetchClientsFolders={mockHandleFetchClientsFolders}
         handleParams={mockHandleParams}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
@@ -95,9 +95,9 @@ describe("UserUI tests", () => {
 
   it("handles empty data gracefully by rendering the empty state when folders is empty", () => {
     const emptyMockData = {
-      usersFoldersData: { folders: [], total_count: 0, total_pages: 1, page: 1 },
+      clientsFoldersData: { folders: [], total_count: 0, total_pages: 1, page: 1 },
       loading: false,
-      error: false,
+      error: true,
       params: {
         search: "",
         sort: "asc",
@@ -107,9 +107,9 @@ describe("UserUI tests", () => {
     };
 
     renderWithProvider(
-      <UsersUI
-        usersFolders={emptyMockData}
-        handleFetchUsersFolders={mockHandleFetchUsersFolders}
+      <ClientsDirectoryUI
+        clientsFolders={emptyMockData}
+        handleFetchClientsFolders={mockHandleFetchClientsFolders}
         handleParams={mockHandleParams}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
@@ -120,7 +120,7 @@ describe("UserUI tests", () => {
 
   it("handles empty data gracefully by rendering the empty state when usersFoldersData is undefined", () => {
     const undefinedMockData = {
-      usersFoldersData: { folders: undefined, total_count: 0, total_pages: 1, page: 1 },
+      clientsFoldersData: { folders: undefined, total_count: 0, total_pages: 1, page: 1 },
       loading: false,
       error: false,
       params: {
@@ -132,9 +132,9 @@ describe("UserUI tests", () => {
     };
 
     renderWithProvider(
-      <UsersUI
-        usersFolders={undefinedMockData}
-        handleFetchUsersFolders={mockHandleFetchUsersFolders}
+      <ClientsDirectoryUI
+        clientsFolders={undefinedMockData}
+        handleFetchClientsFolders={mockHandleFetchClientsFolders}
         handleParams={mockHandleParams}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
@@ -145,7 +145,7 @@ describe("UserUI tests", () => {
 
   it("handles empty data gracefully by rendering the empty state when usersFoldersData is null", () => {
     const nullMockData = {
-      usersFoldersData: { folders: null, total_count: 0, total_pages: 1, page: 1 },
+      clientsFoldersData: { folders: null, total_count: 0, total_pages: 1, page: 1 },
       loading: false,
       error: false,
       params: {
@@ -157,9 +157,9 @@ describe("UserUI tests", () => {
     };
 
     renderWithProvider(
-      <UsersUI
-        usersFolders={nullMockData}
-        handleFetchUsersFolders={mockHandleFetchUsersFolders}
+      <ClientsDirectoryUI
+        clientsFolders={nullMockData}
+        handleFetchClientsFolders={mockHandleFetchClientsFolders}
         handleParams={mockHandleParams}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
@@ -168,38 +168,38 @@ describe("UserUI tests", () => {
     expect(screen.getByTestId("empty-state")).toBeInTheDocument();
   });
 
-  it("renders the user card component correctly", async () => {
+  it("renders the client card component correctly", async () => {
     renderWithProvider(
-      <UserCard
-        id={mockFolder[0].id}
-        name={mockUserFolder[0].name}
-        fileCount={mockUserFolder[0].file_count}
-        folderSize={mockUserFolder[0].total_folder_size}
-        path={mockFolder[0].path}
-        handleFetchFolders={mockHandleFetchUsersFolders}
+      <ClientCard
+        id={mockClientFolder[0].id}
+        name={mockClientFolder[0].name}
+        fileCount={mockClientFolder[0].file_count}
+        folderSize={mockClientFolder[0].total_folder_size}
+        path={mockClientFolder[0].path}
+        handleFetchFolders={mockHandleFetchClientsFolders}
         handleFolderRename={mockHandleRenameFolder}
         renameLoading={false}
       />
     );
-    expect(screen.getByText(mockUserFolder[0].name)).toBeInTheDocument();
-    expect(screen.getByText(`${mockUserFolder[0].file_count} files`)).toBeInTheDocument();
-    expect(screen.getByText(mockUserFolder[0].total_folder_size)).toBeInTheDocument();
+    expect(screen.getByText(mockClientFolder[0].name)).toBeInTheDocument();
+    expect(screen.getByText(`${mockClientFolder[0].file_count} files`)).toBeInTheDocument();
+    expect(screen.getByText(mockClientFolder[0].total_folder_size)).toBeInTheDocument();
     expect(screen.getByTestId("mock-folder-icon")).toBeInTheDocument();
   });
 
   describe("Search functionality", () => {
     it("updates the search input value when typing", () => {
       renderWithProvider(
-        <UsersUI
-          usersFolders={mockAllUsersFolders}
-          handleFetchUsersFolders={mockHandleFetchUsersFolders}
+        <ClientsDirectoryUI
+          clientsFolders={mockAllClientsFolders}
+          handleFetchClientsFolders={mockHandleFetchClientsFolders}
           handleParams={mockHandleParams}
           handleFolderRename={mockHandleRenameFolder}
           renameLoading={false}
         />
       );
 
-      const searchInput = screen.getByPlaceholderText("Search users");
+      const searchInput = screen.getByPlaceholderText("Search clients");
       fireEvent.change(searchInput, { target: { value: "test search" } });
 
       expect(searchInput).toHaveValue("test search");
@@ -209,16 +209,16 @@ describe("UserUI tests", () => {
       vi.useFakeTimers();
 
       renderWithProvider(
-        <UsersUI
-          usersFolders={mockAllUsersFolders}
-          handleFetchUsersFolders={mockHandleFetchUsersFolders}
+        <ClientsDirectoryUI
+          clientsFolders={mockAllClientsFolders}
+          handleFetchClientsFolders={mockHandleFetchClientsFolders}
           handleParams={mockHandleParams}
           handleFolderRename={mockHandleRenameFolder}
           renameLoading={false}
         />
       );
 
-      const searchInput = screen.getByPlaceholderText("Search users");
+      const searchInput = screen.getByPlaceholderText("Search clients");
       fireEvent.change(searchInput, { target: { value: "test search" } });
 
       vi.advanceTimersByTime(1000);
@@ -231,16 +231,16 @@ describe("UserUI tests", () => {
   describe("Sort functionality", () => {
     it("calls handleParams with the correct sort value when a sort option is selected", async () => {
       renderWithProvider(
-        <UsersUI
-          usersFolders={mockAllUsersFolders}
-          handleFetchUsersFolders={mockHandleFetchUsersFolders}
+        <ClientsDirectoryUI
+          clientsFolders={mockAllClientsFolders}
+          handleFetchClientsFolders={mockHandleFetchClientsFolders}
           handleParams={mockHandleParams}
           handleFolderRename={mockHandleRenameFolder}
           renameLoading={false}
         />
       );
 
-      const sortButton = screen.getByTestId("users-sort-button");
+      const sortButton = screen.getByTestId("clients-sort-button");
       await userEvent.click(sortButton);
       await waitFor(() => {
         expect(sortButton).toHaveAttribute("data-state", "open");
@@ -255,30 +255,34 @@ describe("UserUI tests", () => {
   describe("Rename functionality", () => {
     it("renders the rename option correctly", async () => {
       renderWithProvider(
-        <UsersUI
-          usersFolders={mockAllUsersFolders}
-          handleFetchUsersFolders={mockHandleFetchUsersFolders}
-          handleParams={mockHandleParams}
+        <ClientCard
+          id={mockFolder[1].id}
+          name={mockClientFolder[0].name}
+          fileCount={mockClientFolder[0].file_count}
+          folderSize={mockClientFolder[0].total_folder_size}
+          path={mockFolder[1].path}
+          handleFetchFolders={mockHandleFetchClientsFolders}
           handleFolderRename={mockHandleRenameFolder}
           renameLoading={false}
         />
       );
-      const menuTriggers = screen.getAllByRole("data-test-dropdown-trigger");
-      userEvent.click(menuTriggers[0]);
+      const menuTrigger = screen.getByRole("data-test-dropdown-trigger");
+      expect(menuTrigger).toBeInTheDocument();
+      userEvent.click(menuTrigger);
       await waitFor(() => {
-        expect(menuTriggers[0]).toHaveAttribute("data-state", "open");
+        expect(menuTrigger).toHaveAttribute("data-state", "open");
       });
       expect(screen.getByText("Rename folder")).toBeInTheDocument();
     });
     it("renders the rename modal when the rename option is clicked", async () => {
       renderWithProvider(
-        <UserCard
-          id={mockFolder[0].id}
-          name={mockUserFolder[0].name}
-          fileCount={mockUserFolder[0].file_count}
-          folderSize={mockUserFolder[0].total_folder_size}
-          path={mockFolder[0].path}
-          handleFetchFolders={mockHandleFetchUsersFolders}
+        <ClientCard
+          id={mockFolder[1].id}
+          name={mockClientFolder[0].name}
+          fileCount={mockClientFolder[0].file_count}
+          folderSize={mockClientFolder[0].total_folder_size}
+          path={mockFolder[1].path}
+          handleFetchFolders={mockHandleFetchClientsFolders}
           handleFolderRename={mockHandleRenameFolder}
           renameLoading={false}
         />
@@ -297,13 +301,13 @@ describe("UserUI tests", () => {
     });
     it("renders the rename input with the current folder name as its value", async () => {
       renderWithProvider(
-        <UserCard
-          id={mockFolder[0].id}
-          name={mockUserFolder[0].name}
-          fileCount={mockUserFolder[0].file_count}
-          folderSize={mockUserFolder[0].total_folder_size}
-          path={mockFolder[0].path}
-          handleFetchFolders={mockHandleFetchUsersFolders}
+        <ClientCard
+          id={mockClientFolder[0].id}
+          name={mockClientFolder[0].name}
+          fileCount={mockClientFolder[0].file_count}
+          folderSize={mockClientFolder[0].total_folder_size}
+          path={mockFolder[1].path}
+          handleFetchFolders={mockHandleFetchClientsFolders}
           handleFolderRename={mockHandleRenameFolder}
           renameLoading={false}
         />
@@ -321,45 +325,45 @@ describe("UserUI tests", () => {
       await waitFor(() => {
         const renameInput = screen.getByRole("textbox");
         expect(renameModal).toContainElement(renameInput);
-        expect(renameInput).toHaveValue(mockUserFolder[0].name);
+        expect(renameInput).toHaveValue(mockClientFolder[0].name);
       });
     });
-    it("calls handleRenameFolder with the correct parameters:  folder name and id when the check button is clicked", async () => {
-      renderWithProvider(
-        <UserCard
-          id={mockUserFolder[0].id}
-          name={mockUserFolder[0].name}
-          fileCount={mockUserFolder[0].file_count}
-          folderSize={mockUserFolder[0].total_folder_size}
-          path={mockFolder[0].path}
-          handleFetchFolders={mockHandleFetchUsersFolders}
-          handleFolderRename={mockHandleRenameFolder}
-          renameLoading={false}
-        />
-      );
-
-      const menuTrigger = screen.getByRole("data-test-dropdown-trigger");
-      expect(menuTrigger).toBeInTheDocument();
-      userEvent.click(menuTrigger);
-      await waitFor(() => {
-        expect(menuTrigger).toHaveAttribute("data-state", "open");
-      });
-      const renameOption = screen.getByText("Rename folder");
-      expect(renameOption).toBeInTheDocument();
-      userEvent.click(renameOption);
-      const renameModal = screen.getByTestId("input-action-modal");
-      await waitFor(() => {
-        const renameInput = screen.getByRole("textbox");
-        expect(renameModal).toContainElement(renameInput);
-        expect(renameInput).toHaveValue(mockUserFolder[0].name);
-      });
-      const checkButton = screen.getByTestId("check-button");
-      expect(checkButton).toBeInTheDocument();
-      userEvent.click(checkButton);
-      await waitFor(() => {
-        expect(mockHandleRenameFolder).toHaveBeenCalledWith(mockUserFolder[0].id, mockUserFolder[0].name);
-      });
-
-    });
+        it("calls handleRenameFolder with the correct parameters:  folder name and id when the check button is clicked", async () => {
+          renderWithProvider(
+            <ClientCard
+              id={mockClientFolder[0].id}
+              name={mockClientFolder[0].name}
+              fileCount={mockClientFolder[0].file_count}
+              folderSize={mockClientFolder[0].total_folder_size}
+              path={mockFolder[0].path}
+              handleFetchFolders={mockHandleFetchClientsFolders}
+              handleFolderRename={mockHandleRenameFolder}
+              renameLoading={false}
+            />
+          );
+    
+          const menuTrigger = screen.getByRole("data-test-dropdown-trigger");
+          expect(menuTrigger).toBeInTheDocument();
+          userEvent.click(menuTrigger);
+          await waitFor(() => {
+            expect(menuTrigger).toHaveAttribute("data-state", "open");
+          });
+          const renameOption = screen.getByText("Rename folder");
+          expect(renameOption).toBeInTheDocument();
+          userEvent.click(renameOption);
+          const renameModal = screen.getByTestId("input-action-modal");
+          await waitFor(() => {
+            const renameInput = screen.getByRole("textbox");
+            expect(renameModal).toContainElement(renameInput);
+            expect(renameInput).toHaveValue(mockClientFolder[0].name);
+          });
+          const checkButton = screen.getByTestId("check-button");
+          expect(checkButton).toBeInTheDocument();
+          userEvent.click(checkButton);
+          await waitFor(() => {
+            expect(mockHandleRenameFolder).toHaveBeenCalledWith(mockClientFolder[0].id, mockClientFolder[0].name);
+          });
+    
+        });
   });
 });

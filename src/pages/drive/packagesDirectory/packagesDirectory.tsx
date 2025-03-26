@@ -3,7 +3,7 @@ import { useApiRequest } from "hooks";
 import { useEffect, useMemo, useState } from "react";
 import { DefaultFolderResponse, fetchFoldersQueryParams, FoldersResponse } from "types";
 import { toast } from "components";
-import { PackagesUI } from "modules";
+import { PackagesDirectoryUI } from "modules";
 
 const Packages = () => {
   const {
@@ -71,7 +71,7 @@ const Packages = () => {
   }, [fetchPackagesFoldersResponse, fetchPackagesFoldersError]);
 
   return (
-    <PackagesUI
+    <PackagesDirectoryUI
       packagesFolders={{
         packagesFoldersData,
         loading: fetchPackagesFoldersStatus.isPending,
