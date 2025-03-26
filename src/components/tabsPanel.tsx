@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { cn } from "lib";
-import { FC, ReactElement, useState, useEffect } from "react";
+import { FC, HTMLAttributes, ReactElement, useState, useEffect } from "react";
 import { optionType } from "types";
 
 type TabType = {
@@ -32,6 +32,12 @@ type TabType = {
  * 
  * @example
  * // Usage with URL synchronization
+ * 
+ * // In a page component get the URL parameter:
+ * const { id, route } = useParams();
+ * 
+ * // Child component accepts the URL Params as props:
+ *  
  * <TabsPanel
  *   tabs={PRIMARY_TABS}
  *   syncWithUrl={true}
@@ -51,7 +57,7 @@ type TabType = {
  * @param {string} [props.urlParam] - Current URL parameter value to sync with
  * @param {Function} [props.onUrlChange] - Callback when tab changes, to update URL
  */
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   tabs: Array<TabType & optionType>;
   containerClassName?: string;
   syncWithUrl?: boolean;
