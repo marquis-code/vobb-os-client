@@ -1,13 +1,12 @@
 import { PipelinesUI } from "modules";
-import { useEffect, useMemo, useState } from "react";
-import { CreatePipeline } from "./createPipeline";
-import { EditPipelineStages } from "./editPipelineStages";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useApiRequest } from "hooks";
 import { editPipelineTitleService, fetchPipelinesService } from "api";
 import { PipelineTableDataProps } from "types";
 import { toast } from "components";
+import { CreatePipeline } from "./createPipeline";
 
-const Pipelines = () => {
+export const Pipelines = () => {
   const {
     run: runFetchPipelines,
     data: fetchPipelinesResponse,
@@ -21,6 +20,7 @@ const Pipelines = () => {
     error: editPipelineTitleError,
     requestStatus: editPipelineTitleStatus
   } = useApiRequest({});
+
 
   const [pipelinesQueryParams, setPipelinesQueryParams] = useState({
     page: 1,
@@ -37,17 +37,14 @@ const Pipelines = () => {
     setPipelinesQueryParams((prev) => ({ ...prev, [param]: value }));
   };
 
-  const [singlePipelineModal, setSinglePipelineModal] = useState({ id: "", name: "" });
   const [createPipelineModal, setCreatePipelineModal] = useState(false);
   const handleOpenCreatePipeline = () => setCreatePipelineModal(true);
   const handleCloseCreatePipeline = () => setCreatePipelineModal(false);
 
-  const [editPipelineStagesModal, setEditPipelineStagesModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailureModal, setShowFailureModal] = useState(false);
 
-  const handleOpenEditPipelineStages = () => setEditPipelineStagesModal(true);
-  const handleCloseEditPipelineStages = () => setEditPipelineStagesModal(false);
-
-  const handleFetchPipelines = () => {
+  const handleFetchPipelines = useCallback(() => {
     runFetchPipelines(
       fetchPipelinesService({
         page,
@@ -58,7 +55,7 @@ const Pipelines = () => {
         sort_property: sortProperty
       })
     );
-  };
+  }, [limit, page, runFetchPipelines, search, sector, sortOrder, sortProperty]);
 
   const pipelinesData = useMemo<PipelineTableDataProps>(() => {
     if (fetchPipelinesResponse?.status === 200) {
@@ -104,8 +101,6 @@ const Pipelines = () => {
         description: editPipelineTitleResponse?.data?.message
       });
       handleFetchPipelines();
-      setSinglePipelineModal({ id: "", name: "" });
-      handleOpenEditPipelineStages();
     } else if (editPipelineTitleError) {
       toast({
         variant: "destructive",
@@ -120,6 +115,7 @@ const Pipelines = () => {
   return (
     <>
       <PipelinesUI
+        data-testid="pipelines-ui"
         handleCreatePipeline={handleOpenCreatePipeline}
         allPipelines={{
           pipelinesData,
@@ -127,23 +123,24 @@ const Pipelines = () => {
           params: pipelinesQueryParams
         }}
         handleParams={handleUpdateQueryParams}
-        selectedPipelines={[]}
-        handleSelectPipeline={console.log}
         handleViewPipeline={console.log}
-        handleEditTitle={({ id, name }) => setSinglePipelineModal({ id, name })}
+        handleEditTitle={({ id, data }) => handleEditPipelineTitle(id, data)}
+        editPipelineTitleStatus={editPipelineTitleStatus}
         handleEditStages={console.log}
         handleViewForms={console.log}
         handleDeletePipeline={console.log}
+        onPipelineUpdate={handleFetchPipelines}
       />
-      <EditPipelineStages show={editPipelineStagesModal} close={handleCloseEditPipelineStages} />
       <CreatePipeline
+        data-testid="createPipeline-modal"
         show={createPipelineModal}
         close={handleCloseCreatePipeline}
-        handleOpenEditPipelineStages={handleOpenEditPipelineStages}
-        handleCloseEditPipelineStages={handleCloseEditPipelineStages}
+        showFailureModal={showFailureModal}
+        showSuccessModal={showSuccessModal}
+        setShowFailureModal={setShowFailureModal}
+        setShowSuccessModal={setShowSuccessModal}
+        onPipelineUpdate={handleFetchPipelines}
       />
     </>
   );
 };
-
-export { Pipelines };

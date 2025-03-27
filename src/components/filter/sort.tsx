@@ -11,12 +11,13 @@ import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon } from "@radix-ui/react-icons
 import { Button } from "components";
 import { optionType } from "types";
 import { IconArrowsDownUp } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 export type SortOrderType = "asc" | "desc" | string;
 
 interface SortByProps {
   sort: {
-    active: optionType | undefined;
+    active?: optionType;
     items: optionType[];
     handleChange: (val: optionType | undefined) => void;
   };
@@ -31,13 +32,25 @@ interface SortByProps {
 }
 
 const SortBy = ({ order, sort, className, isClearable, testId }: SortByProps) => {
+  const [activeSortItem, setActiveSortItem] = useState<optionType | undefined>(sort.active);
+
+  useEffect(() => {
+    if (sort.active !== undefined) {
+      setActiveSortItem(sort.active);
+    }
+  }, [sort.active]);
+
   const handleSortBy = (item: optionType) => {
+    setActiveSortItem(item);
     sort.handleChange(item);
   };
+
   const handleClear = () => {
+    setActiveSortItem(undefined);
     sort.handleChange(undefined);
     order.handleChange(undefined);
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -46,11 +59,11 @@ const SortBy = ({ order, sort, className, isClearable, testId }: SortByProps) =>
           className="border-neutral-40 h-[32px] py-1 px-2 gap-1 text-xs text-neutral-800 font-medium focus-visible:ring-0 focus-visible:ring-none shadow-xs"
           data-testid={testId}>
           {!order.active && <CaretSortIcon />}
-          {sort.active ? (
+          {activeSortItem ? (
             <>
               <span className="text-vobb-neutral-100 flex gap-1 items-center">
-                {sort.active.label}{" "}
-               <IconArrowsDownUp className="text-neutral-600 w-[12px] h-[12px] stroke-2" />
+                {activeSortItem.label}{" "}
+                <IconArrowsDownUp className="text-neutral-600 w-[12px] h-[12px] stroke-2" />
               </span>
               Sort
             </>
@@ -65,11 +78,10 @@ const SortBy = ({ order, sort, className, isClearable, testId }: SortByProps) =>
         <DropdownMenuGroup>
           {sort.items.map((item) => (
             <DropdownMenuItem
-              //   disabled={sort.items.length === 1}
               onClick={() => handleSortBy(item)}
               key={item.value}>
               {item.label}{" "}
-              {item.value === sort?.active?.value ? (
+              {item.value === activeSortItem?.value ? (
                 <span className="ml-auto rounded-full bg-vobb-primary-70 p-1"></span>
               ) : (
                 ""

@@ -14,14 +14,14 @@ const PipelinesTable = <TData, TValue>({ columns, data }: PipelineTableProps<TDa
   });
 
   return (
-    <div className="rounded-md border">
+    <div className="border-t">
       <Table>
-        <TableHeader>
+        <TableHeader className="px-4">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="bg-muted/50 h-[44px] space-x-4">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-xs font-medium leading-5 px-4">
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -37,7 +37,7 @@ const PipelinesTable = <TData, TValue>({ columns, data }: PipelineTableProps<TDa
               <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell) => (
                   //@ts-ignore
-                  <TableCell key={cell.id} testId={cell.getValue()}>
+                  <TableCell key={cell.id} testId={cell.getValue()} className="border-r text-xs leading-5 font-medium px-4">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -45,7 +45,7 @@ const PipelinesTable = <TData, TValue>({ columns, data }: PipelineTableProps<TDa
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className="h-24 text-center px-2">
                 No results.
               </TableCell>
             </TableRow>

@@ -287,6 +287,31 @@ export const priorityOptions: ObjectOptionProps[] = [
   }
 ];
 
+export const toolTipInfos = {
+  stageCreation: `Pipeline stages represent the different phases of the client's journey through your organization while purchasing a service. Each stage allows you to track and manage the client's status efficiently.
+Customize each stage with a title, order, color, and rules for movement to build a structured flow for your client interactions.`,
+  allStagesAllowed: `Clients from all other stages are allowed to move into this stage.`,
+  specificStageAllowed(number: number) {
+    return `Only clients from ${number} stage${number > 1 ? 's' : ''} are allowed to move into this stage.`
+  },
+  stageValidation: "At least two stages are required to complete the pipeline setup."
+};
+
+export const PipelineStagesColors = [
+  "#4A22EB",
+  "#088FFF",
+  "#069952",
+  "#E62E2E",
+  "#FFCC00",
+  "#F0AF4F",
+  "#FFC0CB",
+  "#4B0082",
+  "#FFA500",
+  "#866CF2",
+  "#F65385",
+  "#1D2939"
+]
+
 export const ACCEPTED_FILE_TYPES = [
   "image/jpeg",
   "image/jpg",

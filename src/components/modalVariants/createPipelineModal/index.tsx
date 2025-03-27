@@ -1,37 +1,25 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IconX } from "@tabler/icons-react";
-import { CustomInput, CustomTextarea, SelectInput } from "components/form";
+import { CustomInput, CustomTextarea } from "components/form";
 import { Modal } from "components/modal";
 import { Button } from "components/ui";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ModalProps, optionType, stagesType } from "types";
-import { sectorOptions } from "lib";
+import { ModalProps } from "types";
 
 export interface CreatePipelineData {
   name: string;
   description?: string;
-  sector: optionType;
-  stages?: stagesType[];
 }
 
-const optionTypeSchemaReq = yup
-  .object({
-    label: yup.string().required("Required"),
-    value: yup.string().required("Required")
-  })
-  .required("Required");
-
-const stagesTypeSchema = yup.object({
-  title: yup.string(),
-  color: yup.string()
-});
+// const stagesTypeSchema = yup.object({
+//   title: yup.string(),
+//   color: yup.string()
+// });
 
 const schema = yup.object({
   name: yup.string().required("Required"),
-  description: yup.string(),
-  sector: optionTypeSchemaReq,
-  stages: yup.array().of(stagesTypeSchema)
+  description: yup.string()
 });
 
 interface CreatePipelineModalProps extends ModalProps {
@@ -49,8 +37,6 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
     register,
     handleSubmit,
     formState: { errors, isDirty },
-    watch,
-    setValue
   } = useForm<CreatePipelineData>({
     resolver: yupResolver(schema)
   });
@@ -67,7 +53,7 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
         close={close}
         testId="createPipeline-modal">
         <div className="flex items-center justify-between p-3 border-b border-vobb-neutral-20">
-          <h2 className="text-lg font-medium text-vobb-neutral-95">Pipeline Creation</h2>
+          <h2 className="text-lg font-medium font-inter text-vobb-neutral-95">Pipeline Creation</h2>
           <Button
             onClick={close}
             variant={"ghost"}
@@ -95,19 +81,6 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
             validatorMessage={errors.description?.message}
           />
 
-          <SelectInput
-            label="Sector"
-            options={sectorOptions}
-            value={watch("sector")?.value === "" ? null : watch("sector")}
-            onChange={(val) => val && setValue("sector", val)}
-            placeholder="Select Sector"
-            validatorMessage={
-              errors.sector?.message ??
-              errors.sector?.value?.message ??
-              errors.sector?.label?.message
-            }
-            menuPosition="fixed"
-          />
         </form>
         <div className="flex justify-between py-2 px-4 bg-vobb-neutral-10">
           <Button
@@ -134,3 +107,5 @@ const CreatePipelineModal: React.FC<CreatePipelineModalProps> = ({
 };
 
 export { CreatePipelineModal };
+export * from "./error";
+export * from "./success";

@@ -21,7 +21,7 @@ export type PipelineTableData = {
   };
   clients: number;
   stages: number;
-  pipelinePackage: {
+  package: {
     id: string;
     name: string;
   };
@@ -30,6 +30,21 @@ export type PipelineTableData = {
 };
 
 export interface PipelineTableDataProps {
-  data: PipelineTableData[];
+  data: PipelineTableData[] | null | undefined;
   metaData: MetaDataProps;
+}
+
+
+export interface EditPipelineStagesDto {
+  stages : Array<IPipelineStage>;
+}
+
+export type AllowedStages = Array<Partial<IPipelineStage>> | Array<string>;
+export interface IPipelineStage {
+  _id: string;
+  title: string;
+  level: number;
+  color: string;
+  allow_all_stages?: boolean;
+  allowed_stages?: AllowedStages | any;
 }

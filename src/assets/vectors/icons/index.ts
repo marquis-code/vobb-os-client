@@ -36,6 +36,7 @@ import { ReactComponent as PngIcon } from "./pngIcon.svg";
 import { ReactComponent as WebpIcon } from "./webpIcon.svg";
 import { ReactComponent as SendupLinkIcon } from "./sendupLinkIcon.svg";
 import { ReactComponent as BooksLinkIcon } from "./booksLinkIcon.svg";
+import { ReactComponent as CanvasIcon } from "./canvasIcon.svg";
 
 export {
   OfferingIcon,
@@ -74,5 +75,6 @@ export {
   SendIcon,
   MailIcon,
   Arrow,
-  Check
+  Check,
+  CanvasIcon
 };

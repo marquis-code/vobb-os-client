@@ -1,41 +1,56 @@
-import { createPipelineStageService } from "api";
+import { editPipelineStagesService } from "api";
 import { EditPipelineStagesModal, toast } from "components";
 import { useApiRequest } from "hooks";
 import React, { useMemo } from "react";
-import { ModalProps } from "types";
+import { EditPipelineStagesDto, ModalProps, PipelineTableData } from "types";
 interface EditPipelineStagesProps extends ModalProps {
-  callback?: () => void;
+  callback: () => void;
+  mode: "edit" | "create";
+  pipelineTableData?: PipelineTableData | null;
 }
 
-const EditPipelineStages: React.FC<EditPipelineStagesProps> = ({ callback, show, close }) => {
-  const { run, data: response, requestStatus, error } = useApiRequest({});
+const EditPipelineStages: React.FC<EditPipelineStagesProps> = ({ 
+  show, 
+  close, 
+  mode, 
+  callback,
+  pipelineTableData}) => {
 
-  const submit = (data) => {
-    run(createPipelineStageService(data));
-  };
+      const { 
+            run, 
+            data, 
+            requestStatus, 
+            error
+          } = useApiRequest({});
 
-  useMemo(() => {
-    if (response?.status === 201) {
-      toast({
-        description: response?.data?.message
-      });
-      callback?.();
-      close();
-    } else if (error) {
-      toast({
-        variant: "destructive",
-        description: error?.response?.data?.error
-      });
-    }
-  }, [response, error]);
+          const onSubmit = (id, data: EditPipelineStagesDto) => {
+            run(editPipelineStagesService(id, data))
+          }
+
+          useMemo(() => {
+            if (data?.status === 200) {
+              toast({
+                description: data?.data?.message
+              });
+              close()
+              callback()
+            } else if (error) {
+              toast({
+                variant: "destructive",
+                description: error?.response?.data?.error
+              });
+            }
+          }, [data, error]);
 
   return (
     <>
       <EditPipelineStagesModal
+      submit={onSubmit}
         show={show}
         close={close}
-        submit={submit}
-        loading={requestStatus.isPending}
+        editPipelineStagesStatus={requestStatus}
+        initialMode={mode}
+        pipelineTableData={pipelineTableData}
       />
     </>
   );

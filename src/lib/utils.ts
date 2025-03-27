@@ -61,3 +61,17 @@ export const calculateTotalWordCount = (values: any) => {
   });
   return wordCountObj;
 };
+
+
+export const numberToOrdinal = (n: number): string => {
+  const suffixes = ["th", "st", "nd", "rd"];
+  const value = n % 100;
+  return n + (suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0]) + " Stage";
+};
+
+export const isArrayEqual = (a, b) => {
+  if (a.length !== b.length) return false;
+  const sortedA = [...a].sort();
+  const sortedB = [...b].sort();
+  return sortedA.every((val, idx) => val === sortedB[idx]);
+};

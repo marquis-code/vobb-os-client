@@ -1,51 +1,65 @@
-import { IconPlus } from "@tabler/icons-react";
 import { createPipelineRequestBody, createPipelineService } from "api";
-import { Button, CreatePipelineData, CreatePipelineErrorModal, CreatePipelineModal, CreatePipelineSuccessModal } from "components";
 import { useApiRequest } from "hooks";
-import { Column, Row } from "layout";
-import { useMemo, useState } from "react";
-import { ModalProps } from "types";
+import { SetStateAction, useMemo, useState } from "react";
+import { ModalProps, PipelineTableData } from "types";
+import { EditPipelineStages } from "./editPipelineStages";
+import {
+  CreatePipelineData,
+  CreatePipelineErrorModal,
+  CreatePipelineModal,
+  CreatePipelineSuccessModal
+} from "components";
 
 interface CreatePipelineProps extends ModalProps {
-  callback?: () => void;
-  handleOpenEditPipelineStages: () => void;
-  handleCloseEditPipelineStages: () => void;
+  showSuccessModal: boolean;
+  showFailureModal: boolean;
+  setShowFailureModal: React.Dispatch<SetStateAction<boolean>>;
+  setShowSuccessModal: React.Dispatch<SetStateAction<boolean>>;
+  onPipelineUpdate: () => void;
 }
 
-const CreatePipeline: React.FC<CreatePipelineProps> = ({
+export const CreatePipeline: React.FC<CreatePipelineProps> = ({
   show,
   close,
-  callback,
-  handleOpenEditPipelineStages
+  showFailureModal,
+  showSuccessModal,
+  setShowFailureModal,
+  setShowSuccessModal,
+  onPipelineUpdate
 }) => {
-  const { run, data: response, requestStatus, error } = useApiRequest({});
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showFailureModal, setShowFailureModal] = useState(false);
+  const [editPipelineStagesModal, setEditPipelineStagesModal] = useState(false);
+  const { run, data, requestStatus, error } = useApiRequest({});
+  
   const submit = (data: CreatePipelineData) => {
     const requestBody: createPipelineRequestBody = {
-      name: data.name,
-      sector: data.sector.value
+      name: data.name
     };
     if (data.description && data.description.trim() !== "") {
       requestBody.description = data.description;
     }
-    if (data.stages?.length) {
-      requestBody.stages = data.stages;
-    }
     run(createPipelineService(requestBody));
   };
 
+  const transformedPipelineData: PipelineTableData | null = useMemo(() => {
+    if (data?.status === 201 && data?.data?.data) {
+      const originalData = data.data.data;
+      return {
+        id: originalData._id,
+        ...originalData
+      };
+    }
+    return null;
+  }, [data]);
+
   useMemo(() => {
-    if (response?.status === 201) {
-      setShowSuccessModal(true);
-      callback?.();
+    if (data?.status === 201) {
       close();
+      setShowSuccessModal(true);
     } else if (error) {
       close();
       setShowFailureModal(true);
     }
-  }, [response, error]);
-
+  }, [data, error]);
 
   return (
     <>
@@ -55,10 +69,23 @@ const CreatePipeline: React.FC<CreatePipelineProps> = ({
         submit={submit}
         loading={requestStatus.isPending}
       />
-      <CreatePipelineSuccessModal show={showSuccessModal} close={() => setShowSuccessModal(false)} onEditPipelineStages={handleOpenEditPipelineStages} />
-      <CreatePipelineErrorModal show={showFailureModal} close={() => setShowFailureModal(false)} errorMessage={error?.response?.data?.error} />
+      <EditPipelineStages
+        mode="create"
+        show={editPipelineStagesModal}
+        close={() => setEditPipelineStagesModal(false)}
+        callback={onPipelineUpdate}
+        pipelineTableData={transformedPipelineData}
+      />
+      <CreatePipelineSuccessModal
+        show={showSuccessModal}
+        close={() => setShowSuccessModal(false)}
+        onEditPipelineStages={() => setEditPipelineStagesModal(true)}
+      />
+      <CreatePipelineErrorModal
+        show={showFailureModal}
+        close={() => setShowFailureModal(false)}
+        errorMessage={error?.response?.data?.error}
+      />
     </>
   );
 };
-
-export { CreatePipeline };

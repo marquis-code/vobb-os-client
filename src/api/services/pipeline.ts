@@ -7,23 +7,23 @@ PIPELINE SERVICES
 import {
   createPipelineStageURL,
   createPipelineURL,
+  editPipelineStagesURL,
   editPipelineTitleURL,
+  fetchPipelineStagesURL,
   fetchPipelinesURL,
   getRequest,
   patchRequest,
   postRequest
 } from "api";
-import { fetchPipelinesQueryParams, stagesType } from "types";
+import { EditPipelineStagesDto, fetchPipelinesQueryParams, stagesType } from "types";
 
 export interface createPipelineRequestBody {
   name: string;
   description?: string;
-  sector: string;
-  stages?: stagesType[];
 }
 
 export interface createPipelineStageRequestBody {
-  name: string;
+  pipeline: string;
   stages: stagesType[];
 }
 
@@ -54,6 +54,19 @@ export const createPipelineStageService = (data: createPipelineStageRequestBody)
 };
 
 /**
+ * Edit a Pipeline's stages service
+ * @param data
+ * @returns axios promise
+ */
+
+export const editPipelineStagesService = (id: string, data: EditPipelineStagesDto) => {
+  return patchRequest({
+    url: editPipelineStagesURL({ id }),
+    data
+  });
+};
+
+/**
  * Fetch pipelines Service
  * @returns url string
  *
@@ -76,3 +89,14 @@ export const editPipelineTitleService = (id: string, data: { name: string }) => 
     data
   });
 };
+
+/**
+ * Fetch stages for a pipeline Service
+ * @returns stages array
+ */
+
+export const fetchPipelineStagesService = (id: string) => {
+  return getRequest({
+    url: fetchPipelineStagesURL({id} )
+  })
+}

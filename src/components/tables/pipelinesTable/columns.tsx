@@ -1,10 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Button, Checkbox } from "components/ui";
+import { Button, Checkbox, Popover, PopoverContent, PopoverTrigger } from "components/ui";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
 
@@ -12,42 +11,50 @@ import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { cn } from "lib";
 import { PipelineTableData } from "types";
 import { IconDotsVertical } from "@tabler/icons-react";
-import { CustomInput } from "components/form";
+import { useState } from "react";
+import { EditPipelineTitleModal } from "components/modalVariants";
+import { Row } from "layout";
 
 export interface PipelineTableActions {
-  selectedPipelines: string[];
-  handleSelectPipeline: (id: string) => void;
   handleViewPipeline: (id: string) => void;
-  handleEditTitle: ({ id, name }: { id: string; name: string }) => void;
-  handleEditStages: (id: string) => void;
+  handleEditTitle: ({ id, data }: { id: string; data: {name: string} }) => void;
+  editPipelineTitleStatus: {
+    isResolved: boolean;
+    isPending: boolean;
+    isRejected: boolean;
+    isIdle: boolean;
+},
+  handleEditStages: (data: PipelineTableData) => void;
   handleViewForms: (id: string) => void;
-  handleDeletePipeline: (id: string) => void;
+  handleDeletePipeline: (id: string) => void
 }
 
 export const getPipelinesTableColumns = ({
-  selectedPipelines,
-  handleSelectPipeline,
   handleViewPipeline,
   handleEditTitle,
+  editPipelineTitleStatus,
   handleEditStages,
   handleViewForms,
   handleDeletePipeline
 }: PipelineTableActions): ColumnDef<PipelineTableData>[] => [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ table }) => (
+      <Row className="items-center">
+        <Checkbox 
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+        <p> Name</p>
+      </Row>
+    ),
     cell: ({ row }) => {
-      const { name, id } = row.original;
-      return (
-        <div className="flex gap-2 items-end truncate text-xs">
-          <Checkbox
-            checked={selectedPipelines.find((item) => item === id) ? true : false}
-            onCheckedChange={() => handleSelectPipeline(id)}
-          />
-
-          <span>{name}</span>
-        </div>
-      );
+      const { name } = row.original;
+      return <span>{name}</span>;
     }
   },
   {
@@ -100,98 +107,145 @@ export const getPipelinesTableColumns = ({
     }
   },
   {
-    accessorKey: "sector",
-    header: "Sector",
-    cell: ({ row }) => {
-      const { sector } = row.original;
-      return (
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-fit justify-start text-left items-center font-normal text-xs h-8  py-0 p-2 gap-1"
-          )}>
-          {sector}
-        </Button>
-      );
-    }
-  },
-  {
-    accessorKey: "package",
-    header: "Package",
-    cell: ({ row }) => {
-      const { pipelinePackage } = row.original;
-      return <span>{pipelinePackage?.name}</span>;
-    }
-  },
-
-  {
     id: "actions",
     cell: ({ row }) => {
-      const { id, name } = row.original;
-
+      const rowData = row.original;
+  
       const viewPipeline = () => {
-        handleViewPipeline(id);
+        handleViewPipeline(rowData.id);
       };
-      const editTitle = () => {
-        handleEditTitle({ id, name });
+      const editTitle = (data: {name: string}) => {
+        handleEditTitle({ id: rowData.id, data });
       };
-
-      const editStages = () => {
-        handleEditStages(id);
+  
+      const editStages = (data) => {
+        handleEditStages(data);
       };
-
+  
       const viewForms = () => {
-        handleViewForms(id);
+        handleViewForms(rowData.id);
       };
-
+  
       const deletePipeline = () => {
-        handleDeletePipeline(id);
+        handleDeletePipeline(rowData.id);
       };
-
+  
       return (
         <ActionColumn
+          rowData={rowData}
           viewPipeline={viewPipeline}
-          editTitle={editTitle}
+          editTitle={(data) => editTitle(data)}
           editStages={editStages}
           viewForms={viewForms}
           deletePipeline={deletePipeline}
+          editPipelineTitleStatus={editPipelineTitleStatus}
         />
       );
     }
   }
 ];
 
-const ActionColumn = ({ viewPipeline, editTitle, editStages, viewForms, deletePipeline }) => {
+interface ActionColumnProps {
+  viewPipeline: () => void;
+  editTitle: (data: {name: string}) => void;
+  editPipelineTitleStatus: {
+    isResolved: boolean;
+    isPending: boolean;
+    isRejected: boolean;
+    isIdle: boolean;
+},
+  editStages: (data: any) => void;
+  viewForms: () => void;
+  deletePipeline: () => void;
+  rowData: any;
+}
+
+const ActionColumn = ({ 
+  viewPipeline, 
+  editStages, 
+  viewForms, 
+  deletePipeline, 
+  rowData,
+  editTitle,
+  editPipelineTitleStatus 
+}: ActionColumnProps) => {
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [isEditTitleOpen, setIsEditTitleOpen] = useState(false);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isActionsOpen} onOpenChange={setIsActionsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="h-6 w-6 p-0" data-testid="pipeline-actions">
           <span className="sr-only">Open menu</span>
-          <IconDotsVertical size={16} />{" "}
+          <IconDotsVertical size={16} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={viewPipeline} className="cursor-pointer" testId="view-pipeline">
+      <DropdownMenuContent align="end" className="min-w-[200px]">
+        <DropdownMenuItem onClick={viewPipeline} className="cursor-pointer" data-testid="view-pipeline">
           View Pipeline
         </DropdownMenuItem>
+        
+        <Popover 
+        modal={true}
+        open={isEditTitleOpen} 
+        onOpenChange={(open) => {
+          setIsEditTitleOpen(open);
+          if (open) setIsActionsOpen(true);
+        }}
+      >
+        <PopoverTrigger asChild>
+          <DropdownMenuItem 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsEditTitleOpen(true);
+            }} 
+            className="cursor-pointer"
+            data-testid="edit-title-btn"
+          >
+            Edit Title
+          </DropdownMenuItem>
+        </PopoverTrigger>
+        <PopoverContent className="w-[260px] p-0 bg-transparent border-0" align="end">
+        <EditPipelineTitleModal
+                isOpen={isEditTitleOpen}
+                setIsOpen={setIsEditTitleOpen}
+                data={rowData}
+                editTitle={editTitle}
+                editPipelineTitleStatus={editPipelineTitleStatus}
+              />
+        </PopoverContent>
+      </Popover>
 
-        <DropdownMenuItem onClick={editTitle} className="gap-2 cursor-pointer" testId="edit-title">
-          Edit Title
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={editStages} className="cursor-pointer" testId="edit-stages">
+        <DropdownMenuItem 
+          onClick={() => {
+            editStages(rowData);
+            setIsActionsOpen(false);
+          }} 
+          className="cursor-pointer" 
+          data-testid="edit-stages"
+        >
           Edit stages
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={viewForms} className="cursor-pointer" testId="view-forms">
+        <DropdownMenuItem 
+          onClick={() => {
+            viewForms();
+            setIsActionsOpen(false);
+          }} 
+          className="cursor-pointer" 
+          data-testid="view-forms"
+        >
           View forms
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          onClick={deletePipeline}
+          onClick={() => {
+            deletePipeline();
+            setIsActionsOpen(false);
+          }}
           className="gap-2 cursor-pointer text-error-10"
-          testId="delete-pipeline">
-          {" "}
+          data-testid="delete-pipeline"
+        >
           Delete pipeline
         </DropdownMenuItem>
       </DropdownMenuContent>

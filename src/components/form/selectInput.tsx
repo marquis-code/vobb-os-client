@@ -43,7 +43,8 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
     styles,
     loading,
     testId,
-    disabled
+    disabled,
+    onChange
   } = props;
 
   return (
@@ -58,6 +59,9 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
         {icon ? <span className="absolute left-2 top-[10px] z-[1]">{icon}</span> : ""}
         <Select
           {...props}
+          onChange={(newValue) => {
+            onChange(newValue);
+          }}
           isSearchable
           styles={{
             control: (baseStyles, state) => ({

@@ -1,12 +1,12 @@
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { LoadingSpinner } from "components/ui";
-import { useClickOutside } from "hooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface InputActionModalProps {
   modalView: boolean;
+  setModalView: React.Dispatch<React.SetStateAction<boolean>>;
+  modalRef: React.MutableRefObject<null>;
   onConfirm: (inputValue: string) => void;
-  handleClose: () => void;
   prefilledValue?: string;
   placeholder?: string;
   loading?: boolean;
@@ -15,14 +15,14 @@ interface InputActionModalProps {
 
 const InputActionModal: React.FC<InputActionModalProps> = ({
   modalView,
+  setModalView,
+  modalRef,
   onConfirm,
-  handleClose,
   prefilledValue = "",
   placeholder = "Enter value",
   loading,
   parentClassName
 }) => {
-  const modalRef = useRef(null);
   const [inputValue, setInputValue] = useState(prefilledValue);
   const [isEmpty, setIsEmpty] = useState(!prefilledValue);
 
@@ -40,7 +40,6 @@ const InputActionModal: React.FC<InputActionModalProps> = ({
       onConfirm(inputValue);
     }
   };
-  useClickOutside(modalRef, handleClose);
   return (
     <div
       data-testid="input-action-modal"
@@ -54,8 +53,9 @@ const InputActionModal: React.FC<InputActionModalProps> = ({
           className={`absolute flex items-center justify-center w-[272px] z-[200] ${parentClassName}`}>
           <div className="w-full rounded-md bg-vobb-neutral-10 flex items-center justify-between p-1 relative">
             <div
-              className={`bg-white border p-2 transition-all duration-200 ${isEmpty ? "w-[85%]" : "w-[70%]"
-                }  rounded-md flex items-center justify-start relative z-[15]`}>
+              className={`bg-white border p-2 transition-all duration-200 ${
+                isEmpty ? "w-[85%]" : "w-[70%]"
+              }  rounded-md flex items-center justify-start relative z-[15]`}>
               <input
                 role="textbox"
                 data-testid="action-input"
@@ -74,7 +74,6 @@ const InputActionModal: React.FC<InputActionModalProps> = ({
                 <IconCheck
                   className="cursor-pointer"
                   onClick={handleConfirm}
-                  data-testid="check-button"
                   size={16}
                   stroke="black"
                 />
@@ -82,7 +81,9 @@ const InputActionModal: React.FC<InputActionModalProps> = ({
                 !isEmpty && <LoadingSpinner size={16} />
               )}
               <IconX
-                onClick={handleClose}
+                onClick={() => {
+                  setModalView(false);
+                }}
                 className="cursor-pointer"
                 size={16}
                 stroke="black"

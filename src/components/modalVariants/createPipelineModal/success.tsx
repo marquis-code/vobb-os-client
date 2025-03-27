@@ -9,13 +9,13 @@ interface CreatePipelineSuccessModalProps extends ModalProps {
   onEditPipelineStages: () => void;
 }
 
-const CreatePipelineSuccessModal:FC<CreatePipelineSuccessModalProps> = ({
+export const CreatePipelineSuccessModal:FC<CreatePipelineSuccessModalProps> = ({
       show,
       close,
       onEditPipelineStages
 }) => {
       return (
-            <Modal show={show} close={close} dialogClassName="p-0" contentClassName="p-0">
+            <Modal show={show} close={close} dialogClassName="p-0" contentClassName="p-0" testId="createPipeline-success-modal">
             <Column className="border">
               <Column className="px-4 pt-4 gap-2">
                 <h2 className="text-sm font-bold text-vobb-neutral-95 font-inter">Pipeline Created Successfully!</h2>
@@ -36,5 +36,3 @@ const CreatePipelineSuccessModal:FC<CreatePipelineSuccessModalProps> = ({
           </Modal>
       )
 }
-
-export { CreatePipelineSuccessModal };

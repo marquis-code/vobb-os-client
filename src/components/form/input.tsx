@@ -31,6 +31,45 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     labelClassName
   } = props;
 
+
+  const inputClassName = cn(
+    'w-full',
+    'text-xs',
+    'font-medium',
+    'leading-5',
+    'placeholder:text-vobb-neutral-60', 
+    'border-0 focus-visible:ring-0',
+    className
+  );
+
+  const containerClassName = cn(
+    'flex justify-between items-center',
+    'rounded-md',
+    'border border-input',
+    'bg-background',
+    'ring-offset-background focus-within:border-transparent',
+    'focus-within:ring-1',
+    'focus-within:ring-ring',
+    'focus-within:ring-offset-1',
+    validatorMessage && 'border-error-10 focus-visible:ring-error-0',
+    icon && 'pl-2'
+  );
+
+
+  const inputProps = register && name
+    ? {
+        ...props,
+        ...register(name, {
+          required,
+          minLength: props.minLength,
+          onChange: props.onChange,
+          min: props.min,
+          max: props.max
+        }),
+        defaultValue
+      }
+    : props;
+
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>
@@ -45,37 +84,12 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
           </label>
         )}
         <div>
-          <div className="relative">
-            {icon ? <span className="absolute left-2 top-[10px]">{icon}</span> : ""}
-            {register && name ? (
-              <Input
-                {...props}
-                {...register(name, {
-                  required: required,
-                  minLength: props.minLength,
-                  onChange: props.onChange,
-                  min: props.min,
-                  max: props.max
-                })}
-                defaultValue={defaultValue}
-                className={cn(
-                  `${
-                    validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""
-                  } placeholder:text-vobb-neutral-60 text-xs font-medium leading-5`,
-                  className,
-                  icon ? "pl-8" : "" // Ensures padding when icon is present
-                )}
-              />
-            ) : (
-              <Input
-                className={cn(
-                  `${validatorMessage ? "border-error-10 focus-visible:ring-error-0" : ""}`,
-                  className,
-                  icon ? "pl-8" : "" // Ensures padding when icon is present
-                )}
-                {...props}
-              />
-            )}
+        <div className={containerClassName}>
+            {icon && <span >{icon}</span>}
+            <Input
+              className={inputClassName}
+              {...inputProps}
+            />
           </div>
           {validatorMessage && (
             <small className="block text-[11px] mt-1 text-error-10">{validatorMessage}</small>

@@ -17,6 +17,14 @@ const prefix = "/pipeline";
 export const createPipelineURL = () => `${prefix}`;
 
 /**
+ * Edit pipeline title URL
+ *
+ * @returns url string
+ *
+ */
+export const editPipelineStagesURL = ({ id }) => `${prefix}/stage/${id}`;
+
+/**
  * Create a pipeline stage URL
  *
  * @returns url string
@@ -45,3 +53,12 @@ export const fetchPipelinesURL = (queryParams: fetchPipelinesQueryParams) => {
  *
  */
 export const editPipelineTitleURL = ({ id }) => `${prefix}/edit-name/${id}`;
+
+/**
+ * Fetch stages for a pipeline
+ *
+ * @returns url string
+ *
+ */
+
+export const fetchPipelineStagesURL = ({ id }) => `${prefix}/stage/${id}`;
