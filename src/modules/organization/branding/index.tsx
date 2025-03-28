@@ -35,11 +35,11 @@ const OrgBrandingUI: React.FC<OrgBrandingProps> = ({ submit, loading }) => {
         <div>
           <div className="mb-8" data-testid="primary-color">
             <p className="text-sm font-semibold mb-4">Primary Brand Color</p>
-            <ColorPicker value={primary} handleChange={setPrimary} />
+            <ColorPicker color={primary} onChange={setPrimary} />
           </div>
           <div data-testid="secondary-color">
             <p className="text-sm font-semibold mb-4">Secondary Brand Color</p>
-            <ColorPicker value={secondary} handleChange={setSecondary} />{" "}
+            <ColorPicker color={secondary} onChange={setSecondary} />{" "}
           </div>
           <div className="flex gap-2 justify-start max-w-[800px] pt-10">
             <Button onClick={handleDefault} variant={"outline"} disabled={loading}>

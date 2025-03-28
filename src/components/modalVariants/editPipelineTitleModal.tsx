@@ -4,7 +4,7 @@ import { PipelineTableData } from "types";
 
 interface EditPipelineTitleModalProps {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleClose: () => void;
   data: PipelineTableData;
   editTitle: (data: {name: string}) => void;
   editPipelineTitleStatus: {
@@ -17,29 +17,25 @@ interface EditPipelineTitleModalProps {
 
 export const EditPipelineTitleModal: React.FC<EditPipelineTitleModalProps> = ({
   isOpen,
-  setIsOpen,
+  handleClose,
   data,
   editTitle,
   editPipelineTitleStatus
 }) => {
 
-  
-  const modalRef = useRef(null);
 
   const handleConfirm = (inputValue: string) => {
     // Only trigger an API call if the title has changed
     if (inputValue === data.name) {
-      setIsOpen(false);
-      return;
+      editTitle({ name: inputValue })
     }
-    editTitle({ name: inputValue })
+    
   };
 
   return (
     <InputActionModal
       modalView={isOpen}
-      setModalView={setIsOpen}
-      modalRef={modalRef}
+      handleClose={handleClose}
       onConfirm={handleConfirm}
       prefilledValue={data.name}
       placeholder="Enter new title"

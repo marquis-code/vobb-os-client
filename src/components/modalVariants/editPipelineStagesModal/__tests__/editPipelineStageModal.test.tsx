@@ -130,7 +130,7 @@ describe("EditPipelineStagesModal", () => {
     },
     initialMode: "edit" as const,
     pipelineTableData: {
-      _id: "pipeline1",
+      id: "pipeline1",
       name: "Pipeline 1",
       description: "Pipeline description",
       sector: "Sector 1",

@@ -208,7 +208,7 @@ const ActionColumn = ({
         <PopoverContent className="w-[260px] p-0 bg-transparent border-0" align="end">
         <EditPipelineTitleModal
                 isOpen={isEditTitleOpen}
-                setIsOpen={setIsEditTitleOpen}
+                handleClose={() => setIsEditTitleOpen(false)}
                 data={rowData}
                 editTitle={editTitle}
                 editPipelineTitleStatus={editPipelineTitleStatus}
