@@ -1,17 +1,17 @@
-import { fetchUserFilesService, renameFileService, uploadFileService } from "api";
+import { fetchOfferingFilesService, renameFileService, uploadFileService } from "api";
 import { useApiRequest } from "hooks";
 import { useEffect, useMemo, useState } from "react";
-import { fetchFoldersQueryParams, FilesResponse, DefaultFile, DefaultFileResponse } from "types";
+import { FilesResponse, DefaultFile, fetchFoldersQueryParams, DefaultFileResponse } from "types";
 import { toast } from "components";
 import { useParams } from "react-router-dom";
-import { UserFilesUI } from "modules";
+import { OfferingFilesUI } from "modules";
 
-const UserFiles = () => {
+const OfferingFiles = () => {
   const {
-    run: runFetchUserFiles,
-    data: fetchUserFilesResponse,
-    error: fetchUserFilesError,
-    requestStatus: fetchUserFilesStatus
+    run: runFetchOfferingFiles,
+    data: fetchOfferingFilesResponse,
+    error: fetchOfferingFilesError,
+    requestStatus: fetchOfferingFilesStatus
   } = useApiRequest({});
 
   const {
@@ -29,29 +29,35 @@ const UserFiles = () => {
   } = useApiRequest({});
 
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [userFilesQueryParams, setUserFilesQueryParams] = useState<fetchFoldersQueryParams>({
-    page: 1,
-    limit: 30,
-    search: "",
-    sort: "asc"
-  });
+  const [offeringFilesQueryParams, setOfferingFilesQueryParams] = useState<fetchFoldersQueryParams>(
+    {
+      page: 1,
+      limit: 30,
+      search: "",
+      sort: "asc",
+      start_date: "2024-12-01",
+      end_date: "2025-12-31"
+    }
+  );
 
-  const { page, limit, search, sort } = userFilesQueryParams;
+  const { page, limit, search, sort, start_date, end_date } = offeringFilesQueryParams;
 
   const handleUpdateQueryParams = (param: string, value: string | number) => {
-    setUserFilesQueryParams((prev) => ({ ...prev, [param]: value }));
+    setOfferingFilesQueryParams((prev) => ({ ...prev, [param]: value }));
   };
 
   const { id } = useParams<{ id: string }>();
 
-  const handleFetchUserFiles = () => {
+  const handleFetchOfferingFiles = () => {
     if (id) {
-      runFetchUserFiles(
-        fetchUserFilesService(id, {
+      runFetchOfferingFiles(
+        fetchOfferingFilesService(id, {
           page,
           limit,
           search,
-          sort
+          sort,
+          start_date,
+          end_date
         })
       );
     }
@@ -72,16 +78,16 @@ const UserFiles = () => {
   };
 
   useEffect(() => {
-    handleFetchUserFiles();
+    handleFetchOfferingFiles();
   }, []);
 
   useEffect(() => {
-    handleFetchUserFiles();
-  }, [userFilesQueryParams]);
+    handleFetchOfferingFiles();
+  }, [offeringFilesQueryParams]);
 
   const filesData = useMemo<FilesResponse>(() => {
-    if (fetchUserFilesResponse?.status === 200) {
-      const files = fetchUserFilesResponse.data.data.files.map((item: DefaultFileResponse) => ({
+    if (fetchOfferingFilesResponse?.status === 200) {
+      const files = fetchOfferingFilesResponse.data.data.files.map((item: DefaultFileResponse) => ({
         id: item._id,
         name: item.name,
         path: item.path,
@@ -91,23 +97,23 @@ const UserFiles = () => {
       }));
       return {
         files,
-        total_count: fetchUserFilesResponse.data.total_count || 0,
-        total_pages: fetchUserFilesResponse.data.total_pages || 0,
-        page: fetchUserFilesResponse.data.page || 1
+        total_count: fetchOfferingFilesResponse.data.total_count || 0,
+        total_pages: fetchOfferingFilesResponse.data.total_pages || 0,
+        page: fetchOfferingFilesResponse.data.page || 1
       };
-    } else if (fetchUserFilesError) {
-      toast({ description: fetchUserFilesError?.response?.data.error });
+    } else if (fetchOfferingFilesError) {
+      toast({ description: fetchOfferingFilesError?.response?.data.error });
     }
 
     return {} as FilesResponse;
-  }, [fetchUserFilesResponse, fetchUserFilesError]);
+  }, [fetchOfferingFilesResponse, fetchOfferingFilesError]);
 
   useMemo(() => {
     if (renameResponse?.status === 200) {
       toast({
         description: renameResponse?.data?.message
       });
-      handleFetchUserFiles();
+      handleFetchOfferingFiles();
     } else if (renameError) {
       toast({
         variant: "destructive",
@@ -121,7 +127,7 @@ const UserFiles = () => {
       toast({
         description: uploadFilesResponse?.data?.message
       });
-      handleFetchUserFiles();
+      handleFetchOfferingFiles();
       setShowUploadModal(false);
     } else if (uploadFilesError) {
       toast({
@@ -132,15 +138,15 @@ const UserFiles = () => {
   }, [uploadFilesResponse, uploadFilesError]);
 
   return (
-    <UserFilesUI
-      userFiles={{
+    <OfferingFilesUI
+      offeringFiles={{
         filesData,
-        loading: fetchUserFilesStatus.isPending,
-        params: userFilesQueryParams,
-        error: fetchUserFilesError || fetchUserFilesStatus.isRejected
+        loading: fetchOfferingFilesStatus.isPending,
+        params: offeringFilesQueryParams,
+        error: fetchOfferingFilesError || fetchOfferingFilesStatus.isRejected
       }}
       handleParams={handleUpdateQueryParams}
-      handleFetchUserFiles={handleFetchUserFiles}
+      handleFetchOfferingFiles={handleFetchOfferingFiles}
       handleFileRename={handleFileRename}
       renameLoading={renameStatus.isPending}
       showUploadModal={showUploadModal}
@@ -151,4 +157,4 @@ const UserFiles = () => {
   );
 };
 
-export { UserFiles };
+export { OfferingFiles };

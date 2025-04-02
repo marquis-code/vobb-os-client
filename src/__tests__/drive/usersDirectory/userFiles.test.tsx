@@ -446,7 +446,10 @@ describe("User files test", () => {
       const downloadOption = screen.getByText("Download file");
       userEvent.click(downloadOption);
       await waitFor(() => {
-        expect(lib.handleDownloadFile).toHaveBeenCalledWith(mockUserFile[0].file_url, mockUserFile);
+        expect(lib.handleDownloadFile).toHaveBeenCalledWith(
+          mockAllUserFiles.filesData.files[0].file_url,
+          mockAllUserFiles.filesData.files
+        );
       });
     });
   });

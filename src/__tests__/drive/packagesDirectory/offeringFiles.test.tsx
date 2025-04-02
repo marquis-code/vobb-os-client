@@ -2,18 +2,9 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FilesContainer } from "components/files";
 import { MultiCheckViewProvider } from "context";
-import { mockAllClientFiles, mockClientFile } from "lib";
+import { mockAllOfferingFiles, mockOfferingFile } from "lib";
 import * as lib from "lib";
 import React from "react";
-
-
-vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
-  return {
-    ...actual,
-    useParams: () => ({ id: "mock-folder-id" }),
-  };
-});
 
 vi.mock("assets", async () => {
   const originalModule = await vi.importActual<any>("assets");
@@ -29,6 +20,14 @@ vi.mock("assets", async () => {
     WebpIcon: () => <div data-testid="mock-webp-icon">Mocked Webp Icon</div>,
     DocIcon: () => <div data-testid="mock-doc-icon">Mocked doc Icon</div>,
     FileIcon: () => <div data-testid="mock-directory-icon">Mocked Directory Icon</div>
+  };
+});
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useParams: () => ({ id: "mock-folder-id" })
   };
 });
 
@@ -50,14 +49,14 @@ const renderWithProvider = (ui: React.ReactElement) => {
   return render(<MultiCheckViewProvider>{ui}</MultiCheckViewProvider>);
 };
 
-describe("Client files test", () => {
-  it("renders the user files correctly", () => {
+describe("Offering files test", () => {
+  it("renders the offering files correctly", () => {
     renderWithProvider(
       <FilesContainer
-        files={mockAllClientFiles}
+        files={mockAllOfferingFiles}
         handleFetchFiles={mockHandleFetchFiles}
         handleParams={mockHandleParams}
-        path="client"
+        path="offering"
         handleFileRename={mockHandleFileRename}
         handleUploadFiles={mockHandleUploadFiles}
         renameLoading={false}
@@ -66,7 +65,7 @@ describe("Client files test", () => {
         uploadLoading={false}
       />
     );
-    mockAllClientFiles.filesData.files.forEach((file, index, files) => {
+    mockAllOfferingFiles.filesData.files.forEach((file, index, files) => {
       expect(screen.getByText(file.name)).toBeInTheDocument();
       expect(screen.queryAllByText(file.file_size)).toHaveLength(files.length);
     });
@@ -80,7 +79,9 @@ describe("Client files test", () => {
         search: "",
         sort: "asc",
         limit: 30,
-        page: 1
+        page: 1,
+        start_date: "2024-12-21",
+        end_date: "2025-12-31"
       }
     };
 
@@ -89,7 +90,7 @@ describe("Client files test", () => {
         files={loadingMockData}
         handleFetchFiles={mockHandleFetchFiles}
         handleParams={mockHandleParams}
-        path="client"
+        path="offering"
         handleFileRename={mockHandleFileRename}
         handleUploadFiles={mockHandleUploadFiles}
         renameLoading={false}
@@ -112,7 +113,9 @@ describe("Client files test", () => {
         search: "",
         sort: "asc",
         limit: 30,
-        page: 1
+        page: 1,
+        start_date: "2024-12-21",
+        end_date: "2025-12-31"
       }
     };
 
@@ -121,7 +124,7 @@ describe("Client files test", () => {
         files={errorMockData}
         handleFetchFiles={mockHandleFetchFiles}
         handleParams={mockHandleParams}
-        path="client"
+        path="offering"
         handleFileRename={mockHandleFileRename}
         handleUploadFiles={mockHandleUploadFiles}
         renameLoading={false}
@@ -142,7 +145,9 @@ describe("Client files test", () => {
         search: "",
         sort: "asc",
         limit: 30,
-        page: 1
+        page: 1,
+        start_date: "2024-12-21",
+        end_date: "2025-12-31"
       }
     };
 
@@ -151,7 +156,7 @@ describe("Client files test", () => {
         files={emptyMockData}
         handleFetchFiles={mockHandleFetchFiles}
         handleParams={mockHandleParams}
-        path="client"
+        path="offering"
         handleFileRename={mockHandleFileRename}
         handleUploadFiles={mockHandleUploadFiles}
         renameLoading={false}
@@ -172,7 +177,9 @@ describe("Client files test", () => {
         search: "",
         sort: "asc",
         limit: 30,
-        page: 1
+        page: 1,
+        start_date: "2024-12-21",
+        end_date: "2025-12-31"
       }
     };
 
@@ -181,7 +188,7 @@ describe("Client files test", () => {
         files={undefinedMockData}
         handleFetchFiles={mockHandleFetchFiles}
         handleParams={mockHandleParams}
-        path="client"
+        path="offering"
         handleFileRename={mockHandleFileRename}
         handleUploadFiles={mockHandleUploadFiles}
         renameLoading={false}
@@ -202,7 +209,9 @@ describe("Client files test", () => {
         search: "",
         sort: "asc",
         limit: 30,
-        page: 1
+        page: 1,
+        start_date: "2024-12-21",
+        end_date: "2025-12-31"
       }
     };
 
@@ -211,7 +220,7 @@ describe("Client files test", () => {
         files={nullMockData}
         handleFetchFiles={mockHandleFetchFiles}
         handleParams={mockHandleParams}
-        path="client"
+        path="offering"
         handleFileRename={mockHandleFileRename}
         handleUploadFiles={mockHandleUploadFiles}
         renameLoading={false}
@@ -226,10 +235,10 @@ describe("Client files test", () => {
     it("updates the search input value when typing", () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -250,10 +259,10 @@ describe("Client files test", () => {
 
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -277,10 +286,10 @@ describe("Client files test", () => {
     it("calls handleParams with the correct sort value when a sort option is selected", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -306,10 +315,10 @@ describe("Client files test", () => {
     it("renders the rename option correctly", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -328,10 +337,10 @@ describe("Client files test", () => {
     it("renders the rename modal when the rename option is clicked", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -353,10 +362,10 @@ describe("Client files test", () => {
     it("renders the rename input with the current file name as its value", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -378,16 +387,16 @@ describe("Client files test", () => {
       await waitFor(() => {
         const renameInput = screen.getByTestId("action-input");
         expect(renameModal).toContainElement(renameInput);
-        expect(renameInput).toHaveValue(mockClientFile[0].name);
+        expect(renameInput).toHaveValue(mockOfferingFile[0].name);
       });
     });
     it("calls handleFileRename with the correct parameters:  file name input and file id when the check button is clicked", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -409,15 +418,17 @@ describe("Client files test", () => {
       await waitFor(() => {
         const renameInput = screen.getByTestId("action-input");
         expect(renameModal).toContainElement(renameInput);
-        expect(renameInput).toHaveValue(mockClientFile[0].name);
+        expect(renameInput).toHaveValue(mockOfferingFile[0].name);
       });
       const checkButton = screen.getByTestId("check-button");
       expect(checkButton).toBeInTheDocument();
       userEvent.click(checkButton);
       await waitFor(() => {
-        expect(mockHandleFileRename).toHaveBeenCalledWith(mockClientFile[0].id, mockClientFile[0].name);
+        expect(mockHandleFileRename).toHaveBeenCalledWith(
+          mockOfferingFile[0].id,
+          mockOfferingFile[0].name
+        );
       });
-
     });
   });
 
@@ -425,10 +436,10 @@ describe("Client files test", () => {
     it("Downloads a file when the download option is clicked", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -447,23 +458,24 @@ describe("Client files test", () => {
       userEvent.click(downloadOption);
       await waitFor(() => {
         expect(lib.handleDownloadFile).toHaveBeenCalledWith(
-          mockAllClientFiles.filesData.files[0].file_url,
-          mockAllClientFiles.filesData.files
+          mockAllOfferingFiles.filesData.files[0].file_url,
+          mockAllOfferingFiles.filesData.files
         );
       });
     });
   });
+
   describe("Upload functionality", () => {
-    it("renders the upload file modal when clicked", async () => {
+    it("renders the upload file modal when the upload button is clicked", async () => {
       const StateWrapper = () => {
         const [showUploadModal, setShowUploadModal] = React.useState(false);
 
         return (
           <FilesContainer
-            files={mockAllClientFiles}
+            files={mockAllOfferingFiles}
             handleFetchFiles={mockHandleFetchFiles}
             handleParams={mockHandleParams}
-            path="client"
+            path="offering"
             handleFileRename={mockHandleFileRename}
             handleUploadFiles={mockHandleUploadFiles}
             renameLoading={false}
@@ -475,12 +487,9 @@ describe("Client files test", () => {
       };
 
       renderWithProvider(<StateWrapper />);
-
       const uploadButton = screen.getByText("Upload a New file");
       expect(uploadButton).toBeInTheDocument();
-
       userEvent.click(uploadButton);
-
       await waitFor(() => {
         expect(screen.getByText("Attach files")).toBeInTheDocument();
       });
@@ -491,10 +500,10 @@ describe("Client files test", () => {
 
         return (
           <FilesContainer
-            files={mockAllClientFiles}
+            files={mockAllOfferingFiles}
             handleFetchFiles={mockHandleFetchFiles}
             handleParams={mockHandleParams}
-            path="client"
+            path="offering"
             handleFileRename={mockHandleFileRename}
             handleUploadFiles={mockHandleUploadFiles}
             renameLoading={false}
@@ -520,22 +529,21 @@ describe("Client files test", () => {
       fireEvent.change(fileInput, { target: { files: [file1] } });
 
       const attachButton = screen.getByText("Attach files");
-      expect(attachButton).toBeInTheDocument()
+      expect(attachButton).toBeInTheDocument();
       userEvent.click(attachButton);
       await waitFor(() => {
         expect(mockHandleUploadFiles).toHaveBeenCalledWith([file1], "mock-folder-id");
-      })
+      });
     });
   });
-
   describe("Multi Check functionality", () => {
     it("renders the multicheck view when the select option is clicked", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}
@@ -560,10 +568,10 @@ describe("Client files test", () => {
     it("selects a folder within the multicheck view when the checkbox is clicked", async () => {
       renderWithProvider(
         <FilesContainer
-          files={mockAllClientFiles}
+          files={mockAllOfferingFiles}
           handleFetchFiles={mockHandleFetchFiles}
           handleParams={mockHandleParams}
-          path="client"
+          path="offering"
           handleFileRename={mockHandleFileRename}
           handleUploadFiles={mockHandleUploadFiles}
           renameLoading={false}

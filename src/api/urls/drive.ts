@@ -60,7 +60,7 @@ export const fetchPackagesFoldersURL = (queryParams: fetchFoldersQueryParams) =>
 };
 
 /**
- * Get package offerings folders URL
+ * Get package offerings URL
  *
  * @returns url string
  *
@@ -107,6 +107,25 @@ export const fetchClientFilesURL = (id: string, queryParams: fetchFoldersQueryPa
 }; 
 
 /**
+ * Get offering documents URL
+ *
+ * @returns url string
+ *
+ */
+
+export const fetchOfferingFilesURL = (
+  id: string,
+  queryParams: fetchFoldersQueryParams
+) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefix}/offering/${id}/${queryString ? `?${queryString}` : ""}`;
+};
+
+/**
  * Delete documents URL
  *
  * @returns url string
@@ -147,6 +166,6 @@ export const renameFolderURL = (id: string) => {
  * @returns url string
  *
  */
-export const uploadFileURL = (id: string, path: "general" | "user" | "client") => {
+export const uploadFileURL = (id: string, path: "general" | "user" | "client" | "offering") => {
   return `${prefix}/${path}/${id}`;
 };

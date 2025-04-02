@@ -1209,7 +1209,7 @@ export const mockAllPackages = {
     search: "test search",
     sort: "asc",
     limit: 30,
-    page: 1,
+    page: 1
   }
 };
 
@@ -1257,7 +1257,7 @@ export const mockAllPackageOfferings = {
     limit: 30,
     page: 1,
     start_date: "2024-12-21",
-    end_date: "2025-02-04"
+    end_date: "2025-12-31"
   }
 };
 
@@ -1266,7 +1266,7 @@ export const mockPackageOffering = [
     id: "po0",
     name: "Offering 1",
     file_count: 0,
-    total_folder_size: "0KB",
+    total_folder_size: "6KB",
     path: "offering"
   }
 ];
@@ -1276,15 +1276,15 @@ export const mockAllUserFiles = {
   filesData: {
     files: [
       {
-        id: "1",
+        id: "uf1",
         name: "Capture.PNG",
         path: "user",
         type: "file",
-        file_size: "0KB",
+        file_size: "5KB",
         file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
       }
     ],
-    total_count: 2,
+    total_count: 1,
     total_pages: 1,
     page: 1
   },
@@ -1300,11 +1300,11 @@ export const mockAllUserFiles = {
 
 export const mockUserFile = [
   {
-    id: "1",
+    id: "uf0",
     name: "Capture.PNG",
     path: "user",
     type: "file",
-    file_size: "0KB",
+    file_size: "5KB",
     file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
   }
 ];
@@ -1313,7 +1313,7 @@ export const mockAllClientFiles = {
   filesData: {
     files: [
       {
-        id: "1",
+        id: "cf1",
         name: "Capture.PNG",
         path: "client",
         type: "file",
@@ -1321,7 +1321,7 @@ export const mockAllClientFiles = {
         file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
       }
     ],
-    total_count: 2,
+    total_count: 1,
     total_pages: 1,
     page: 1
   },
@@ -1337,11 +1337,50 @@ export const mockAllClientFiles = {
 
 export const mockClientFile = [
   {
-    id: "1",
+    id: "cf0",
     name: "Capture.PNG",
     path: "client",
+    type: "file", 
+    file_size: "1KB",
+    file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
+  }
+];
+
+export const mockAllOfferingFiles = {
+  filesData: {
+    files: [
+      {
+        id: "pof0",
+        name: "Capture.PNG",
+        path: "offering",
+        type: "file",
+        file_size: "0KB",
+        file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
+      }
+    ],
+    total_count: 1,
+    total_pages: 1,
+    page: 1
+  },
+  loading: false,
+  error: false,
+  params: {
+    search: "test search",
+    sort: "asc",
+    limit: 30,
+    page: 1,
+    start_date: "2024-12-21",
+    end_date: "2025-12-31"
+  }
+};
+
+export const mockOfferingFile = [
+  {
+    id: "pof0",
+    name: "Capture.PNG",
+    path: "offering",
     type: "file",
-    file_size: "0KB",
+    file_size: "1KB",
     file_url: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1738201660489-Capture.PNG"
   }
 ];

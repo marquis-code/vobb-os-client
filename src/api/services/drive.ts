@@ -10,6 +10,7 @@ import {
   fetchClientFilesURL,
   fetchClientsFoldersURL,
   fetchDefaultFoldersURL,
+  fetchOfferingFilesURL,
   fetchPackageOfferingsURL,
   fetchPackagesFoldersURL,
   fetchUserFilesURL,
@@ -68,6 +69,15 @@ export const fetchClientFilesService = (id: string, queryParams: fetchFoldersQue
   });
 };
 
+export const fetchOfferingFilesService = (
+  id: string,
+  queryParams: fetchFoldersQueryParams
+) => {
+  return getRequest({
+    url: fetchOfferingFilesURL(id, queryParams)
+  });
+};
+
 export const deleteDocumentsService = (ids: string[]) => {
   return deleteRequest({
     url: deleteDocumentsURL(ids)
@@ -90,7 +100,7 @@ export const renameFolderService = (id: string, data: { name: string }) => {
 
 export const uploadFileService = (
   id: string,
-  path: "general" | "user" | "client",
+  path: "general" | "user" | "client" | "offering",
   data: FormData
 ) => {
   return postRequest({

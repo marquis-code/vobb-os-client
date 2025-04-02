@@ -38,7 +38,7 @@ export interface FilesContainerProps {
   };
   handleParams: (param: string, value: string | number) => void;
   handleFetchFiles: () => void;
-  path: "user" | "client" | "general";
+  path: "user" | "client" | "general" | "offering";
   handleFileRename: (id: string, newName: string) => void;
   renameLoading: boolean;
   handleUploadFiles: (files: File[], id: string) => void;

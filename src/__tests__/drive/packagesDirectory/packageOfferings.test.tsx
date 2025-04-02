@@ -81,7 +81,7 @@ describe("PackageOfferingsUI tests", () => {
         limit: 30,
         page: 1,
         start_date: "2024-12-21",
-        end_date: "2025-02-04"
+        end_date: "2025-12-31"
       }
     };
 
