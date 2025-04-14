@@ -10,7 +10,8 @@ import {
   IconPlus,
   IconSearch,
   IconSubtask,
-  IconUserCircle
+  IconUserCircle,
+  IconUsersGroup
 } from "@tabler/icons-react";
 import { Button, CustomInput } from "components";
 import React, { useState } from "react";
@@ -89,9 +90,16 @@ const SidebarLinks: React.FC<SidebarLinksProps> = ({ active }) => {
       links: [
         {
           title: { icon: <IconUserCircle size={16} color="#494949" />, text: "Clients" },
-          linkType: "standalone",
-          path: Routes.overview,
-          value: "clients"
+          linkType: "dropdown",
+          value: "clients",
+          items: [
+            {
+              title: "Client groups",
+              icon: <IconUsersGroup size={16} color="#494949" />,
+              path: Routes.client_groups,
+              value: "client_groups"
+            }
+          ]
         },
         {
           title: { text: "Pipeline" },

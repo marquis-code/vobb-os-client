@@ -34,9 +34,8 @@ export interface PipelineTableDataProps {
   metaData: MetaDataProps;
 }
 
-
 export interface EditPipelineStagesDto {
-  stages : Array<IPipelineStage>;
+  stages: Array<IPipelineStage>;
 }
 
 export type AllowedStages = Array<Partial<IPipelineStage>> | Array<string>;

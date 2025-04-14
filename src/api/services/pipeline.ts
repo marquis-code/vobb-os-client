@@ -13,7 +13,9 @@ import {
   fetchPipelinesURL,
   getRequest,
   patchRequest,
-  postRequest
+  postRequest,
+  fetchAllPipelinesURL,
+  fetchAllClientsPerPipelinesURL
 } from "api";
 import { EditPipelineStagesDto, fetchPipelinesQueryParams, stagesType } from "types";
 
@@ -97,6 +99,28 @@ export const editPipelineTitleService = (id: string, data: { name: string }) => 
 
 export const fetchPipelineStagesService = (id: string) => {
   return getRequest({
-    url: fetchPipelineStagesURL({id} )
-  })
-}
+    url: fetchPipelineStagesURL({ id })
+  });
+};
+
+/**
+ * Fetch All Pipelines
+ * @returns axios promise
+ */
+
+export const fetchAllPipelinesService = () => {
+  return getRequest({
+    url: fetchAllPipelinesURL()
+  });
+};
+
+/**
+ * Fetch All Clients Per Pipeline
+ * @returns axios promise
+ */
+
+export const fetchAllClientsPerPipelinesService = (id: string) => {
+  return getRequest({
+    url: fetchAllClientsPerPipelinesURL({ id })
+  });
+};

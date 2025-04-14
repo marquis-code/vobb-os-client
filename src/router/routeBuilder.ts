@@ -46,9 +46,11 @@ import {
   ClientFiles,
   Packages,
   PackageOfferings,
-  OfferingFiles
+  OfferingFiles,
+  ClientGroup
 } from "pages";
 import { DashboardLayout, OnboardingLayout, SettingsLayout } from "layout";
+import ClientGroupDetail from "pages/client-group/client-group-detail";
 
 // Route Builder Item Props
 export interface RouteBuilderItem extends PathRouteProps {
@@ -159,6 +161,24 @@ export const RouteBuilder: RouteBuilderItem[] = [
     Layout: DashboardLayout,
     props: {
       title: "Overview"
+    }
+  },
+  {
+    path: Routes.client_groups,
+    Element: ClientGroup,
+    isProtected: true,
+    Layout: DashboardLayout,
+    props: {
+      title: "Client Group"
+    }
+  },
+  {
+    path: Routes.client_group(":id", ":route"),
+    Element: ClientGroupDetail,
+    isProtected: true,
+    Layout: DashboardLayout,
+    props: {
+      title: "Group Management"
     }
   },
   {

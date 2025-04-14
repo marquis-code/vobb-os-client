@@ -70,5 +70,9 @@ export const Routes = {
   packages_directory: "/drive/package",
   package_offerings_directory: (id = ":id") => `/drive/package/offering/${id}`,
   offering_files_directory: (id = ":id") => `/drive/offering/${id}`,
-  general_directory: "/drive/general"
+  general_directory: "/drive/general",
+
+  // Clients
+  client_groups: "/client-group",
+  client_group: (id = ":id", tab = ":route") => `/client-group/${id}/${tab}`
 };
