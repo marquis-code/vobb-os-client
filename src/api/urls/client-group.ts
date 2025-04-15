@@ -4,7 +4,7 @@ CLIENT GROUP URLS
 =================================
 */
 
-import { fetchClientGroupQueryParams } from "types/client-group";
+import { fetchClientGroupQueryParams, fetchGroupActivitiesQueryParams } from "types/client-group";
 
 const prefix = "/pipeline/group";
 
@@ -91,8 +91,20 @@ export const ungroupClientGroupURL = ({ groupId }: { groupId: string }) => `${pr
  * @returns url string
  *
  */
-export const fetchGroupActivitiesURL = ({ groupId }: { groupId: string }) =>
-  `${prefix}/activity/${groupId}`;
+export const fetchGroupActivitiesURL = ({
+  groupId,
+  queryParams
+}: {
+  groupId: string;
+  queryParams: fetchGroupActivitiesQueryParams;
+}) => {
+  const queryString = Object.entries(queryParams)
+    .filter(([_, value]) => value !== undefined && value !== "")
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
+    .join("&");
+
+  return `${prefix}/activity/${groupId}${queryString ? `?${queryString}` : ""}`;
+};
 
 /**
  * Add clients to group URL

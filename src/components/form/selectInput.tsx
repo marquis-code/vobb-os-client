@@ -1,4 +1,3 @@
-import { FileIcon, ImageIcon, UploadIcon } from "@radix-ui/react-icons";
 import { cn } from "lib";
 import { ReactNode } from "react";
 import { optionType } from "types";
@@ -7,8 +6,7 @@ import Select, {
   CSSObjectWithLabel,
   MenuPlacement,
   MenuPosition,
-  MultiValue,
-  SingleValue
+  MultiValue
 } from "react-select";
 
 interface SelectInputProps {

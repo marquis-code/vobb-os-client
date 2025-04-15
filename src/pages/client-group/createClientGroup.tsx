@@ -1,22 +1,29 @@
-import { fetchAllPipelinesService } from "api";
 import { CreateClientGroupModal } from "components/modalVariants/createClientGroupModal";
 import { createClientGroupService } from "api/services/client-group";
 import { useApiRequest } from "hooks";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { ModalProps } from "types";
 import { toast } from "components";
 
-interface CreateClientGroupProps extends ModalProps {}
+interface CreateClientGroupProps extends ModalProps {
+  handleRefreshTable: () => void;
+  pipelinesData:
+    | {
+        _id: string;
+        name: string;
+      }[]
+    | null;
+  isFetchingPipelineData: boolean;
+}
 
-export const CreateClientGroup: FC<CreateClientGroupProps> = ({ show, close }) => {
+export const CreateClientGroup: FC<CreateClientGroupProps> = ({
+  show,
+  close,
+  handleRefreshTable,
+  pipelinesData,
+  isFetchingPipelineData
+}) => {
   const [groupName, setGroupName] = useState("");
-
-  const {
-    run: runFetchAllPipelines,
-    data: AllPipelinesResponse,
-    error: AllPipelinesError,
-    requestStatus: AllPipelinesStatus
-  } = useApiRequest({});
 
   const {
     run: runCreateClientGroup,
@@ -25,31 +32,32 @@ export const CreateClientGroup: FC<CreateClientGroupProps> = ({ show, close }) =
     data: createClientGroupResponse
   } = useApiRequest({});
 
-  useEffect(() => {
-    runFetchAllPipelines(fetchAllPipelinesService());
-  }, []);
+  const handleCreateClientGroup = useCallback(
+    (
+      pipelineId: string,
+      data: {
+        name: string;
+        clients: string[];
+      }
+    ) => {
+      if (!pipelineId || !data) {
+        toast({ description: "incomplete fields", variant: "destructive" });
+        return;
+      }
+      runCreateClientGroup(createClientGroupService(pipelineId, data));
+    },
+    [runCreateClientGroup]
+  );
 
-  const handleCreateClientGroup = (
-    pipelineId: string,
-    data: {
-      name: string;
-      clients: string[];
-    }
-  ) => {
-    if (!pipelineId || !data) {
-      console.log("incomplete value");
-      return;
-    }
-    runCreateClientGroup(createClientGroupService(pipelineId, data));
-  };
-
-  useEffect(() => {
+  useMemo(() => {
     if (createClientGroupStatus.isRejected) {
       toast({ description: createClientGroupError.response.data.error, variant: "destructive" });
     } else if (createClientGroupStatus.isResolved) {
-      toast({ description: `Client ${groupName} group has been created successfully!` });
+      toast({ description: createClientGroupResponse?.data?.message });
+      close();
+      handleRefreshTable();
     }
-  }, [createClientGroupError, createClientGroupStatus]);
+  }, [createClientGroupError, createClientGroupResponse]);
 
   return (
     <>
@@ -58,9 +66,9 @@ export const CreateClientGroup: FC<CreateClientGroupProps> = ({ show, close }) =
         groupName={groupName}
         setGroupName={setGroupName}
         submit={handleCreateClientGroup}
-        pipelinesData={AllPipelinesResponse ? AllPipelinesResponse.data.data : []}
+        pipelinesData={pipelinesData}
         show={show}
-        isFetchingPiplines={AllPipelinesStatus.isPending}
+        isFetchingPiplines={isFetchingPipelineData}
         close={close}
       />
     </>
