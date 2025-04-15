@@ -22,15 +22,7 @@ import { fetchPipelineStagesService } from "api";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
-const ActionColumn = ({
-  rowData,
-  handleRefreshTable
-}: {
-  rowData: ClientGroupTableData;
-  handleRefreshTable: () => void;
-}) => {
-  // #region Api Requests
-  //  Fetch pipeline stages
+const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
   const {
     run: runFetchPipelineStages,
     error: fetchPipelineStagesError,
@@ -70,8 +62,6 @@ const ActionColumn = ({
   } = useApiRequest({});
   //   #endregion
 
-  //   #region Handle run Fns
-  // fetch pipelines
   const handleFetchPipelineStages = useCallback(
     (pipelineId: string) => {
       runFetchPipelineStages(fetchPipelineStagesService(pipelineId));
