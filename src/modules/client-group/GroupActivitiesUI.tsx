@@ -1,6 +1,6 @@
 import { IconAt, IconUserCircle, IconUsersGroup } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
+import dayjs from "dayjs";
 import { GroupActivityItem } from "types/client-group";
 
 const GroupActivitiesUI = ({
@@ -30,8 +30,8 @@ const GroupActivitiesUI = ({
       case "created-group":
         return (
           <>
-            <span className="font-medium capitalize text-[#475467]">{item.initiator.name}</span>{" "}
-            created a group <span className="text-[#4A22EB] font-medium">{groupName}</span>
+            <span className="font-medium capitalize">{item.initiator.name}</span> created a group{" "}
+            <span className="text-[#4A22EB] font-medium">{groupName}</span>
           </>
         );
       case "added-client":
@@ -95,9 +95,8 @@ const GroupActivitiesUI = ({
         );
       default:
         return (
-          <span className=" ">
-            <span className="capitalize text-[#475467] font-medium">{item.initiator.name}</span>{" "}
-            {item.action.split("-").join(" ")}
+          <span className="font-medium text-[#475467]">
+            {item.initiator.name} {item.action.split("-").join(" ")}
           </span>
         );
     }
@@ -114,7 +113,7 @@ const GroupActivitiesUI = ({
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
-      return format(new Date(date), "yyyy-MM-dd h:mm a");
+      return dayjs(date).format("YYYY-MM-DD HH:mm a");
     } catch (error) {
       return dateString;
     }
@@ -122,38 +121,33 @@ const GroupActivitiesUI = ({
 
   return (
     <section className=" ">
-      <div className="max-w-full pl-12 px-5">
-        <div className="flex flex-col min-w-[600px] pt-6 py-4 ">
-          {groupActivities.map((activity, index) => (
-            <div className="flex gap-2 items-start">
-              <div
-                className={`flex flex-col items-center last:h-fit group h-[60px] ${
-                  index === groupActivities.length - 1 ? "h-fit" : ""
-                }`}>
-                <div className="grid place-items-center bg-[#f2f0fb] rounded-full size-5">
-                  {getActionIcon(activity.action)}
-                </div>
-                <span
-                  className={`flex-1 block border-r-[0.5px] border-[#e0e0e0] h-full ${
-                    index === groupActivities.length - 1 ? "invisible" : ""
-                  }`}></span>
+      <div className="py-4 pl-8 px-5 border-b-[0.5px] border-[#ebecf0]">
+        <p className="font-bold">Group Activity</p>
+      </div>
+      <div className="flex flex-col pt-6 py-4 pl-12 px-5">
+        {groupActivities.map((activity) => (
+          <div className="flex gap-2 items-start">
+            <div className="flex flex-col items-center h-[60px]">
+              <div className="grid place-items-center bg-[#f2f0fb] rounded-full size-5">
+                {getActionIcon(activity.action)}
               </div>
-              <div className="flex flex-wrap items-center gap-2 text-xs text-[#667085] font-medium">
-                <Avatar className="size-6 mr-2">
-                  <AvatarImage
-                    src={activity.initiator.avatar || "/placeholder.svg"}
-                    alt={activity.initiator.name}
-                  />
-                  <AvatarFallback className="text-[10px]">
-                    {getInitials(activity.initiator.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <p className="flex gap-1 text-nowrap items-center">{getActionText(activity)}</p>
-                <p className="text-nowrap">on {formatDate(activity.time)}</p>
-              </div>
+              <span className="flex-1 block border-r-[0.5px] border-[#e0e0e0] h-full"></span>
             </div>
-          ))}
-        </div>
+            <div className="flex items-center gap-2 text-xs text-[#667085] font-medium">
+              <Avatar className="size-6 mr-2">
+                <AvatarImage
+                  src={activity.initiator.avatar || "/placeholder.svg"}
+                  alt={activity.initiator.name}
+                />
+                <AvatarFallback className="text-[10px]">
+                  {getInitials(activity.initiator.name)}
+                </AvatarFallback>
+              </Avatar>
+              <p className="flex gap-1 items-center">{getActionText(activity)}</p>
+              <p>on {formatDate(activity.time)}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

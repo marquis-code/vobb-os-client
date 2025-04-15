@@ -14,6 +14,7 @@ import { GroupNotes } from "./GroupNotes";
 import { GroupMembers } from "./GroupMembers";
 import { GroupComments } from "./GroupComments";
 import { GroupSales } from "./GroupSales";
+import { GroupInvoice } from "./GroupInvoice";
 
 const testData = {
   _id: "674757e27107439426e2d137",
@@ -166,7 +167,7 @@ const ClientGroupDetail = () => {
         <section className="grid grid-cols-[2fr,1.25fr] divide-x -ml-4 w-[calc(100%+2rem)] min-h-screen">
           <section>
             {params.route === "activity" ? (
-              <GroupActivity />
+              <GroupActivity groupId={params.id as string} groupName={groupDetails.name} />
             ) : params.route === "emails" ? (
               <GroupEmails />
             ) : params.route === "files" ? (
@@ -180,17 +181,15 @@ const ClientGroupDetail = () => {
               // handleUpdateProfileTabLengths={handleUpdateProfileTabLengths}
               // memberProfile={memberProfile}
               />
+            ) : params.route === "invoice" ? (
+              <GroupInvoice />
             ) : (
               ""
             )}
           </section>
           <div className="p-4">
             {subTab === "members" ? (
-              <GroupMembers
-                groupId={groupDetails._id}
-                groupName={groupDetails.name}
-                groupClients={groupDetails.clients}
-              />
+              <GroupMembers groupDetails={groupDetails} />
             ) : subTab === "comments" ? (
               <GroupComments />
             ) : (

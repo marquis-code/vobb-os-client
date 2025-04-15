@@ -18,7 +18,7 @@ import {
   fetchGroupActivitiesURL,
   addClientsToGroupURL
 } from "api/urls/client-group";
-import { fetchClientGroupQueryParams } from "types/client-group";
+import { fetchClientGroupQueryParams, fetchGroupActivitiesQueryParams } from "types/client-group";
 
 export interface CreateClientGroupRequestBody {
   name: string;
@@ -177,9 +177,12 @@ export const ungroupClientGroupService = (groupId: string) => {
  * @param groupId
  * @returns axios promise
  */
-export const fetchGroupActivitiesService = (groupId: string) => {
+export const fetchGroupActivitiesService = (
+  groupId: string,
+  queryParams: fetchGroupActivitiesQueryParams
+) => {
   return getRequest({
-    url: fetchGroupActivitiesURL({ groupId })
+    url: fetchGroupActivitiesURL({ groupId, queryParams })
   });
 };
 

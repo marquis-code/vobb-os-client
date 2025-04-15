@@ -3,6 +3,7 @@ import { GroupDetailsTabLengthProps } from "types/client-group";
 import {
   IconCash,
   IconClipboardText,
+  IconFile,
   IconFiles,
   IconFlame,
   IconListCheck,
@@ -67,6 +68,12 @@ export const GroupDetailsTabs: FC<GroupDetailsTabsProps> = ({
       title: "Notes",
       key: "notes",
       icon: <IconClipboardText size={16} />,
+      length: notes
+    },
+    {
+      title: "Invoice",
+      key: "invoice",
+      icon: <IconFile size={16} />,
       length: notes
     }
   ];

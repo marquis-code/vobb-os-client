@@ -5,6 +5,7 @@ import { ClientGroupTableDataProps, fetchClientGroupQueryParams } from "types/cl
 import { useApiRequest } from "hooks";
 import { fetchClientGroupService } from "api/services/client-group";
 import { toast } from "components";
+import { fetchAllPipelinesService } from "api";
 
 export type ApiRequestStatus = {
   isResolved: boolean;
@@ -13,33 +14,15 @@ export type ApiRequestStatus = {
   isIdle: boolean;
 };
 
-const mockClientGroup = {
-  data: [
-    {
-      id: "111111",
-      pipeline: {
-        id: "22222",
-        name: "testing pipeline"
-      },
-      name: "first group",
-      clients: 3,
-      date: "20/8/2025",
-      time: ""
-    }
-  ],
-  metaData: {
-    currentPage: 1,
-    totalCount: 1,
-    totalPages: 1
-  }
-};
 export const ClientGroup = () => {
   const [createGroupModal, setCreateGroupModal] = useState(false);
   const [clientGroupParams, setClientGroupParams] = useState<fetchClientGroupQueryParams>({
     page: 1,
     limit: 10,
     search: "",
-    sort: "desc"
+    sort: "desc",
+    pipeline: "",
+    assigned_members: ""
   });
 
   const {
@@ -48,6 +31,20 @@ export const ClientGroup = () => {
     error: fetchClientGroupsError,
     requestStatus: fetchClientGroupStatus
   } = useApiRequest({});
+
+  const {
+    run: runFetchAllPipelines,
+    data: fetchAllPipelinesResponse,
+    requestStatus: fetchAllPipelinesStatus
+  } = useApiRequest({});
+
+  const handleFetchAllPipelines = useCallback(() => {
+    runFetchAllPipelines(fetchAllPipelinesService());
+  }, [runFetchAllPipelines]);
+
+  useEffect(() => {
+    handleFetchAllPipelines();
+  }, [handleFetchAllPipelines]);
 
   const handleFetchClientGroups = useCallback(() => {
     runFetchClientGroups(
@@ -87,32 +84,12 @@ export const ClientGroup = () => {
         totalCount: fetchClientGroupsResponse.data.data.total_count,
         totalPages: fetchClientGroupsResponse.data.data.total_count
       };
-      if (!data.length) return mockClientGroup;
       return { data, metaData };
     } else if (fetchClientGroupsError) {
       toast({ description: fetchClientGroupsError?.response?.data.error });
     }
 
-    return {
-      data: [
-        {
-          id: "111111",
-          pipeline: {
-            id: "22222",
-            name: "testing pipeline"
-          },
-          name: "first group",
-          clients: 3,
-          date: "20/8/2025",
-          time: ""
-        }
-      ],
-      metaData: {
-        currentPage: 1,
-        totalCount: 1,
-        totalPages: 1
-      }
-    } as ClientGroupTableDataProps;
+    return {} as ClientGroupTableDataProps;
   }, [fetchClientGroupsResponse, fetchClientGroupsError]);
 
   useEffect(() => {
@@ -122,6 +99,8 @@ export const ClientGroup = () => {
   return (
     <>
       <ClientGroupUI
+        pipelinesData={fetchAllPipelinesResponse ? fetchAllPipelinesResponse.data.data : []}
+        handleRefreshClientGroups={handleFetchClientGroups}
         allClientGroups={{
           clientGroupsdata: clientGroupData,
           loading: fetchClientGroupStatus.isPending,
@@ -130,7 +109,13 @@ export const ClientGroup = () => {
         handleParams={handleUpdateQueryParams}
         handleCreateClientGroup={handleOpenCreateClientGroup}
       />
-      <CreateClientGroup show={createGroupModal} close={() => setCreateGroupModal(false)} />
+      <CreateClientGroup
+        pipelinesData={fetchAllPipelinesResponse ? fetchAllPipelinesResponse.data.data : []}
+        isFetchingPipelineData={fetchAllPipelinesStatus.isPending}
+        handleRefreshTable={handleFetchClientGroups}
+        show={createGroupModal}
+        close={() => setCreateGroupModal(false)}
+      />
     </>
   );
 };

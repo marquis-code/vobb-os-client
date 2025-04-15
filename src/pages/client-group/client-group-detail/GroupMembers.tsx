@@ -7,11 +7,13 @@ import {
 import { IconChevronUp, IconPlus, IconDotsVertical } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Button, toast } from "components";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ConfirmDangerousActionModal from "modules/client-group/confirmDangerousActionModal";
 import { SelectionPanel } from "modules/client-group/selection-panel";
 import { useApiRequest } from "hooks";
 import { addClientsToGroupService, removeClientFromGroupService } from "api/services/client-group";
+import { GroupData } from "types/client-group";
+import { fetchAllClientsPerPipelinesService } from "api";
 
 const ClientActions = ({
   client,
@@ -44,7 +46,7 @@ const ClientActions = ({
 
   useMemo(() => {
     if (removeClientResponse?.status === 200) {
-      toast({ description: removeClientResponse?.data?.messsage });
+      toast({ description: removeClientResponse?.data?.message });
       setIsShowingRemoveClientModal(false);
     } else if (removeClientErrors) {
       toast({
@@ -94,21 +96,9 @@ const ClientActions = ({
   );
 };
 
-export const GroupMembers = ({
-  groupClients,
-  groupName,
-  groupId
-}: {
-  groupClients: {
-    _id: string;
-    name: string;
-    email: string;
-    avatar?: string;
-  }[];
-  groupName: string;
-  groupId: string;
-}) => {
+export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
   const [isAddingClient, setIsAddingClient] = useState(false);
+  const [clients, setClients] = useState([]);
   const {
     run: runAddClients,
     data: addClientsResponse,
@@ -116,14 +106,28 @@ export const GroupMembers = ({
     error: addClientsErrors
   } = useApiRequest({});
 
+  const {
+    run: runFetchClientsForPipeline,
+    requestStatus: FetchClientForPipelineStatus,
+    data: FetchClientsForPipelineResponse,
+    error: FetchClientsForPipelineError
+  } = useApiRequest({});
+
+  const handleFetchClientsForPipeline = useCallback(
+    (id: string) => {
+      runFetchClientsForPipeline(fetchAllClientsPerPipelinesService(id));
+    },
+    [runFetchClientsForPipeline]
+  );
+
   const handleAddClients = useCallback(
-    (clients: string[]) => runAddClients(addClientsToGroupService(groupId, { clients })),
+    (clients: string[]) => runAddClients(addClientsToGroupService(groupDetails._id, { clients })),
     [runAddClients]
   );
 
   useMemo(() => {
     if (addClientsResponse?.status === 200) {
-      toast({ description: addClientsResponse?.data?.messsage });
+      toast({ description: addClientsResponse?.data?.message });
       setIsAddingClient(false);
     } else if (addClientsErrors) {
       toast({
@@ -132,6 +136,21 @@ export const GroupMembers = ({
       });
     }
   }, [addClientsResponse, addClientsErrors]);
+
+  useEffect(() => {
+    handleFetchClientsForPipeline(groupDetails.pipeline._id);
+  }, [handleFetchClientsForPipeline]);
+
+  useMemo(() => {
+    if (FetchClientsForPipelineResponse?.status === 200) {
+      setClients(FetchClientsForPipelineResponse.data.data.clients);
+    } else if (FetchClientsForPipelineError) {
+      toast({
+        variant: "destructive",
+        description: FetchClientsForPipelineError?.response?.data.error
+      });
+    }
+  }, [FetchClientsForPipelineError, FetchClientsForPipelineResponse]);
 
   return (
     <section className="bg-white pb-6">
@@ -155,7 +174,7 @@ export const GroupMembers = ({
                 <SelectionPanel
                   type="member"
                   close={() => setIsAddingClient(false)}
-                  items={[]}
+                  items={clients}
                   buttonText="Add Client"
                   loading={addClientsStatus.isPending}
                   onSubmit={(selectedIds) => handleAddClients(selectedIds)}
@@ -166,7 +185,7 @@ export const GroupMembers = ({
           </div>
         </div>
         <div className="p-3 flex gap-3 flex-col">
-          {groupClients.map((client) => (
+          {groupDetails.clients.map((client) => (
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-1 rounded border-[0.5px] border-[#dddfe5] p-1">
                 <Avatar className="w-5 h-5">
@@ -179,7 +198,11 @@ export const GroupMembers = ({
                 </Avatar>
                 <p className="text-xs text-[#344054] font-medium">{client.name}</p>
               </div>
-              <ClientActions groupId={groupId} client={client} groupName={groupName} />
+              <ClientActions
+                groupId={groupDetails._id}
+                client={client}
+                groupName={groupDetails.name}
+              />
             </div>
           ))}
         </div>

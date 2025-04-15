@@ -15,7 +15,6 @@ import {
   editGroupNameService,
   assignMemberToGroupService,
   ungroupClientGroupService,
-  fetchClientGroupDetailService,
   updateClientGroupStageService
 } from "api/services/client-group";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -23,7 +22,13 @@ import { fetchPipelineStagesService } from "api";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
-const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
+const ActionColumn = ({
+  rowData,
+  handleRefreshTable
+}: {
+  rowData: ClientGroupTableData;
+  handleRefreshTable: () => void;
+}) => {
   // #region Api Requests
   //  Fetch pipeline stages
   const {
@@ -114,30 +119,32 @@ const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
   const [isPipelineStagesModalOpen, setIsPipelneStagesModalOpen] = useState(false);
   const [piplelineStages, setPipelineStages] = useState<
     {
-      id: string;
+      _id: string;
       color: string;
-      name: string;
+      title: string;
     }[]
   >([]);
 
   // 1. Ungroup client group toast handler
   useMemo(() => {
     if (ungroupClientGroupResponse?.status === 200) {
-      toast({ description: ungroupClientGroupResponse?.data?.messsage });
+      toast({ description: ungroupClientGroupResponse?.data?.message });
       setIsShowingUngroupModal(false);
+      handleRefreshTable();
     } else if (ungroupClientGroupError) {
       toast({
         variant: "destructive",
         description: ungroupClientGroupError?.response?.data.error
       });
     }
-  }, [ungroupClientGroupResponse, ungroupClientGroupError]);
+  }, [ungroupClientGroupResponse, ungroupClientGroupError, handleRefreshTable]);
 
   // 2. Edit group name toast handler
   useMemo(() => {
     if (editGroupNameResponse?.status === 200) {
-      toast({ description: editGroupNameResponse?.data?.messsage });
+      toast({ description: editGroupNameResponse?.data?.message });
       setIsEditNameOpen(false);
+      handleRefreshTable();
     } else if (editGroupNameError) {
       console.log(editGroupNameError?.response);
       toast({
@@ -145,24 +152,26 @@ const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
         description: editGroupNameError?.response?.data.error
       });
     }
-  }, [editGroupNameResponse, editGroupNameError]);
+  }, [editGroupNameResponse, editGroupNameError, handleRefreshTable]);
 
   // 3. Assign member toast handler
   useMemo(() => {
     if (assignMemberResponse?.status === 200) {
-      toast({ description: assignMemberResponse?.data?.messsage });
+      toast({ description: assignMemberResponse?.data?.message });
+      handleRefreshTable();
     } else if (assignMemberError) {
       toast({
         variant: "destructive",
         description: assignMemberError?.response?.data.error
       });
     }
-  }, [assignMemberResponse, assignMemberError]);
+  }, [assignMemberResponse, assignMemberError, handleRefreshTable]);
 
   // 5. Update group stage toast handler
   useMemo(() => {
     if (updateGroupStageResponse?.status === 200) {
-      toast({ description: updateGroupStageResponse?.data?.messsage });
+      toast({ description: updateGroupStageResponse?.data?.message });
+      handleRefreshTable();
       setIsPipelneStagesModalOpen(false);
     } else if (updateGroupStageError) {
       toast({
@@ -170,7 +179,7 @@ const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
         description: updateGroupStageError?.response?.data.error
       });
     }
-  }, [updateGroupStageResponse, updateGroupStageError]);
+  }, [updateGroupStageResponse, updateGroupStageError, handleRefreshTable]);
 
   // 6. Fetch pipeline stages toast handler
   useMemo(() => {
@@ -186,19 +195,7 @@ const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
 
   useEffect(() => {
     if (isPipelineStagesModalOpen) handleFetchPipelineStages(rowData.id);
-  }, [isPipelineStagesModalOpen]);
-
-  useMemo(() => {
-    if (ungroupClientGroupResponse?.status === 200) {
-      toast({ description: ungroupClientGroupResponse?.data?.messsage });
-      setIsShowingUngroupModal(false);
-    } else if (ungroupClientGroupError) {
-      toast({
-        variant: "destructive",
-        description: ungroupClientGroupError?.response?.data.error
-      });
-    }
-  }, [ungroupClientGroupResponse, ungroupClientGroupError]);
+  }, [isPipelineStagesModalOpen, handleFetchPipelineStages, rowData.id]);
 
   const viewGroupDetails = () => {
     navigate(Routes.client_group(rowData.id, "activity"));
@@ -278,7 +275,7 @@ const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
             onClick={() => {
               setIsShowingUngroupModal(true);
             }}
-            className="cursor-pointer bg-[#f2f3f2] rounded text-[#912018] hover:!text-[#912018] hover:bg-[#f2f3f2]"
+            className="cursor-pointer rounded text-[#912018] hover:!text-[#912018] hover:!bg-[#fef3f2]"
             data-testid="ungroup-client">
             Ungroup Clients
           </DropdownMenuItem>

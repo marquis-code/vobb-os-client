@@ -1,7 +1,7 @@
 import { Modal } from "components/modal";
-import React, { Dispatch, FormEvent, useEffect, useState } from "react";
+import React, { Dispatch, FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { ModalProps } from "types";
-import { Button } from "components/ui";
+import { Button, toast } from "components/ui";
 import { IconX } from "@tabler/icons-react";
 import { CustomInput, SelectInput } from "components/form";
 import SelectClients, { ClientType } from "modules/client-group/SelectClients";
@@ -41,7 +41,8 @@ export const CreateClientGroupModal: React.FC<CreateClientGroupModalProps> = ({
   const {
     run: runFetchClientsForPipeline,
     requestStatus: FetchClientForPipelineStatus,
-    data: ClientsForPipelineData
+    data: FetchClientsForPipelineResponse,
+    error: FetchClientsForPipelineError
   } = useApiRequest({});
 
   const [selectedPipline, setSelectedPipline] = useState<{
@@ -49,11 +50,29 @@ export const CreateClientGroupModal: React.FC<CreateClientGroupModalProps> = ({
     label: string;
   } | null>(null);
   const [selectedClients, setSelectedClients] = useState<ClientType[]>([]);
+  const [clients, setClients] = useState([]);
+
+  const handleFetchClientsForPipeline = useCallback(
+    (id: string) => {
+      runFetchClientsForPipeline(fetchAllClientsPerPipelinesService(id));
+    },
+    [runFetchClientsForPipeline]
+  );
 
   useEffect(() => {
-    if (selectedPipline)
-      runFetchClientsForPipeline(fetchAllClientsPerPipelinesService(selectedPipline.value));
-  }, [selectedPipline]);
+    if (selectedPipline) handleFetchClientsForPipeline(selectedPipline.value);
+  }, [selectedPipline, handleFetchClientsForPipeline]);
+
+  useMemo(() => {
+    if (FetchClientsForPipelineResponse?.status === 200) {
+      setClients(FetchClientsForPipelineResponse.data.data.clients);
+    } else if (FetchClientsForPipelineError) {
+      toast({
+        variant: "destructive",
+        description: FetchClientsForPipelineError?.response?.data.error
+      });
+    }
+  }, [FetchClientsForPipelineError, FetchClientsForPipelineResponse]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -61,7 +80,7 @@ export const CreateClientGroupModal: React.FC<CreateClientGroupModalProps> = ({
 
     const requestBody = {
       name: groupName,
-      clients: selectedClients.map((client) => client.id)
+      clients: selectedClients.map((client) => client._id)
     };
 
     submit(selectedPipline.value, requestBody);
@@ -112,17 +131,7 @@ export const CreateClientGroupModal: React.FC<CreateClientGroupModalProps> = ({
             label="Clients"
             selectedOptions={selectedClients}
             setSelectedOptions={setSelectedClients}
-            options={
-              ClientsForPipelineData
-                ? ClientsForPipelineData.data.data.clients.map((item) => {
-                    return {
-                      id: item._id,
-                      first_name: item.first_name,
-                      last_name: item.last_name
-                    };
-                  })
-                : []
-            }
+            options={clients}
           />
         </div>
         <div className="px-4 bg-[#fafafa] flex justify-between py-2">
