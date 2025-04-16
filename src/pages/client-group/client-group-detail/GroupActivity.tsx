@@ -1,10 +1,13 @@
-import { IconFlame } from "@tabler/icons-react";
+import { IconCloudDown, IconFlame } from "@tabler/icons-react";
 import { fetchGroupActivitiesService } from "api/services/client-group";
-import { LoadingSpinner, TableEmptyState, toast } from "components";
+import { DateFilter, LoadingSpinner, TableEmptyState, toast } from "components";
 import { useApiRequest } from "hooks";
+import { Button } from "components";
 import GroupActivitiesUI from "modules/client-group/GroupActivitiesUI";
+import SortActivities from "modules/client-group/sort-activities";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchGroupActivitiesQueryParams, GroupActivityItem } from "types/client-group";
+import { DateRange } from "react-day-picker";
 
 export const GroupActivity = ({ groupId, groupName }: { groupId: string; groupName: string }) => {
   const [groupActivities, setGroupActivities] = useState<GroupActivityItem[]>([]);
@@ -23,6 +26,7 @@ export const GroupActivity = ({ groupId, groupName }: { groupId: string; groupNa
       start: "",
       end: ""
     });
+  const [dateFilter, setDateFilter] = useState<DateRange | undefined>(undefined);
 
   const handleUpdateQueryParams = (param: string, value: string | number) => {
     setGroupActivitiesParams((prev) => ({ ...prev, [param]: value }));
@@ -51,6 +55,32 @@ export const GroupActivity = ({ groupId, groupName }: { groupId: string; groupNa
 
   return (
     <div>
+      <div className="py-4 pl-8 px-5 border-b-[0.5px] border-[#ebecf0] flex items-center justify-between">
+        <p className="font-bold">Group Activity</p>
+        <div className="flex items-center gap-3">
+          <DateFilter
+            value={dateFilter}
+            showPreset
+            handleChange={(val) => {
+              setDateFilter(val);
+              if (val) {
+                handleUpdateQueryParams(
+                  "start",
+                  val.from ? val.from.toISOString().slice(0, 10) : ""
+                );
+                handleUpdateQueryParams("end", val.to ? val.to.toISOString().slice(0, 10) : "");
+              }
+            }}
+          />
+          <SortActivities handleParams={handleUpdateQueryParams} />
+          <Button
+            variant="outline"
+            className="w-full justify-start text-left font-normal text-xs h-8 py-1 px-2 gap-2">
+            <IconCloudDown size={12} color="#667085" />
+            <p className="text-xs text-[#344054] font-medium">Export</p>
+          </Button>
+        </div>
+      </div>
       {fetchClientGroupActivityStatus.isPending ? (
         <LoadingSpinner />
       ) : !groupActivities.length ? (

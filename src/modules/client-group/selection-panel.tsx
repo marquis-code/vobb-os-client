@@ -6,6 +6,7 @@ import { Button } from "components/ui/button";
 import { Checkbox } from "components/ui/checkbox";
 import { Input } from "components/ui/input";
 import { useClickOutside } from "hooks";
+import { LoadingSpinner } from "components";
 
 // Types for our items
 interface BaseItem {
@@ -29,6 +30,7 @@ type SelectionPanelProps = {
   onSubmit: (selectedIds: string[]) => void;
   buttonText: string;
   loading?: boolean;
+  isFetching?: boolean;
   className?: string;
   searchPlaceholder: string;
   selectedOptions?: string[];
@@ -43,6 +45,7 @@ export function SelectionPanel({
   buttonText,
   searchPlaceholder,
   className,
+  isFetching,
   selectedOptions,
   loading,
   singleSelect = false,
@@ -93,41 +96,45 @@ export function SelectionPanel({
       </div>
 
       <div className="space-y-2 mb-4 max-h-[300px] overflow-y-auto">
-        {filteredItems.map((item) => (
-          <div key={item._id} className="flex items-center justify-between py-2">
-            <div className="flex items-center">
-              {type === "stage" ? (
-                <div
-                  style={{
-                    background: `${(item as StageItem).color}`
-                  }}
-                  className={`w-3 h-3 rounded-full mr-3 `}
-                />
-              ) : (
-                <Avatar className="h-8 w-8 mr-3">
-                  <AvatarImage
-                    src={(item as MemberItem).avatarUrl || "/placeholder.svg"}
-                    alt={(item as MemberItem).first_name + "avatar"}
+        {!isFetching ? (
+          filteredItems.map((item) => (
+            <div key={item._id} className="flex items-center justify-between py-2">
+              <div className="flex items-center">
+                {type === "stage" ? (
+                  <div
+                    style={{
+                      background: `${(item as StageItem).color}`
+                    }}
+                    className={`w-3 h-3 rounded-full mr-3 `}
                   />
-                  <AvatarFallback className="bg-vobb-primary-70">
-                    {(item as MemberItem).first_name.charAt(0)}
-                    {(item as MemberItem).last_name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <span className="text-sm font-medium">
-                {type === "member"
-                  ? `${(item as MemberItem).first_name} ${(item as MemberItem).last_name}`
-                  : `${(item as StageItem).title}`}
-              </span>
+                ) : (
+                  <Avatar className="h-8 w-8 mr-3">
+                    <AvatarImage
+                      src={(item as MemberItem).avatarUrl || "/placeholder.svg"}
+                      alt={(item as MemberItem).first_name + "avatar"}
+                    />
+                    <AvatarFallback className="bg-vobb-primary-70">
+                      {(item as MemberItem).first_name.charAt(0)}
+                      {(item as MemberItem).last_name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <span className="text-sm font-medium">
+                  {type === "member"
+                    ? `${(item as MemberItem).first_name} ${(item as MemberItem).last_name}`
+                    : `${(item as StageItem).title}`}
+                </span>
+              </div>
+              <Checkbox
+                id={`item-${item._id}`}
+                checked={selectedIds.includes(item._id)}
+                onCheckedChange={() => handleItemToggle(item._id)}
+              />
             </div>
-            <Checkbox
-              id={`item-${item._id}`}
-              checked={selectedIds.includes(item._id)}
-              onCheckedChange={() => handleItemToggle(item._id)}
-            />
-          </div>
-        ))}
+          ))
+        ) : (
+          <LoadingSpinner size={20} />
+        )}
       </div>
 
       <Button

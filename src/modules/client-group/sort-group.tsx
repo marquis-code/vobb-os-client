@@ -5,7 +5,6 @@ import {
   IconArrowsSort,
   IconArrowUp,
   IconChevronRight,
-  IconCircle,
   IconCircleFilled
 } from "@tabler/icons-react";
 // import { Button } from "@/components/ui/button";

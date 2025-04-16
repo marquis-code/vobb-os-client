@@ -32,7 +32,7 @@ const ModalEmptyState: React.FC<EmptyStateProps> = (props) => {
 
         <p className="text-xs max-w-[245px] text-vobb-neutral-60">{description}</p>
         {btnText && (
-          <Button onClick={ctaFunction} className="flex gap-2 mt-5" variant={"fill"}>
+          <Button onClick={ctaFunction} className="flex gap-2 mt-5 relative z-10" variant={"fill"}>
             {btnIcon} {btnText}
           </Button>
         )}

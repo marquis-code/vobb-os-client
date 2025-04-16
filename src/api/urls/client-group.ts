@@ -113,3 +113,10 @@ export const fetchGroupActivitiesURL = ({
  */
 export const addClientsToGroupURL = ({ groupId }: { groupId: string }) =>
   `${prefix}/add-clients/${groupId}`;
+
+/**
+ * Fetch organization members list URL
+ * @returns url string
+ *
+ */
+export const fetchOrgMembersListURL = () => `/org/members-list`;

@@ -1,7 +1,7 @@
 import { Button, LoadingSpinner, Pagination, TableEmptyState } from "components";
 import { IconPlus, IconSearch, IconUsersGroup } from "@tabler/icons-react";
 import { CustomInput } from "components/form";
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo } from "react";
 import { ClientGroupTableDataProps, fetchClientGroupQueryParams } from "types/client-group";
 import { getClientGroupTableColumns } from "components/tables/clientGroupTable/columns";
 import { ClientGroupTable } from "components/tables/clientGroupTable";

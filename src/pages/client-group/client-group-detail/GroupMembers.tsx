@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { IconChevronUp, IconPlus, IconDotsVertical } from "@tabler/icons-react";
+import { IconChevronUp, IconPlus, IconDotsVertical, IconChevronDown } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Button, toast } from "components";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -99,6 +99,7 @@ const ClientActions = ({
 export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
   const [isAddingClient, setIsAddingClient] = useState(false);
   const [clients, setClients] = useState([]);
+  const [isShowingClients, setIsShowingClients] = useState(false);
   const {
     run: runAddClients,
     data: addClientsResponse,
@@ -108,7 +109,7 @@ export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
 
   const {
     run: runFetchClientsForPipeline,
-    requestStatus: FetchClientForPipelineStatus,
+    // requestStatus: FetchClientForPipelineStatus,
     data: FetchClientsForPipelineResponse,
     error: FetchClientsForPipelineError
   } = useApiRequest({});
@@ -157,55 +158,61 @@ export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
       <div className="w-full rounded-lg p-1 flex flex-col bg-[#fbfbfb] border-[0.5px] border-[#eaecf0] gap-1 *:rounded *:bg-white *:border-[0.5px] *:border-[#eaecf0]">
         <div className="px-4 py-1.5 flex justify-between items-center">
           <p className="text-xs text-[#101323] font-medium">Client List</p>
-          <button className="size-[26px] rounded border-[0.5px] border-[#dddfe5] grid place-items-center">
-            <IconChevronUp size={14} />
+          <button
+            onClick={() => setIsShowingClients(!isShowingClients)}
+            className="size-[26px] rounded border-[0.5px] border-[#dddfe5] grid place-items-center">
+            {isShowingClients ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
           </button>
         </div>
-        <div className="px-4 py-1.5">
-          <div className="relative">
-            <button
-              className="flex shadow-[0px_1px_2px_0px_#1018280D] bg-white border-[0.5px] border-[#dddfe5] py-1.5 px-2 rounded items-center gap-1"
-              onClick={() => setIsAddingClient(true)}>
-              <IconPlus size={12} />
-              <p className="text-[#344054] font-medium text-xs">New Client</p>
-            </button>
-            {isAddingClient && (
-              <div className="absolute z-10 left-0 top-[calc(100%+7px)]">
-                <SelectionPanel
-                  type="member"
-                  close={() => setIsAddingClient(false)}
-                  items={clients}
-                  buttonText="Add Client"
-                  loading={addClientsStatus.isPending}
-                  onSubmit={(selectedIds) => handleAddClients(selectedIds)}
-                  searchPlaceholder="Search clients"
-                />
+        {isShowingClients && (
+          <>
+            <div className="px-4 py-1.5">
+              <div className="relative">
+                <button
+                  className="flex shadow-[0px_1px_2px_0px_#1018280D] bg-white border-[0.5px] border-[#dddfe5] py-1.5 px-2 rounded items-center gap-1"
+                  onClick={() => setIsAddingClient(true)}>
+                  <IconPlus size={12} />
+                  <p className="text-[#344054] font-medium text-xs">New Client</p>
+                </button>
+                {isAddingClient && (
+                  <div className="absolute z-10 left-0 top-[calc(100%+7px)]">
+                    <SelectionPanel
+                      type="member"
+                      close={() => setIsAddingClient(false)}
+                      items={clients}
+                      buttonText="Add Client"
+                      loading={addClientsStatus.isPending}
+                      onSubmit={(selectedIds) => handleAddClients(selectedIds)}
+                      searchPlaceholder="Search clients"
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-        <div className="p-3 flex gap-3 flex-col">
-          {groupDetails.clients.map((client) => (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-1 rounded border-[0.5px] border-[#dddfe5] p-1">
-                <Avatar className="w-5 h-5">
-                  <AvatarImage src={client?.avatar} alt="profile picture" />
-
-                  <AvatarFallback className="text-[10px]">
-                    {client?.name.charAt(0)}
-                    {client?.name.charAt(1)}
-                  </AvatarFallback>
-                </Avatar>
-                <p className="text-xs text-[#344054] font-medium">{client.name}</p>
-              </div>
-              <ClientActions
-                groupId={groupDetails._id}
-                client={client}
-                groupName={groupDetails.name}
-              />
             </div>
-          ))}
-        </div>
+            <div className="p-3 flex gap-3 flex-col">
+              {groupDetails.clients.map((client) => (
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-1 rounded border-[0.5px] border-[#dddfe5] p-1">
+                    <Avatar className="w-5 h-5">
+                      <AvatarImage src={client?.avatar} alt="profile picture" />
+
+                      <AvatarFallback className="text-[10px]">
+                        {client?.name.charAt(0)}
+                        {client?.name.charAt(1)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="text-xs text-[#344054] font-medium">{client.name}</p>
+                  </div>
+                  <ClientActions
+                    groupId={groupDetails._id}
+                    client={client}
+                    groupName={groupDetails.name}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

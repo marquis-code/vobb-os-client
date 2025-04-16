@@ -4,7 +4,7 @@ import { ModalProps } from "types";
 import { Button, toast } from "components/ui";
 import { IconX } from "@tabler/icons-react";
 import { CustomInput, SelectInput } from "components/form";
-import SelectClients, { ClientType } from "modules/client-group/SelectClients";
+import SelectClients, { ClientType } from "modules/client-group/select-clients";
 import { useApiRequest } from "hooks";
 import { fetchAllClientsPerPipelinesService } from "api";
 
@@ -40,7 +40,7 @@ export const CreateClientGroupModal: React.FC<CreateClientGroupModalProps> = ({
 }) => {
   const {
     run: runFetchClientsForPipeline,
-    requestStatus: FetchClientForPipelineStatus,
+    // requestStatus: FetchClientForPipelineStatus,
     data: FetchClientsForPipelineResponse,
     error: FetchClientsForPipelineError
   } = useApiRequest({});
