@@ -3,12 +3,13 @@ import { GroupDetailsTabLengthProps } from "types/client-group";
 import {
   IconCash,
   IconClipboardText,
-  IconFileDescription,
   IconFiles,
   IconFlame,
   IconListCheck,
   IconMail,
   IconMessageCircle,
+  IconUser,
+  IconUsers,
   IconUsersGroup
 } from "@tabler/icons-react";
 import { cn } from "lib";
@@ -66,12 +67,6 @@ export const GroupDetailsTabs: FC<GroupDetailsTabsProps> = ({
       title: "Notes",
       key: "notes",
       icon: <IconClipboardText size={16} />,
-      length: notes
-    },
-    {
-      title: "Invoice",
-      key: "invoice",
-      icon: <IconFileDescription size={16} />,
       length: notes
     }
   ];

@@ -15,21 +15,15 @@ import {
   editGroupNameService,
   assignMemberToGroupService,
   ungroupClientGroupService,
-  updateClientGroupStageService,
-  fetchOrgMembersListService
+  fetchClientGroupDetailService,
+  updateClientGroupStageService
 } from "api/services/client-group";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchPipelineStagesService } from "api";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
-const ActionColumn = ({
-  rowData,
-  handleRefreshTable
-}: {
-  rowData: ClientGroupTableData;
-  handleRefreshTable: () => void;
-}) => {
+const ActionColumn = ({ rowData }: { rowData: ClientGroupTableData }) => {
   // #region Api Requests
   //  Fetch pipeline stages
   const {
@@ -38,19 +32,12 @@ const ActionColumn = ({
     data: fetchPipelineStagesResponse,
     requestStatus: fetchPipelineStagesStatus
   } = useApiRequest({});
-  // Fetch org members
-  const {
-    run: runFetchOrgMembersList,
-    error: fetchOrgMembersListError,
-    data: fetchOrgMembersListResponse,
-    requestStatus: fetchOrgMembersListStatus
-  } = useApiRequest({});
   // Edit group name
   const {
     run: runEditGroupName,
     data: editGroupNameResponse,
-    error: editGroupNameError
-    // requestStatus: editGroupNameStatus
+    error: editGroupNameError,
+    requestStatus: editGroupNameStatus
   } = useApiRequest({});
 
   // Assign member to group
@@ -87,12 +74,6 @@ const ActionColumn = ({
     [runFetchPipelineStages]
   );
 
-  // fetch members list
-  const handleFetchOrgMembersList = useCallback(
-    () => runFetchOrgMembersList(fetchOrgMembersListService()),
-    [runFetchOrgMembersList]
-  );
-
   // edit
   const handleChangeClientGroupName = useCallback(
     (id: string, name: string) => {
@@ -102,8 +83,8 @@ const ActionColumn = ({
   );
   // assign
   const handleAssignMembersToGroup = useCallback(
-    (member: string | string, id: string) => {
-      runAssignMember(assignMemberToGroupService(id, { member }));
+    (members: string[] | string, id: string) => {
+      runAssignMember(assignMemberToGroupService(id, { member: members }));
     },
     [runAssignMember]
   );
@@ -129,43 +110,34 @@ const ActionColumn = ({
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isEditNameOpen, setIsEditNameOpen] = useState(false);
   const [isShowingUngroupModal, setIsShowingUngroupModal] = useState(false);
-  const [membersList, setMembersList] = useState<
-    {
-      _id: string;
-      name: string;
-    }[]
-  >([]);
-  const [isAssignMembersModalOpen, setIsAssignMembersModalOpen] = useState(false);
 
   const [isPipelineStagesModalOpen, setIsPipelneStagesModalOpen] = useState(false);
   const [piplelineStages, setPipelineStages] = useState<
     {
-      _id: string;
+      id: string;
       color: string;
-      title: string;
+      name: string;
     }[]
   >([]);
 
   // 1. Ungroup client group toast handler
   useMemo(() => {
     if (ungroupClientGroupResponse?.status === 200) {
-      toast({ description: ungroupClientGroupResponse?.data?.message });
+      toast({ description: ungroupClientGroupResponse?.data?.messsage });
       setIsShowingUngroupModal(false);
-      handleRefreshTable();
     } else if (ungroupClientGroupError) {
       toast({
         variant: "destructive",
         description: ungroupClientGroupError?.response?.data.error
       });
     }
-  }, [ungroupClientGroupResponse, ungroupClientGroupError, handleRefreshTable]);
+  }, [ungroupClientGroupResponse, ungroupClientGroupError]);
 
   // 2. Edit group name toast handler
   useMemo(() => {
     if (editGroupNameResponse?.status === 200) {
-      toast({ description: editGroupNameResponse?.data?.message });
+      toast({ description: editGroupNameResponse?.data?.messsage });
       setIsEditNameOpen(false);
-      handleRefreshTable();
     } else if (editGroupNameError) {
       console.log(editGroupNameError?.response);
       toast({
@@ -173,26 +145,24 @@ const ActionColumn = ({
         description: editGroupNameError?.response?.data.error
       });
     }
-  }, [editGroupNameResponse, editGroupNameError, handleRefreshTable]);
+  }, [editGroupNameResponse, editGroupNameError]);
 
   // 3. Assign member toast handler
   useMemo(() => {
     if (assignMemberResponse?.status === 200) {
-      toast({ description: assignMemberResponse?.data?.message });
-      handleRefreshTable();
+      toast({ description: assignMemberResponse?.data?.messsage });
     } else if (assignMemberError) {
       toast({
         variant: "destructive",
         description: assignMemberError?.response?.data.error
       });
     }
-  }, [assignMemberResponse, assignMemberError, handleRefreshTable]);
+  }, [assignMemberResponse, assignMemberError]);
 
   // 5. Update group stage toast handler
   useMemo(() => {
     if (updateGroupStageResponse?.status === 200) {
-      toast({ description: updateGroupStageResponse?.data?.message });
-      handleRefreshTable();
+      toast({ description: updateGroupStageResponse?.data?.messsage });
       setIsPipelneStagesModalOpen(false);
     } else if (updateGroupStageError) {
       toast({
@@ -200,7 +170,7 @@ const ActionColumn = ({
         description: updateGroupStageError?.response?.data.error
       });
     }
-  }, [updateGroupStageResponse, updateGroupStageError, handleRefreshTable]);
+  }, [updateGroupStageResponse, updateGroupStageError]);
 
   // 6. Fetch pipeline stages toast handler
   useMemo(() => {
@@ -214,26 +184,21 @@ const ActionColumn = ({
     }
   }, [fetchPipelineStagesResponse, fetchPipelineStagesError]);
 
-  // 7. Fetch members list toast handler
-  useMemo(() => {
-    if (fetchOrgMembersListResponse?.status === 200) {
-      console.log(fetchOrgMembersListResponse?.data?.data?.members);
-      setMembersList(fetchOrgMembersListResponse?.data?.data?.members || []);
-    } else if (fetchOrgMembersListError) {
-      toast({
-        variant: "destructive",
-        description: fetchOrgMembersListError?.response?.data.error
-      });
-    }
-  }, [fetchOrgMembersListResponse, fetchOrgMembersListError]);
-
   useEffect(() => {
     if (isPipelineStagesModalOpen) handleFetchPipelineStages(rowData.id);
-  }, [isPipelineStagesModalOpen, handleFetchPipelineStages, rowData.id]);
+  }, [isPipelineStagesModalOpen]);
 
-  useEffect(() => {
-    if (isAssignMembersModalOpen) handleFetchOrgMembersList();
-  }, [isAssignMembersModalOpen, handleFetchOrgMembersList]);
+  useMemo(() => {
+    if (ungroupClientGroupResponse?.status === 200) {
+      toast({ description: ungroupClientGroupResponse?.data?.messsage });
+      setIsShowingUngroupModal(false);
+    } else if (ungroupClientGroupError) {
+      toast({
+        variant: "destructive",
+        description: ungroupClientGroupError?.response?.data.error
+      });
+    }
+  }, [ungroupClientGroupResponse, ungroupClientGroupError]);
 
   const viewGroupDetails = () => {
     navigate(Routes.client_group(rowData.id, "activity"));
@@ -248,7 +213,7 @@ const ActionColumn = ({
             <IconDotsVertical size={16} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[230px]">
+        <DropdownMenuContent align="end" className="min-w-[200px]">
           <DropdownMenuItem
             onClick={viewGroupDetails}
             className="cursor-pointer"
@@ -300,7 +265,6 @@ const ActionColumn = ({
               <SelectionPanel
                 loading={updateGroupStageStatus.isPending}
                 type="stage"
-                isFetching={fetchPipelineStagesStatus.isPending}
                 close={() => setIsPipelneStagesModalOpen(false)}
                 items={piplelineStages}
                 buttonText="Update Group Stage"
@@ -310,45 +274,11 @@ const ActionColumn = ({
               />
             </PopoverContent>
           </Popover>
-          <Popover modal={true} open={isAssignMembersModalOpen}>
-            <PopoverTrigger asChild>
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsAssignMembersModalOpen(true);
-                }}
-                className="cursor-pointer w-full flex justify-between items-center"
-                data-testid="member-btn">
-                <p>Assign Member To Group</p>
-                <IconChevronRight height={12} width={12} />
-              </DropdownMenuItem>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-[280px] bg-transparent border-0 !shadow-none">
-              <SelectionPanel
-                loading={assignMemberStatus.isPending}
-                type="member"
-                isFetching={fetchOrgMembersListStatus.isPending}
-                close={() => setIsAssignMembersModalOpen(false)}
-                items={membersList.map((item) => {
-                  const [first_name, last_name] = item.name.split(" ");
-                  return {
-                    _id: item._id,
-                    first_name,
-                    last_name
-                  };
-                })}
-                buttonText="Assign Member To Group"
-                onSubmit={(selectedId) => handleAssignMembersToGroup(selectedId[0], rowData.id)}
-                searchPlaceholder="Search Member"
-                singleSelect
-              />
-            </PopoverContent>
-          </Popover>
           <DropdownMenuItem
             onClick={() => {
               setIsShowingUngroupModal(true);
             }}
-            className="cursor-pointer rounded text-[#912018] hover:!text-[#912018] hover:!bg-[#fef3f2]"
+            className="cursor-pointer bg-[#f2f3f2] rounded text-[#912018] hover:!text-[#912018] hover:bg-[#f2f3f2]"
             data-testid="ungroup-client">
             Ungroup Clients
           </DropdownMenuItem>

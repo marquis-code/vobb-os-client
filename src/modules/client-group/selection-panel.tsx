@@ -6,22 +6,21 @@ import { Button } from "components/ui/button";
 import { Checkbox } from "components/ui/checkbox";
 import { Input } from "components/ui/input";
 import { useClickOutside } from "hooks";
-import { LoadingSpinner } from "components";
 
 // Types for our items
 interface BaseItem {
-  _id: string;
+  id: string;
+  name: string;
 }
 
 interface StageItem extends BaseItem {
   color: string;
-  title: string;
 }
 
 interface MemberItem extends BaseItem {
   avatarUrl?: string;
-  first_name: string;
-  last_name: string;
+  initials: string;
+  color: string;
 }
 
 type SelectionPanelProps = {
@@ -30,10 +29,7 @@ type SelectionPanelProps = {
   onSubmit: (selectedIds: string[]) => void;
   buttonText: string;
   loading?: boolean;
-  isFetching?: boolean;
-  className?: string;
   searchPlaceholder: string;
-  selectedOptions?: string[];
   singleSelect?: boolean;
   close: () => void;
 };
@@ -44,27 +40,20 @@ export function SelectionPanel({
   onSubmit,
   buttonText,
   searchPlaceholder,
-  className,
-  isFetching,
-  selectedOptions,
   loading,
   singleSelect = false,
   close
 }: SelectionPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>(selectedOptions ?? []);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const ref = useRef(null);
 
   useClickOutside(ref, close);
 
-  const filteredItems = items.filter((item) => {
-    const name =
-      type === "member"
-        ? `${(item as MemberItem).first_name} ${(item as MemberItem).last_name}`
-        : (item as StageItem).title;
-    return name.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleItemToggle = (itemId: string) => {
     if (singleSelect) {
@@ -83,9 +72,7 @@ export function SelectionPanel({
   return (
     <div
       ref={ref}
-      className={`w-full max-w-md mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-4 ${
-        className ? className : ""
-      }`}>
+      className="w-full max-w-md mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="mb-4">
         <Input
           placeholder={searchPlaceholder}
@@ -96,51 +83,41 @@ export function SelectionPanel({
       </div>
 
       <div className="space-y-2 mb-4 max-h-[300px] overflow-y-auto">
-        {!isFetching ? (
-          filteredItems.map((item) => (
-            <div key={item._id} className="flex items-center justify-between py-2">
-              <div className="flex items-center">
-                {type === "stage" ? (
-                  <div
-                    style={{
-                      background: `${(item as StageItem).color}`
-                    }}
-                    className={`w-3 h-3 rounded-full mr-3 `}
+        {filteredItems.map((item) => (
+          <div key={item.id} className="flex items-center justify-between py-2">
+            <div className="flex items-center">
+              {type === "stage" ? (
+                <div
+                  style={{
+                    background: `${(item as StageItem).color}`
+                  }}
+                  className={`w-3 h-3 rounded-full mr-3 `}
+                />
+              ) : (
+                <Avatar className="h-8 w-8 mr-3">
+                  <AvatarImage
+                    src={(item as MemberItem).avatarUrl || "/placeholder.svg"}
+                    alt={item.name}
                   />
-                ) : (
-                  <Avatar className="h-8 w-8 mr-3">
-                    <AvatarImage
-                      src={(item as MemberItem).avatarUrl || "/placeholder.svg"}
-                      alt={(item as MemberItem).first_name + "avatar"}
-                    />
-                    <AvatarFallback className="bg-vobb-primary-70">
-                      {(item as MemberItem).first_name.charAt(0)}
-                      {(item as MemberItem).last_name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                <span className="text-sm font-medium">
-                  {type === "member"
-                    ? `${(item as MemberItem).first_name} ${(item as MemberItem).last_name}`
-                    : `${(item as StageItem).title}`}
-                </span>
-              </div>
-              <Checkbox
-                id={`item-${item._id}`}
-                checked={selectedIds.includes(item._id)}
-                onCheckedChange={() => handleItemToggle(item._id)}
-              />
+                  <AvatarFallback className={(item as MemberItem).color}>
+                    {(item as MemberItem).initials}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              <span className="text-sm font-medium">{item.name}</span>
             </div>
-          ))
-        ) : (
-          <LoadingSpinner size={20} />
-        )}
+            <Checkbox
+              id={`item-${item.id}`}
+              checked={selectedIds.includes(item.id)}
+              onCheckedChange={() => handleItemToggle(item.id)}
+            />
+          </div>
+        ))}
       </div>
 
       <Button
         onClick={handleSubmit}
         loading={loading}
-        type="button"
         disabled={selectedIds.length < 1}
         className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white">
         {buttonText}

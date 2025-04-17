@@ -5,16 +5,6 @@ export interface fetchClientGroupQueryParams {
   limit: number;
   search: string;
   sort: string;
-  pipeline: string;
-  assigned_members: string;
-}
-
-export interface fetchGroupActivitiesQueryParams {
-  page: number;
-  limit: number;
-  start: string;
-  end: string;
-  sort: string;
 }
 
 export interface ClientGroupTableData {
@@ -68,31 +58,4 @@ export interface GroupDetailsTabLengthProps {
   files: number;
   notes: number;
   comments: number;
-}
-
-export interface GroupActivityItem {
-  action: string;
-  initiator: {
-    _id: string;
-    avatar: string;
-    name: string;
-  };
-  meta: {
-    name?: string;
-    client?: {
-      id: string;
-      name: string;
-    };
-    member?: {
-      id: string;
-      name?: string;
-    };
-    stage?: {
-      id: string;
-      title: string;
-      color: string;
-    };
-  };
-  date: string;
-  time: string;
 }

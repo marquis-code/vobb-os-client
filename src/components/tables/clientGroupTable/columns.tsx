@@ -6,11 +6,7 @@ import { Row } from "layout";
 import { ClientGroupTableData } from "types/client-group";
 import ActionColumn from "modules/client-group/ActionColumn";
 
-export const getClientGroupTableColumns = ({
-  handleRefreshTable
-}: {
-  handleRefreshTable: () => void;
-}): ColumnDef<ClientGroupTableData>[] => [
+export const getClientGroupTableColumns = (): ColumnDef<ClientGroupTableData>[] => [
   {
     accessorKey: "name",
     header: ({ table }) => (
@@ -90,7 +86,7 @@ export const getClientGroupTableColumns = ({
     id: "actions",
     cell: ({ row }) => {
       const rowData = row.original;
-      return <ActionColumn rowData={rowData} handleRefreshTable={handleRefreshTable} />;
+      return <ActionColumn rowData={rowData} />;
     }
   }
 ];

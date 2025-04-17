@@ -1,9 +1,5 @@
-import {
-  assignMemberToGroupService,
-  fetchClientGroupDetailService,
-  fetchOrgMembersListService
-} from "api/services/client-group";
-import { LoadingSpinner, toast, Button, Popover, PopoverContent, PopoverTrigger } from "components";
+import { fetchClientGroupDetailService } from "api/services/client-group";
+import { LoadingSpinner, toast } from "components";
 import { useApiRequest } from "hooks";
 import { GroupDetailsTabs } from "modules/client-group/components/GroupDetailsTabs";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -18,8 +14,49 @@ import { GroupNotes } from "./GroupNotes";
 import { GroupMembers } from "./GroupMembers";
 import { GroupComments } from "./GroupComments";
 import { GroupSales } from "./GroupSales";
-import { GroupInvoice } from "./GroupInvoice";
-import { SelectionPanel } from "modules/client-group/selection-panel";
+
+const testData = {
+  _id: "674757e27107439426e2d137",
+  pipeline: {
+    _id: "6697c407cfa9d757d8e63aff",
+    name: "Fifth pipeline"
+  },
+  name: "First group",
+  assigned_to: {
+    _id: "663ce09d66b7017f632d6fe0",
+    avatar: "https://vobb-os.s3.us-east-2.amazonaws.com/images/1720946465291-Capture.PNG",
+    name: "Ekene IkeOkoro"
+  },
+  clients: [
+    {
+      _id: "66b278247e57bf108845ebe1",
+      name: "Ekene Okoro",
+      email: "ekeneanthony84@gmail.com"
+    },
+    {
+      _id: "66c383af2ba9cf4e2627ac31",
+      name: "Ekene Okoro",
+      email: "ekeneanthony85@gmail.com"
+    },
+    {
+      _id: "672a3b6dd3d7debb9a692d60",
+      name: "Ekene Okoro",
+      email: "ekeneanthony89090@gmail.com"
+    },
+    {
+      _id: "672bdb8be0510f3bc2fdf2f4",
+      name: "Ekene Okoro",
+      email: "ekeneanthonyadaqq8@gmail.com"
+    },
+    {
+      _id: "672d1016e958b9d5cb79f43e",
+      name: "Ekene Okoro",
+      email: "ekeneanthony84f222@gmail.com"
+    }
+  ],
+  date: "27/11/2024",
+  time: "2024-11-27T17:33:23.199Z"
+};
 
 const ClientGroupDetail = () => {
   const navigate = useNavigate();
@@ -33,31 +70,8 @@ const ClientGroupDetail = () => {
     requestStatus: fetchClientGroupDetailStatus
   } = useApiRequest({});
 
-  // Fetch org members
-  const {
-    run: runFetchOrgMembersList,
-    error: fetchOrgMembersListError,
-    data: fetchOrgMembersListResponse,
-    requestStatus: fetchOrgMembersListStatus
-  } = useApiRequest({});
-
-  // Assign member to group
-  const {
-    run: runAssignMember,
-    data: assignMemberResponse,
-    error: assignMemberError,
-    requestStatus: assignMemberStatus
-  } = useApiRequest({});
-
   const [groupDetails, setGroupDetails] = useState<GroupData | null>(null);
   const [subTab, setSubTab] = useState<string>("members");
-  const [isAssignMembersModalOpen, setIsAssignMembersModalOpen] = useState(false);
-  const [membersList, setMembersList] = useState<
-    {
-      _id: string;
-      name: string;
-    }[]
-  >([]);
 
   const handleSubTabChange = (tab: string) => {
     setSubTab(tab);
@@ -67,7 +81,7 @@ const ClientGroupDetail = () => {
     navigate(Routes.client_group(params.id, route));
   };
 
-  const [groupDetailsTabLengths] = useState({
+  const [groupDetailsTabLengths, setGroupDetailsTabLengths] = useState({
     activity: 0,
     email: 0,
     tasks: 0,
@@ -83,18 +97,6 @@ const ClientGroupDetail = () => {
     [runFetchClientGroupDetail]
   );
 
-  const handleFetchOrgMembersList = useCallback(
-    () => runFetchOrgMembersList(fetchOrgMembersListService()),
-    [runFetchOrgMembersList]
-  );
-
-  const handleAssignMembersToGroup = useCallback(
-    (member: string | string, id: string) => {
-      runAssignMember(assignMemberToGroupService(id, { member }));
-    },
-    [runAssignMember]
-  );
-
   useMemo(() => {
     if (fetchClientGroupDetailResponse?.status === 200) {
       setGroupDetails(fetchClientGroupDetailResponse.data.data);
@@ -103,40 +105,13 @@ const ClientGroupDetail = () => {
         variant: "destructive",
         description: fetchClientGroupDetailError?.response?.data.error
       });
+      setGroupDetails(testData);
     }
   }, [fetchClientGroupDetailResponse, fetchClientGroupDetailError]);
 
-  useMemo(() => {
-    if (fetchOrgMembersListResponse?.status === 200) {
-      console.log(fetchOrgMembersListResponse?.data?.data?.members);
-      setMembersList(fetchOrgMembersListResponse?.data?.data?.members || []);
-    } else if (fetchOrgMembersListError) {
-      toast({
-        variant: "destructive",
-        description: fetchOrgMembersListError?.response?.data.error
-      });
-    }
-  }, [fetchOrgMembersListResponse, fetchOrgMembersListError]);
-
-  useMemo(() => {
-    if (assignMemberResponse?.status === 200) {
-      toast({ description: assignMemberResponse?.data?.message });
-      handleViewGroup(params.id as string);
-    } else if (assignMemberError) {
-      toast({
-        variant: "destructive",
-        description: assignMemberError?.response?.data.error
-      });
-    }
-  }, [assignMemberResponse, assignMemberError, handleViewGroup, params.id]);
-
   useEffect(() => {
     if (params.id) handleViewGroup(params.id);
-  }, [params.id, handleViewGroup]);
-
-  useEffect(() => {
-    if (isAssignMembersModalOpen) handleFetchOrgMembersList();
-  }, [isAssignMembersModalOpen, handleFetchOrgMembersList]);
+  }, []);
 
   if (fetchClientGroupDetailStatus.isPending)
     return (
@@ -164,7 +139,7 @@ const ClientGroupDetail = () => {
           </div>
         </section>
         <section className="border-y-[0.5px] border-[#ebecf0] px-4 py-3">
-          {groupDetails.assigned_to ? (
+          {groupDetails.assigned_to && (
             <div className="bg-white p-1 rounded w-fit border-[0.5px] shadow-[0px_1px_2px_0px_#1018280D] flex gap-1.5 text-xs font-medium text-[#344054]">
               <p>Assigned to</p>
               {groupDetails.assigned_to.avatar ? (
@@ -174,50 +149,11 @@ const ClientGroupDetail = () => {
                   className="size-5 rounded-full"
                 />
               ) : (
-                <div className="bg-[#4a22eb] grid place-items-center size-5 rounded-full text-[10px] text-white uppercase">
+                <div className="bg-[#4a22eb] grid place-items-center size-5 rounded-full text-xs text-white">
                   {groupDetails.assigned_to.name.slice(0, 2)}
                 </div>
               )}
             </div>
-          ) : (
-            <Popover modal={true} open={isAssignMembersModalOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  onClick={(e) => {
-                    setIsAssignMembersModalOpen(true);
-                  }}
-                  className="text-xs text-vobb-neutral-60"
-                  data-testid="member-btn">
-                  <p>Assign member</p>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                align="end"
-                alignOffset={-200}
-                className="w-[280px] bg-transparent border-0 !shadow-none">
-                <SelectionPanel
-                  loading={assignMemberStatus.isPending}
-                  type="member"
-                  isFetching={fetchOrgMembersListStatus.isPending}
-                  close={() => setIsAssignMembersModalOpen(false)}
-                  items={membersList.map((item) => {
-                    const [first_name, last_name] = item.name.split(" ");
-                    return {
-                      _id: item._id,
-                      first_name,
-                      last_name
-                    };
-                  })}
-                  buttonText="Assign Member To Group"
-                  onSubmit={(selectedId) =>
-                    handleAssignMembersToGroup(selectedId[0], params.id as string)
-                  }
-                  searchPlaceholder="Search Member"
-                  singleSelect
-                />
-              </PopoverContent>
-            </Popover>
           )}
         </section>
         <GroupDetailsTabs
@@ -230,28 +166,35 @@ const ClientGroupDetail = () => {
         <section className="grid grid-cols-[2fr,1.25fr] divide-x -ml-4 w-[calc(100%+2rem)] min-h-screen">
           <section>
             {params.route === "activity" ? (
-              <GroupActivity groupId={params.id as string} groupName={groupDetails.name} />
+              <GroupActivity />
             ) : params.route === "emails" ? (
               <GroupEmails />
             ) : params.route === "files" ? (
               <GroupFiles />
             ) : params.route === "tasks" ? (
-              <GroupTasks />
+              <GroupTasks
+              //   handleUpdateProfileTabLengths={handleUpdateProfileTabLengths}
+              />
             ) : params.route === "notes" ? (
-              <GroupNotes />
-            ) : params.route === "invoice" ? (
-              <GroupInvoice />
+              <GroupNotes
+              // handleUpdateProfileTabLengths={handleUpdateProfileTabLengths}
+              // memberProfile={memberProfile}
+              />
             ) : (
               ""
             )}
           </section>
           <div className="p-4">
             {subTab === "members" ? (
-              <GroupMembers groupDetails={groupDetails} />
+              <GroupMembers
+                groupId={groupDetails._id}
+                groupName={groupDetails.name}
+                groupClients={groupDetails.clients}
+              />
             ) : subTab === "comments" ? (
               <GroupComments />
             ) : (
-              <GroupSales pipeline={groupDetails.pipeline} />
+              <GroupSales />
             )}
           </div>
         </section>

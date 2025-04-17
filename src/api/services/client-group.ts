@@ -16,10 +16,9 @@ import {
   fetchClientGroupDetailURL,
   ungroupClientGroupURL,
   fetchGroupActivitiesURL,
-  addClientsToGroupURL,
-  fetchOrgMembersListURL
+  addClientsToGroupURL
 } from "api/urls/client-group";
-import { fetchClientGroupQueryParams, fetchGroupActivitiesQueryParams } from "types/client-group";
+import { fetchClientGroupQueryParams } from "types/client-group";
 
 export interface CreateClientGroupRequestBody {
   name: string;
@@ -178,12 +177,9 @@ export const ungroupClientGroupService = (groupId: string) => {
  * @param groupId
  * @returns axios promise
  */
-export const fetchGroupActivitiesService = (
-  groupId: string,
-  queryParams: fetchGroupActivitiesQueryParams
-) => {
+export const fetchGroupActivitiesService = (groupId: string) => {
   return getRequest({
-    url: fetchGroupActivitiesURL({ groupId, queryParams })
+    url: fetchGroupActivitiesURL({ groupId })
   });
 };
 
@@ -197,16 +193,5 @@ export const addClientsToGroupService = (groupId: string, data: AddClientsToGrou
   return postRequest({
     url: addClientsToGroupURL({ groupId }),
     data
-  });
-};
-
-/**
- * Fetch group activities service
- * @param groupId
- * @returns axios promise
- */
-export const fetchOrgMembersListService = () => {
-  return getRequest({
-    url: fetchOrgMembersListURL()
   });
 };

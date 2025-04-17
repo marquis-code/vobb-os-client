@@ -4,16 +4,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem
 } from "components/ui/dropdown-menu";
-import { IconChevronUp, IconPlus, IconDotsVertical, IconChevronDown } from "@tabler/icons-react";
+import { IconChevronUp, IconPlus, IconDotsVertical } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { Button, toast } from "components";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import ConfirmDangerousActionModal from "modules/client-group/confirmDangerousActionModal";
 import { SelectionPanel } from "modules/client-group/selection-panel";
 import { useApiRequest } from "hooks";
 import { addClientsToGroupService, removeClientFromGroupService } from "api/services/client-group";
-import { GroupData } from "types/client-group";
-import { fetchAllClientsPerPipelinesService } from "api";
 
 const ClientActions = ({
   client,
@@ -46,7 +44,7 @@ const ClientActions = ({
 
   useMemo(() => {
     if (removeClientResponse?.status === 200) {
-      toast({ description: removeClientResponse?.data?.message });
+      toast({ description: removeClientResponse?.data?.messsage });
       setIsShowingRemoveClientModal(false);
     } else if (removeClientErrors) {
       toast({
@@ -96,10 +94,21 @@ const ClientActions = ({
   );
 };
 
-export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
+export const GroupMembers = ({
+  groupClients,
+  groupName,
+  groupId
+}: {
+  groupClients: {
+    _id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+  }[];
+  groupName: string;
+  groupId: string;
+}) => {
   const [isAddingClient, setIsAddingClient] = useState(false);
-  const [clients, setClients] = useState([]);
-  const [isShowingClients, setIsShowingClients] = useState(false);
   const {
     run: runAddClients,
     data: addClientsResponse,
@@ -107,28 +116,14 @@ export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
     error: addClientsErrors
   } = useApiRequest({});
 
-  const {
-    run: runFetchClientsForPipeline,
-    // requestStatus: FetchClientForPipelineStatus,
-    data: FetchClientsForPipelineResponse,
-    error: FetchClientsForPipelineError
-  } = useApiRequest({});
-
-  const handleFetchClientsForPipeline = useCallback(
-    (id: string) => {
-      runFetchClientsForPipeline(fetchAllClientsPerPipelinesService(id));
-    },
-    [runFetchClientsForPipeline]
-  );
-
   const handleAddClients = useCallback(
-    (clients: string[]) => runAddClients(addClientsToGroupService(groupDetails._id, { clients })),
+    (clients: string[]) => runAddClients(addClientsToGroupService(groupId, { clients })),
     [runAddClients]
   );
 
   useMemo(() => {
     if (addClientsResponse?.status === 200) {
-      toast({ description: addClientsResponse?.data?.message });
+      toast({ description: addClientsResponse?.data?.messsage });
       setIsAddingClient(false);
     } else if (addClientsErrors) {
       toast({
@@ -138,81 +133,56 @@ export const GroupMembers = ({ groupDetails }: { groupDetails: GroupData }) => {
     }
   }, [addClientsResponse, addClientsErrors]);
 
-  useEffect(() => {
-    handleFetchClientsForPipeline(groupDetails.pipeline._id);
-  }, [handleFetchClientsForPipeline]);
-
-  useMemo(() => {
-    if (FetchClientsForPipelineResponse?.status === 200) {
-      setClients(FetchClientsForPipelineResponse.data.data.clients);
-    } else if (FetchClientsForPipelineError) {
-      toast({
-        variant: "destructive",
-        description: FetchClientsForPipelineError?.response?.data.error
-      });
-    }
-  }, [FetchClientsForPipelineError, FetchClientsForPipelineResponse]);
-
   return (
     <section className="bg-white pb-6">
       <div className="w-full rounded-lg p-1 flex flex-col bg-[#fbfbfb] border-[0.5px] border-[#eaecf0] gap-1 *:rounded *:bg-white *:border-[0.5px] *:border-[#eaecf0]">
         <div className="px-4 py-1.5 flex justify-between items-center">
           <p className="text-xs text-[#101323] font-medium">Client List</p>
-          <button
-            onClick={() => setIsShowingClients(!isShowingClients)}
-            className="size-[26px] rounded border-[0.5px] border-[#dddfe5] grid place-items-center">
-            {isShowingClients ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+          <button className="size-[26px] rounded border-[0.5px] border-[#dddfe5] grid place-items-center">
+            <IconChevronUp size={14} />
           </button>
         </div>
-        {isShowingClients && (
-          <>
-            <div className="px-4 py-1.5">
-              <div className="relative">
-                <button
-                  className="flex shadow-[0px_1px_2px_0px_#1018280D] bg-white border-[0.5px] border-[#dddfe5] py-1.5 px-2 rounded items-center gap-1"
-                  onClick={() => setIsAddingClient(true)}>
-                  <IconPlus size={12} />
-                  <p className="text-[#344054] font-medium text-xs">New Client</p>
-                </button>
-                {isAddingClient && (
-                  <div className="absolute z-10 left-0 top-[calc(100%+7px)]">
-                    <SelectionPanel
-                      type="member"
-                      close={() => setIsAddingClient(false)}
-                      items={clients}
-                      buttonText="Add Client"
-                      loading={addClientsStatus.isPending}
-                      onSubmit={(selectedIds) => handleAddClients(selectedIds)}
-                      searchPlaceholder="Search clients"
-                    />
-                  </div>
-                )}
+        <div className="px-4 py-1.5">
+          <div className="relative">
+            <button
+              className="flex shadow-[0px_1px_2px_0px_#1018280D] bg-white border-[0.5px] border-[#dddfe5] py-1.5 px-2 rounded items-center gap-1"
+              onClick={() => setIsAddingClient(true)}>
+              <IconPlus size={12} />
+              <p className="text-[#344054] font-medium text-xs">New Client</p>
+            </button>
+            {isAddingClient && (
+              <div className="absolute z-10 left-0 top-[calc(100%+7px)]">
+                <SelectionPanel
+                  type="member"
+                  close={() => setIsAddingClient(false)}
+                  items={[]}
+                  buttonText="Add Client"
+                  loading={addClientsStatus.isPending}
+                  onSubmit={(selectedIds) => handleAddClients(selectedIds)}
+                  searchPlaceholder="Search clients"
+                />
               </div>
-            </div>
-            <div className="p-3 flex gap-3 flex-col">
-              {groupDetails.clients.map((client) => (
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-1 rounded border-[0.5px] border-[#dddfe5] p-1">
-                    <Avatar className="w-5 h-5">
-                      <AvatarImage src={client?.avatar} alt="profile picture" />
+            )}
+          </div>
+        </div>
+        <div className="p-3 flex gap-3 flex-col">
+          {groupClients.map((client) => (
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-1 rounded border-[0.5px] border-[#dddfe5] p-1">
+                <Avatar className="w-5 h-5">
+                  <AvatarImage src={client?.avatar} alt="profile picture" />
 
-                      <AvatarFallback className="text-[10px]">
-                        {client?.name.charAt(0)}
-                        {client?.name.charAt(1)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="text-xs text-[#344054] font-medium">{client.name}</p>
-                  </div>
-                  <ClientActions
-                    groupId={groupDetails._id}
-                    client={client}
-                    groupName={groupDetails.name}
-                  />
-                </div>
-              ))}
+                  <AvatarFallback className="text-[10px]">
+                    {client?.name.charAt(0)}
+                    {client?.name.charAt(1)}
+                  </AvatarFallback>
+                </Avatar>
+                <p className="text-xs text-[#344054] font-medium">{client.name}</p>
+              </div>
+              <ClientActions groupId={groupId} client={client} groupName={groupName} />
             </div>
-          </>
-        )}
+          ))}
+        </div>
       </div>
     </section>
   );

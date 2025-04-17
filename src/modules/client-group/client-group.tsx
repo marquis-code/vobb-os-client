@@ -5,17 +5,9 @@ import { FC, useMemo } from "react";
 import { ClientGroupTableDataProps, fetchClientGroupQueryParams } from "types/client-group";
 import { getClientGroupTableColumns } from "components/tables/clientGroupTable/columns";
 import { ClientGroupTable } from "components/tables/clientGroupTable";
-import SortGroup from "./sort-group";
-import FilterGroup from "./filter-group";
 
 interface ClientGroupUIProps {
   handleCreateClientGroup: () => void;
-  handleRefreshClientGroups: () => void;
-  pipelinesData:
-    | {
-        _id: string;
-        name: string;
-      }[];
   allClientGroups?: {
     clientGroupsdata: ClientGroupTableDataProps | null;
     loading?: boolean;
@@ -27,16 +19,10 @@ interface ClientGroupUIProps {
 export const ClientGroupUI: FC<ClientGroupUIProps> = ({
   handleCreateClientGroup,
   allClientGroups,
-  pipelinesData,
-  handleRefreshClientGroups,
   handleParams
 }) => {
   const clientGroupData = allClientGroups?.clientGroupsdata?.data || [];
-  const clientGroupColumns = useMemo(
-    () => getClientGroupTableColumns({ handleRefreshTable: handleRefreshClientGroups }),
-    [handleRefreshClientGroups]
-  );
-  // const [searchValue, setSearchValue] = useState("")
+  const clientGroupColumns = useMemo(() => getClientGroupTableColumns(), []);
 
   const metaData = allClientGroups?.clientGroupsdata?.metaData || {
     totalCount: 0,
@@ -56,19 +42,33 @@ export const ClientGroupUI: FC<ClientGroupUIProps> = ({
           <div className="flex items-center gap-3 text-vobb-neutral-80">
             <CustomInput
               icon={<IconSearch size={14} />}
-              onChange={(e) => {
-                handleParams("search", e.target.value);
-              }}
               placeholder="Search groups"
               parentClassName="mb-0 min-w-[250px] text-xs font-medium"
               data-testid="search-input"
             />
           </div>
         </section>
-        <section className="flex gap-2 py-2 px-4">
-          <SortGroup handleParams={handleParams} />
-          <FilterGroup pipelines={pipelinesData} handleParams={handleParams} />
-        </section>
+        {/* <section className="flex gap-2 my-4 px-4">
+          <SortBy
+            sort={{
+              items: [
+                { label: "Date created", value: "date" },
+                { label: "Client", value: "client" },
+                { label: "Stage", value: "stage" }
+              ],
+              handleChange: () => {
+                console.log("sort");
+              }
+            }}
+            order={{
+              show: true,
+              active: "asc",
+              handleChange: (val) => console.log("first")
+            }}
+            isClearable
+          />
+          <Filter/>
+        </section> */}
         <section>
           {allClientGroups?.loading ? (
             <LoadingSpinner />
