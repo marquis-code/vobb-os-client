@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import FilterGroup from "modules/client-group/filter-group";
 import userEvent from "@testing-library/user-event";
-import { MockPipeline } from "pages/client-group/__mocks__/types";
+import { MockPipeline } from  "pages/client-group/__mocks__/types";
 
 // Mock dependencies
 vi.mock("components/ui/button", () => ({
@@ -146,7 +146,9 @@ describe("FilterGroup", () => {
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    expect(screen.getByText("Pipeline")).toBeInTheDocument();
+    // Use a more specific query to avoid the multiple elements issue
+    // Look for the pipeline option in the dropdown content
+    expect(screen.getByTestId("dropdown-content").textContent).toContain("Pipeline");
   });
 
   it("opens pipeline popover when pipeline option is clicked", async () => {

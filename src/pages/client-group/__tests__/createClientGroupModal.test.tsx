@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { CreateClientGroupModal } from "components/modalVariants/createClientGroupModal";
 import userEvent from "@testing-library/user-event";
 import { MockClientType, MockPipeline } from "pages/client-group/__mocks__/types";
@@ -25,12 +25,13 @@ let mockApiResponse: ApiResponse = {
   data: null
 };
 
-
 let mockApiError = null;
 
+// Mock the API request hook
+const mockRunFunction = vi.fn();
 vi.mock("hooks", () => ({
   useApiRequest: () => ({
-    run: vi.fn(),
+    run: mockRunFunction,
     requestStatus: { isPending: false },
     data: mockApiResponse,
     error: mockApiError
@@ -41,28 +42,36 @@ vi.mock("api", () => ({
   fetchAllClientsPerPipelinesService: vi.fn()
 }));
 
+// Improved mock for select-clients component
 vi.mock("modules/client-group/select-clients", () => ({
-  default: ({ label, selectedOptions, setSelectedOptions, options }) => (
-    <div data-testid="select-clients">
-      <label>{label}</label>
-      <select
-        multiple
-        data-testid="clients-select"
-        onChange={(e) => {
-          const selectedValues = Array.from(e.target.selectedOptions).map((option) => ({
-            _id: option.value,
-            name: option.text
-          }));
-          setSelectedOptions(selectedValues);
-        }}>
-        {options.map((option) => (
-          <option key={option._id} value={option._id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
-    </div>
-  )
+  default: ({ label, selectedOptions, setSelectedOptions, options }) => {
+    // Create a function to handle selection that doesn't rely on DOM properties
+    const handleSelection = () => {
+      // Simulate selecting the first two clients
+      const selectedClients = options.slice(0, 2).map(option => ({
+        _id: option._id,
+        name: option.name
+      }));
+      setSelectedOptions(selectedClients);
+    };
+    
+    return (
+      <div data-testid="select-clients">
+        <label>{label}</label>
+        <div data-testid="clients-select">
+          {options.map((option) => (
+            <div key={option._id}>{option.name}</div>
+          ))}
+        </div>
+        {/* Add a button to trigger selection without relying on DOM properties */}
+        <button 
+          data-testid="select-clients-button" 
+          onClick={handleSelection}>
+          Select Clients
+        </button>
+      </div>
+    );
+  }
 }));
 
 vi.mock("components/form", () => ({
@@ -96,6 +105,12 @@ vi.mock("components/form", () => ({
           </option>
         ))}
       </select>
+      {/* Add a button to trigger selection without relying on DOM properties */}
+      <button 
+        data-testid="select-pipeline-button" 
+        onClick={() => onChange({ value: "pipeline1", label: "Pipeline 1" })}>
+        Select Pipeline 1
+      </button>
     </div>
   )
 }));
@@ -133,6 +148,7 @@ describe("CreateClientGroupModal", () => {
       data: null
     };
     mockApiError = null;
+    mockRunFunction.mockClear();
   });
 
   it("renders the modal correctly", () => {
@@ -182,29 +198,38 @@ describe("CreateClientGroupModal", () => {
       }
     };
     
-    const { rerender } = render(<CreateClientGroupModal {...updatedProps} />);
-    
-    // Select pipeline
-    const pipelineSelect = screen.getByTestId("pipeline-select");
-    fireEvent.change(pipelineSelect, { target: { value: "pipeline1" } });
-    
-    // Select clients
-    const clientsSelect = screen.getByTestId("clients-select");
-    fireEvent.change(clientsSelect, {
-      target: {
-        selectedOptions: [
-          { value: "client1", text: "Client 1" },
-          { value: "client2", text: "Client 2" }
-        ]
+    // Mock the run function to return clients
+    mockRunFunction.mockResolvedValue({
+      status: 200,
+      data: {
+        data: {
+          clients: [
+            { _id: "client1", name: "Client 1" },
+            { _id: "client2", name: "Client 2" }
+          ]
+        }
       }
     });
+    
+    render(<CreateClientGroupModal {...updatedProps} />);
+    
+    // Select pipeline using the custom button
+    const selectPipelineButton = screen.getByTestId("select-pipeline-button");
+    await userEvent.click(selectPipelineButton);
+    
+    // Select clients using the custom button
+    const selectClientsButton = screen.getByTestId("select-clients-button");
+    await userEvent.click(selectClientsButton);
     
     // Submit form
     const submitButton = screen.getByText("Create Pipeline");
     await userEvent.click(submitButton);
     
-    // Check if submit was called with correct data
-    expect(mockProps.submit).toHaveBeenCalled();
+    // Wait for any async operations to complete
+    await waitFor(() => {
+      // Check if submit was called
+      expect(mockProps.submit).toHaveBeenCalled();
+    });
   });
 
   it("disables submit button when required fields are missing", () => {

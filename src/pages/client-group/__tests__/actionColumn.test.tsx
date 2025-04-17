@@ -4,40 +4,53 @@ import ActionColumn from "modules/client-group/ActionColumn";
 import userEvent from "@testing-library/user-event";
 import { ClientGroupTableData } from "types/client-group"; // Import the actual type
 
-// Mock the toast function
-const mockToast = vi.fn();
+// Create a flexible mock for useApiRequest with proper typing
+interface ApiResponse {
+  status: number | null;
+  data: any | null;
+}
 
-// Mock dependencies
-vi.mock("components/ui", () => ({
-  Button: ({ children, onClick, variant, className }) => (
-    <button onClick={onClick} className={className} data-variant={variant}>
-      {children}
-    </button>
-  ),
-  Popover: ({ children, modal, open, onOpenChange }) => {
-    return (
-      <div data-testid="popover" data-open={open}>
+let mockApiResponse: ApiResponse = {
+  status: null,
+  data: null
+};
+
+let mockApiError = null;
+
+// Move all mock declarations before they're used to avoid hoisting issues
+vi.mock("components/ui", () => {
+  const mockToast = vi.fn();
+  
+  return {
+    Button: ({ children, onClick, variant, className }) => (
+      <button onClick={onClick} className={className} data-variant={variant}>
         {children}
-        {/* Add buttons to control the popover state for testing */}
-        <button data-testid="open-popover" onClick={() => onOpenChange && onOpenChange(true)}>
-          Open Popover
-        </button>
-        <button data-testid="close-popover" onClick={() => onOpenChange && onOpenChange(false)}>
-          Close Popover
-        </button>
+      </button>
+    ),
+    Popover: ({ children, modal, open, onOpenChange }) => {
+      return (
+        <div data-testid="popover" data-open={open}>
+          {children}
+          <button data-testid="open-popover" onClick={() => onOpenChange && onOpenChange(true)}>
+            Open Popover
+          </button>
+          <button data-testid="close-popover" onClick={() => onOpenChange && onOpenChange(false)}>
+            Close Popover
+          </button>
+        </div>
+      );
+    },
+    PopoverContent: ({ children, align, className }) => (
+      <div data-testid="popover-content" className={className}>
+        {children}
       </div>
-    );
-  },
-  PopoverContent: ({ children, align, className }) => (
-    <div data-testid="popover-content" className={className}>
-      {children}
-    </div>
-  ),
-  PopoverTrigger: ({ children, asChild }) => (
-    <div data-testid="popover-trigger">{children}</div>
-  ),
-  toast: mockToast // Use the mock toast function
-}));
+    ),
+    PopoverTrigger: ({ children, asChild }) => (
+      <div data-testid="popover-trigger">{children}</div>
+    ),
+    toast: mockToast
+  };
+});
 
 vi.mock("components/ui/dropdown-menu", () => {
   // Create a mock implementation that tracks state
@@ -52,7 +65,6 @@ vi.mock("components/ui/dropdown-menu", () => {
       return (
         <div data-testid="dropdown-menu" data-open={isOpen}>
           {children}
-          {/* Add buttons to control the dropdown state for testing */}
           <button data-testid="open-dropdown" onClick={() => onOpenChangeFn(true)}>
             Open Dropdown
           </button>
@@ -83,19 +95,6 @@ vi.mock("components/ui/dropdown-menu", () => {
     )
   };
 });
-
-// Create a flexible mock for useApiRequest with proper typing
-interface ApiResponse {
-  status: number | null;
-  data: any | null;
-}
-
-let mockApiResponse: ApiResponse = {
-  status: null,
-  data: null
-};
-
-let mockApiError = null;
 
 vi.mock("hooks", () => ({
   useApiRequest: () => ({
@@ -193,7 +192,6 @@ describe("ActionColumn", () => {
       data: null
     };
     mockApiError = null;
-    mockToast.mockClear();
   });
 
   it("renders the action button correctly", () => {
@@ -270,8 +268,11 @@ describe("ActionColumn", () => {
     const saveButton = screen.getByTestId("save-name-button");
     await userEvent.click(saveButton);
     
+    // Get the toast mock from the components/ui mock
+    const { toast } = vi.mocked(require("components/ui"));
+    
     // Check if toast was called and refresh function was called
-    expect(mockToast).toHaveBeenCalled();
+    expect(toast).toHaveBeenCalled();
     expect(mockHandleRefreshTable).toHaveBeenCalled();
   });
 
@@ -311,8 +312,11 @@ describe("ActionColumn", () => {
     const confirmButton = screen.getByTestId("confirm-action-button");
     await userEvent.click(confirmButton);
     
+    // Get the toast mock from the components/ui mock
+    const { toast } = vi.mocked(require("components/ui"));
+    
     // Check if toast was called and refresh function was called
-    expect(mockToast).toHaveBeenCalled();
+    expect(toast).toHaveBeenCalled();
     expect(mockHandleRefreshTable).toHaveBeenCalled();
   });
 });
