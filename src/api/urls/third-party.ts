@@ -12,4 +12,4 @@ THIRD PARTY URLS
  */
 
 export const fetchCountriesURL = () =>
-  `https://restcountries.com/v3.1/all?fields=name,postalCode,flags,cca3`;
+  `https://restcountries.com/v3.1/all?fields=name,postalCode,flags,demonyms,cca3`;

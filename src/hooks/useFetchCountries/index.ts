@@ -16,6 +16,7 @@ export const useFetchCountries = () => {
       const data = response.data.map((item) => ({
         label: item.name.common,
         value: item.cca3,
+        nationality: item.demonyms.eng.m,
         postalCode: item.postalCode
       }));
 

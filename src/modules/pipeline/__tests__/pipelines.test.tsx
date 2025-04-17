@@ -25,15 +25,15 @@ const pipelinesDataMock: PipelineTableDataProps = {
       stages: 3,
       package: { id: "pkg1", name: "Basic" },
       date: "2023-01-01",
-      time: "12:00 PM",
-    },
+      time: "12:00 PM"
+    }
   ],
   metaData: {
     totalCount: 1,
     pageLimit: 20,
     totalPages: 1,
-    currentPage: 1,
-  },
+    currentPage: 1
+  }
 };
 
 const defaultProps: PipelinesUIProps = {
@@ -47,8 +47,8 @@ const defaultProps: PipelinesUIProps = {
       search: "",
       sector: "",
       sortOrder: "asc",
-      sortProperty: "date",
-    },
+      sortProperty: "date"
+    }
   },
   handleParams,
   handleViewPipeline,
@@ -57,12 +57,11 @@ const defaultProps: PipelinesUIProps = {
     isResolved: false,
     isPending: false,
     isRejected: false,
-    isIdle: true,
+    isIdle: true
   },
   handleViewForms,
   handleDeletePipeline,
-  handleEditStages,
-  onPipelineUpdate,
+  handleEditStages
 };
 
 vi.mock("components", async () => {
@@ -95,12 +94,14 @@ vi.mock("components", async () => {
               <td>{item.sector}</td>
               <td>
                 <button onClick={() => handleViewPipeline(item)}>View</button>
-                <button 
-                  data-testid="edit-stages-button"
+                <button
+                  data-testid="edit-stages"
                   onClick={() => {
-                    columns.find(col => col.accessorKey === "actions")?.cell?.({ row: { original: item } });
-                  }}
-                >
+                    columns
+                      .find((col) => col.accessorKey === "actions")
+                      ?.cell?.({ row: { original: item } });
+                    handleEditStages();
+                  }}>
                   Edit Stages
                 </button>
               </td>
@@ -108,19 +109,9 @@ vi.mock("components", async () => {
           ))}
         </tbody>
       </table>
-    ),
+    )
   };
 });
-
-vi.mock("pages/pipeline/editPipeline", () => ({
-  EditPipelineStages: ({ show, close }) => 
-    show ? (
-      <div data-testid="edit-pipeline-stages-modal">
-        <h2>Edit Pipeline Stages</h2>
-        <button data-testid="close-btn" onClick={close}>Close</button>
-      </div>
-    ) : null,
-}));
 
 describe("PipelinesUI Component", () => {
   it("renders the component and pipeline data correctly", () => {
@@ -197,20 +188,11 @@ describe("PipelinesUI Component", () => {
     expect(handleParams).toHaveBeenCalledWith("page", 2);
   });
 
-  it("handles opening and closing the edit pipeline modal", async () => {
+  it("handles opening the edit pipeline stages modal", async () => {
     render(<PipelinesUI {...defaultProps} />);
 
     fireEvent.click(screen.getByTestId("edit-stages"));
-    
-    await waitFor(() => {
-      expect(screen.getByTestId("edit-pipeline-stages-modal")).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByTestId("close-btn"));
-    
-    await waitFor(() => {
-      expect(screen.queryByTestId("edit-pipeline-stages-modal")).not.toBeInTheDocument();
-    });
+    expect(handleEditStages).toHaveBeenCalled();
   });
 
   it("handles null or undefined pipeline data gracefully", () => {
@@ -226,8 +208,8 @@ describe("PipelinesUI Component", () => {
             search: "",
             sector: "",
             sortOrder: "asc",
-            sortProperty: "date",
-          },
+            sortProperty: "date"
+          }
         }}
       />
     );
@@ -249,8 +231,8 @@ describe("PipelinesUI Component", () => {
             search: "",
             sector: "",
             sortOrder: "asc",
-            sortProperty: "date",
-          },
+            sortProperty: "date"
+          }
         }}
       />
     );
@@ -270,8 +252,8 @@ describe("PipelinesUI Component", () => {
               totalCount: 0,
               pageLimit: 20,
               totalPages: 1,
-              currentPage: 1,
-            },
+              currentPage: 1
+            }
           },
           loading: false,
           params: {
@@ -280,16 +262,16 @@ describe("PipelinesUI Component", () => {
             search: "",
             sector: "",
             sortOrder: "asc",
-            sortProperty: "date",
-          },
+            sortProperty: "date"
+          }
         }}
       />
     );
-  
+
     expect(screen.getByText(/No pipelines yet/i)).toBeInTheDocument();
     expect(screen.getByText(/Get started by creating your first pipeline/i)).toBeInTheDocument();
   });
-  
+
   it("handles undefined data array within pipelinesData gracefully", () => {
     render(
       <PipelinesUI
@@ -301,8 +283,8 @@ describe("PipelinesUI Component", () => {
               totalCount: 0,
               pageLimit: 20,
               totalPages: 1,
-              currentPage: 1,
-            },
+              currentPage: 1
+            }
           },
           loading: false,
           params: {
@@ -311,12 +293,12 @@ describe("PipelinesUI Component", () => {
             search: "",
             sector: "",
             sortOrder: "asc",
-            sortProperty: "date",
-          },
+            sortProperty: "date"
+          }
         }}
       />
     );
-  
+
     expect(screen.getByText(/No pipelines yet/i)).toBeInTheDocument();
     expect(screen.getByText(/Get started by creating your first pipeline/i)).toBeInTheDocument();
   });

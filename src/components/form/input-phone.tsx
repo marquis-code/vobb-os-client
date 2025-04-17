@@ -12,6 +12,7 @@ interface InputProps extends PhoneInputProps {
   label?: string;
   handleChange: (value: string) => void;
   hint?: string;
+  labelClassName?: string;
 }
 
 const CustomPhoneInput: React.FC<InputProps> = (props) => {
@@ -25,13 +26,14 @@ const CustomPhoneInput: React.FC<InputProps> = (props) => {
     onChange,
     handleChange,
     name,
-    hint
+    hint,
+    labelClassName
   } = props;
   return (
     <>
       <div className={cn("mb-4", parentClassName)}>
         {label && (
-          <label className={"block font-inter text-xs mb-1"}>
+          <label className={cn("block font-inter font-medium text-xs mb-1", labelClassName)}>
             {label}
             {required ? <span className={"text-error-50"}>*</span> : ""}
           </label>

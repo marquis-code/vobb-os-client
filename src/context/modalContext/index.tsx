@@ -1,5 +1,6 @@
 import { useFetchBranches, useFetchUser } from "hooks";
 import { AddBranch, AddTeam, InviteMember, UpdateJobTitle } from "pages";
+import { CreateClient } from "pages/pipeline/createClient";
 import { createContext, ReactNode, useContext, useState, ReactElement } from "react";
 
 interface ModalContextType {
@@ -7,10 +8,17 @@ interface ModalContextType {
   addTeam: boolean;
   inviteMember: boolean;
   updateJobTitle: boolean;
+  addClient: {
+    show: boolean;
+    pipeline?: string;
+  };
   setUpdateJobTitle: (value: boolean) => void;
   setAddBranch: (value: boolean) => void;
   setAddTeam: (value: boolean) => void;
   setInviteMember: (value: boolean) => void;
+  setAddClient: (value: { show: boolean; pipeline?: string }) => void;
+  pipelineUpdateCallback: () => void;
+  setPipelineUpdateCallback: (callback: () => void) => void;
 }
 
 const defaultValue: ModalContextType = {
@@ -18,10 +26,16 @@ const defaultValue: ModalContextType = {
   addTeam: false,
   inviteMember: false,
   updateJobTitle: false,
+  addClient: {
+    show: false
+  },
   setUpdateJobTitle: () => {},
   setAddBranch: () => {},
   setAddTeam: () => {},
-  setInviteMember: () => {}
+  setInviteMember: () => {},
+  setAddClient: () => {},
+  pipelineUpdateCallback: () => {},
+  setPipelineUpdateCallback: () => {}
 };
 
 export const ModalContext = createContext<ModalContextType>(defaultValue);
@@ -39,6 +53,14 @@ export const ModalProvider = ({ children }: ModalProviderProps): ReactElement =>
   const [addTeam, setAddTeam] = useState<boolean>(false);
   const [inviteMember, setInviteMember] = useState<boolean>(false);
   const [updateJobTitle, setUpdateJobTitle] = useState<boolean>(false);
+  const [addClient, setAddClient] = useState<{
+    show: boolean;
+    pipeline?: string;
+  }>({
+    show: false
+  });
+  const [pipelineId, setPipelineId] = useState<string>("");
+  const [pipelineUpdateCallback, setPipelineUpdateCallback] = useState<() => void>(() => {});
   const { fetchUserDetails } = useFetchUser();
   const { fetchOrgBranches } = useFetchBranches({});
   return (
@@ -51,7 +73,11 @@ export const ModalProvider = ({ children }: ModalProviderProps): ReactElement =>
         setUpdateJobTitle,
         setAddBranch,
         setAddTeam,
-        setInviteMember
+        setInviteMember,
+        addClient,
+        setAddClient,
+        pipelineUpdateCallback,
+        setPipelineUpdateCallback
       }}>
       {children}
       <AddBranch
@@ -61,7 +87,7 @@ export const ModalProvider = ({ children }: ModalProviderProps): ReactElement =>
           fetchOrgBranches({});
           setAddBranch(false);
         }}
-      />{" "}
+      />
       <AddTeam close={() => setAddTeam(false)} show={addTeam} />
       <InviteMember close={() => setInviteMember(false)} show={inviteMember} />
       <UpdateJobTitle
@@ -71,6 +97,11 @@ export const ModalProvider = ({ children }: ModalProviderProps): ReactElement =>
           fetchUserDetails();
           setUpdateJobTitle(false);
         }}
+      />
+      <CreateClient
+        close={() => setAddClient((prev) => ({ ...prev, show: false }))}
+        show={addClient.show}
+        callback={pipelineUpdateCallback}
       />
     </ModalContext.Provider>
   );
