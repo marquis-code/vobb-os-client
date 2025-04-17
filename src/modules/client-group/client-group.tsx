@@ -8,7 +8,7 @@ import { ClientGroupTable } from "components/tables/clientGroupTable";
 import SortGroup from "./sort-group";
 import FilterGroup from "./filter-group";
 
-interface ClientGroupUIProps {
+export interface ClientGroupUIProps {
   handleCreateClientGroup: () => void;
   handleRefreshClientGroups: () => void;
   pipelinesData:
