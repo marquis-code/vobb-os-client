@@ -9,25 +9,35 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "router";
 
-const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({ initData, submit, loading }) => {
+interface CompanyWebsiteFormData {
+  website?: string;
+}
+const CompanyWebsiteUI: React.FC<CompanyUrlFormProps> = ({
+  initData,
+  submit,
+  loading,
+  handleSkip
+}) => {
   const navigate = useNavigate();
   const { handleFormChange } = useOnboardingContext();
 
   const schema = yup.object().shape({
-    website: yup.string().required("Required").url("Enter a valid URL")
+    website: yup.string().url("Enter a valid URL")
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<CompanyWebsiteData>({
+  } = useForm<CompanyWebsiteFormData>({
     resolver: yupResolver(schema),
     defaultValues: initData
   });
 
-  const onSubmit = (data: CompanyWebsiteData) => {
-    submit(data);
+  const onSubmit = (data: CompanyWebsiteFormData) => {
+    const website = data.website;
+    if (website) submit({ website });
+    else handleSkip();
   };
 
   return (

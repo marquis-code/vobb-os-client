@@ -34,8 +34,12 @@ const CompanyWebsite = () => {
 
   useEffect(() => {
     fetchOnboardDetails();
-    handleFormChange("address", ["fullname", "companyInfo", "companyWeb"]);
+    handleFormChange("companyWeb", ["fullname", "companyInfo"]);
   }, []);
+
+  const handleSkip = () => {
+    navigate(Routes.onboarding_operating_address);
+  };
 
   if (loadingOnboard) {
     return <LoadingSpinner />;
@@ -48,6 +52,7 @@ const CompanyWebsite = () => {
           handleSubmit(data);
         }}
         loading={requestStatus.isPending}
+        handleSkip={handleSkip}
       />
     </>
   );

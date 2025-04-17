@@ -158,7 +158,7 @@ const CompanyAddress = () => {
   useEffect(() => {
     fetchCountries();
     fetchOnboardDetails();
-    handleFormChange("companyWeb", ["fullname", "companyInfo", "companyWeb", "address"]);
+    handleFormChange("address", ["fullname", "companyInfo", "companyWeb"]);
   }, []);
 
   useEffect(() => {

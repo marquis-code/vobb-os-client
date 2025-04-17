@@ -42,39 +42,26 @@ const UpdateJobTitleModal: React.FC<UpdateJobTitleModalProps> = ({
   return (
     <>
       <Modal show={show} close={close} testId="update-job-title-modal" contentClassName="p-0">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-vobb-neutral-20">
-          <h2 className="text-lg font-medium text-vobb-neutral-95">What's your job title?</h2>
-          <Button
-            onClick={close}
-            variant={"ghost"}
-            size={"icon"}
-            data-testid="close-btn"
-            className="border p-2 shadow-sm">
-            <Cross1Icon stroke="currentColor" strokeWidth={1} className="w-6 h-6" />
-          </Button>
+        <div className="flex items-center justify-between p-4">
+          <h2 className="text-sm font-semibold text-vobb-neutral-95">What's your job title?</h2>
         </div>
-        <form className="p-4 border-b border-vobb-neutral-20">
+        <form className="px-4">
           <CustomInput
-            label="Job title"
             name="jobTitle"
             register={register}
             validatorMessage={errors.jobTitle?.message}
+            placeholder="Enter your job title"
           />
         </form>
-        <div className="flex justify-end gap-2 items-center p-4 bg-vobb-neutral-10">
-          <Button
-            onClick={() => close()}
-            className="text-error-10"
-            size={"default"}
-            disabled={loading}
-            variant={"outline"}>
+        <div className="border-t flex justify-between gap-2 items-center py-2 px-4">
+          <Button onClick={() => close()} size={"sm"} disabled={loading} variant={"outline"}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
             disabled={!isDirty}
             loading={loading}
-            size={"default"}
+            size={"sm"}
             variant={"fill"}>
             Save
           </Button>
