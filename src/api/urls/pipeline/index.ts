@@ -46,6 +46,16 @@ export const fetchPipelinesURL = (queryParams: fetchPipelinesQueryParams) => {
   return `${prefix}${queryString ? `?${queryString}` : ""}`;
 };
 
+
+/**
+ * Fetch a single pipeline
+ *
+ * @returns url string
+ *
+ */
+
+export const fetchAPipelineURL = ({ id }) => `${prefix}/${id}`;
+
 /**
  * Fetch all pipelines URL
  * @returns url string

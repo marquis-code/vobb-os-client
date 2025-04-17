@@ -3,17 +3,17 @@ import { useForm } from "react-hook-form";
 import { FC, useEffect } from "react";
 import { Row } from "layout";
 import { useFetchPipelineStages } from "hooks";
-import { usePipelineStages } from 'hooks';
-import { useDragAndDrop } from 'hooks';
-import { useCanvasZoom } from 'hooks';
+import { usePipelineStages } from "hooks";
+import { useDragAndDrop } from "hooks";
+import { useCanvasZoom } from "hooks";
 import { Footer } from "./footer";
 import { Sidebar } from "./sideBar";
 import { Header } from "./header";
 import { Canvas } from "./canvas";
-import { EditPipelineStagesDto, IPipelineStage, PipelineTableData } from "types";
+import { EditPipelineStagesDto, IPipelineStage } from "types";
 
 interface Props {
-  show: boolean,
+  show: boolean;
   close: () => void;
   submit: (id, data: EditPipelineStagesDto) => void;
   editPipelineStagesStatus: {
@@ -21,9 +21,9 @@ interface Props {
     isPending: boolean;
     isRejected: boolean;
     isIdle: boolean;
-}
-  initialMode: "create" | "edit",
-  pipelineTableData?: PipelineTableData | null
+  };
+  initialMode: "create" | "edit";
+  pipeline: string; // Id of the pipeline
 }
 
 const EditPipelineStagesModal: FC<Props> = ({
@@ -32,12 +32,9 @@ const EditPipelineStagesModal: FC<Props> = ({
   submit,
   editPipelineStagesStatus,
   initialMode,
-  pipelineTableData
+  pipeline
 }) => {
-  const {
-    fetchPipelineStages,
-    pipelineStages
-  } = useFetchPipelineStages(pipelineTableData?.id ?? "");
+  const { fetchPipelineStages, pipelineStages } = useFetchPipelineStages(pipeline);
 
   const { register, handleSubmit, setValue } = useForm();
 
@@ -73,10 +70,10 @@ const EditPipelineStagesModal: FC<Props> = ({
       setValue("title", blocks[activeStageIndex].title);
     }
   }, [activeStageIndex, blocks, setValue]);
-  
+
   useEffect(() => {
-    if(editPipelineStagesStatus.isResolved) fetchPipelineStages()
-  }, [editPipelineStagesStatus.isResolved])
+    if (editPipelineStagesStatus.isResolved) fetchPipelineStages();
+  }, [editPipelineStagesStatus.isResolved]);
 
   const dragAndDrop = useDragAndDrop(blocks, setBlocks, activeStageIndex, setActiveStageIndex);
   const canvasZoom = useCanvasZoom(blocks.length);
@@ -84,7 +81,7 @@ const EditPipelineStagesModal: FC<Props> = ({
   const onSubmit = () => {
     const stages = prepareSubmitData();
     if (stages) {
-      submit(pipelineTableData?.id , { stages: stages as Array<IPipelineStage> })
+      submit(pipeline, { stages: stages as Array<IPipelineStage> });
       updateOriginalBlocks();
     }
   };
@@ -95,13 +92,7 @@ const EditPipelineStagesModal: FC<Props> = ({
       show={show}
       close={close}
       data-testid="edit-pipeline-stages-modal">
-      
-      <Header 
-        close={close} 
-        initialMode={initialMode} 
-        resetPipelineStages={resetPipelineStages}
-        // titleDuplicateError={titleDuplicateError}
-      />
+      <Header close={close} initialMode={initialMode} resetPipelineStages={resetPipelineStages} />
 
       <Row className="h-[calc(100%-96px)] flex-grow flex-shrink-1 min-h-0 gap-0 divide-x border">
         <Sidebar

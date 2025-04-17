@@ -29,3 +29,4 @@ export * from "./editMemberNoteModal";
 export * from "./uploadFileModal";
 export * from "./inputActionModal";
 export * from "./editPipelineTitleModal";
+export * from "./createClientModal";

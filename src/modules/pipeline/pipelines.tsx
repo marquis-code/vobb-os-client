@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { IconColumns3, IconPlus, IconSearch } from "@tabler/icons-react";
 import {
   Button,
@@ -11,8 +11,7 @@ import {
   SortBy,
   TableEmptyState
 } from "components";
-import { optionType, PipelineTableData, PipelineTableDataProps } from "types";
-import { EditPipelineStages } from "pages/pipeline/editPipelineStages";
+import { optionType, PipelineTableDataProps } from "types";
 
 export interface PipelinesUIProps extends PipelineTableActions {
   handleCreatePipeline: () => void;
@@ -29,7 +28,6 @@ export interface PipelinesUIProps extends PipelineTableActions {
     };
   };
   handleParams: (param: string, value: string | number) => void;
-  onPipelineUpdate: () => void;
 }
 const PipelinesUI: React.FC<PipelinesUIProps> = ({
   handleCreatePipeline,
@@ -40,26 +38,14 @@ const PipelinesUI: React.FC<PipelinesUIProps> = ({
   editPipelineTitleStatus,
   handleViewForms,
   handleDeletePipeline,
-  onPipelineUpdate
+  handleEditStages
 }) => {
-  const [editPipelineStagesModal, setEditPipelineStagesModal] = useState(false);
-  const [selectedPipelineData, setSelectedPipelineData] = useState<PipelineTableData | null>(null);
-
-  const handleOpenEditPipelineStages = useCallback((data: PipelineTableData) => {
-    setSelectedPipelineData(data);
-    setEditPipelineStagesModal(true);
-  }, []);
-
-  const handleCloseEditPipelineStages = () => {
-    setEditPipelineStagesModal(false);
-    setSelectedPipelineData(null);
-  };
   const pipelinesData = allPipelines.pipelinesData?.data || [];
-  const metaData = allPipelines.pipelinesData?.metaData || { 
-    totalCount: 0, 
-    currentPage: 1, 
-    totalPages: 1, 
-    pageLimit: 20 
+  const metaData = allPipelines.pipelinesData?.metaData || {
+    totalCount: 0,
+    currentPage: 1,
+    totalPages: 1,
+    pageLimit: 20
   };
   const { loading } = allPipelines;
   const pipelinesColumns = useMemo(
@@ -68,7 +54,7 @@ const PipelinesUI: React.FC<PipelinesUIProps> = ({
         handleViewPipeline,
         handleEditTitle,
         editPipelineTitleStatus,
-        handleEditStages: handleOpenEditPipelineStages,
+        handleEditStages,
         handleViewForms,
         handleDeletePipeline
       }),
@@ -76,7 +62,7 @@ const PipelinesUI: React.FC<PipelinesUIProps> = ({
       handleViewPipeline,
       handleEditTitle,
       editPipelineTitleStatus,
-      handleOpenEditPipelineStages,
+      handleEditStages,
       handleViewForms,
       handleDeletePipeline
     ]
@@ -152,15 +138,6 @@ const PipelinesUI: React.FC<PipelinesUIProps> = ({
           )}
         </section>
       </div>
-      {selectedPipelineData && (
-        <EditPipelineStages
-          pipelineTableData={selectedPipelineData}
-          mode="edit"
-          show={editPipelineStagesModal}
-          close={handleCloseEditPipelineStages}
-          callback={onPipelineUpdate}
-        />
-      )}
     </>
   );
 };

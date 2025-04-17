@@ -48,7 +48,7 @@ const SelectInput: React.FC<SelectInputProps> = (props) => {
   return (
     <div className={cn("mb-4", parentClassName)}>
       {label && (
-        <label className={"block font-inter text-xs mb-1 text-vobb-neutral-80 leading-5"}>
+        <label className={"block font-inter text-xs font-medium mb-1 text-vobb-neutral-80 leading-5"}>
           {label}
           {required ? <span className={"text-error-50"}>*</span> : ""}
         </label>

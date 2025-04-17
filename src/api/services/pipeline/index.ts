@@ -9,6 +9,7 @@ import {
   createPipelineURL,
   editPipelineStagesURL,
   editPipelineTitleURL,
+  fetchAPipelineURL,
   fetchPipelineStagesURL,
   fetchPipelinesURL,
   getRequest,
@@ -76,6 +77,17 @@ export const editPipelineStagesService = (id: string, data: EditPipelineStagesDt
 export const fetchPipelinesService = (queryParams: fetchPipelinesQueryParams) => {
   return getRequest({
     url: fetchPipelinesURL(queryParams)
+  });
+};
+
+/**
+ * Fetch stages for a pipeline Service
+ * @returns stages array
+ */
+
+export const fetchAPipelineService = (id: string) => {
+  return getRequest({
+    url: fetchAPipelineURL({ id })
   });
 };
 

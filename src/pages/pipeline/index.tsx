@@ -4,7 +4,8 @@ import { useApiRequest } from "hooks";
 import { editPipelineTitleService, fetchPipelinesService } from "api";
 import { PipelineTableDataProps } from "types";
 import { toast } from "components";
-import { CreatePipeline } from "./createPipeline";
+import { CreatePipeline } from "pages/pipeline/createPipeline";
+import { EditPipelineStages } from "./editPipelineStages";
 
 export const Pipelines = () => {
   const {
@@ -20,7 +21,6 @@ export const Pipelines = () => {
     error: editPipelineTitleError,
     requestStatus: editPipelineTitleStatus
   } = useApiRequest({});
-
 
   const [pipelinesQueryParams, setPipelinesQueryParams] = useState({
     page: 1,
@@ -38,11 +38,20 @@ export const Pipelines = () => {
   };
 
   const [createPipelineModal, setCreatePipelineModal] = useState(false);
+  const [editStages, setEditStages] = useState(false);
+  const [pipeline, setPipeline] = useState("");
+
   const handleOpenCreatePipeline = () => setCreatePipelineModal(true);
   const handleCloseCreatePipeline = () => setCreatePipelineModal(false);
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showFailureModal, setShowFailureModal] = useState(false);
+  const handleOpenStages = (id: string) => {
+    setPipeline(id);
+    setEditStages(true);
+  };
+  const handleCloseStages = () => {
+    setEditStages(false);
+    setPipeline("");
+  };
 
   const handleFetchPipelines = useCallback(() => {
     runFetchPipelines(
@@ -126,21 +135,26 @@ export const Pipelines = () => {
         handleViewPipeline={console.log}
         handleEditTitle={({ id, data }) => handleEditPipelineTitle(id, data)}
         editPipelineTitleStatus={editPipelineTitleStatus}
-        handleEditStages={console.log}
         handleViewForms={console.log}
         handleDeletePipeline={console.log}
-        onPipelineUpdate={handleFetchPipelines}
+        handleEditStages={handleOpenStages}
+      />
+      <EditPipelineStages
+        pipeline={pipeline}
+        mode="edit"
+        show={editStages}
+        close={handleCloseStages}
+        callback={handleFetchPipelines}
       />
       <CreatePipeline
         data-testid="createPipeline-modal"
         show={createPipelineModal}
         close={handleCloseCreatePipeline}
-        showFailureModal={showFailureModal}
-        showSuccessModal={showSuccessModal}
-        setShowFailureModal={setShowFailureModal}
-        setShowSuccessModal={setShowSuccessModal}
-        onPipelineUpdate={handleFetchPipelines}
+        handleStages={handleOpenStages}
+        callback={handleFetchPipelines}
       />
     </>
   );
 };
+
+export * from "./createClient";

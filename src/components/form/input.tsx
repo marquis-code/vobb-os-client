@@ -38,7 +38,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     'font-medium',
     'leading-5',
     'placeholder:text-vobb-neutral-60', 
-    'border-0 focus-visible:ring-0',
+    'border-0 focus-visible:ring-0 focus-visible:ring-transparent',
     className
   );
 
@@ -87,7 +87,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
         <div className={containerClassName}>
             {icon && <span >{icon}</span>}
             <Input
-              className={inputClassName}
+              className={cn("h-[36px]",inputClassName)}
               {...inputProps}
             />
           </div>
