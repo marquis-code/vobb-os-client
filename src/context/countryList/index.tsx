@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { optionType } from "types";
 
 export interface CountryType extends optionType {
+  nationality: string;
   postalCode: {
     format?: string;
     regex?: string;

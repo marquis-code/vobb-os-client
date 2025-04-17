@@ -43,6 +43,7 @@ export interface CompanyUrlFormProps {
   initData: CompanyWebsiteData;
   submit: (data: CompanyWebsiteData) => void;
   loading: boolean;
+  handleSkip: () => void;
 }
 
 export interface CompanyAddressFormData {

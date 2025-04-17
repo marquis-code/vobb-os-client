@@ -134,7 +134,7 @@ export const getPipelinesTableColumns = ({
         <ActionColumn
           rowData={rowData}
           viewPipeline={viewPipeline}
-          editTitle={(data) => editTitle(data)}
+          editTitle={editTitle}
           editStages={editStages}
           viewForms={viewForms}
           deletePipeline={deletePipeline}

@@ -37,6 +37,11 @@ export const OnboardingContextProvider = ({ children }: OnboardingContextProvide
   const [activeForm, setActiveForm] = useState<FormType>("fullname");
   const [completedForms, setCompletedForms] = useState<CompletedFormsType>([]);
 
+  /**
+   * handleFormChange
+   * @param form current form
+   * @param completed list of completed forms
+   */
   const handleFormChange = (form: FormType, completed: CompletedFormsType) => {
     setActiveForm(form);
     setCompletedForms(completed);

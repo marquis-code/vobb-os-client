@@ -100,7 +100,7 @@ const CompanyInfo = () => {
 
   useEffect(() => {
     fetchOnboardDetails();
-    handleFormChange("companyWeb", ["fullname", "companyInfo"]);
+    handleFormChange("companyInfo", ["fullname"]);
   }, []);
 
   useEffect(() => {

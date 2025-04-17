@@ -40,19 +40,19 @@ export const sectorOptions: optionTypeSector[] = [
 
 export const teamSizeOptions: optionTypeSize[] = [
   {
-    label: "0-5 Team members",
+    label: "0 - 5 Team members",
     value: "0-5"
   },
   {
-    label: "6-10 Team members",
+    label: "6 - 10 Team members",
     value: "6-10"
   },
   {
-    label: "11-20 Team members",
+    label: "11 - 20 Team members",
     value: "11-20"
   },
   {
-    label: "21-50 Team members",
+    label: "21 - 50 Team members",
     value: "21-50"
   },
   {

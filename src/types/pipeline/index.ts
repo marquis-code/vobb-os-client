@@ -9,6 +9,23 @@ export interface fetchPipelinesQueryParams {
   sort_property: string;
 }
 
+export interface FetchAPipelineQueryParams {
+  pipeline?: string;
+  page?: number;
+  limit?: number;
+  attributes?: Array<string>;
+  search?: string;
+  branch?: string;
+  sort_order?: string;
+  sort_by?: string;
+}
+
+export interface ISinglePipeline {
+  _id: string;
+  name: string;
+  stages: Array<IPipelineStage>;
+}
+
 export type PipelineTableData = {
   id: string;
   name: string;

@@ -34,7 +34,7 @@ const Fullname = () => {
 
   useEffect(() => {
     fetchOnboardDetails();
-    handleFormChange("companyInfo", ["fullname"]);
+    handleFormChange("fullname",[]);
   }, []);
 
   const initData: FullnameFormData = {

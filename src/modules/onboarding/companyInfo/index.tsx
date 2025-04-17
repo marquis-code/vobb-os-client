@@ -70,19 +70,19 @@ const CompanyInfoUI: React.FC<CompanyFormProps> = ({
       </div>
       <div className="flex justify-center items-center gap-4 mt-8">
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "organisation" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange("organisation")}
           data-testid="organisation-name-state"></div>
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "teamSize" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange("teamSize")}
           data-testid="teamsize-state"></div>
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "sector" === activeCompanyInfo ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange("sector")}

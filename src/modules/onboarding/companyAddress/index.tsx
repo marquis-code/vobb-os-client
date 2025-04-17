@@ -88,25 +88,25 @@ const CompanyAddressUI: React.FC<CompanyAddressProps> = ({
 
       <div className="flex justify-center items-center gap-4 mt-8">
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "country" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("country")}
           data-testid="country-state"></div>
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "zipcode" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("zipcode")}
           data-testid="zipcode-state"></div>
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "province" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("province")}
           data-testid="province-state"></div>
         <div
-          className={`w-3 h-3 rounded-full bg-vobb-neutral-10 cursor-pointer ${
+          className={`w-3 h-3 rounded-full bg-vobb-neutral-30 cursor-pointer ${
             "city" === activeCompanyAddress ? "bg-vobb-primary-70" : ""
           }`}
           onClick={() => handleCompanyChange?.("city")}

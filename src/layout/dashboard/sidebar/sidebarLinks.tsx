@@ -17,6 +17,7 @@ import { Button, CustomInput } from "components";
 import React, { useState } from "react";
 import { Routes } from "router";
 import { SidebarSection } from "./sidebarSection";
+import { useModalContext } from "context";
 
 interface SidebarLinksProps {
   sideBarWidth: string;
@@ -48,6 +49,7 @@ interface SidebarSection {
 }
 
 const SidebarLinks: React.FC<SidebarLinksProps> = ({ active }) => {
+  const { setAddClient } = useModalContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [clientMode, setClientMode] = useState(true);
   const [activeLink, setActiveLink] = useState(active);
@@ -198,6 +200,12 @@ const SidebarLinks: React.FC<SidebarLinksProps> = ({ active }) => {
     }
   ];
 
+  const handleAddClient = () => {
+    setAddClient({
+      show: true
+    });
+  };
+
   return (
     <>
       <div className="overflow-auto h-[80vh] no-scrollbar">
@@ -205,6 +213,7 @@ const SidebarLinks: React.FC<SidebarLinksProps> = ({ active }) => {
           <div className="flex justify-around gap-3">
             {clientMode ? (
               <Button
+                onClick={handleAddClient}
                 variant={"outline"}
                 className="flex items-center justify-center gap-1 flex-1 rounded-sm shadow-sm border-[#DDDFE5] text-vobb-neutral-80 font-medium text-xs">
                 <IconPlus size={14} color="#494949" />
