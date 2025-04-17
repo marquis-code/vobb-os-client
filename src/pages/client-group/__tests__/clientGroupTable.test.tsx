@@ -21,8 +21,7 @@ vi.mock("components/ui/table", () => ({
   )
 }));
 
-// Create a mock table instance with only the methods we need
-// Use type assertion to tell TypeScript this is sufficient for our tests
+
 const mockTableInstance = {
   getHeaderGroups: () => [
     {

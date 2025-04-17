@@ -4,7 +4,7 @@ import ActionColumn from "modules/client-group/ActionColumn";
 import userEvent from "@testing-library/user-event";
 import { ClientGroupTableData } from "types/client-group"; // Import the actual type
 
-// Create a flexible mock for useApiRequest with proper typing
+
 interface ApiResponse {
   status: number | null;
   data: any | null;
@@ -17,7 +17,7 @@ let mockApiResponse: ApiResponse = {
 
 let mockApiError = null;
 
-// Move all mock declarations before they're used to avoid hoisting issues
+
 vi.mock("components/ui", () => {
   const mockToast = vi.fn();
   
@@ -163,7 +163,7 @@ vi.mock("components", () => ({
   )
 }));
 
-// Mock the types/client-group module
+
 vi.mock("types/client-group", () => {
   return {
     ClientGroupTableData: {}
@@ -171,7 +171,7 @@ vi.mock("types/client-group", () => {
 });
 
 describe("ActionColumn", () => {
-  // Create a properly typed mock row data
+
   const mockRowData: ClientGroupTableData = {
     id: "group1",
     name: "Family Summer Vacation",
@@ -180,7 +180,6 @@ describe("ActionColumn", () => {
     date: "07-10-2024",
     time: "10:30 AM",
     assignedTo: { name: "David Wilson", avatar: "" },
-    // Add any other required properties from ClientGroupTableData
   } as unknown as ClientGroupTableData;
   
   const mockHandleRefreshTable = vi.fn();
@@ -203,7 +202,6 @@ describe("ActionColumn", () => {
   it("opens dropdown menu when action button is clicked", async () => {
     render(<ActionColumn rowData={mockRowData} handleRefreshTable={mockHandleRefreshTable} />);
     
-    // Use the test button to open the dropdown
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
@@ -213,11 +211,9 @@ describe("ActionColumn", () => {
   it("shows all action options in dropdown", async () => {
     render(<ActionColumn rowData={mockRowData} handleRefreshTable={mockHandleRefreshTable} />);
     
-    // Use the test button to open the dropdown
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Check if all options are rendered
     expect(screen.getByTestId("view-group")).toBeInTheDocument();
     expect(screen.getByTestId("edit-name-btn")).toBeInTheDocument();
     expect(screen.getByTestId("stages-btn")).toBeInTheDocument();
@@ -232,11 +228,9 @@ describe("ActionColumn", () => {
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Click edit name option
     const editNameOption = screen.getByTestId("edit-name-btn");
     await userEvent.click(editNameOption);
     
-    // Use the test button to open the popover
     const openPopoverButton = screen.getByTestId("open-popover");
     await userEvent.click(openPopoverButton);
     
@@ -244,7 +238,6 @@ describe("ActionColumn", () => {
   });
 
   it("handles edit name submission", async () => {
-    // Mock successful API response with proper typing
     mockApiResponse = {
       status: 200,
       data: {
@@ -254,7 +247,6 @@ describe("ActionColumn", () => {
     
     render(<ActionColumn rowData={mockRowData} handleRefreshTable={mockHandleRefreshTable} />);
     
-    // Open dropdown and edit name modal
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
@@ -264,14 +256,11 @@ describe("ActionColumn", () => {
     const openPopoverButton = screen.getByTestId("open-popover");
     await userEvent.click(openPopoverButton);
     
-    // Submit the form
     const saveButton = screen.getByTestId("save-name-button");
     await userEvent.click(saveButton);
     
-    // Get the toast mock from the components/ui mock
     const { toast } = vi.mocked(require("components/ui"));
     
-    // Check if toast was called and refresh function was called
     expect(toast).toHaveBeenCalled();
     expect(mockHandleRefreshTable).toHaveBeenCalled();
   });
@@ -279,11 +268,9 @@ describe("ActionColumn", () => {
   it("opens ungroup confirmation modal when ungroup option is clicked", async () => {
     render(<ActionColumn rowData={mockRowData} handleRefreshTable={mockHandleRefreshTable} />);
     
-    // Use the test button to open the dropdown
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Click ungroup option
     const ungroupOption = screen.getByTestId("ungroup-client");
     await userEvent.click(ungroupOption);
     
@@ -291,7 +278,6 @@ describe("ActionColumn", () => {
   });
 
   it("handles ungroup confirmation", async () => {
-    // Mock successful API response with proper typing
     mockApiResponse = {
       status: 200,
       data: {
@@ -301,21 +287,17 @@ describe("ActionColumn", () => {
     
     render(<ActionColumn rowData={mockRowData} handleRefreshTable={mockHandleRefreshTable} />);
     
-    // Open dropdown and ungroup modal
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
     const ungroupOption = screen.getByTestId("ungroup-client");
     await userEvent.click(ungroupOption);
     
-    // Confirm ungroup
     const confirmButton = screen.getByTestId("confirm-action-button");
     await userEvent.click(confirmButton);
     
-    // Get the toast mock from the components/ui mock
     const { toast } = vi.mocked(require("components/ui"));
     
-    // Check if toast was called and refresh function was called
     expect(toast).toHaveBeenCalled();
     expect(mockHandleRefreshTable).toHaveBeenCalled();
   });

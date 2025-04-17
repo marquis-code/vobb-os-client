@@ -13,7 +13,6 @@ vi.mock("components", () => ({
 }));
 
 vi.mock("components/ui/dropdown-menu", () => {
-  // Create a mock implementation that tracks state
   let isOpen = false;
   let onOpenChangeFn = vi.fn();
   
@@ -25,7 +24,6 @@ vi.mock("components/ui/dropdown-menu", () => {
       return (
         <div data-testid="dropdown-menu" data-open={isOpen}>
           {children}
-          {/* Add buttons to control the dropdown state for testing */}
           <button data-testid="open-dropdown" onClick={() => onOpenChangeFn(true)}>
             Open Dropdown
           </button>
@@ -55,7 +53,6 @@ vi.mock("components/ui/dropdown-menu", () => {
 });
 
 vi.mock("components/ui/popover", () => {
-  // Create a mock implementation that tracks state
   let isOpen = false;
   let onOpenChangeFn = vi.fn();
   
@@ -67,7 +64,6 @@ vi.mock("components/ui/popover", () => {
       return (
         <div data-testid="popover" data-open={isOpen}>
           {children}
-          {/* Add buttons to control the popover state for testing */}
           <button data-testid="open-popover" onClick={() => onOpenChangeFn(true)}>
             Open Popover
           </button>
@@ -104,7 +100,6 @@ describe("SortGroup", () => {
   it("opens dropdown menu when triggered", async () => {
     render(<SortGroup handleParams={mockHandleParams} />);
     
-    // Use the test button to open the dropdown
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
@@ -114,26 +109,21 @@ describe("SortGroup", () => {
   it("shows date created option in dropdown", async () => {
     render(<SortGroup handleParams={mockHandleParams} />);
     
-    // Use the test button to open the dropdown
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Check if the date created option is rendered
     expect(screen.getByTestId("date-created")).toBeInTheDocument();
   });
 
   it("opens popover when date created is clicked", async () => {
     render(<SortGroup handleParams={mockHandleParams} />);
     
-    // Use the test button to open the dropdown
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Click on date created option
     const dateCreatedOption = screen.getByTestId("date-created");
     await userEvent.click(dateCreatedOption);
     
-    // Use the test button to open the popover
     const openPopoverButton = screen.getByTestId("open-popover");
     await userEvent.click(openPopoverButton);
     
@@ -143,11 +133,8 @@ describe("SortGroup", () => {
   it("calls handleParams with asc when ascending is selected", async () => {
     render(<SortGroup handleParams={mockHandleParams} />);
     
-    // Simulate selecting ascending option
-    // This is a direct test of the function, not through UI interaction
     const component = screen.getByTestId("dropdown-menu");
     
-    // Find and click the asc option directly
     const ascOption = screen.getByTestId("asc");
     await userEvent.click(ascOption);
     
@@ -157,11 +144,8 @@ describe("SortGroup", () => {
   it("calls handleParams with desc when descending is selected", async () => {
     render(<SortGroup handleParams={mockHandleParams} />);
     
-    // Simulate selecting descending option
-    // This is a direct test of the function, not through UI interaction
     const component = screen.getByTestId("dropdown-menu");
     
-    // Find and click the desc option directly
     const descOption = screen.getByTestId("desc");
     await userEvent.click(descOption);
     

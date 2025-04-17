@@ -4,7 +4,7 @@ import FilterGroup from "modules/client-group/filter-group";
 import userEvent from "@testing-library/user-event";
 import { MockPipeline } from  "pages/client-group/__mocks__/types";
 
-// Mock dependencies
+
 vi.mock("components/ui/button", () => ({
   Button: ({ children, onClick, variant, className }) => (
     <button onClick={onClick} className={className} data-variant={variant}>
@@ -14,7 +14,6 @@ vi.mock("components/ui/button", () => ({
 }));
 
 vi.mock("components/ui/dropdown-menu", () => {
-  // Create a mock implementation that tracks state
   let isOpen = false;
   let onOpenChangeFn = vi.fn();
   
@@ -26,7 +25,6 @@ vi.mock("components/ui/dropdown-menu", () => {
       return (
         <div data-testid="dropdown-menu" data-open={isOpen}>
           {children}
-          {/* Add buttons to control the dropdown state for testing */}
           <button data-testid="open-dropdown" onClick={() => onOpenChangeFn(true)}>
             Open Dropdown
           </button>
@@ -48,7 +46,6 @@ vi.mock("components/ui/dropdown-menu", () => {
 });
 
 vi.mock("components/ui/popover", () => {
-  // Create a mock implementation that tracks state
   let isOpen = false;
   let onOpenChangeFn = vi.fn();
   
@@ -60,7 +57,6 @@ vi.mock("components/ui/popover", () => {
       return (
         <div data-testid="popover" data-open={isOpen}>
           {children}
-          {/* Add buttons to control the popover state for testing */}
           <button data-testid="open-popover" onClick={() => onOpenChangeFn(true)}>
             Open Popover
           </button>
@@ -132,7 +128,7 @@ describe("FilterGroup", () => {
   it("opens dropdown menu when filter button is clicked", async () => {
     render(<FilterGroup pipelines={mockPipelines} handleParams={mockHandleParams} />);
     
-    // Use the test button to open the dropdown
+
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
@@ -142,23 +138,20 @@ describe("FilterGroup", () => {
   it("shows pipeline option in dropdown", async () => {
     render(<FilterGroup pipelines={mockPipelines} handleParams={mockHandleParams} />);
     
-    // Use the test button to open the dropdown
+
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Use a more specific query to avoid the multiple elements issue
-    // Look for the pipeline option in the dropdown content
     expect(screen.getByTestId("dropdown-content").textContent).toContain("Pipeline");
   });
 
   it("opens pipeline popover when pipeline option is clicked", async () => {
     render(<FilterGroup pipelines={mockPipelines} handleParams={mockHandleParams} />);
     
-    // Use the test button to open the dropdown
+
     const openButton = screen.getByTestId("open-dropdown");
     await userEvent.click(openButton);
     
-    // Open the popover
     const openPopoverButton = screen.getByTestId("open-popover");
     await userEvent.click(openPopoverButton);
     
@@ -168,7 +161,7 @@ describe("FilterGroup", () => {
   it("calls handleParams when a pipeline is selected", async () => {
     render(<FilterGroup pipelines={mockPipelines} handleParams={mockHandleParams} />);
     
-    // Simulate selecting a pipeline
+
     const radioChangeButton = screen.getByTestId("radio-change-button");
     await userEvent.click(radioChangeButton);
     

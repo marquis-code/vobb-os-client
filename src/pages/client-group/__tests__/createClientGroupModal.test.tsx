@@ -4,7 +4,7 @@ import { CreateClientGroupModal } from "components/modalVariants/createClientGro
 import userEvent from "@testing-library/user-event";
 import { MockClientType, MockPipeline } from "pages/client-group/__mocks__/types";
 
-// Mock dependencies
+
 vi.mock("components/ui", () => ({
   Button: ({ children, onClick, disabled, loading, ...props }) => (
     <button onClick={onClick} disabled={disabled || loading} data-loading={loading} {...props}>
@@ -14,7 +14,7 @@ vi.mock("components/ui", () => ({
   toast: vi.fn()
 }));
 
-// Create a flexible mock for useApiRequest with proper typing
+
 interface ApiResponse {
   status: number | null;
   data: any | null;
@@ -42,12 +42,10 @@ vi.mock("api", () => ({
   fetchAllClientsPerPipelinesService: vi.fn()
 }));
 
-// Improved mock for select-clients component
+
 vi.mock("modules/client-group/select-clients", () => ({
   default: ({ label, selectedOptions, setSelectedOptions, options }) => {
-    // Create a function to handle selection that doesn't rely on DOM properties
     const handleSelection = () => {
-      // Simulate selecting the first two clients
       const selectedClients = options.slice(0, 2).map(option => ({
         _id: option._id,
         name: option.name
@@ -105,7 +103,6 @@ vi.mock("components/form", () => ({
           </option>
         ))}
       </select>
-      {/* Add a button to trigger selection without relying on DOM properties */}
       <button 
         data-testid="select-pipeline-button" 
         onClick={() => onChange({ value: "pipeline1", label: "Pipeline 1" })}>
@@ -185,7 +182,7 @@ describe("CreateClientGroupModal", () => {
       groupName: "Test Group"
     };
     
-    // Mock the API response for clients
+   
     mockApiResponse = {
       status: 200,
       data: {
@@ -198,7 +195,7 @@ describe("CreateClientGroupModal", () => {
       }
     };
     
-    // Mock the run function to return clients
+
     mockRunFunction.mockResolvedValue({
       status: 200,
       data: {
@@ -213,21 +210,20 @@ describe("CreateClientGroupModal", () => {
     
     render(<CreateClientGroupModal {...updatedProps} />);
     
-    // Select pipeline using the custom button
+
     const selectPipelineButton = screen.getByTestId("select-pipeline-button");
     await userEvent.click(selectPipelineButton);
     
-    // Select clients using the custom button
+
     const selectClientsButton = screen.getByTestId("select-clients-button");
     await userEvent.click(selectClientsButton);
     
-    // Submit form
+
     const submitButton = screen.getByText("Create Pipeline");
     await userEvent.click(submitButton);
     
-    // Wait for any async operations to complete
+
     await waitFor(() => {
-      // Check if submit was called
       expect(mockProps.submit).toHaveBeenCalled();
     });
   });

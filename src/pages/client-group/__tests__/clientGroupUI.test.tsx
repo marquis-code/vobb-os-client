@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { ClientGroupUIProps } from "modules/client-group/client-group";
 import { ClientGroupTableDataProps, fetchClientGroupQueryParams } from "types/client-group";
 
-// Mock dependencies
+
 vi.mock("components", () => ({
   Button: ({ children, onClick, ...props }) => (
     <button onClick={onClick} {...props}>
@@ -81,7 +81,7 @@ vi.mock("modules/client-group/filter-group", () => ({
   )
 }));
 
-// Mock the types that we need
+
 vi.mock("types/client-group", () => {
   return {
     fetchClientGroupQueryParams: {},
@@ -90,7 +90,6 @@ vi.mock("types/client-group", () => {
 });
 
 describe("ClientGroupUI", () => {
-  // Create mock data that matches the expected structure
   const mockClientGroupData = [
     {
       id: "group1",
